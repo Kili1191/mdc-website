@@ -122,7 +122,7 @@ export default function Home() {
             </p>
             <p style={bodyStyle}>
               The work is done in silence, one to one, fully clothed. Sixty to ninety minutes.
-              No one is named, ever — not you, not those who came before you.
+              No one is named, ever. Not you, not those who came before you.
             </p>
             <p style={bodyStyle}>
               You arrive carrying. You leave lighter. What happens between is felt, not explained.

@@ -40,8 +40,8 @@ const dividerStyle: React.CSSProperties = {
 };
 
 export const metadata = {
-  title: "Sessions — Maison du Calme",
-  description: "Four private sessions at Maison du Calme — silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees on request.",
+  title: "Sessions · Maison du Calme",
+  description: "Four private sessions at Maison du Calme. Silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees on request.",
 };
 
 export default function SessionsPage() {
@@ -51,7 +51,7 @@ export default function SessionsPage() {
         <p style={eyebrowStyle}>Sessions</p>
         <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Four ways to set it down.</h1>
         <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
-          Each begins the same way — in silence, fully clothed, with nothing required of you.
+          Each begins the same way, in silence, fully clothed, with nothing required of you.
           Each leaves you somewhere different.
         </p>
         <p style={{ ...bodyStyle, marginTop: 40 }}>
@@ -74,7 +74,7 @@ export default function SessionsPage() {
             <p style={bodyStyle}>
               Ninety minutes for the thing underneath the other things. ANTARA is where
               most people begin, and the session they return to. It is unhurried by
-              design — long enough for the body to stop bracing, and then to let go of
+              design, long enough for the body to stop bracing, and then to let go of
               what the bracing was holding.
             </p>
             <p style={bodyStyle}>
@@ -99,7 +99,7 @@ export default function SessionsPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: 40 }}>
             <p style={bodyStyle}>
               Sixty minutes for the held chest, the shallow breath, the sense of running
-              slightly ahead of yourself. VAYU works with what restricts — and returns the
+              slightly ahead of yourself. VAYU works with what restricts, and returns the
               breath you have been taking in halves.
             </p>
             <p style={bodyStyle}>
@@ -119,7 +119,7 @@ export default function SessionsPage() {
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: 40 }}>
             <p style={bodyStyle}>
-              Sixty minutes for the held body — the shoulders that no longer come down,
+              Sixty minutes for the held body: the shoulders that no longer come down,
               the jaw, the places that have been tight so long they feel like structure.
               SOMA meets the tissue where it has settled and lets it change its mind.
             </p>
@@ -140,7 +140,7 @@ export default function SessionsPage() {
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: 40 }}>
             <p style={bodyStyle}>
-              TRANSMISSION is not booked. It is applied for, and it is granted rarely —
+              TRANSMISSION is not booked. It is applied for, and it is granted rarely,
               no more than six times in a year to any one person, and to very few people
               at all.
             </p>
