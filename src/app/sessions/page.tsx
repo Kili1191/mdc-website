@@ -1,7 +1,9 @@
+import MarbleBackground from "@/components/MarbleBackground";
 import { COLORS, FONTS } from "@/styles/tokens";
 
 const pageStyle: React.CSSProperties = {
-  background: COLORS.parchemin,
+  position: "relative",
+  zIndex: 5,
   minHeight: "100vh",
   paddingTop: 160,
   paddingBottom: 200,
@@ -9,7 +11,11 @@ const pageStyle: React.CSSProperties = {
 const containerStyle: React.CSSProperties = {
   maxWidth: 720,
   margin: "0 auto",
-  padding: "0 8vw",
+  padding: "48px 8vw",
+  background: "rgba(237,228,208,0.82)",
+  backdropFilter: "blur(6px)",
+  WebkitBackdropFilter: "blur(6px)",
+  borderRadius: 2,
 };
 const bodyStyle: React.CSSProperties = {
   fontFamily: FONTS.prata, fontSize: 18, lineHeight: 1.75, color: COLORS.brou, margin: 0,
@@ -46,7 +52,9 @@ export const metadata = {
 
 export default function SessionsPage() {
   return (
-    <main style={pageStyle}>
+    <>
+      <MarbleBackground />
+      <main style={pageStyle}>
       <div style={containerStyle}>
         <p style={eyebrowStyle}>Sessions</p>
         <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Four ways to set it down.</h1>
@@ -182,6 +190,7 @@ export default function SessionsPage() {
           <p style={{ ...microStyle, marginTop: 40 }}>By arrangement</p>
         </div>
       </div>
-    </main>
+      </main>
+    </>
   );
 }
