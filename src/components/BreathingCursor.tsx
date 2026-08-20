@@ -2,25 +2,25 @@
 
 import { useEffect, useRef } from "react";
 
-// Curseur custom : deux couches à deux vitesses.
-// - Dot : petit point Rouille net, suit la souris presque instantanément
-//   (LERP haut) → précision.
-// - Halo : anneau flou plus grand, traîne avec beaucoup de retard
-//   (LERP bas) → élégance, sillage.
-// Les deux respirent à 5.5s : légère variation d'opacité + halo qui
-// pulse sur son rayon. Aucun bord dur — le halo est un box-shadow flou,
-// pas un border strict, pour une lecture douce sur le marbre.
+// Curseur custom :
+// - Dot : point Rouille net, position mise à jour SYNCHRONE dans le
+//   handler mousemove (aucun lag rAF) → suit la souris pixel-pixel.
+//   Sa taille (respiration) est animée en rAF via CSS variable, mais
+//   la position ne dépend pas de rAF.
+// - Halo : anneau flou plus grand, position lerpée en rAF → sillage
+//   élégant qui traîne derrière.
+// - Détection hover déplacée en rAF (elementFromPoint est coûteux —
+//   l'appeler à chaque mousemove polluait la fluidité).
 
 const BREATH_MS = 5500;
-const DOT_LERP = 1;      // dot suit la souris sans latence (pas de lag)
-const HALO_LERP = 0.14;  // halo traîne juste ce qu'il faut pour l'élégance
+const HALO_LERP = 0.14;
 
-const DOT_BASE = 15;          // rayon point net (30px de diamètre — impossible à rater)
+const DOT_BASE = 15;          // rayon point net (30px de diamètre)
 const DOT_BREATH = 2;         // respiration nette
 
-const HALO_BASE = 48;         // rayon halo (96px de diamètre)
-const HALO_BREATH = 8;        // respiration visible
-const HALO_HOVER = 24;        // grossissement sur cible
+const HALO_BASE = 48;         // rayon halo
+const HALO_BREATH = 8;
+const HALO_HOVER = 24;
 
 export default function BreathingCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -38,42 +38,58 @@ export default function BreathingCursor() {
     document.head.appendChild(style);
 
     const mouse = { x: -100, y: -100 };
-    const dotPos = { x: -100, y: -100 };
     const haloPos = { x: -100, y: -100 };
     let hover = 0;
     let hoverTarget = 0;
     let raf = 0;
     const t0 = performance.now();
 
+    // Init CSS variables
+    dot.style.setProperty("--mx", "-100px");
+    dot.style.setProperty("--my", "-100px");
+
     const onMove = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      const el = document.elementFromPoint(e.clientX, e.clientY);
-      hoverTarget = el && el.closest("a, button, input, textarea, select, [role=button]") ? 1 : 0;
+      // Position dot : synchrone, aucun lag rAF
+      dot.style.setProperty("--mx", `${e.clientX}px`);
+      dot.style.setProperty("--my", `${e.clientY}px`);
     };
-    const onLeave = () => { mouse.x = -100; mouse.y = -100; };
+    const onLeave = () => {
+      mouse.x = -100; mouse.y = -100;
+      dot.style.setProperty("--mx", "-100px");
+      dot.style.setProperty("--my", "-100px");
+    };
 
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseleave", onLeave);
 
-    const tick = () => {
-      dotPos.x += (mouse.x - dotPos.x) * DOT_LERP;
-      dotPos.y += (mouse.y - dotPos.y) * DOT_LERP;
-      haloPos.x += (mouse.x - haloPos.x) * HALO_LERP;
-      haloPos.y += (mouse.y - haloPos.y) * HALO_LERP;
-      hover += (hoverTarget - hover) * 0.10;
+    // Hover check : à un rythme plus lent que rAF pour ne pas
+    // forcer de reflow trop souvent (elementFromPoint = coûteux).
+    let hoverCheckAt = 0;
+    const HOVER_CHECK_INTERVAL = 80; // ms
 
-      const t = (performance.now() - t0) / BREATH_MS;
+    const tick = (now: number) => {
+      // Détection hover — throttlée
+      if (now - hoverCheckAt > HOVER_CHECK_INTERVAL && mouse.x >= 0) {
+        hoverCheckAt = now;
+        const el = document.elementFromPoint(mouse.x, mouse.y);
+        hoverTarget = el && el.closest("a, button, input, textarea, select, [role=button]") ? 1 : 0;
+      }
+      hover += (hoverTarget - hover) * 0.12;
+
+      const t = (now - t0) / BREATH_MS;
       const breath = Math.sin(t * Math.PI * 2) * 0.5 + 0.5;
 
-      // Point net
+      // Dot : respiration via CSS variables (taille + opacité)
       const dr = DOT_BASE + breath * DOT_BREATH;
       const dotAlpha = (0.75 + breath * 0.15) * (1 - hover * 0.5);
-      dot.style.transform = `translate3d(${dotPos.x - dr}px, ${dotPos.y - dr}px, 0)`;
-      dot.style.width = dot.style.height = `${dr * 2}px`;
+      dot.style.setProperty("--r", `${dr}px`);
       dot.style.opacity = String(dotAlpha);
 
-      // Halo flou
+      // Halo : lerp position + respiration
+      haloPos.x += (mouse.x - haloPos.x) * HALO_LERP;
+      haloPos.y += (mouse.y - haloPos.y) * HALO_LERP;
       const hr = HALO_BASE + breath * HALO_BREATH + hover * HALO_HOVER;
       const haloAlpha = 0.45 + breath * 0.18;
       halo.style.transform = `translate3d(${haloPos.x - hr}px, ${haloPos.y - hr}px, 0)`;
@@ -106,7 +122,7 @@ export default function BreathingCursor() {
           willChange: "transform, width, height, opacity",
         }}
       />
-      {/* Point net, premier plan */}
+      {/* Point net — position via CSS variables --mx/--my, taille via --r */}
       <div
         ref={dotRef}
         aria-hidden
@@ -116,6 +132,9 @@ export default function BreathingCursor() {
           background: "#A55A3E",
           borderRadius: "50%",
           boxShadow: "0 0 6px rgba(165,90,62,0.45)",
+          width: "var(--r, 15px)", height: "var(--r, 15px)",
+          transform:
+            "translate3d(var(--mx, -100px), var(--my, -100px), 0) translate(-50%, -50%)",
           willChange: "transform, width, height, opacity",
         }}
       />
