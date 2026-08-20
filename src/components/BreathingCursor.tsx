@@ -15,12 +15,12 @@ const BREATH_MS = 5500;
 const DOT_LERP = 0.32;
 const HALO_LERP = 0.11;
 
-const DOT_BASE = 2.5;         // rayon point net
-const DOT_BREATH = 0.5;       // respiration très fine
+const DOT_BASE = 5.5;         // rayon point net (visible, suivable à l'œil)
+const DOT_BREATH = 1;         // respiration fine
 
-const HALO_BASE = 16;         // rayon halo
-const HALO_BREATH = 2.5;      // respiration visible mais douce
-const HALO_HOVER = 10;        // grossissement sur cible
+const HALO_BASE = 22;         // rayon halo
+const HALO_BREATH = 3.5;      // respiration visible
+const HALO_HOVER = 14;        // grossissement sur cible
 
 export default function BreathingCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -115,7 +115,7 @@ export default function BreathingCursor() {
           pointerEvents: "none",
           background: "#A55A3E",
           borderRadius: "50%",
-          boxShadow: "0 0 3px rgba(165,90,62,0.35)",
+          boxShadow: "0 0 6px rgba(165,90,62,0.45)",
           willChange: "transform, width, height, opacity",
         }}
       />
