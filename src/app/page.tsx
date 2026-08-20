@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import BreathReveal from "@/components/BreathReveal";
 import { useIntroReady } from "@/lib/introReady";
 import { COLORS, FONTS } from "@/styles/tokens";
 
@@ -110,9 +111,12 @@ export default function Home() {
       {/* 1. SEUIL — hero */}
       <section className="mdc-station" style={stationStyle}>
         <div className="mdc-station-inner" style={contentBox}>
-          <p style={{ ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)" }}>
-            For those who carry everything inside.
-          </p>
+          <BreathReveal
+            as="p"
+            text="For those who carry everything inside."
+            style={{ ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)" }}
+            stagger={110}
+          />
           {/* Hero video slot — à remplir plus tard */}
           <div
             aria-hidden
@@ -125,9 +129,12 @@ export default function Home() {
       {/* 2. PIERRE */}
       <section className="mdc-station" style={stationStyle}>
         <div className="mdc-station-inner" style={contentBox}>
-          <p style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 52px)" }}>
-            There is a kind of tiredness that rest doesn&apos;t reach…
-          </p>
+          <BreathReveal
+            as="p"
+            text="There is a kind of tiredness that rest doesn't reach…"
+            style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 52px)" }}
+            stagger={100}
+          />
         </div>
       </section>
 
@@ -143,20 +150,21 @@ export default function Home() {
       {/* 4. TRAVAIL */}
       <section className="mdc-station" style={stationStyle}>
         <div className="mdc-station-inner" style={contentBox}>
-          <p style={{
-            fontFamily: FONTS.higuen,
-            fontSize: "clamp(26px, 3.6vw, 40px)",
-            lineHeight: 1.55,
-            color: COLORS.brouFonce,
-            margin: 0,
-            textTransform: "uppercase",
-            letterSpacing: "0.14em",
-            fontWeight: 400,
-          }}>
-            Ninety minutes.<br />
-            Clothed.<br />
-            In silence.
-          </p>
+          <BreathReveal
+            as="p"
+            text="Ninety minutes. / Clothed. / In silence."
+            style={{
+              fontFamily: FONTS.higuen,
+              fontSize: "clamp(26px, 3.6vw, 40px)",
+              lineHeight: 1.55,
+              color: COLORS.brouFonce,
+              margin: 0,
+              textTransform: "uppercase",
+              letterSpacing: "0.14em",
+              fontWeight: 400,
+            }}
+            stagger={140}
+          />
           <div style={{ marginTop: 48 }}>
             <a href="/the-work" style={linkStyle}>The Work</a>
           </div>
@@ -166,10 +174,12 @@ export default function Home() {
       {/* 5. KILIAN */}
       <section className="mdc-station" style={stationStyle}>
         <div className="mdc-station-inner" style={contentBox}>
-          <p style={{ ...displayItalic, fontSize: "clamp(24px, 3.8vw, 40px)" }}>
-            Chronic stress rarely looks like falling apart. It looks like being
-            very good at your life.
-          </p>
+          <BreathReveal
+            as="p"
+            text="Chronic stress rarely looks like falling apart. It looks like being very good at your life."
+            style={{ ...displayItalic, fontSize: "clamp(24px, 3.8vw, 40px)" }}
+            stagger={70}
+          />
           <div style={{ marginTop: 56 }}>
             <a href="/practitioner" style={linkStyle}>Kilian</a>
           </div>
@@ -179,9 +189,12 @@ export default function Home() {
       {/* 6. BEGIN */}
       <section className="mdc-station" style={stationStyle}>
         <div className="mdc-station-inner" style={contentBox}>
-          <p style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 56px)" }}>
-            You only have to arrive.
-          </p>
+          <BreathReveal
+            as="p"
+            text="You only have to arrive."
+            style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 56px)" }}
+            stagger={110}
+          />
           <a
             href="/begin"
             style={{
