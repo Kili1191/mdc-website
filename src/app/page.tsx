@@ -130,7 +130,7 @@ export default function Home() {
           <div style={{ textAlign: "center" }}>
             <BreathReveal
               as="p"
-              text="Ninety minutes. / Clothed. / In silence."
+              text="Sixty to ninety minutes. / Clothed. / In silence."
               style={displayCaps}
               stagger={140}
             />
