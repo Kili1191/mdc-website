@@ -2,18 +2,19 @@
 
 import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BreathReveal from "@/components/BreathReveal";
 import { useIntroReady } from "@/lib/introReady";
 import { COLORS, FONTS } from "@/styles/tokens";
+import { scrollStore } from "@/lib/scrollStore";
 
-const HouseScene = dynamic(() => import("@/components/HouseScene"), { ssr: false });
+const HomeStage = dynamic(() => import("@/components/HomeStage"), { ssr: false });
 
-// Home = "la traversée de la maison" — 6 stations pinned.
-// Copy validée uniquement (WARROOM_Site_Decision_Finale) : pas de numéros,
-// pas de "5 états". Chaque station tient 100vh d'écran + pin pendant 100vh
-// de scroll, transition douce entre elles.
+// Home = "la traversée de la maison" — 6 stations scroll-scrub.
+// Pas de pin. Le scroll est libre (Lenis). Chaque station est 100vh.
+// Sa visibilité est calculée en continu à partir du progrès de scroll
+// (0..1) via une courbe gaussienne centrée sur son propre pas. Aucun
+// re-render React par frame : on mute le DOM directement via refs.
+// Modèle Awwwards 2024–2026 (Studio Freight, Igloo Inc, Active Theory).
 
 const displayItalic: React.CSSProperties = {
   fontFamily: FONTS.higuen,
@@ -24,33 +25,36 @@ const displayItalic: React.CSSProperties = {
   lineHeight: 1.2,
   letterSpacing: "-0.005em",
 };
-
-const bodyStyle: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 18, lineHeight: 1.75, color: COLORS.brou, margin: 0,
+const displayCaps: React.CSSProperties = {
+  fontFamily: FONTS.higuen,
+  fontSize: "clamp(26px, 3.6vw, 40px)",
+  lineHeight: 1.55,
+  color: COLORS.brouFonce,
+  margin: 0,
+  textTransform: "uppercase",
+  letterSpacing: "0.14em",
+  fontWeight: 400,
 };
-
 const linkStyle: React.CSSProperties = {
   fontFamily: FONTS.prata, fontSize: 12, letterSpacing: "0.28em",
   textTransform: "uppercase", color: COLORS.rouille,
   textDecoration: "none",
   borderBottom: `1px solid ${COLORS.rouille}`, paddingBottom: 4,
 };
-
 const stationStyle: React.CSSProperties = {
   position: "relative", zIndex: 5,
   height: "100vh", width: "100%",
   display: "flex", alignItems: "center", justifyContent: "center",
   padding: "0 8vw",
+  willChange: "opacity, transform",
 };
 
-const contentBox: React.CSSProperties = {
-  maxWidth: 780, width: "100%", textAlign: "center",
-  padding: "48px 40px",
-  background: "rgba(237,228,208,0.28)",
-  backdropFilter: "blur(3px)",
-  WebkitBackdropFilter: "blur(3px)",
-  borderRadius: 2,
-};
+function gaussian(x: number, mu: number, sigma: number) {
+  const d = (x - mu) / sigma;
+  return Math.exp(-0.5 * d * d);
+}
+
+const N_STATIONS = 6;
 
 export default function Home() {
   const ready = useIntroReady();
@@ -61,160 +65,120 @@ export default function Home() {
     const root = rootRef.current;
     if (!root) return;
 
-    gsap.registerPlugin(ScrollTrigger);
+    const stations = Array.from(root.querySelectorAll<HTMLElement>(".mdc-station"));
 
-    // Pin chaque station pendant +100vh — cinematic descent.
-    // Le contenu fade in au tiers d'entrée et fade out au tiers de sortie.
-    const stations = gsap.utils.toArray<HTMLElement>(".mdc-station");
-    const triggers: ScrollTrigger[] = [];
-
-    stations.forEach((station) => {
-      const inner = station.querySelector<HTMLElement>(".mdc-station-inner");
-      if (!inner) return;
-      const st = ScrollTrigger.create({
-        trigger: station,
-        start: "top top",
-        end: "+=100%",
-        pin: true,
-        pinSpacing: true,
-        onUpdate: (self) => {
-          const p = self.progress;
-          // fade in 0..0.15, hold 0.15..0.85, fade out 0.85..1
-          let opacity = 1;
-          let ty = 0;
-          if (p < 0.15) {
-            const k = p / 0.15;
-            opacity = k;
-            ty = (1 - k) * 24;
-          } else if (p > 0.85) {
-            const k = (p - 0.85) / 0.15;
-            opacity = 1 - k;
-            ty = -k * 24;
-          }
-          inner.style.opacity = String(opacity);
-          inner.style.transform = `translateY(${ty}px)`;
-        },
+    // Boucle rAF qui lit le scrollStore et met à jour l'opacité + le Y
+    // de chaque station en continu. Zéro re-render React.
+    let raf = 0;
+    const tick = () => {
+      const p = scrollStore.get().progress;
+      stations.forEach((st, i) => {
+        const center = (i + 0.5) / N_STATIONS;
+        const sigma = 0.7 / N_STATIONS;
+        // Visibilité gaussienne
+        const vis = gaussian(p, center, sigma);
+        // "Focus" : reste très visible entre 0.4 et 1, atténue vite en dessous
+        const focus = Math.max(0, (vis - 0.35) / 0.65);
+        st.style.opacity = String(focus);
+        // Léger translateY inversement lié au focus, borné à ±14px
+        const dy = (1 - focus) * (p < center ? 14 : -14);
+        st.style.transform = `translateY(${dy}px)`;
+        // Quand quasi-invisible, on retire du hit-test pour libérer le curseur
+        st.style.pointerEvents = focus > 0.15 ? "auto" : "none";
       });
-      triggers.push(st);
-    });
-
-    return () => {
-      triggers.forEach((t) => t.kill());
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      raf = requestAnimationFrame(tick);
     };
+    raf = requestAnimationFrame(tick);
+    // premier tick immédiat aussi
+    tick();
+    return () => cancelAnimationFrame(raf);
   }, [ready]);
 
   if (!ready) return null;
 
   return (
-    <div ref={rootRef}>
-      {/* 1. SEUIL — hero */}
-      <section className="mdc-station" style={stationStyle}>
-        <div className="mdc-station-inner" style={contentBox}>
+    <>
+      <HomeStage />
+
+      <div ref={rootRef}>
+        {/* 1. SEUIL */}
+        <section className="mdc-station" style={stationStyle}>
           <BreathReveal
             as="p"
             text="For those who carry everything inside."
-            style={{ ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)" }}
+            style={{ ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)", maxWidth: 900, textAlign: "center" }}
             stagger={110}
           />
-          {/* Hero video slot — à remplir plus tard */}
-          <div
-            aria-hidden
-            data-slot="hero-video"
-            style={{ display: "none" }}
-          />
-        </div>
-      </section>
+        </section>
 
-      {/* 2. PIERRE */}
-      <section className="mdc-station" style={stationStyle}>
-        <div className="mdc-station-inner" style={contentBox}>
+        {/* 2. PIERRE */}
+        <section className="mdc-station" style={stationStyle}>
           <BreathReveal
             as="p"
             text="There is a kind of tiredness that rest doesn't reach…"
-            style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 52px)" }}
+            style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 52px)", maxWidth: 900, textAlign: "center" }}
             stagger={100}
           />
-        </div>
-      </section>
+        </section>
 
-      {/* 3. MAISON — signature 3D house */}
-      <section className="mdc-station" style={{ ...stationStyle, padding: 0 }}>
-        <div className="mdc-station-inner" style={{
-          position: "absolute", inset: 0, width: "100%", height: "100%",
-        }}>
-          <HouseScene />
-        </div>
-      </section>
+        {/* 3. MAISON — pas de texte, la 3D parle. Station vide qui laisse
+             respirer la maison qu'HomeStage anime au même progrès. */}
+        <section className="mdc-station" style={stationStyle} aria-hidden />
 
-      {/* 4. TRAVAIL */}
-      <section className="mdc-station" style={stationStyle}>
-        <div className="mdc-station-inner" style={contentBox}>
-          <BreathReveal
-            as="p"
-            text="Ninety minutes. / Clothed. / In silence."
-            style={{
-              fontFamily: FONTS.higuen,
-              fontSize: "clamp(26px, 3.6vw, 40px)",
-              lineHeight: 1.55,
-              color: COLORS.brouFonce,
-              margin: 0,
-              textTransform: "uppercase",
-              letterSpacing: "0.14em",
-              fontWeight: 400,
-            }}
-            stagger={140}
-          />
-          <div style={{ marginTop: 48 }}>
-            <a href="/the-work" style={linkStyle}>The Work</a>
+        {/* 4. TRAVAIL */}
+        <section className="mdc-station" style={stationStyle}>
+          <div style={{ textAlign: "center" }}>
+            <BreathReveal
+              as="p"
+              text="Ninety minutes. / Clothed. / In silence."
+              style={displayCaps}
+              stagger={140}
+            />
+            <div style={{ marginTop: 48 }}>
+              <a href="/the-work" style={linkStyle}>The Work</a>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 5. KILIAN */}
-      <section className="mdc-station" style={stationStyle}>
-        <div className="mdc-station-inner" style={contentBox}>
-          <BreathReveal
-            as="p"
-            text="Chronic stress rarely looks like falling apart. It looks like being very good at your life."
-            style={{ ...displayItalic, fontSize: "clamp(24px, 3.8vw, 40px)" }}
-            stagger={70}
-          />
-          <div style={{ marginTop: 56 }}>
-            <a href="/practitioner" style={linkStyle}>Kilian</a>
+        {/* 5. KILIAN */}
+        <section className="mdc-station" style={stationStyle}>
+          <div style={{ textAlign: "center", maxWidth: 900 }}>
+            <BreathReveal
+              as="p"
+              text="Chronic stress rarely looks like falling apart. It looks like being very good at your life."
+              style={{ ...displayItalic, fontSize: "clamp(24px, 3.8vw, 40px)" }}
+              stagger={70}
+            />
+            <div style={{ marginTop: 56 }}>
+              <a href="/practitioner" style={linkStyle}>Kilian</a>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* 6. BEGIN */}
-      <section className="mdc-station" style={stationStyle}>
-        <div className="mdc-station-inner" style={contentBox}>
-          <BreathReveal
-            as="p"
-            text="You only have to arrive."
-            style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 56px)" }}
-            stagger={110}
-          />
-          <a
-            href="/begin"
-            style={{
-              display: "inline-block", marginTop: 56,
-              fontFamily: FONTS.prata, fontSize: 14, letterSpacing: "0.32em",
-              textTransform: "uppercase", textDecoration: "none",
-              color: COLORS.rouille, border: `1px solid ${COLORS.rouille}`,
-              padding: "18px 44px", borderRadius: 2,
-            }}
-          >
-            Begin
-          </a>
-        </div>
-      </section>
-
-      {/* padding pour libérer le dernier pin */}
-      <div style={{ height: "10vh" }} aria-hidden />
-    </div>
+        {/* 6. BEGIN */}
+        <section className="mdc-station" style={stationStyle}>
+          <div style={{ textAlign: "center" }}>
+            <BreathReveal
+              as="p"
+              text="You only have to arrive."
+              style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 56px)" }}
+              stagger={110}
+            />
+            <a
+              href="/begin"
+              style={{
+                display: "inline-block", marginTop: 56,
+                fontFamily: FONTS.prata, fontSize: 14, letterSpacing: "0.32em",
+                textTransform: "uppercase", textDecoration: "none",
+                color: COLORS.rouille, border: `1px solid ${COLORS.rouille}`,
+                padding: "18px 44px", borderRadius: 2,
+              }}
+            >
+              Begin
+            </a>
+          </div>
+        </section>
+      </div>
+    </>
   );
 }
-
-// Body inutilisé — silencier le linter unused import.
-void bodyStyle;
