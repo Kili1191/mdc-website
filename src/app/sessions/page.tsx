@@ -46,7 +46,7 @@ const dividerStyle: React.CSSProperties = {
 
 export const metadata = {
   title: "Sessions · Maison du Calme",
-  description: "Four private sessions at Maison du Calme. Silent, one-to-one, unhurried. From the ninety-minute threshold session to work offered by application only. Fees on request.",
+  description: "Four private sessions at Maison du Calme. Silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees on request.",
 };
 
 export default function SessionsPage() {
@@ -56,14 +56,14 @@ export default function SessionsPage() {
         <p style={eyebrowStyle}>Sessions</p>
         <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Four ways to set it down.</h1>
         <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
-          Each begins the same way, in silence, with nothing required of you.
+          Each begins the same way, in silence, fully clothed, with nothing required of you.
           Each leaves you somewhere different.
         </p>
         <p style={{ ...bodyStyle, marginTop: 40 }}>
           There is no menu here, in the way spas mean a menu. There are four rooms of work,
-          chosen for you in conversation, not from a list. What they share: warm oil,
-          silence, and no need to perform being well. What they change: the amount you are
-          holding when you leave.
+          chosen for you in conversation, not from a list. What they share: you are not
+          touched with oil, not asked to speak, not asked to perform being well. What they
+          change: the amount you are holding when you leave.
         </p>
         <p style={{ ...bodyStyle, marginTop: 24 }}>Fees are shared on request.</p>
 

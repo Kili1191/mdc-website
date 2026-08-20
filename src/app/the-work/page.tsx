@@ -38,7 +38,7 @@ const dividerStyle: React.CSSProperties = {
 
 export const metadata = {
   title: "The Work · Maison du Calme",
-  description: "What actually happens at Maison du Calme. An honest account of the silent, unhurried session, told in what you feel, not how it is done. Sixty to ninety minutes. You leave lighter.",
+  description: "What actually happens at Maison du Calme. An honest account of the silent, fully-clothed session, told in what you feel, not how it is done. Sixty to ninety minutes. You leave lighter.",
 };
 
 export default function TheWorkPage() {
@@ -58,7 +58,8 @@ export default function TheWorkPage() {
               you always answer, and that answer is the thing we are here to get underneath.
             </p>
             <p style={bodyStyle}>
-              You lie down. The room is warm and quiet, and it stays quiet. There is no
+              You lie down, dressed. The room is quiet, and it stays quiet. Nothing is
+              done <em>to</em> you in the way that word usually means. There is no oil, no
               conversation, no performance of relaxation. For a while, not much seems to
               be happening at all.
             </p>
