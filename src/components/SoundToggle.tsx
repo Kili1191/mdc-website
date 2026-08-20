@@ -28,6 +28,7 @@ export default function SoundToggle() {
     const a = audioRef.current;
     if (!a) return;
 
+    const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
     const cancelFade = () => {
       if (fadeRafRef.current) {
         cancelAnimationFrame(fadeRafRef.current);
@@ -37,10 +38,11 @@ export default function SoundToggle() {
     const fadeTo = (target: number, done?: () => void) => {
       cancelFade();
       const start = performance.now();
-      const from = a.volume;
+      const from = clamp01(a.volume);
+      const to = clamp01(target);
       const step = (now: number) => {
         const p = Math.min(1, (now - start) / FADE_MS);
-        a.volume = from + (target - from) * p;
+        a.volume = clamp01(from + (to - from) * p);
         if (p < 1) fadeRafRef.current = requestAnimationFrame(step);
         else { fadeRafRef.current = null; done?.(); }
       };
@@ -48,7 +50,7 @@ export default function SoundToggle() {
     };
 
     if (on) {
-      a.volume = a.volume || 0;
+      a.volume = clamp01(a.volume);
       a.play().then(() => fadeTo(0.35)).catch(() => { /* audio absent / user-gesture requis */ });
       localStorage.setItem(STORAGE_KEY, "1");
     } else {
