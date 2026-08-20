@@ -18,9 +18,9 @@ const HALO_LERP = 0.14;
 const DOT_BASE = 15;          // rayon point net (30px de diamètre)
 const DOT_BREATH = 2;         // respiration nette
 
-const HALO_BASE = 48;         // rayon halo
-const HALO_BREATH = 8;
-const HALO_HOVER = 24;
+const HALO_BASE = 28;         // rayon halo (56px diamètre)
+const HALO_BREATH = 4;
+const HALO_HOVER = 16;
 
 export default function BreathingCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -91,7 +91,7 @@ export default function BreathingCursor() {
       haloPos.x += (mouse.x - haloPos.x) * HALO_LERP;
       haloPos.y += (mouse.y - haloPos.y) * HALO_LERP;
       const hr = HALO_BASE + breath * HALO_BREATH + hover * HALO_HOVER;
-      const haloAlpha = 0.45 + breath * 0.18;
+      const haloAlpha = 0.55 + breath * 0.15;
       halo.style.transform = `translate3d(${haloPos.x - hr}px, ${haloPos.y - hr}px, 0)`;
       halo.style.width = halo.style.height = `${hr * 2}px`;
       halo.style.opacity = String(haloAlpha);
@@ -118,7 +118,7 @@ export default function BreathingCursor() {
           position: "fixed", left: 0, top: 0, zIndex: 9998,
           pointerEvents: "none",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(165,90,62,0.45) 0%, rgba(165,90,62,0.15) 55%, rgba(165,90,62,0) 82%)",
+          background: "radial-gradient(circle, rgba(165,90,62,0.22) 0%, rgba(165,90,62,0.06) 55%, rgba(165,90,62,0) 80%)",
           willChange: "transform, width, height, opacity",
         }}
       />
