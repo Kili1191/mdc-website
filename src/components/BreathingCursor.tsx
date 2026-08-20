@@ -2,37 +2,38 @@
 
 import { useEffect, useRef } from "react";
 
-// Curseur custom :
-// - Dot : point Rouille, position mise à jour SYNCHRONE dans mousemove
-//   (aucun lag rAF). Taille animée via transform:scale() — GPU pur, pas
-//   de reflow, jamais saccadé.
-// - Halo : anneau flou plus grand, position lerpée en rAF (sillage
-//   élégant), taille aussi via scale().
-// - Détection hover en rAF (throttlée) : elementFromPoint est coûteux,
-//   pas dans le pipeline mousemove.
+// Deux couches, deux vitesses :
+// - Dot : outer div positionné en synchrone dans mousemove (translate3d
+//   pur, aucun lag). Inner div appliqué le scale du souffle en GPU.
+// - Halo : outer positionné avec lerp en rAF, inner scale du souffle.
+// Séparer position et scale sur deux éléments évite tout conflit de
+// composition de transform (Safari est chiant sur var() imbriqués
+// dans un même transform).
 
 const BREATH_MS = 5500;
 const HALO_LERP = 0.14;
 
-const DOT_BASE = 15;
-const DOT_BREATH = 2;
-const DOT_MAX = DOT_BASE + DOT_BREATH; // rayon fixe DOM, scale animé
+const DOT_MIN = 12;   // rayon dot au fond du souffle
+const DOT_MAX = 18;   // rayon dot au pic du souffle
 
-const HALO_BASE = 28;
-const HALO_BREATH = 4;
-const HALO_HOVER = 16;
-const HALO_MAX = HALO_BASE + HALO_BREATH + HALO_HOVER; // rayon fixe DOM
+const HALO_MIN = 24;
+const HALO_MAX = 34;
+const HALO_HOVER = 18;
 
 export default function BreathingCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const haloRef = useRef<HTMLDivElement>(null);
+  const dotWrapRef = useRef<HTMLDivElement>(null);
+  const dotInnerRef = useRef<HTMLDivElement>(null);
+  const haloWrapRef = useRef<HTMLDivElement>(null);
+  const haloInnerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!window.matchMedia("(pointer: fine)").matches) return;
 
-    const dot = dotRef.current;
-    const halo = haloRef.current;
-    if (!dot || !halo) return;
+    const dotWrap = dotWrapRef.current;
+    const dotInner = dotInnerRef.current;
+    const haloWrap = haloWrapRef.current;
+    const haloInner = haloInnerRef.current;
+    if (!dotWrap || !dotInner || !haloWrap || !haloInner) return;
 
     const style = document.createElement("style");
     style.textContent = `html, body, a, button, input, textarea, select { cursor: none !important; }`;
@@ -45,24 +46,25 @@ export default function BreathingCursor() {
     let raf = 0;
     const t0 = performance.now();
 
-    dot.style.setProperty("--mx", "-1000px");
-    dot.style.setProperty("--my", "-1000px");
-    dot.style.setProperty("--sc", "1");
-    halo.style.setProperty("--sc", "1");
-    halo.style.transform = "translate3d(-1000px, -1000px, 0) translate(-50%, -50%) scale(1)";
+    // La taille DOM est fixée au max — on n'anime QUE la scale, jamais
+    // width/height (pas de layout par frame).
+    dotInner.style.width = `${DOT_MAX * 2}px`;
+    dotInner.style.height = `${DOT_MAX * 2}px`;
+    haloInner.style.width = `${(HALO_MAX + HALO_HOVER) * 2}px`;
+    haloInner.style.height = `${(HALO_MAX + HALO_HOVER) * 2}px`;
+
+    dotWrap.style.transform = "translate3d(-1000px, -1000px, 0)";
+    haloWrap.style.transform = "translate3d(-1000px, -1000px, 0)";
 
     const onMove = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      // Position dot : synchrone, écrit dans les CSS vars — transform
-      // pur, aucun reflow, aucun lag rAF.
-      dot.style.setProperty("--mx", `${e.clientX}px`);
-      dot.style.setProperty("--my", `${e.clientY}px`);
+      // Position synchrone du dot — aucun rAF de latence
+      dotWrap.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
     };
     const onLeave = () => {
       mouse.x = -1000; mouse.y = -1000;
-      dot.style.setProperty("--mx", "-1000px");
-      dot.style.setProperty("--my", "-1000px");
+      dotWrap.style.transform = "translate3d(-1000px, -1000px, 0)";
     };
 
     window.addEventListener("mousemove", onMove, { passive: true });
@@ -82,22 +84,23 @@ export default function BreathingCursor() {
       const t = (now - t0) / BREATH_MS;
       const breath = Math.sin(t * Math.PI * 2) * 0.5 + 0.5;
 
-      // Dot : SCALE au lieu de width/height — GPU only.
-      const dr = DOT_BASE + breath * DOT_BREATH;
+      // Dot inner scale : respiration DOT_MIN → DOT_MAX
+      const dr = DOT_MIN + breath * (DOT_MAX - DOT_MIN);
       const dotScale = dr / DOT_MAX;
       const dotAlpha = (0.75 + breath * 0.15) * (1 - hover * 0.5);
-      dot.style.setProperty("--sc", String(dotScale));
-      dot.style.opacity = String(dotAlpha);
+      dotInner.style.transform = `scale(${dotScale})`;
+      dotInner.style.opacity = String(dotAlpha);
 
-      // Halo : lerp position + scale
+      // Halo : position lerp en rAF + inner scale
       haloPos.x += (mouse.x - haloPos.x) * HALO_LERP;
       haloPos.y += (mouse.y - haloPos.y) * HALO_LERP;
-      const hr = HALO_BASE + breath * HALO_BREATH + hover * HALO_HOVER;
-      const haloScale = hr / HALO_MAX;
+      haloWrap.style.transform = `translate3d(${haloPos.x}px, ${haloPos.y}px, 0)`;
+
+      const hr = HALO_MIN + breath * (HALO_MAX - HALO_MIN) + hover * HALO_HOVER;
+      const haloScale = hr / (HALO_MAX + HALO_HOVER);
       const haloAlpha = 0.55 + breath * 0.15;
-      halo.style.transform =
-        `translate3d(${haloPos.x}px, ${haloPos.y}px, 0) translate(-50%, -50%) scale(${haloScale})`;
-      halo.style.opacity = String(haloAlpha);
+      haloInner.style.transform = `scale(${haloScale})`;
+      haloInner.style.opacity = String(haloAlpha);
 
       raf = requestAnimationFrame(tick);
     };
@@ -111,41 +114,41 @@ export default function BreathingCursor() {
     };
   }, []);
 
+  const wrapBase: React.CSSProperties = {
+    position: "fixed", left: 0, top: 0,
+    pointerEvents: "none",
+    willChange: "transform",
+  };
+  const innerBase: React.CSSProperties = {
+    position: "absolute", left: "50%", top: "50%",
+    marginLeft: "-50%", marginTop: "-50%",
+    borderRadius: "50%",
+    willChange: "transform, opacity",
+    transformOrigin: "center",
+  };
+
   return (
     <>
-      {/* Halo : taille DOM fixée = 2 * HALO_MAX, transformée en scale */}
-      <div
-        ref={haloRef}
-        aria-hidden
-        style={{
-          position: "fixed", left: 0, top: 0, zIndex: 9998,
-          pointerEvents: "none",
-          width: `${HALO_MAX * 2}px`,
-          height: `${HALO_MAX * 2}px`,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(165,90,62,0.22) 0%, rgba(165,90,62,0.06) 55%, rgba(165,90,62,0) 80%)",
-          transform: "translate3d(-1000px, -1000px, 0) translate(-50%, -50%) scale(1)",
-          willChange: "transform, opacity",
-        }}
-      />
-      {/* Dot : taille DOM fixée = 2 * DOT_MAX, transformée en scale */}
-      <div
-        ref={dotRef}
-        aria-hidden
-        style={{
-          position: "fixed", left: 0, top: 0, zIndex: 9999,
-          pointerEvents: "none",
-          width: `${DOT_MAX * 2}px`,
-          height: `${DOT_MAX * 2}px`,
-          background: "#A55A3E",
-          borderRadius: "50%",
-          boxShadow: "0 0 6px rgba(165,90,62,0.45)",
-          transform:
-            "translate3d(var(--mx, -1000px), var(--my, -1000px), 0) translate(-50%, -50%) scale(var(--sc, 1))",
-          willChange: "transform, opacity",
-        }}
-      />
+      <div ref={haloWrapRef} aria-hidden style={{ ...wrapBase, zIndex: 9998 }}>
+        <div
+          ref={haloInnerRef}
+          style={{
+            ...innerBase,
+            background:
+              "radial-gradient(circle, rgba(165,90,62,0.22) 0%, rgba(165,90,62,0.06) 55%, rgba(165,90,62,0) 80%)",
+          }}
+        />
+      </div>
+      <div ref={dotWrapRef} aria-hidden style={{ ...wrapBase, zIndex: 9999 }}>
+        <div
+          ref={dotInnerRef}
+          style={{
+            ...innerBase,
+            background: "#A55A3E",
+            boxShadow: "0 0 6px rgba(165,90,62,0.45)",
+          }}
+        />
+      </div>
     </>
   );
 }
