@@ -47,6 +47,9 @@ export default function BreathingCursor() {
     let hoverTarget = 0;
     let raf = 0;
     const t0 = performance.now();
+    // "activity" : 1 quand la souris bouge, décroît quand elle s'arrête.
+    // Sert à faire fondre le halo sous la souris quand on est immobile.
+    let activity = 0;
 
     // La taille DOM est fixée au max — on n'anime QUE la scale, jamais
     // width/height (pas de layout par frame).
@@ -63,6 +66,8 @@ export default function BreathingCursor() {
       mouse.y = e.clientY;
       // Position synchrone du dot — aucun rAF de latence
       dotWrap.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+      // Signal d'activité : le halo est visible quand ça bouge
+      activity = 1;
     };
     const onLeave = () => {
       mouse.x = -1000; mouse.y = -1000;
@@ -93,6 +98,11 @@ export default function BreathingCursor() {
       dotInner.style.transform = `scale(${dotScale})`;
       dotInner.style.opacity = String(dotAlpha);
 
+      // Décroissance de l'activité — quand la souris ne bouge plus,
+      // le halo se glisse sous elle (lerp continue) puis fond à zéro.
+      // Décay 0.93/frame → demie-vie ~180ms, quasi 0 après ~700ms.
+      activity *= 0.93;
+
       // Halo : position lerp en rAF + inner scale
       haloPos.x += (mouse.x - haloPos.x) * HALO_LERP;
       haloPos.y += (mouse.y - haloPos.y) * HALO_LERP;
@@ -100,7 +110,9 @@ export default function BreathingCursor() {
 
       const hr = HALO_MIN + breath * (HALO_MAX - HALO_MIN) + hover * HALO_HOVER;
       const haloScale = hr / (HALO_MAX + HALO_HOVER);
-      const haloAlpha = 0.55 + breath * 0.15;
+      // Alpha final multiplié par l'activité : le halo devient invisible
+      // à l'arrêt (mais reste visible sous le hover pour marquer la cible).
+      const haloAlpha = (0.55 + breath * 0.15) * Math.max(activity, hover * 0.6);
       haloInner.style.transform = `scale(${haloScale})`;
       haloInner.style.opacity = String(haloAlpha);
 
