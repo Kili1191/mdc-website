@@ -130,7 +130,7 @@ export default function Home() {
           <div style={{ textAlign: "center" }}>
             <BreathReveal
               as="p"
-              text="Ninety minutes. / Clothed. / In silence."
+              text="Ninety minutes. / Warm oil. / In silence."
               style={displayCaps}
               stagger={140}
             />
@@ -160,7 +160,7 @@ export default function Home() {
           <div style={{ textAlign: "center" }}>
             <BreathReveal
               as="p"
-              text="You only have to arrive."
+              text="Arriving is enough."
               style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 56px)" }}
               stagger={110}
             />
