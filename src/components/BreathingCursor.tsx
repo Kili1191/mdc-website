@@ -2,37 +2,44 @@
 
 import { useEffect, useRef } from "react";
 
-// Curseur custom : anneau Rouille qui suit la souris avec un lag doux
-// et respire clairement au rythme du souffle (5.5s), plus un petit
-// point central qui pulse au même rythme pour marquer la présence.
-// Sur hover d'une cible interactive, l'anneau grossit.
-// Masqué sur touch devices.
+// Curseur custom : deux couches à deux vitesses.
+// - Dot : petit point Rouille net, suit la souris presque instantanément
+//   (LERP haut) → précision.
+// - Halo : anneau flou plus grand, traîne avec beaucoup de retard
+//   (LERP bas) → élégance, sillage.
+// Les deux respirent à 5.5s : légère variation d'opacité + halo qui
+// pulse sur son rayon. Aucun bord dur — le halo est un box-shadow flou,
+// pas un border strict, pour une lecture douce sur le marbre.
 
 const BREATH_MS = 5500;
-const LERP = 0.22;
-const BASE = 12;         // rayon repos de l'anneau
-const BREATH_AMP = 3.5;  // amplitude de respiration (visible)
-const HOVER_AMP = 6;     // grossissement sur cible interactive
-const DOT_BASE = 2.2;    // rayon du point central au repos
-const DOT_AMP = 0.8;     // respiration du point
+const DOT_LERP = 0.32;
+const HALO_LERP = 0.11;
+
+const DOT_BASE = 2.5;         // rayon point net
+const DOT_BREATH = 0.5;       // respiration très fine
+
+const HALO_BASE = 16;         // rayon halo
+const HALO_BREATH = 2.5;      // respiration visible mais douce
+const HALO_HOVER = 10;        // grossissement sur cible
 
 export default function BreathingCursor() {
-  const ringRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
+  const haloRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!window.matchMedia("(pointer: fine)").matches) return;
 
-    const ring = ringRef.current;
     const dot = dotRef.current;
-    if (!ring || !dot) return;
+    const halo = haloRef.current;
+    if (!dot || !halo) return;
 
     const style = document.createElement("style");
     style.textContent = `html, body, a, button, input, textarea, select { cursor: none !important; }`;
     document.head.appendChild(style);
 
-    const mouse = { x: -50, y: -50 };
-    const pos = { x: -50, y: -50 };
+    const mouse = { x: -100, y: -100 };
+    const dotPos = { x: -100, y: -100 };
+    const haloPos = { x: -100, y: -100 };
     let hover = 0;
     let hoverTarget = 0;
     let raf = 0;
@@ -44,32 +51,34 @@ export default function BreathingCursor() {
       const el = document.elementFromPoint(e.clientX, e.clientY);
       hoverTarget = el && el.closest("a, button, input, textarea, select, [role=button]") ? 1 : 0;
     };
-    const onLeave = () => { mouse.x = -50; mouse.y = -50; };
+    const onLeave = () => { mouse.x = -100; mouse.y = -100; };
 
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseleave", onLeave);
 
     const tick = () => {
-      pos.x += (mouse.x - pos.x) * LERP;
-      pos.y += (mouse.y - pos.y) * LERP;
-      hover += (hoverTarget - hover) * 0.14;
+      dotPos.x += (mouse.x - dotPos.x) * DOT_LERP;
+      dotPos.y += (mouse.y - dotPos.y) * DOT_LERP;
+      haloPos.x += (mouse.x - haloPos.x) * HALO_LERP;
+      haloPos.y += (mouse.y - haloPos.y) * HALO_LERP;
+      hover += (hoverTarget - hover) * 0.10;
 
       const t = (performance.now() - t0) / BREATH_MS;
-      const breath = Math.sin(t * Math.PI * 2) * 0.5 + 0.5; // 0..1
+      const breath = Math.sin(t * Math.PI * 2) * 0.5 + 0.5;
 
-      // Anneau
-      const r = BASE + breath * BREATH_AMP + hover * HOVER_AMP;
-      const ringAlpha = 0.75 + breath * 0.2;
-      ring.style.transform = `translate3d(${pos.x - r}px, ${pos.y - r}px, 0)`;
-      ring.style.width = ring.style.height = `${r * 2}px`;
-      ring.style.opacity = String(ringAlpha);
-
-      // Point central : pulse plus visible au fond du souffle
-      const dr = DOT_BASE + breath * DOT_AMP;
-      const dotAlpha = (0.55 + breath * 0.35) * (1 - hover * 0.6);
-      dot.style.transform = `translate3d(${pos.x - dr}px, ${pos.y - dr}px, 0)`;
+      // Point net
+      const dr = DOT_BASE + breath * DOT_BREATH;
+      const dotAlpha = (0.75 + breath * 0.15) * (1 - hover * 0.5);
+      dot.style.transform = `translate3d(${dotPos.x - dr}px, ${dotPos.y - dr}px, 0)`;
       dot.style.width = dot.style.height = `${dr * 2}px`;
       dot.style.opacity = String(dotAlpha);
+
+      // Halo flou
+      const hr = HALO_BASE + breath * HALO_BREATH + hover * HALO_HOVER;
+      const haloAlpha = 0.45 + breath * 0.18;
+      halo.style.transform = `translate3d(${haloPos.x - hr}px, ${haloPos.y - hr}px, 0)`;
+      halo.style.width = halo.style.height = `${hr * 2}px`;
+      halo.style.opacity = String(haloAlpha);
 
       raf = requestAnimationFrame(tick);
     };
@@ -85,18 +94,19 @@ export default function BreathingCursor() {
 
   return (
     <>
+      {/* Halo flou, arrière-plan, traîne */}
       <div
-        ref={ringRef}
+        ref={haloRef}
         aria-hidden
         style={{
-          position: "fixed", left: 0, top: 0, zIndex: 9999,
+          position: "fixed", left: 0, top: 0, zIndex: 9998,
           pointerEvents: "none",
-          border: "1.5px solid rgba(165,90,62,0.9)",
           borderRadius: "50%",
-          background: "transparent",
+          background: "radial-gradient(circle, rgba(165,90,62,0.22) 0%, rgba(165,90,62,0.06) 55%, rgba(165,90,62,0) 78%)",
           willChange: "transform, width, height, opacity",
         }}
       />
+      {/* Point net, premier plan */}
       <div
         ref={dotRef}
         aria-hidden
@@ -105,6 +115,7 @@ export default function BreathingCursor() {
           pointerEvents: "none",
           background: "#A55A3E",
           borderRadius: "50%",
+          boxShadow: "0 0 3px rgba(165,90,62,0.35)",
           willChange: "transform, width, height, opacity",
         }}
       />
