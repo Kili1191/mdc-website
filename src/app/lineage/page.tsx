@@ -1,4 +1,3 @@
-import MarbleBackground from "@/components/MarbleBackground";
 import { COLORS, FONTS } from "@/styles/tokens";
 
 const pageStyle: React.CSSProperties = {
@@ -45,9 +44,7 @@ export const metadata = {
 
 export default function LineagePage() {
   return (
-    <>
-      <MarbleBackground motif="/motif-bodhi.jpg" />
-      <main style={pageStyle}>
+    <main style={pageStyle}>
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Lineage</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Where the work comes from.</h1>
@@ -116,8 +113,7 @@ export default function LineagePage() {
           <p style={{ ...microStyle, marginTop: 48 }}>
             If it matters to you, ask in person. <a href="/begin" style={{ color: COLORS.rouille, textDecoration: "none", borderBottom: `1px solid ${COLORS.rouille}`, paddingBottom: 2 }}>Contact</a>
           </p>
-        </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

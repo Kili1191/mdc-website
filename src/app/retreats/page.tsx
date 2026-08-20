@@ -1,4 +1,3 @@
-import MarbleBackground from "@/components/MarbleBackground";
 import { COLORS, FONTS } from "@/styles/tokens";
 
 const pageStyle: React.CSSProperties = {
@@ -37,9 +36,7 @@ export const metadata = {
 
 export default function RetreatsPage() {
   return (
-    <>
-      <MarbleBackground motif="/motif-compo.jpg" />
-      <main style={pageStyle}>
+    <main style={pageStyle}>
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Retreats</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
@@ -87,8 +84,7 @@ export default function RetreatsPage() {
             activities, no group of strangers. If that is what you are looking for, this
             is not it, and we would rather say so.
           </p>
-        </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

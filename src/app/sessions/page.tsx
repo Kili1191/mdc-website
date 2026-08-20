@@ -1,4 +1,3 @@
-import MarbleBackground from "@/components/MarbleBackground";
 import { COLORS, FONTS } from "@/styles/tokens";
 
 const pageStyle: React.CSSProperties = {
@@ -52,9 +51,7 @@ export const metadata = {
 
 export default function SessionsPage() {
   return (
-    <>
-      <MarbleBackground />
-      <main style={pageStyle}>
+    <main style={pageStyle}>
       <div style={containerStyle}>
         <p style={eyebrowStyle}>Sessions</p>
         <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Four ways to set it down.</h1>
@@ -190,7 +187,6 @@ export default function SessionsPage() {
           <p style={{ ...microStyle, marginTop: 40 }}>By arrangement</p>
         </div>
       </div>
-      </main>
-    </>
+    </main>
   );
 }

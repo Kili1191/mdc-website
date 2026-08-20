@@ -1,4 +1,3 @@
-import MarbleBackground from "@/components/MarbleBackground";
 import { COLORS, FONTS } from "@/styles/tokens";
 
 const pageStyle: React.CSSProperties = {
@@ -42,9 +41,7 @@ export const metadata = {
 
 export default function PractitionerPage() {
   return (
-    <>
-      <MarbleBackground motif="/motif-bodhi.jpg" />
-      <main style={pageStyle}>
+    <main style={pageStyle}>
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Practitioner</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Kilian.</h1>
@@ -99,8 +96,7 @@ export default function PractitionerPage() {
             person for whom that matters, you already understand why it is the first thing
             we say and the last.
           </p>
-        </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

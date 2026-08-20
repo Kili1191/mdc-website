@@ -1,4 +1,3 @@
-import MarbleBackground from "@/components/MarbleBackground";
 import BeginForm from "./BeginForm";
 import { COLORS, FONTS } from "@/styles/tokens";
 
@@ -47,9 +46,7 @@ export const metadata = {
 
 export default function BeginPage() {
   return (
-    <>
-      <MarbleBackground motif="/motif-compo.jpg" />
-      <main style={pageStyle}>
+    <main style={pageStyle}>
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Begin</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Begin.</h1>
@@ -91,8 +88,7 @@ export default function BeginPage() {
             What you write here is read by Kilian alone and held privately. It is never
             shared, never shown, and no client is ever named. What you carry stays yours.
           </p>
-        </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

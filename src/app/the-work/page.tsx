@@ -1,4 +1,3 @@
-import MarbleBackground from "@/components/MarbleBackground";
 import { COLORS, FONTS } from "@/styles/tokens";
 
 const pageStyle: React.CSSProperties = {
@@ -44,9 +43,7 @@ export const metadata = {
 
 export default function TheWorkPage() {
   return (
-    <>
-      <MarbleBackground motif="/motif-bodhi.jpg" />
-      <main style={pageStyle}>
+    <main style={pageStyle}>
         <div style={containerStyle}>
           <p style={eyebrowStyle}>The Work</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>What actually happens.</h1>
@@ -116,8 +113,7 @@ export default function TheWorkPage() {
           >
             Begin
           </a>
-        </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

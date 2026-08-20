@@ -3,9 +3,14 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-// Marbre + motif révélé au curseur, en fond fixe sur les pages internes.
+// Marbre + motif révélé au curseur, en fond fixe.
 // Version allégée d'AlbatreHero : pas de scroll panels, pas de CTA, un seul motif.
-export default function MarbleBackground({ motif = "/motif-compo.jpg" }: { motif?: string }) {
+// `calme={true}` réduit l'intensité de la révélation pour les pages de contenu
+// (VISION §1 : marbre calme/apaisé sur les pages internes, lisibilité du texte).
+export default function MarbleBackground({
+  motif = "/motif-compo.jpg",
+  calme = false,
+}: { motif?: string; calme?: boolean }) {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -74,12 +79,13 @@ export default function MarbleBackground({ motif = "/motif-compo.jpg" }: { motif
         uHouseCenter: { value: new THREE.Vector2(0.5, 0.80) },
         uHouseInner: { value: 0.11 },
         uHouseOuter: { value: 0.24 },
+        uEffectScale: { value: calme ? 0.35 : 1.0 },
       },
       vertexShader: `varying vec2 vUv; void main(){vUv=uv; gl_Position=vec4(position,1.0);}`,
       fragmentShader: `
         precision highp float;
         uniform sampler2D uMotif,uVeil,uTrail;
-        uniform float uZoom,uTime,uReflet,uIrisation;
+        uniform float uZoom,uTime,uReflet,uIrisation,uEffectScale;
         uniform vec2 uScreenRes,uRes;
         uniform vec2 uHouseCenter;
         uniform float uHouseInner,uHouseOuter;
@@ -100,6 +106,7 @@ export default function MarbleBackground({ motif = "/motif-compo.jpg" }: { motif
           vec2 hd = uv - uHouseCenter;
           hd.x *= uRes.x / uRes.y;
           float houseMask = smoothstep(uHouseInner, uHouseOuter, length(hd));
+          r *= uEffectScale;
 
           vec2 flow = vec2(sin(uv.y*16.0+uTime*1.3), cos(uv.x*16.0+uTime*1.1))*0.004*r*houseMask;
           vec2 uvMotif = uv + flow;

@@ -1,4 +1,3 @@
-import MarbleBackground from "@/components/MarbleBackground";
 import { COLORS, FONTS } from "@/styles/tokens";
 
 const pageStyle: React.CSSProperties = {
@@ -41,9 +40,7 @@ export const metadata = {
 
 export default function NotesPage() {
   return (
-    <>
-      <MarbleBackground motif="/motif-compo.jpg" />
-      <main style={pageStyle}>
+    <main style={pageStyle}>
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Notes</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Notes.</h1>
@@ -102,8 +99,7 @@ export default function NotesPage() {
             it. Written for people who have tried thinking their way out and found the
             thinking was part of the problem.
           </p>
-        </div>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

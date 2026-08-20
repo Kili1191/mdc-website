@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import IntroOverlay from "@/components/IntroOverlay";
 import Nav from "@/components/Nav";
+import SiteMarble from "@/components/SiteMarble";
 
 const prata = localFont({
   src: "../../public/fonts/Prata-Regular.ttf",
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${prata.variable} ${higuen.variable} ${greatVibes.variable}`}>
       <body style={{ margin: 0, minHeight: "100vh", background: "#EDE4D0", color: "#4A3B2A" }}>
         <IntroOverlay />
+        <SiteMarble />
         <Nav />
         {children}
       </body>
