@@ -41,10 +41,10 @@ function HouseChoreo() {
     g.position.z = clampedT * 6;
     g.position.y = -clampedT * 0.4;
 
-    // Scale : au repos loin (0.35), s'ouvre à ~1.0 au centre de la
-    // station — la maison en traits Rouille apparaît en entier, occupe
-    // ~65% de la hauteur de viewport sans jamais déborder.
-    const s = 0.35 + easeInOutQuad(vis) * 0.65;
+    // Scale : au repos loin (0.28), s'ouvre à ~0.62 au centre de la
+    // station — la maison en traits reste délicate, jamais ne remplit
+    // le viewport. Traits fins de contour uniquement.
+    const s = 0.28 + easeInOutQuad(vis) * 0.34;
     g.scale.setScalar(s);
 
     // Rotation : elle nous fait face en arrivant, tourne quand on passe
