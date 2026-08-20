@@ -71,6 +71,24 @@ export default function DepthImageLayer({
     const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 10);
     cam.position.z = 1;
 
+    // Position "curseur virtuel" pour la parallaxe (souris + gyro).
+    // pt en 0..1, lerp doux — la pierre suit l'œil sans jamais l'attraper.
+    const pt = { x: 0.5, y: 0.5 };
+    const ptTarget = { x: 0.5, y: 0.5 };
+    const onPointer = (e: PointerEvent) => {
+      ptTarget.x = e.clientX / window.innerWidth;
+      ptTarget.y = e.clientY / window.innerHeight;
+    };
+    const onOrient = (e: DeviceOrientationEvent) => {
+      if (e.gamma === null || e.beta === null) return;
+      ptTarget.x = 0.5 + Math.max(-1, Math.min(1, e.gamma / 30)) * 0.5;
+      ptTarget.y = 0.5 + Math.max(-1, Math.min(1, (e.beta - 45) / 30)) * 0.5;
+    };
+    window.addEventListener("pointermove", onPointer, { passive: true });
+    if ("DeviceOrientationEvent" in window) {
+      window.addEventListener("deviceorientation", onOrient);
+    }
+
     // Try loading real assets. On erreur, on garde les placeholders.
     let imageTex: THREE.Texture | null = null;
     let depthTex: THREE.Texture | null = null;
@@ -128,11 +146,14 @@ export default function DepthImageLayer({
         uProgress: { value: scrollProgress },
         uParallax: { value: parallax },
         uDisplace: { value: displacement },
+        uPointer: { value: new THREE.Vector2(0.5, 0.5) },
       },
       vertexShader: `
         uniform sampler2D uDepth;
         uniform float uHasDepth, uDisplace, uProgress;
+        uniform vec2 uPointer;
         varying vec2 vUv;
+        varying float vDepth;
 
         // Value noise fallback si pas de depth map
         float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }
@@ -151,9 +172,14 @@ export default function DepthImageLayer({
         void main(){
           vUv = uv;
           float d = mix(fbm(uv*4.0), texture2D(uDepth, uv).r, uHasDepth);
+          vDepth = d;
           vec3 p = position;
           // Le displacement s'atténue avec la distance de la caméra (progress).
           p.z += (d - 0.5) * uDisplace * (0.6 + 0.8 * (1.0 - abs(uProgress)));
+          // Parallaxe : les vertices avec plus de profondeur bougent moins
+          // — la pierre tourne la tête vers l'œil.
+          vec2 pShift = (uPointer - 0.5) * 0.06;
+          p.xy += pShift * (0.5 - (d - 0.5));
           gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
         }
       `,
@@ -162,7 +188,9 @@ export default function DepthImageLayer({
         uniform sampler2D uImage;
         uniform float uHasImage, uState, uTime, uProgress, uParallax;
         uniform vec3 uColA, uColB;
+        uniform vec2 uPointer;
         varying vec2 vUv;
+        varying float vDepth;
 
         float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }
         float vnoise(vec2 p){
@@ -221,8 +249,9 @@ export default function DepthImageLayer({
 
         void main(){
           vec2 uv = vUv;
-          // Parallax léger piloté par la progression scroll
+          // Parallax scroll (vertical) + parallaxe fine souris/gyro
           uv += vec2(uParallax * 0.0, uParallax * uProgress * 0.6);
+          uv += (uPointer - 0.5) * 0.02 * (0.6 + vDepth * 0.8);
           vec3 col = mix(placeholder(uv), texture2D(uImage, uv).rgb, uHasImage);
           gl_FragColor = vec4(col, 1.0);
         }
@@ -237,6 +266,9 @@ export default function DepthImageLayer({
       const t = clock.getElapsedTime();
       mat.uniforms.uTime.value = t;
       mat.uniforms.uProgress.value = progressRef.current;
+      pt.x += (ptTarget.x - pt.x) * 0.06;
+      pt.y += (ptTarget.y - pt.y) * 0.06;
+      mat.uniforms.uPointer.value.set(pt.x, pt.y);
       renderer.render(scene, cam);
       raf = requestAnimationFrame(animate);
     };
@@ -248,6 +280,8 @@ export default function DepthImageLayer({
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("deviceorientation", onOrient);
       geo.dispose(); mat.dispose();
       imageTex?.dispose(); depthTex?.dispose();
       renderer.dispose();
