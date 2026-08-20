@@ -2,6 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 
 // Marbre + motif révélé au curseur, en fond fixe.
 // Version allégée d'AlbatreHero : pas de scroll panels, pas de CTA, un seul motif.
@@ -153,6 +156,40 @@ export default function MarbleBackground({
     });
     scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), finalMat));
 
+    // Brique 3 : grain + vignette cinématographique en post-processing plein écran.
+    // Grain animé (film), vignette douce qui referme les bords sur le centre.
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, cam));
+    const filmPass = new ShaderPass({
+      uniforms: {
+        tDiffuse: { value: null },
+        uTime: { value: 0 },
+        uRes: { value: new THREE.Vector2(W(), H()) },
+        uGrain: { value: 0.028 },
+        uVignette: { value: 0.32 },
+      },
+      vertexShader: `varying vec2 vUv; void main(){vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}`,
+      fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform float uTime,uGrain,uVignette;
+        uniform vec2 uRes;
+        varying vec2 vUv;
+        float grainHash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233)))*43758.5453); }
+        void main(){
+          vec4 col = texture2D(tDiffuse, vUv);
+          // grain animé — se renouvelle chaque frame
+          float g = grainHash(vUv * uRes + uTime * 60.0) - 0.5;
+          col.rgb += g * uGrain;
+          // vignette douce, centrée
+          vec2 uv = vUv - 0.5;
+          float vig = smoothstep(0.90, 0.30, length(uv));
+          col.rgb *= mix(1.0 - uVignette, 1.0, vig);
+          gl_FragColor = col;
+        }
+      `,
+    });
+    composer.addPass(filmPass);
+
     const mouse = new THREE.Vector2(-10, -10), target = new THREE.Vector2(-10, -10), last = new THREE.Vector2(-10, -10);
     const onMove = (e: MouseEvent) => {
       const r = renderer.domElement.getBoundingClientRect();
@@ -165,6 +202,7 @@ export default function MarbleBackground({
       const t = clock.getElapsedTime();
       finalMat.uniforms.uTime.value = t;
       trailMat.uniforms.uTrailTime.value = t;
+      filmPass.uniforms.uTime.value = t;
       mouse.lerp(target, 0.65);
       const vel = mouse.distanceTo(last); last.copy(mouse);
       trailMat.uniforms.uPrev.value = rtA.texture;
@@ -173,14 +211,16 @@ export default function MarbleBackground({
       renderer.setRenderTarget(rtB); renderer.render(trailScene, trailCam); renderer.setRenderTarget(null);
       const tmp = rtA; rtA = rtB; rtB = tmp;
       finalMat.uniforms.uTrail.value = rtA.texture;
-      renderer.render(scene, cam);
+      composer.render();
       raf = requestAnimationFrame(animate);
     };
     animate();
 
     function onResize() {
       renderer.setSize(W(), H());
+      composer.setSize(W(), H());
       finalMat.uniforms.uScreenRes.value.set(W(), H());
+      filmPass.uniforms.uRes.value.set(W(), H());
       trailMat.uniforms.uAspect.value = W() / H();
       trailMat.uniforms.uRes.value.set(W(), H());
       rtA.setSize(W(), H()); rtB.setSize(W(), H());
