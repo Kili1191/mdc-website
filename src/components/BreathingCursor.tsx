@@ -2,31 +2,26 @@
 
 import { useEffect, useRef } from "react";
 
-// Curseur custom : point Rouille (#A55A3E) qui suit la souris avec un
-// petit lag et respire au rythme du souffle (5.5s comme l'intro).
-// Se masque sur touch devices (fine pointer detection).
-// Interaction : sur hover d'un élément cliquable, le point s'agrandit
-// et s'assouplit.
+// Curseur custom minimal : un petit anneau Rouille qui suit la souris
+// avec un lag doux et respire au rythme du souffle. Sur hover d'un lien,
+// il grossit très légèrement. Rien de plus.
+// Masqué sur touch devices.
 
 const BREATH_MS = 5500;
-const LERP = 0.18;
-const BASE = 8;     // rayon repos
-const BREATH_AMP = 3;
-const HOVER_SCALE = 2.2;
+const LERP = 0.22;
+const BASE = 9;         // rayon repos (petit)
+const BREATH_AMP = 1.2; // respiration très discrète
+const HOVER_AMP = 4;    // grossissement subtil sur cible interactive
 
 export default function BreathingCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Skip sur écrans tactiles / pointeurs non-fins
     if (!window.matchMedia("(pointer: fine)").matches) return;
 
-    const dot = dotRef.current;
     const ring = ringRef.current;
-    if (!dot || !ring) return;
+    if (!ring) return;
 
-    // hide native cursor site-wide when custom cursor is on
     const style = document.createElement("style");
     style.textContent = `html, body, a, button { cursor: none !important; }`;
     document.head.appendChild(style);
@@ -41,38 +36,27 @@ export default function BreathingCursor() {
     const onMove = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      // hover detection via elementFromPoint
       const el = document.elementFromPoint(e.clientX, e.clientY);
-      hoverTarget = el && (el.closest("a, button, input, textarea, select, [role=button]")) ? 1 : 0;
+      hoverTarget = el && el.closest("a, button, input, textarea, select, [role=button]") ? 1 : 0;
     };
-    const onDown = () => { hoverTarget = 1.6; };
-    const onUp = () => { /* natural release */ };
     const onLeave = () => { mouse.x = -50; mouse.y = -50; };
 
     window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("mousedown", onDown, { passive: true });
-    window.addEventListener("mouseup", onUp, { passive: true });
     window.addEventListener("mouseleave", onLeave);
 
     const tick = () => {
       pos.x += (mouse.x - pos.x) * LERP;
       pos.y += (mouse.y - pos.y) * LERP;
-      hover += (hoverTarget - hover) * 0.12;
+      hover += (hoverTarget - hover) * 0.14;
 
       const t = (performance.now() - t0) / BREATH_MS;
       const breath = Math.sin(t * Math.PI * 2) * 0.5 + 0.5; // 0..1
-      const r = BASE + breath * BREATH_AMP + hover * (HOVER_SCALE - 1) * BASE;
-      const alpha = 0.55 + breath * 0.25;
+      const r = BASE + breath * BREATH_AMP + hover * HOVER_AMP;
+      const alpha = 0.55 + breath * 0.15;
 
-      dot.style.transform = `translate3d(${pos.x - r}px, ${pos.y - r}px, 0)`;
-      dot.style.width = dot.style.height = `${r * 2}px`;
-      dot.style.opacity = String(alpha);
-
-      // Ring plus large qui suit avec un lag plus grand
-      const rr = r * (1.9 + hover * 0.6);
-      ring.style.transform = `translate3d(${pos.x - rr}px, ${pos.y - rr}px, 0)`;
-      ring.style.width = ring.style.height = `${rr * 2}px`;
-      ring.style.opacity = String((0.22 + breath * 0.1) * (1 - hover * 0.4));
+      ring.style.transform = `translate3d(${pos.x - r}px, ${pos.y - r}px, 0)`;
+      ring.style.width = ring.style.height = `${r * 2}px`;
+      ring.style.opacity = String(alpha);
 
       raf = requestAnimationFrame(tick);
     };
@@ -81,38 +65,23 @@ export default function BreathingCursor() {
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mousedown", onDown);
-      window.removeEventListener("mouseup", onUp);
       window.removeEventListener("mouseleave", onLeave);
       style.remove();
     };
   }, []);
 
   return (
-    <>
-      <div
-        ref={ringRef}
-        aria-hidden
-        style={{
-          position: "fixed", left: 0, top: 0, zIndex: 9998,
-          pointerEvents: "none",
-          border: "1px solid #A55A3E",
-          borderRadius: "50%",
-          mixBlendMode: "multiply",
-          transition: "opacity 0.4s ease",
-        }}
-      />
-      <div
-        ref={dotRef}
-        aria-hidden
-        style={{
-          position: "fixed", left: 0, top: 0, zIndex: 9999,
-          pointerEvents: "none",
-          background: "#A55A3E",
-          borderRadius: "50%",
-          mixBlendMode: "multiply",
-        }}
-      />
-    </>
+    <div
+      ref={ringRef}
+      aria-hidden
+      style={{
+        position: "fixed", left: 0, top: 0, zIndex: 9999,
+        pointerEvents: "none",
+        border: "1px solid rgba(165,90,62,0.7)",
+        borderRadius: "50%",
+        background: "transparent",
+        transition: "opacity 0.4s ease",
+      }}
+    />
   );
 }
