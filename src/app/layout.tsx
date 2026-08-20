@@ -4,6 +4,7 @@ import "./globals.css";
 import BreathingCursor from "@/components/BreathingCursor";
 import IntroOverlay from "@/components/IntroOverlay";
 import Nav from "@/components/Nav";
+import PageTransition from "@/components/PageTransition";
 import ScrollProvider from "@/components/ScrollProvider";
 import SeoNav from "@/components/SeoNav";
 import SiteMarble from "@/components/SiteMarble";
@@ -43,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Nav />
         <BreathingCursor />
         <SoundToggle />
-        {children}
+        <PageTransition>{children}</PageTransition>
       </body>
     </html>
   );
