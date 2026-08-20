@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import BreathingCursor from "@/components/BreathingCursor";
 import IntroOverlay from "@/components/IntroOverlay";
 import Nav from "@/components/Nav";
 import ScrollProvider from "@/components/ScrollProvider";
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollProvider />
         <SiteMarble />
         <Nav />
+        <BreathingCursor />
         {children}
       </body>
     </html>
