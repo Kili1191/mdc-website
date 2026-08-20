@@ -41,9 +41,10 @@ function HouseChoreo() {
     g.position.z = clampedT * 6;
     g.position.y = -clampedT * 0.4;
 
-    // Scale : le logo reste discret — un dessin délicat au loin,
-    // pas un grand bloc extrudé qui remplit l'écran.
-    const s = 0.14 + easeInOutQuad(vis) * 0.22;
+    // Scale : au repos loin (0.35), s'ouvre à ~1.0 au centre de la
+    // station — la maison en traits Rouille apparaît en entier, occupe
+    // ~65% de la hauteur de viewport sans jamais déborder.
+    const s = 0.35 + easeInOutQuad(vis) * 0.65;
     g.scale.setScalar(s);
 
     // Rotation : elle nous fait face en arrivant, tourne quand on passe

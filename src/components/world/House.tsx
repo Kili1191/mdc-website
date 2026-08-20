@@ -1,19 +1,20 @@
 "use client";
 
 import { useFrame, useLoader } from "@react-three/fiber";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import * as THREE from "three";
 
-const TUBE_COLOR = "#A55A3E";
+const STROKE_COLOR = "#A55A3E";
+const HOUSE_TARGET_SIZE = 2.6;
 
-const HOUSE_TARGET_SIZE = 2.6; // longest world-unit dimension of the SVG
-const TARGET_DEPTH = 0.02; // world-unit depth of extrusion
-
-function HouseLogo({ material }: { material: THREE.MeshStandardMaterial }) {
+// Rendu du logo maison en **traits** (edges/outlines Rouille), pas en
+// bloc extrudé plein. Effet dessin architectural, cohérent avec le
+// dessin d'origine du logo. L'épaisseur du trait respire doucement.
+function HouseLogo({ material }: { material: THREE.LineBasicMaterial }) {
   const svgData = useLoader(SVGLoader, "/mdc-logo.svg");
 
-  const { geometries, center, scale } = useMemo(() => {
+  const { edges, center, scale } = useMemo(() => {
     const shapes: THREE.Shape[] = [];
     const bbox2D = new THREE.Box2();
     for (const path of svgData.paths) {
@@ -25,62 +26,60 @@ function HouseLogo({ material }: { material: THREE.MeshStandardMaterial }) {
     const size2D = bbox2D.getSize(new THREE.Vector2());
     const scale = HOUSE_TARGET_SIZE / Math.max(size2D.x, size2D.y);
     const center = bbox2D.getCenter(new THREE.Vector2());
-    const svgDepth = TARGET_DEPTH / scale;
-    const geometries = shapes.map(
-      (s) =>
-        new THREE.ExtrudeGeometry(s, {
-          depth: svgDepth,
-          bevelEnabled: false,
-          curveSegments: 16,
-        }),
-    );
-    return { geometries, center, scale };
+    // On construit les contours à partir des shapes. ShapeGeometry produit
+    // le fill triangulé ; on en extrait les EdgesGeometry (bords) pour
+    // avoir uniquement le pourtour dessiné.
+    const edges = shapes.map((s) => {
+      const shapeGeom = new THREE.ShapeGeometry(s, 32);
+      const eg = new THREE.EdgesGeometry(shapeGeom, 15);
+      shapeGeom.dispose();
+      return eg;
+    });
+    return { edges, center, scale };
   }, [svgData]);
 
   useEffect(() => {
     return () => {
-      geometries.forEach((g) => g.dispose());
+      edges.forEach((g) => g.dispose());
     };
-  }, [geometries]);
+  }, [edges]);
 
   return (
     <group
       position={[-center.x * scale, center.y * scale, 0]}
       scale={[scale, -scale, scale]}
     >
-      {geometries.map((g, i) => (
-        <mesh key={i} geometry={g} material={material} />
+      {edges.map((g, i) => (
+        <lineSegments key={i} geometry={g} material={material} />
       ))}
     </group>
   );
 }
 
 export function House() {
-  const tubeMaterial = useMemo(
+  const lineMat = useMemo(
     () =>
-      new THREE.MeshStandardMaterial({
-        color: TUBE_COLOR,
-        emissive: TUBE_COLOR,
-        emissiveIntensity: 0.5,
-        roughness: 0.7,
-        metalness: 0,
-        side: THREE.DoubleSide,
+      new THREE.LineBasicMaterial({
+        color: STROKE_COLOR,
+        transparent: true,
+        opacity: 0.9,
       }),
     [],
   );
+  const ref = useRef(lineMat);
+  ref.current = lineMat;
 
   useEffect(() => {
     return () => {
-      tubeMaterial.dispose();
+      lineMat.dispose();
     };
-  }, [tubeMaterial]);
+  }, [lineMat]);
 
-  // Breathing — émissive discrète, pour que le logo se lise comme un
-  // trait dessiné et pas comme une masse orange qui glow.
+  // Opacité qui respire — souffle discret, pas de glow.
   useFrame(({ clock }) => {
     const phase = Math.sin(clock.elapsedTime * 0.5);
-    tubeMaterial.emissiveIntensity = 0.25 + phase * 0.08;
+    lineMat.opacity = 0.85 + phase * 0.1;
   });
 
-  return <HouseLogo material={tubeMaterial} />;
+  return <HouseLogo material={lineMat} />;
 }
