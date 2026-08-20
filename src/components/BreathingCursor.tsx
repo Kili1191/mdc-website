@@ -12,15 +12,15 @@ import { useEffect, useRef } from "react";
 // pas un border strict, pour une lecture douce sur le marbre.
 
 const BREATH_MS = 5500;
-const DOT_LERP = 0.32;
-const HALO_LERP = 0.11;
+const DOT_LERP = 1;      // dot suit la souris sans latence (pas de lag)
+const HALO_LERP = 0.14;  // halo traîne juste ce qu'il faut pour l'élégance
 
-const DOT_BASE = 9;           // rayon point net (18px de diamètre)
-const DOT_BREATH = 1.5;       // respiration visible
+const DOT_BASE = 15;          // rayon point net (30px de diamètre — impossible à rater)
+const DOT_BREATH = 2;         // respiration nette
 
-const HALO_BASE = 38;         // rayon halo (76px de diamètre)
-const HALO_BREATH = 6;        // respiration visible
-const HALO_HOVER = 20;        // grossissement sur cible
+const HALO_BASE = 48;         // rayon halo (96px de diamètre)
+const HALO_BREATH = 8;        // respiration visible
+const HALO_HOVER = 24;        // grossissement sur cible
 
 export default function BreathingCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -102,7 +102,7 @@ export default function BreathingCursor() {
           position: "fixed", left: 0, top: 0, zIndex: 9998,
           pointerEvents: "none",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(165,90,62,0.22) 0%, rgba(165,90,62,0.06) 55%, rgba(165,90,62,0) 78%)",
+          background: "radial-gradient(circle, rgba(165,90,62,0.45) 0%, rgba(165,90,62,0.15) 55%, rgba(165,90,62,0) 82%)",
           willChange: "transform, width, height, opacity",
         }}
       />
