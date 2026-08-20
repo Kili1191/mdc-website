@@ -13,12 +13,14 @@ import { useEffect, useRef } from "react";
 const BREATH_MS = 5500;
 const HALO_LERP = 0.14;
 
-const DOT_MIN = 12;   // rayon dot au fond du souffle
-const DOT_MAX = 18;   // rayon dot au pic du souffle
+// Contrainte : au pic du souffle, le dot ne doit PAS dépasser la
+// taille d'un curseur natif (~18-20px de diamètre). MAX = 9 → 18px.
+const DOT_MIN = 5;    // rayon dot au fond du souffle (10px diamètre)
+const DOT_MAX = 9;    // rayon dot au pic du souffle (18px ≈ curseur natif)
 
-const HALO_MIN = 24;
-const HALO_MAX = 34;
-const HALO_HOVER = 18;
+const HALO_MIN = 18;
+const HALO_MAX = 26;
+const HALO_HOVER = 14;
 
 export default function BreathingCursor() {
   const dotWrapRef = useRef<HTMLDivElement>(null);
