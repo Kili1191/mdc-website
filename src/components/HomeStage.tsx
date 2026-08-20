@@ -32,34 +32,33 @@ function HouseChoreo() {
     const g = groupRef.current;
     const p = scrollStore.get().progress;
 
-    // Visibilité : gauss centrée sur la station MAISON, envelope étroite
-    const vis = gaussian(p, HOUSE_CENTER, HOUSE_WIDTH * 0.55);
+    // Visibilité : gauss centrée sur la station MAISON
+    const vis = gaussian(p, HOUSE_CENTER, HOUSE_WIDTH * 0.6);
 
-    // Position : la maison arrive de loin, on la dépasse (Z de -4 à +2)
+    // Approche progressive : la maison vient de loin, on la longe et
+    // on la dépasse (Z de +5 = loin à -3 = dépassée)
     const t = (p - HOUSE_CENTER) / HOUSE_WIDTH; // -0.5..0.5..+
-    const clampedT = Math.max(-1.2, Math.min(1.2, t));
-    g.position.z = clampedT * 6;
-    g.position.y = -clampedT * 0.4;
+    const clampedT = Math.max(-1.3, Math.min(1.3, t));
+    g.position.z = -clampedT * 4;
+    g.position.y = -0.15 - clampedT * 0.25;
 
-    // Scale : au repos loin (0.28), s'ouvre à ~0.62 au centre de la
-    // station — la maison en traits reste délicate, jamais ne remplit
-    // le viewport. Traits fins de contour uniquement.
-    const s = 0.28 + easeInOutQuad(vis) * 0.34;
+    // Scale : contenue mais visible — pas de zoom violent
+    const s = 0.55 + easeInOutQuad(vis) * 0.4;
     g.scale.setScalar(s);
 
-    // Rotation : elle nous fait face en arrivant, tourne quand on passe
-    g.rotation.y = clampedT * 0.85 + Math.sin(performance.now() * 0.0003) * 0.06;
-    g.rotation.x = -clampedT * 0.15;
+    // Vue 3/4 en approche, on tourne autour de la maison au dépassement
+    const baseRotY = -Math.PI / 6;
+    g.rotation.y = baseRotY + clampedT * 0.9 + Math.sin(performance.now() * 0.0003) * 0.04;
+    g.rotation.x = 0.08 - clampedT * 0.06;
 
-    // Fade via material opacity — le House component utilise MeshStandard,
-    // on triche via visible et une échelle qui tend vers 0 aux bords
-    g.visible = vis > 0.02;
+    // Fade in/out
+    g.visible = vis > 0.015;
 
     // Caméra : léger drift latéral piloté par l'exploration horizontale
     const s2 = scrollStore.get();
     cameraFocus.current.x += (s2.x / 800 - cameraFocus.current.x) * (dt * 3);
     camera.position.x = cameraFocus.current.x;
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(0, -0.15, 0);
   });
 
   return (
