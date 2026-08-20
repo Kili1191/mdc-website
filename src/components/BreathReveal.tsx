@@ -7,10 +7,11 @@ import { useEffect, useRef, type CSSProperties, type ElementType } from "react";
 // la phrase de gauche à droite en ~1.2s. Déclenché quand l'élément
 // entre dans le viewport via IntersectionObserver (une seule fois).
 //
-// Usage :
-//   <BreathReveal text="For those who carry everything inside." as="h1" />
-// ou :
-//   <BreathReveal text="Kilian." as="h1" style={{...}} />
+// Fix typographique : les glyphes italiques (Higuen f, j, apostrophes,
+// swashes) débordent du bounding box strict d'un inline-block. On
+// applique du padding em-relatif compensé par des marges négatives
+// équivalentes : les glyphes ont de la place pour respirer, le layout
+// ne bouge pas d'un pixel.
 
 type Props = {
   text: string;
@@ -21,6 +22,33 @@ type Props = {
   duration?: number;     // ms d'apparition d'un mot (default 900)
   delay?: number;        // ms avant démarrage (default 100)
   lineBreaks?: string;   // séparateur pour retour à la ligne (default "/")
+};
+
+// Espace ménagé autour de chaque mot pour les débords de glyphes
+// italiques + compensation en marge négative pour ne rien décaler.
+const PAD_X = "0.1em";
+const PAD_Y = "0.15em";
+const WORD_GAP = "0.28em";
+
+const wordSpanStyle: CSSProperties = {
+  display: "inline-block",
+  opacity: 0,
+  transform: "translateY(0.4em)",
+  paddingLeft: PAD_X, paddingRight: PAD_X,
+  paddingTop: PAD_Y, paddingBottom: PAD_Y,
+  marginLeft: `calc(-1 * ${PAD_X})`,
+  marginTop: `calc(-1 * ${PAD_Y})`,
+  marginBottom: `calc(-1 * ${PAD_Y})`,
+  // total right gap = -PAD_X + PAD_X + WORD_GAP = WORD_GAP (inchangé)
+  marginRight: `calc(${WORD_GAP} - ${PAD_X})`,
+  overflow: "visible",
+  willChange: "opacity, transform",
+};
+
+const lineSpanStyle: CSSProperties = {
+  display: "block",
+  overflow: "visible",
+  paddingBottom: "0.05em",
 };
 
 export default function BreathReveal({
@@ -39,7 +67,6 @@ export default function BreathReveal({
     const el = ref.current;
     if (!el) return;
 
-    // prefers-reduced-motion : on affiche instantanément
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       el.querySelectorAll<HTMLElement>(".mdc-breath-word").forEach((w) => {
         w.style.opacity = "1";
@@ -53,7 +80,6 @@ export default function BreathReveal({
       words.forEach((w, i) => {
         w.style.transition = `opacity ${duration}ms cubic-bezier(0.16,1,0.3,1), transform ${duration}ms cubic-bezier(0.16,1,0.3,1)`;
         w.style.transitionDelay = `${delay + i * stagger}ms`;
-        // laisse le browser peindre l'état initial puis déclenche
         requestAnimationFrame(() => {
           w.style.opacity = "1";
           w.style.transform = "translateY(0)";
@@ -76,25 +102,22 @@ export default function BreathReveal({
     return () => io.disconnect();
   }, [text, stagger, duration, delay]);
 
-  // Sépare texte → lignes (par lineBreaks) → mots.
   const lines = text.split(lineBreaks).map((l) => l.trim());
+
+  // overflow:visible sur le wrapper aussi, au cas où un parent applique
+  // un mask/clip via CSS.
+  const rootStyle: CSSProperties = { overflow: "visible", ...style };
 
   return (
     // @ts-expect-error dynamic tag
-    <Tag ref={ref} className={className} style={style}>
+    <Tag ref={ref} className={className} style={rootStyle}>
       {lines.map((line, li) => (
-        <span key={li} style={{ display: "block" }}>
+        <span key={li} style={lineSpanStyle}>
           {line.split(/\s+/).map((word, wi) => (
             <span
               key={`${li}-${wi}`}
               className="mdc-breath-word"
-              style={{
-                display: "inline-block",
-                opacity: 0,
-                transform: "translateY(0.4em)",
-                marginRight: "0.28em",
-                willChange: "opacity, transform",
-              }}
+              style={wordSpanStyle}
             >
               {word}
             </span>
