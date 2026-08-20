@@ -75,11 +75,11 @@ export function House() {
     };
   }, [tubeMaterial]);
 
-  // Breathing — emissive base bumped to 1.2 so the house reads brightly
-  // from the far end of the chaos descent.
+  // Breathing — émissive discrète, pour que le logo se lise comme un
+  // trait dessiné et pas comme une masse orange qui glow.
   useFrame(({ clock }) => {
     const phase = Math.sin(clock.elapsedTime * 0.5);
-    tubeMaterial.emissiveIntensity = 1.2 + phase * 0.2;
+    tubeMaterial.emissiveIntensity = 0.25 + phase * 0.08;
   });
 
   return <HouseLogo material={tubeMaterial} />;

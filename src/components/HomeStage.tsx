@@ -41,8 +41,9 @@ function HouseChoreo() {
     g.position.z = clampedT * 6;
     g.position.y = -clampedT * 0.4;
 
-    // Scale : plus proche = plus grand
-    const s = 0.55 + easeInOutQuad(vis) * 0.9;
+    // Scale : le logo reste discret — un dessin délicat au loin,
+    // pas un grand bloc extrudé qui remplit l'écran.
+    const s = 0.14 + easeInOutQuad(vis) * 0.22;
     g.scale.setScalar(s);
 
     // Rotation : elle nous fait face en arrivant, tourne quand on passe
