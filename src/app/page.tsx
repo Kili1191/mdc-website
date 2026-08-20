@@ -75,15 +75,17 @@ export default function Home() {
       stations.forEach((st, i) => {
         const center = (i + 0.5) / N_STATIONS;
         const sigma = 0.7 / N_STATIONS;
-        // Visibilité gaussienne
-        const vis = gaussian(p, center, sigma);
-        // "Focus" : reste très visible entre 0.4 et 1, atténue vite en dessous
+        // Première station : plein focus tant qu'on n'a pas dépassé son
+        // centre (hero doit toujours être clean à l'arrivée, pas voilé).
+        // Dernière station : idem en sortie.
+        let vis: number;
+        if (i === 0 && p <= center) vis = 1;
+        else if (i === N_STATIONS - 1 && p >= center) vis = 1;
+        else vis = gaussian(p, center, sigma);
         const focus = Math.max(0, (vis - 0.35) / 0.65);
         st.style.opacity = String(focus);
-        // Léger translateY inversement lié au focus, borné à ±14px
         const dy = (1 - focus) * (p < center ? 14 : -14);
         st.style.transform = `translateY(${dy}px)`;
-        // Quand quasi-invisible, on retire du hit-test pour libérer le curseur
         st.style.pointerEvents = focus > 0.15 ? "auto" : "none";
       });
       raf = requestAnimationFrame(tick);

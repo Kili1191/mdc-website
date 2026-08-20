@@ -1,113 +1,117 @@
 "use client";
 
-import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useFrame, useLoader } from "@react-three/fiber";
+import { useEffect, useMemo } from "react";
+import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import * as THREE from "three";
 
-// Vraie maison 3D volumétrique — plus le logo extrudé.
-// - Base : BoxGeometry (murs + sol)
-// - Toit : ExtrudeGeometry d'un triangle sur la largeur (deux pentes)
-// - Porte : plane sombre insérée sur la façade (comme une ouverture)
-// - Fenêtres : deux plans chauds émissifs sur les murs latéraux
-// - Un plancher plus large en-dessous, comme une pierre
-//
-// Palette Aube Encens : murs parchemin, toit rouille, ouvertures brou.
-// Éclairage vient de HomeStage (ambient + 2 directionnelles).
+// La maison = la silhouette du logo MDC, extrudée en volume.
+// Pas une architecture custom (Kilian ne veut PAS un modèle générique) :
+// c'est SON logo, qui devient une maison-objet 3D. On extrude
+// suffisamment pour qu'elle ait un vrai volume (murs latéraux visibles),
+// et on la rend en matière chaleureuse Aube Encens plutôt qu'en rouge
+// orangé émissif.
 
-const WALL_COLOR = "#EDE4D0";       // parchemin
-const ROOF_COLOR = "#A55A3E";       // rouille
-const OPENING_COLOR = "#2F2519";    // brou foncé (portes)
-const WINDOW_GLOW = "#B89968";      // ocre chaud (fenêtres)
-const GROUND_COLOR = "#A89A85";     // taupe (dalle)
+const HOUSE_TARGET_SIZE = 2.4;   // taille max en largeur/hauteur
+const EXTRUDE_DEPTH_RATIO = 0.42; // profondeur ≈ 42% de la taille
 
-const W = 2.0;   // largeur murs
-const H = 1.4;   // hauteur murs
-const D = 1.6;   // profondeur murs
-const ROOF_H = 0.9;
+const WALL_COLOR = "#D9C9A8";     // parchemin chaud, tirant sur l'ocre pâle
+const RIM_COLOR = "#A55A3E";      // rouille (émissive discrète sur le contour)
 
-export function House() {
-  const groupRef = useRef<THREE.Group>(null);
+function HouseVolume({ material, wireMaterial }: {
+  material: THREE.MeshStandardMaterial;
+  wireMaterial: THREE.LineBasicMaterial;
+}) {
+  const svgData = useLoader(SVGLoader, "/mdc-logo.svg");
 
-  // Toit : triangle extrudé sur la largeur (profondeur = D)
-  const roofGeom = useMemo(() => {
-    const shape = new THREE.Shape();
-    shape.moveTo(-W / 2 - 0.05, 0);
-    shape.lineTo(W / 2 + 0.05, 0);
-    shape.lineTo(0, ROOF_H);
-    shape.closePath();
-    const g = new THREE.ExtrudeGeometry(shape, {
-      depth: D + 0.1,
-      bevelEnabled: false,
-    });
-    g.translate(0, 0, -(D + 0.1) / 2);
-    return g;
-  }, []);
+  const { geometries, edges, center, scale, depth } = useMemo(() => {
+    const shapes: THREE.Shape[] = [];
+    const bbox2D = new THREE.Box2();
+    for (const path of svgData.paths) {
+      for (const shape of SVGLoader.createShapes(path)) {
+        for (const pt of shape.getPoints()) bbox2D.expandByPoint(pt);
+        shapes.push(shape);
+      }
+    }
+    const size2D = bbox2D.getSize(new THREE.Vector2());
+    const scale = HOUSE_TARGET_SIZE / Math.max(size2D.x, size2D.y);
+    const center = bbox2D.getCenter(new THREE.Vector2());
+    const depth = (HOUSE_TARGET_SIZE * EXTRUDE_DEPTH_RATIO) / scale;
 
-  const wallMat = useMemo(() => new THREE.MeshStandardMaterial({
-    color: WALL_COLOR, roughness: 0.9, metalness: 0,
-  }), []);
-  const roofMat = useMemo(() => new THREE.MeshStandardMaterial({
-    color: ROOF_COLOR, roughness: 0.7, metalness: 0,
-  }), []);
-  const openingMat = useMemo(() => new THREE.MeshStandardMaterial({
-    color: OPENING_COLOR, roughness: 1, metalness: 0,
-  }), []);
-  const windowMat = useMemo(() => new THREE.MeshStandardMaterial({
-    color: WINDOW_GLOW,
-    emissive: WINDOW_GLOW,
-    emissiveIntensity: 0.6,
-    roughness: 0.4, metalness: 0,
-  }), []);
-  const groundMat = useMemo(() => new THREE.MeshStandardMaterial({
-    color: GROUND_COLOR, roughness: 1, metalness: 0,
-  }), []);
+    const geometries = shapes.map(
+      (s) =>
+        new THREE.ExtrudeGeometry(s, {
+          depth,
+          bevelEnabled: true,
+          bevelThickness: 0.02 / scale,
+          bevelSize: 0.015 / scale,
+          bevelSegments: 2,
+          curveSegments: 20,
+        }),
+    );
 
-  // Léger souffle : la fenêtre inspire/expire de chaleur
-  useFrame(({ clock }) => {
-    const phase = Math.sin(clock.elapsedTime * 0.5);
-    windowMat.emissiveIntensity = 0.5 + phase * 0.18;
-  });
+    // Lignes de contour pour rappeler le trait du logo
+    const edges = geometries.map((g) => new THREE.EdgesGeometry(g, 25));
+
+    return { geometries, edges, center, scale, depth };
+  }, [svgData]);
+
+  useEffect(() => {
+    return () => {
+      geometries.forEach((g) => g.dispose());
+      edges.forEach((e) => e.dispose());
+    };
+  }, [geometries, edges]);
 
   return (
-    <group ref={groupRef}>
-      {/* Dalle */}
-      <mesh position={[0, -H / 2 - 0.02, 0]}>
-        <boxGeometry args={[W + 0.6, 0.04, D + 0.6]} />
-        <primitive object={groundMat} attach="material" />
-      </mesh>
-
-      {/* Murs (box plein) */}
-      <mesh castShadow receiveShadow>
-        <boxGeometry args={[W, H, D]} />
-        <primitive object={wallMat} attach="material" />
-      </mesh>
-
-      {/* Toit à deux pentes */}
-      <mesh position={[0, H / 2, 0]} geometry={roofGeom}>
-        <primitive object={roofMat} attach="material" />
-      </mesh>
-
-      {/* Porte façade (côté +Z) */}
-      <mesh position={[0, -H / 2 + 0.42, D / 2 + 0.001]}>
-        <planeGeometry args={[0.42, 0.82]} />
-        <primitive object={openingMat} attach="material" />
-      </mesh>
-
-      {/* Fenêtres latérales gauche/droite (±X) */}
-      <mesh position={[W / 2 + 0.001, 0.1, 0]} rotation={[0, Math.PI / 2, 0]}>
-        <planeGeometry args={[0.42, 0.34]} />
-        <primitive object={windowMat} attach="material" />
-      </mesh>
-      <mesh position={[-W / 2 - 0.001, 0.1, 0]} rotation={[0, -Math.PI / 2, 0]}>
-        <planeGeometry args={[0.42, 0.34]} />
-        <primitive object={windowMat} attach="material" />
-      </mesh>
-
-      {/* Fenêtre haute pignon arrière (petit oeil, côté -Z) */}
-      <mesh position={[0, H / 2 + 0.28, -D / 2 - 0.001]} rotation={[0, Math.PI, 0]}>
-        <circleGeometry args={[0.12, 32]} />
-        <primitive object={windowMat} attach="material" />
-      </mesh>
+    // centrage 3D : x/y depuis bbox SVG, z ramené au centre de la profondeur
+    <group
+      position={[-center.x * scale, center.y * scale, -depth * scale * 0.5]}
+      scale={[scale, -scale, scale]}
+    >
+      {geometries.map((g, i) => (
+        <mesh key={`m-${i}`} geometry={g} material={material} castShadow receiveShadow />
+      ))}
+      {edges.map((e, i) => (
+        <lineSegments key={`e-${i}`} geometry={e} material={wireMaterial} />
+      ))}
     </group>
   );
+}
+
+export function House() {
+  const material = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: WALL_COLOR,
+        roughness: 0.85,
+        metalness: 0,
+        side: THREE.DoubleSide,
+      }),
+    [],
+  );
+  const wireMaterial = useMemo(
+    () =>
+      new THREE.LineBasicMaterial({
+        color: RIM_COLOR,
+        transparent: true,
+        opacity: 0.7,
+      }),
+    [],
+  );
+
+  useEffect(() => {
+    return () => {
+      material.dispose();
+      wireMaterial.dispose();
+    };
+  }, [material, wireMaterial]);
+
+  // Souffle très discret sur l'opacité du contour
+  useFrame(({ clock }) => {
+    const phase = Math.sin(clock.elapsedTime * 0.5);
+    wireMaterial.opacity = 0.6 + phase * 0.15;
+  });
+
+  return <HouseVolume material={material} wireMaterial={wireMaterial} />;
 }
