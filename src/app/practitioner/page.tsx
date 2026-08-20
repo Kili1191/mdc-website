@@ -85,6 +85,19 @@ export default function PractitionerPage() {
 
           <hr style={dividerStyle} />
 
+          <p style={{
+            fontFamily: "var(--font-great-vibes), cursive",
+            fontSize: "clamp(38px, 6vw, 62px)",
+            lineHeight: 1.2,
+            color: COLORS.brouFonce,
+            margin: 0,
+            textAlign: "center",
+          }}>
+            I don&apos;t fix anyone. Nothing is broken.
+          </p>
+
+          <hr style={dividerStyle} />
+
           <p style={eyebrowStyle}>Discretion</p>
           <h2 style={{ ...sectionHeadStyle, marginTop: 32 }}>
             No one is named. This is not a policy. It is the product.
