@@ -17,10 +17,6 @@ const bigHeadStyle: React.CSSProperties = {
   fontFamily: FONTS.higuen, fontSize: "clamp(32px, 5vw, 56px)",
   lineHeight: 1.2, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
 };
-const sectionHeadStyle: React.CSSProperties = {
-  fontFamily: FONTS.higuen, fontSize: "clamp(22px, 3vw, 32px)",
-  lineHeight: 1.3, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
-};
 const eyebrowStyle: React.CSSProperties = {
   fontFamily: FONTS.prata, fontSize: 11, letterSpacing: "0.28em",
   textTransform: "uppercase", color: COLORS.taupe, margin: 0,
@@ -28,10 +24,6 @@ const eyebrowStyle: React.CSSProperties = {
 const placeLabelStyle: React.CSSProperties = {
   fontFamily: FONTS.higuen, fontSize: 15, letterSpacing: "0.3em",
   color: COLORS.rouille, margin: 0, textTransform: "uppercase",
-};
-const microStyle: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 13, color: COLORS.taupe,
-  margin: 0, fontStyle: "italic",
 };
 const dividerStyle: React.CSSProperties = {
   height: 1, background: COLORS.taupe, opacity: 0.28, border: 0, margin: "96px 0",
@@ -81,38 +73,7 @@ export default function LineagePage() {
                 to student, never in a classroom.
               </p>
             </div>
-            <div>
-              <p style={placeLabelStyle}>London</p>
-              <p style={{ ...bodyStyle, marginTop: 20 }}>
-                Private practice, built the way the work itself is built, one person at a
-                time, by introduction.
-              </p>
-            </div>
           </div>
-
-          <hr style={dividerStyle} />
-
-          <h2 style={sectionHeadStyle}>Why no names, no dates.</h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: 40 }}>
-            <p style={bodyStyle}>
-              Because a lineage is not a marketing asset, and the people in it are not
-              references to be called. Because what was entrusted in confidence should
-              not be searchable. And because you would not want to be listed on
-              someone&apos;s website either.
-            </p>
-            <p style={bodyStyle}>
-              What can be verified is this: the places are real, the transmission is real,
-              and the formal attestations exist. Held privately, shown where it is
-              genuinely warranted, never published. What cannot be copied is also the
-              point: a weekend produces a certificate. An unbroken line, passed one
-              student at a time across eight generations, produces something else, and
-              you will feel the difference before you can explain it.
-            </p>
-          </div>
-
-          <p style={{ ...microStyle, marginTop: 48 }}>
-            If it matters to you, ask in person. <a href="/begin" style={{ color: COLORS.rouille, textDecoration: "none", borderBottom: `1px solid ${COLORS.rouille}`, paddingBottom: 2 }}>Contact</a>
-          </p>
       </div>
     </main>
   );
