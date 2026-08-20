@@ -33,13 +33,12 @@ function HouseChoreo() {
     const p = scrollStore.get().progress;
     const t = (p - HOUSE_CENTER) / HOUSE_WIDTH; // -0.5 entrée, +0.5 sortie
 
-    // ZOOM CONTINU : la maison apparaît en entier dès l'entrée de la
-    // station, puis grandit à travers le scroll — on s'en approche et on
-    // la traverse. À la sortie, elle est zoomée fort puis fondue.
-    // Échelle passe de 0.55 (visible en entier) à 1.8 (traversée)
-    // proportionnellement à la position dans la station.
-    const zoomK = Math.max(-0.9, Math.min(0.9, t + 0.4));
-    const s = 0.55 + (zoomK + 0.9) * 0.7; // ~0.55 → ~1.8
+    // Logo visible en entier tout au long de la station, PETIT.
+    // Zoom très subtil : 0.35 (entrée) → 0.48 (sortie), croissance
+    // douce de ~37% — on sent une approche cinétique sans que la
+    // maison ne remplisse jamais l'écran.
+    const zoomK = Math.max(-0.5, Math.min(0.5, t));
+    const s = 0.35 + (zoomK + 0.5) * 0.13; // 0.35 → 0.48
     g.scale.setScalar(s);
 
     // Fade in/out doux uniquement aux bords : t ∈ [-0.7, -0.5] fade in,
