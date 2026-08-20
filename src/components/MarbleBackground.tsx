@@ -197,6 +197,26 @@ export default function MarbleBackground({
     };
     window.addEventListener("mousemove", onMove);
 
+    // Réactivité gyroscope (mobile). La position "curseur virtuel" glisse
+    // dans le cadre en fonction de l'inclinaison de l'appareil.
+    // beta = incliner avant/arrière (-180..180), gamma = gauche/droite (-90..90)
+    const gyro = { has: false, x: 0.5, y: 0.5 };
+    let gyroSmoothing = 0.06;
+    const onOrient = (e: DeviceOrientationEvent) => {
+      if (e.gamma === null || e.beta === null) return;
+      gyro.has = true;
+      const nx = 0.5 + Math.max(-1, Math.min(1, e.gamma / 30)) * 0.5;
+      const ny = 0.5 - Math.max(-1, Math.min(1, (e.beta - 45) / 30)) * 0.5;
+      gyro.x += (nx - gyro.x) * gyroSmoothing;
+      gyro.y += (ny - gyro.y) * gyroSmoothing;
+      target.set(gyro.x, gyro.y);
+    };
+    // Ne s'active que sur mobile / capteurs présents (iOS demande permission
+    // via un geste utilisateur : hors scope MVP, on écoute passivement).
+    if (typeof window !== "undefined" && "DeviceOrientationEvent" in window) {
+      window.addEventListener("deviceorientation", onOrient);
+    }
+
     const clock = new THREE.Clock(); let raf = 0;
     const animate = () => {
       const t = clock.getElapsedTime();
@@ -234,6 +254,7 @@ export default function MarbleBackground({
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("deviceorientation", onOrient);
       rtA.dispose(); rtB.dispose(); texMotif.dispose(); texVeil.dispose(); renderer.dispose();
       if (renderer.domElement.parentNode) mount.removeChild(renderer.domElement);
     };

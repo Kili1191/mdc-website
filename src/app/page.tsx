@@ -1,8 +1,6 @@
 "use client";
-import dynamic from "next/dynamic";
 import { useIntroReady } from "@/lib/introReady";
 import { COLORS, FONTS } from "@/styles/tokens";
-const AlbatreHero = dynamic(() => import("@/components/AlbatreHero"), { ssr: false });
 
 const bodyStyle: React.CSSProperties = {
   fontFamily: FONTS.prata,
@@ -57,9 +55,7 @@ export default function Home() {
   if (!ready) return null;
   return (
     <>
-      <AlbatreHero />
-
-      <section style={sectionStyle}>
+      <section style={{ ...sectionStyle, minHeight: "100vh", alignItems: "center" }}>
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Arrival</p>
           <h1 style={{ ...headlineStyle, marginTop: 40 }}>
