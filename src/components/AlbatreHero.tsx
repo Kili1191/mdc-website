@@ -43,11 +43,23 @@ export default function AlbatreHero() {
         uVel: { value: 0 }, uAspect: { value: W()/H() },
         uDecay: { value: 0.93 }, uRadius: { value: 0.29 }, uActive: { value: 1 },
         uRes: { value: new THREE.Vector2(W(), H()) }, uSpread: { value: 1.0 },
+        uTrailTime: { value: 0 },
       },
       vertexShader: `varying vec2 vUv; void main(){vUv=uv; gl_Position=vec4(position,1.0);}`,
       fragmentShader: `
-        uniform sampler2D uPrev; uniform vec2 uMouse, uRes; uniform float uVel,uAspect,uDecay,uRadius,uActive,uSpread;
+        uniform sampler2D uPrev; uniform vec2 uMouse, uRes;
+        uniform float uVel,uAspect,uDecay,uRadius,uActive,uSpread,uTrailTime;
         varying vec2 vUv;
+
+        // Brique 2 : bords organiques via domain warping (value noise).
+        float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }
+        float vnoise(vec2 p){
+          vec2 i = floor(p); vec2 f = fract(p);
+          vec2 u = f*f*(3.0-2.0*f);
+          return mix(mix(hash(i), hash(i+vec2(1,0)), u.x),
+                     mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), u.x), u.y);
+        }
+
         void main(){
           // diffusion type encre : moyenne des 4 voisins + centre, dosée par uSpread
           vec2 px = 1.0 / uRes;
@@ -59,7 +71,12 @@ export default function AlbatreHero() {
           float diffused = (c + n + s + e + w) / 5.0;
           float prev = mix(c, diffused, uSpread) * uDecay;
           vec2 d = vUv - uMouse; d.x *= uAspect;
-          float stamp = uActive * smoothstep(uRadius, 0.0, length(d)) * (0.6 + uVel*2.5);
+
+          vec2 wp = d * 6.0 + uTrailTime * 0.12;
+          vec2 warp = vec2(vnoise(wp), vnoise(wp + vec2(17.3, 41.7))) - 0.5;
+          vec2 dOrg = d + warp * 0.055;
+
+          float stamp = uActive * smoothstep(uRadius, 0.0, length(dOrg)) * (0.6 + uVel*2.5);
           gl_FragColor = vec4(vec3(clamp(max(prev,stamp),0.0,1.0)),1.0);
         }`,
     });
@@ -172,7 +189,9 @@ export default function AlbatreHero() {
 
     const clock=new THREE.Clock(); let raf=0;
     const animate=()=>{
-      finalMat.uniforms.uTime.value = clock.getElapsedTime();
+      const t = clock.getElapsedTime();
+      finalMat.uniforms.uTime.value = t;
+      trailMat.uniforms.uTrailTime.value = t;
 
       scrollProg += (scrollTarget - scrollProg) * 0.1;
       const wantPanel = Math.min(N-1, Math.round(scrollProg * (N-1)));
