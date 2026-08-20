@@ -71,11 +71,21 @@ export function House() {
     return () => material.dispose();
   }, [material]);
 
-  // Souffle doux sur l'opacité
+  // Souffle doux sur l'opacité + fade in/out géré par HomeStage via
+  // le userData.alpha du parent (pour respecter la choréographie zoom).
+  const groupRef = useRef<THREE.Group>(null);
   useFrame(({ clock }) => {
     const phase = Math.sin(clock.elapsedTime * 0.5);
-    material.opacity = 0.9 + phase * 0.08;
+    const breath = 0.92 + phase * 0.06;
+    // Récupère l'alpha choréo depuis le parent (userData défini par HomeStage)
+    const parent = groupRef.current?.parent as THREE.Object3D | undefined;
+    const alpha = (parent?.userData as { alpha?: number } | undefined)?.alpha ?? 1;
+    material.opacity = breath * alpha;
   });
 
-  return <HouseFill material={material} />;
+  return (
+    <group ref={groupRef}>
+      <HouseFill material={material} />
+    </group>
+  );
 }

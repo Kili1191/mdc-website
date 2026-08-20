@@ -31,31 +31,32 @@ function HouseChoreo() {
     if (!groupRef.current) return;
     const g = groupRef.current;
     const p = scrollStore.get().progress;
+    const t = (p - HOUSE_CENTER) / HOUSE_WIDTH; // -0.5 entrée, +0.5 sortie
 
-    // Visibilité : gauss centrée sur la station MAISON, envelope étroite
-    const vis = gaussian(p, HOUSE_CENTER, HOUSE_WIDTH * 0.55);
-
-    // Position : la maison arrive de loin, on la dépasse (Z de -4 à +2)
-    const t = (p - HOUSE_CENTER) / HOUSE_WIDTH; // -0.5..0.5..+
-    const clampedT = Math.max(-1.2, Math.min(1.2, t));
-    g.position.z = clampedT * 6;
-    g.position.y = -clampedT * 0.4;
-
-    // Scale : la maison est un petit objet identifiable — jamais
-    // ne remplit le viewport. Au pic ~30% de la hauteur (comme un
-    // sceau qu'on longe, pas un décor).
-    const s = 0.18 + easeInOutQuad(vis) * 0.24;
+    // ZOOM CONTINU : la maison apparaît en entier dès l'entrée de la
+    // station, puis grandit à travers le scroll — on s'en approche et on
+    // la traverse. À la sortie, elle est zoomée fort puis fondue.
+    // Échelle passe de 0.55 (visible en entier) à 1.8 (traversée)
+    // proportionnellement à la position dans la station.
+    const zoomK = Math.max(-0.9, Math.min(0.9, t + 0.4));
+    const s = 0.55 + (zoomK + 0.9) * 0.7; // ~0.55 → ~1.8
     g.scale.setScalar(s);
 
-    // Rotation : elle nous fait face en arrivant, tourne quand on passe
-    g.rotation.y = clampedT * 0.85 + Math.sin(performance.now() * 0.0003) * 0.06;
-    g.rotation.x = -clampedT * 0.15;
+    // Fade in/out doux uniquement aux bords : t ∈ [-0.7, -0.5] fade in,
+    // t ∈ [0.5, 0.75] fade out. Entre les deux, opacité 1.
+    let alpha = 1;
+    if (t < -0.5) alpha = Math.max(0, (t + 0.7) / 0.2);
+    else if (t > 0.5) alpha = Math.max(0, (0.75 - t) / 0.25);
+    // On passe alpha via userData → le House l'applique sur son material
+    (g.userData as { alpha?: number }).alpha = alpha;
+    g.visible = alpha > 0.02;
 
-    // Fade via material opacity — le House component utilise MeshStandard,
-    // on triche via visible et une échelle qui tend vers 0 aux bords
-    g.visible = vis > 0.02;
+    // Rotation très douce — vibration organique, pas de vue 3/4 forcée
+    g.rotation.y = Math.sin(performance.now() * 0.0003) * 0.04;
+    g.rotation.x = 0;
+    g.position.set(0, 0, 0);
 
-    // Caméra : léger drift latéral piloté par l'exploration horizontale
+    // Caméra : drift latéral piloté par l'exploration horizontale
     const s2 = scrollStore.get();
     cameraFocus.current.x += (s2.x / 800 - cameraFocus.current.x) * (dt * 3);
     camera.position.x = cameraFocus.current.x;
