@@ -7,6 +7,7 @@ import Nav from "@/components/Nav";
 import ScrollProvider from "@/components/ScrollProvider";
 import SeoNav from "@/components/SeoNav";
 import SiteMarble from "@/components/SiteMarble";
+import SoundToggle from "@/components/SoundToggle";
 
 const prata = localFont({
   src: "../../public/fonts/Prata-Regular.ttf",
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteMarble />
         <Nav />
         <BreathingCursor />
+        <SoundToggle />
         {children}
       </body>
     </html>
