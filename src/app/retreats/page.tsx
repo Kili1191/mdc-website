@@ -6,8 +6,8 @@ const pageStyle: React.CSSProperties = {
 };
 const containerStyle: React.CSSProperties = {
   maxWidth: 720, margin: "0 auto", padding: "48px 8vw",
-  background: "rgba(237,228,208,0.82)",
-  backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
+  background: "rgba(237,228,208,0.28)",
+  backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)",
   borderRadius: 2,
 };
 const bodyStyle: React.CSSProperties = {

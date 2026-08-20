@@ -38,7 +38,6 @@ const stateNumStyle: React.CSSProperties = {
 const sectionStyle: React.CSSProperties = {
   position: "relative",
   zIndex: 5,
-  background: COLORS.parchemin,
   padding: "160px 8vw",
   display: "flex",
   justifyContent: "center",
@@ -46,6 +45,11 @@ const sectionStyle: React.CSSProperties = {
 const containerStyle: React.CSSProperties = {
   maxWidth: 640,
   width: "100%",
+  padding: "40px 32px",
+  background: "rgba(237,228,208,0.28)",
+  backdropFilter: "blur(3px)",
+  WebkitBackdropFilter: "blur(3px)",
+  borderRadius: 2,
 };
 
 export default function Home() {
@@ -140,10 +144,13 @@ export default function Home() {
           <p style={{ ...bodyStyle, marginTop: 40 }}>
             Entry is by conversation, not by calendar. Tell us what you carry.
           </p>
+          <p style={{ ...bodyStyle, fontSize: 13, color: COLORS.taupe, marginTop: 32, fontStyle: "italic" }}>
+            No forms you dread. One question, answered in your own time.
+          </p>
           <a
             href="/begin"
             style={{
-              display: "inline-block", marginTop: 56,
+              display: "inline-block", marginTop: 48,
               fontFamily: FONTS.prata, fontSize: 14, letterSpacing: "0.32em",
               textTransform: "uppercase", textDecoration: "none",
               color: COLORS.rouille, border: `1px solid ${COLORS.rouille}`,
@@ -152,9 +159,6 @@ export default function Home() {
           >
             Begin
           </a>
-          <p style={{ ...bodyStyle, fontSize: 13, color: COLORS.taupe, marginTop: 32, fontStyle: "italic" }}>
-            No forms you dread. One question, answered in your own time.
-          </p>
         </div>
       </section>
     </>

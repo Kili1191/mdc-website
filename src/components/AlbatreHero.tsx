@@ -288,26 +288,11 @@ export default function AlbatreHero() {
   }, []);
 
   const brou = "#2F2519";
-  const rouille = "#A55A3E";
 
   return (
     <>
       {/* canvas plein écran fixe */}
       <div ref={mountRef} style={{position:"fixed",inset:0,width:"100%",height:"100%",overflow:"hidden",background:"#EDE4D0",zIndex:0}} />
-
-      {/* SEUIL Begin à la fin */}
-      <div style={{
-        position:"fixed", bottom:"12%", left:0, right:0, zIndex:8,
-        display:"flex", justifyContent:"center", pointerEvents:"none",
-        opacity: atEnd ? 1 : 0, transition:"opacity 1.2s ease",
-      }}>
-        <a href="#" style={{
-          fontFamily:"'Prata', serif", fontSize:"18px", letterSpacing:"0.3em",
-          color: rouille, textDecoration:"none", border:`1px solid ${rouille}`,
-          padding:"16px 48px", borderRadius:"2px", pointerEvents: atEnd ? "auto" : "none",
-          background:"rgba(237,228,208,0.4)", backdropFilter:"blur(2px)",
-        }}>BEGIN</a>
-      </div>
 
       {/* indice scroll */}
       <div style={{
