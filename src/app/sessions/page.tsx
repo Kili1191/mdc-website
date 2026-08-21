@@ -1,4 +1,7 @@
 import { COLORS, FONTS } from "@/styles/tokens";
+import SplitTextChars from "@/components/effects/SplitTextChars";
+import MagneticButton from "@/components/effects/MagneticButton";
+import AssetFrame from "@/components/effects/AssetFrame";
 
 const pageStyle: React.CSSProperties = {
   position: "relative",
@@ -54,7 +57,9 @@ export default function SessionsPage() {
     <main style={pageStyle}>
       <div style={containerStyle}>
         <p style={eyebrowStyle}>Sessions</p>
-        <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Four ways to set it down.</h1>
+        <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
+          <SplitTextChars text="Four ways to set it down." delay={26} duration={900} />
+        </h1>
         <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
           Each begins the same way, in silence, fully clothed, with nothing required of you.
           Each leaves you somewhere different.
@@ -72,6 +77,10 @@ export default function SessionsPage() {
         <div>
           <p style={roomLabelStyle}>ANTARA</p>
           <p style={{ ...microStyle, marginTop: 12 }}>90 minutes · The threshold session</p>
+          <div style={{ margin: "32px auto", maxWidth: 460 }}>
+            <AssetFrame slot="SI-01" kind="image" src="/photos/si-01.jpg" aspect="4/5" effect="reveal"
+              prompt="Warm low platform bed in cream linen, sourceless warm ambient light, empty threshold room, Aube Encens." />
+          </div>
           <h2 style={{ ...sectionHeadStyle, marginTop: 32 }}>
             For the weight you have carried longest.
           </h2>
@@ -158,18 +167,9 @@ export default function SessionsPage() {
               If you feel it is yours, say so.
             </p>
           </div>
-          <a
-            href="/begin"
-            style={{
-              display: "inline-block", marginTop: 48,
-              fontFamily: FONTS.prata, fontSize: 14, letterSpacing: "0.32em",
-              textTransform: "uppercase", textDecoration: "none",
-              color: COLORS.rouille, border: `1px solid ${COLORS.rouille}`,
-              padding: "18px 44px", borderRadius: 2,
-            }}
-          >
-            Apply
-          </a>
+          <div style={{ marginTop: 48 }}>
+            <MagneticButton href="/begin">Apply</MagneticButton>
+          </div>
         </div>
 
         <hr style={dividerStyle} />

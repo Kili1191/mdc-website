@@ -1,4 +1,6 @@
 import { COLORS, FONTS } from "@/styles/tokens";
+import SplitTextChars from "@/components/effects/SplitTextChars";
+import TextScramble from "@/components/effects/TextScramble";
 
 const pageStyle: React.CSSProperties = {
   position: "relative", zIndex: 5, minHeight: "100vh",
@@ -43,7 +45,9 @@ export default function NotesPage() {
     <main style={pageStyle}>
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Notes</p>
-          <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Notes.</h1>
+          <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
+            <SplitTextChars text="Notes." delay={60} duration={900} />
+          </h1>
           <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
             A long piece, once a month. Nothing to scroll past. Written to be read slowly,
             or not at all.
@@ -59,7 +63,7 @@ export default function NotesPage() {
 
           <hr style={dividerStyle} />
 
-          <p style={essayNumStyle}>Essay 01</p>
+          <p style={essayNumStyle}><TextScramble text="Essay 01" duration={900} /></p>
           <h2 style={{ ...essayTitleStyle, marginTop: 20 }}>On carrying.</h2>
           <p style={{ ...bodyStyle, marginTop: 32 }}>
             Everyone you know is carrying something they have decided not to mention. The
@@ -73,7 +77,7 @@ export default function NotesPage() {
 
           <hr style={dividerStyle} />
 
-          <p style={essayNumStyle}>Essay 02</p>
+          <p style={essayNumStyle}><TextScramble text="Essay 02" duration={900} /></p>
           <h2 style={{ ...essayTitleStyle, marginTop: 20 }}>
             The difference between quiet and silence.
           </h2>
@@ -88,7 +92,7 @@ export default function NotesPage() {
 
           <hr style={dividerStyle} />
 
-          <p style={essayNumStyle}>Essay 03</p>
+          <p style={essayNumStyle}><TextScramble text="Essay 03" duration={900} /></p>
           <h2 style={{ ...essayTitleStyle, marginTop: 20 }}>What the body keeps.</h2>
           <p style={{ ...bodyStyle, marginTop: 32 }}>
             You forget on purpose; the body does not. It keeps a record: in the shoulders

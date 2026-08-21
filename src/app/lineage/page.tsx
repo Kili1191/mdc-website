@@ -1,4 +1,6 @@
 import { COLORS, FONTS } from "@/styles/tokens";
+import SplitTextChars from "@/components/effects/SplitTextChars";
+import AssetFrame from "@/components/effects/AssetFrame";
 
 const pageStyle: React.CSSProperties = {
   position: "relative", zIndex: 5, minHeight: "100vh",
@@ -39,7 +41,9 @@ export default function LineagePage() {
     <main style={pageStyle}>
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Lineage</p>
-          <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Where the work comes from.</h1>
+          <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
+            <SplitTextChars text="Where the work comes from." delay={24} duration={900} />
+          </h1>
           <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
             Learned at the source. Named to no one, for the same reason you are named to no one.
           </p>
@@ -60,6 +64,10 @@ export default function LineagePage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 72, marginTop: 64 }}>
             <div>
               <p style={placeLabelStyle}>North India · Rishikesh</p>
+              <div style={{ maxWidth: 360, margin: "24px auto" }}>
+                <AssetFrame slot="LP-01" kind="image" src="/photos/lp-01.jpg" aspect="3/4" effect="reveal"
+                  prompt="Quiet stone step on wide misty river at dawn, warm amber light rising, no people, Sugimoto seascapes, Aube Encens." />
+              </div>
               <p style={{ ...bodyStyle, marginTop: 20 }}>
                 Learned at the source, in person, one student at a time, in a town the
                 world visits for a week and Kilian did not.
@@ -67,6 +75,10 @@ export default function LineagePage() {
             </div>
             <div>
               <p style={placeLabelStyle}>The Himalaya · Dharamshala</p>
+              <div style={{ maxWidth: 360, margin: "24px auto" }}>
+                <AssetFrame slot="LP-02" kind="image" src="/photos/lp-02.jpg" aspect="3/4" effect="reveal"
+                  prompt="Single ancient faded Rouille prayer flag against Himalayan peaks in soft warm light, no wind, no people, Aube Encens." />
+              </div>
               <p style={{ ...bodyStyle, marginTop: 20 }}>
                 Where the deeper part of the transmission was entrusted. Among what he
                 carries from there: a line unbroken for eight generations, passed teacher

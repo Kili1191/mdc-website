@@ -1,4 +1,6 @@
 import { COLORS, FONTS } from "@/styles/tokens";
+import SplitTextChars from "@/components/effects/SplitTextChars";
+import MagneticButton from "@/components/effects/MagneticButton";
 
 const pageStyle: React.CSSProperties = {
   position: "relative", zIndex: 5, minHeight: "100vh",
@@ -46,7 +48,9 @@ export default function TheWorkPage() {
     <main style={pageStyle}>
         <div style={containerStyle}>
           <p style={eyebrowStyle}>The Work</p>
-          <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>What actually happens.</h1>
+          <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
+            <SplitTextChars text="What actually happens." delay={26} duration={900} />
+          </h1>
           <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
             A fair question. Here is an honest answer that gives away nothing, because the
             giving-away is not the point.
@@ -87,8 +91,10 @@ export default function TheWorkPage() {
           <hr style={dividerStyle} />
 
           <blockquote style={pullQuoteStyle}>
-            We will tell you what you will feel. We will never tell you how. The how is
-            years of training, and it is the reason the feeling is reliable.
+            <SplitTextChars
+              text="We will tell you what you will feel. We will never tell you how. The how is years of training, and it is the reason the feeling is reliable."
+              delay={12} duration={800}
+            />
           </blockquote>
 
           <hr style={dividerStyle} />
@@ -101,18 +107,9 @@ export default function TheWorkPage() {
             tell you honestly if it is not for you.
           </p>
 
-          <a
-            href="/begin"
-            style={{
-              display: "inline-block", marginTop: 56,
-              fontFamily: FONTS.prata, fontSize: 14, letterSpacing: "0.32em",
-              textTransform: "uppercase", textDecoration: "none",
-              color: COLORS.rouille, border: `1px solid ${COLORS.rouille}`,
-              padding: "18px 44px", borderRadius: 2,
-            }}
-          >
-            Begin
-          </a>
+          <div style={{ marginTop: 56 }}>
+            <MagneticButton href="/begin">Begin</MagneticButton>
+          </div>
       </div>
     </main>
   );

@@ -3,6 +3,9 @@
 import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import BreathReveal from "@/components/BreathReveal";
+import SplitTextChars from "@/components/effects/SplitTextChars";
+import MagneticButton from "@/components/effects/MagneticButton";
+import AssetFrame from "@/components/effects/AssetFrame";
 import { useIntroReady } from "@/lib/introReady";
 import { COLORS, FONTS } from "@/styles/tokens";
 import { scrollStore } from "@/lib/scrollStore";
@@ -103,22 +106,37 @@ export default function Home() {
       <HomeStage />
 
       <div ref={rootRef}>
-        {/* 1. SEUIL */}
+        {/* 1. SEUIL — VD-01 hero video derrière + SplitTextChars sur titre */}
         <section className="mdc-station" style={stationStyle}>
-          <BreathReveal
-            as="p"
-            text="For those who carry everything inside."
-            style={{ ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)", maxWidth: 900, textAlign: "center" }}
-            stagger={110}
-          />
+          <div style={{
+            position: "absolute", inset: "10% 8vw 22% 8vw", zIndex: -1,
+            opacity: 0.35, mixBlendMode: "multiply",
+          }}>
+            <AssetFrame slot="VD-01" kind="video" src="/videos/vd-01.mp4" aspect="21/9"
+              prompt="Slow drift over pale onyx marble, sourceless warm light, dust particles, no people, seamless 8s loop, Sugimoto/Turrell." />
+          </div>
+          <div style={{
+            ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)",
+            maxWidth: 900, textAlign: "center",
+          }}>
+            <SplitTextChars text="For those who carry everything inside." delay={22} duration={950} />
+          </div>
         </section>
 
-        {/* 2. PIERRE */}
+        {/* 2. PIERRE — PH-01 image derrière + titre */}
         <section className="mdc-station" style={stationStyle}>
+          <div style={{
+            position: "absolute", inset: "18% 20vw", zIndex: -1,
+            opacity: 0.55, filter: "contrast(0.9)",
+          }}>
+            <AssetFrame slot="PH-01" kind="image" src="/photos/ph-01.jpg" aspect="4/5"
+              effect="reveal"
+              prompt="Onyx stone slab with faint house engraving, warm amber inside the lines, Brou dominant, Ocre glow, Sugimoto meets Kiefer." />
+          </div>
           <BreathReveal
             as="p"
             text="There is a kind of tiredness that rest doesn't reach…"
-            style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 52px)", maxWidth: 900, textAlign: "center" }}
+            style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 52px)", maxWidth: 900, textAlign: "center", position: "relative", zIndex: 1 }}
             stagger={100}
           />
         </section>
@@ -137,7 +155,7 @@ export default function Home() {
               stagger={140}
             />
             <div style={{ marginTop: 48 }}>
-              <a href="/the-work" style={linkStyle}>The Work</a>
+              <MagneticButton href="/the-work">The Work</MagneticButton>
             </div>
           </div>
         </section>
@@ -145,14 +163,14 @@ export default function Home() {
         {/* 5. KILIAN */}
         <section className="mdc-station" style={stationStyle}>
           <div style={{ textAlign: "center", maxWidth: 900 }}>
-            <BreathReveal
-              as="p"
-              text="Chronic stress rarely looks like falling apart. It looks like being very good at your life."
-              style={{ ...displayItalic, fontSize: "clamp(24px, 3.8vw, 40px)" }}
-              stagger={70}
-            />
+            <div style={{ ...displayItalic, fontSize: "clamp(24px, 3.8vw, 40px)" }}>
+              <SplitTextChars
+                text="Chronic stress rarely looks like falling apart. It looks like being very good at your life."
+                delay={18} duration={800}
+              />
+            </div>
             <div style={{ marginTop: 56 }}>
-              <a href="/practitioner" style={linkStyle}>Kilian</a>
+              <MagneticButton href="/practitioner">Kilian</MagneticButton>
             </div>
           </div>
         </section>
@@ -160,24 +178,12 @@ export default function Home() {
         {/* 6. BEGIN */}
         <section className="mdc-station" style={stationStyle}>
           <div style={{ textAlign: "center" }}>
-            <BreathReveal
-              as="p"
-              text="Arriving is enough."
-              style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 56px)" }}
-              stagger={110}
-            />
-            <a
-              href="/begin"
-              style={{
-                display: "inline-block", marginTop: 56,
-                fontFamily: FONTS.prata, fontSize: 14, letterSpacing: "0.32em",
-                textTransform: "uppercase", textDecoration: "none",
-                color: COLORS.rouille, border: `1px solid ${COLORS.rouille}`,
-                padding: "18px 44px", borderRadius: 2,
-              }}
-            >
-              Begin
-            </a>
+            <div style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 56px)" }}>
+              <SplitTextChars text="Arriving is enough." delay={38} duration={950} />
+            </div>
+            <div style={{ marginTop: 56 }}>
+              <MagneticButton href="/begin">Begin</MagneticButton>
+            </div>
           </div>
         </section>
       </div>

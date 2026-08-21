@@ -1,4 +1,7 @@
 import { COLORS, FONTS } from "@/styles/tokens";
+import SplitTextChars from "@/components/effects/SplitTextChars";
+import MagneticButton from "@/components/effects/MagneticButton";
+import AssetFrame from "@/components/effects/AssetFrame";
 
 const pageStyle: React.CSSProperties = {
   position: "relative", zIndex: 5, minHeight: "100vh",
@@ -40,8 +43,12 @@ export default function RetreatsPage() {
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Retreats</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
-            Once a year. Very few people. Somewhere quiet.
+            <SplitTextChars text="Once a year. Very few people. Somewhere quiet." delay={18} duration={950} />
           </h1>
+          <div style={{ maxWidth: 640, margin: "48px auto 0" }}>
+            <AssetFrame slot="RT-01" kind="image" src="/photos/rt-01.jpg" aspect="21/9" effect="reveal"
+              prompt="Vast quiet interior of old stone house, sourceless warm light pooling on floor, faded parchemin walls, one low bench, Sugimoto Theaters meets Turrell." />
+          </div>
           <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
             The work, given room and time it cannot have in a single afternoon in London.
           </p>
@@ -64,18 +71,9 @@ export default function RetreatsPage() {
             </p>
           </div>
 
-          <a
-            href="/begin"
-            style={{
-              display: "inline-block", marginTop: 56,
-              fontFamily: FONTS.prata, fontSize: 14, letterSpacing: "0.32em",
-              textTransform: "uppercase", textDecoration: "none",
-              color: COLORS.rouille, border: `1px solid ${COLORS.rouille}`,
-              padding: "18px 44px", borderRadius: 2,
-            }}
-          >
-            Register interest
-          </a>
+          <div style={{ marginTop: 56 }}>
+            <MagneticButton href="/begin">Register interest</MagneticButton>
+          </div>
 
           <hr style={dividerStyle} />
 

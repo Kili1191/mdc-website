@@ -1,5 +1,7 @@
 import BeginForm from "./BeginForm";
 import { COLORS, FONTS } from "@/styles/tokens";
+import SplitTextChars from "@/components/effects/SplitTextChars";
+import TextScramble from "@/components/effects/TextScramble";
 
 const pageStyle: React.CSSProperties = {
   position: "relative", zIndex: 5, minHeight: "100vh",
@@ -49,14 +51,18 @@ export default function BeginPage() {
     <main style={pageStyle}>
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Begin</p>
-          <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Begin.</h1>
+          <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
+            <SplitTextChars text="Begin." delay={70} duration={900} />
+          </h1>
           <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
             There is no booking calendar. There is a conversation. It starts with one
             question.
           </p>
 
           <div style={{ marginTop: 96, marginBottom: 56 }}>
-            <p style={questionStyle}>What do you carry?</p>
+            <p style={questionStyle}>
+              <TextScramble text="What do you carry?" duration={1600} />
+            </p>
           </div>
 
           <p style={{ ...bodyStyle }}>

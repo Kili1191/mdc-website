@@ -1,4 +1,7 @@
 import { COLORS, FONTS } from "@/styles/tokens";
+import SplitTextChars from "@/components/effects/SplitTextChars";
+import MagneticButton from "@/components/effects/MagneticButton";
+import AssetFrame from "@/components/effects/AssetFrame";
 
 const pageStyle: React.CSSProperties = {
   position: "relative", zIndex: 5, minHeight: "100vh",
@@ -44,10 +47,17 @@ export default function PractitionerPage() {
     <main style={pageStyle}>
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Practitioner</p>
-          <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>Kilian.</h1>
+          <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
+            <SplitTextChars text="Kilian." delay={35} duration={800} />
+          </h1>
           <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
             One practitioner. Every session, his. Nothing here is delivered by staff.
           </p>
+
+          <div style={{ maxWidth: 380, margin: "56px auto 8px" }}>
+            <AssetFrame slot="PT-01" kind="image" src="/photos/pt-01.jpg" aspect="4/5" effect="fluid"
+              prompt="Silhouette or hands of Kilian, warm ambient light, Aube Encens palette, discreet fine art." />
+          </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: 64 }}>
             <p style={bodyStyle}>
@@ -80,7 +90,7 @@ export default function PractitionerPage() {
           </div>
 
           <div style={{ marginTop: 56 }}>
-            <a href="/lineage" style={linkStyle}>See the lineage</a>
+            <MagneticButton href="/lineage">See the lineage</MagneticButton>
           </div>
 
           <hr style={dividerStyle} />
@@ -100,7 +110,7 @@ export default function PractitionerPage() {
 
           <p style={eyebrowStyle}>Discretion</p>
           <h2 style={{ ...sectionHeadStyle, marginTop: 32 }}>
-            No one is named. This is not a policy. It is the product.
+            <SplitTextChars text="No one is named. This is not a policy. It is the product." delay={16} duration={800} />
           </h2>
           <p style={{ ...bodyStyle, marginTop: 40 }}>
             No client is ever named, referenced, or implied. Not on this site, not in
