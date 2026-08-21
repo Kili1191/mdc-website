@@ -8,6 +8,8 @@ import ImageReveal from "@/components/effects/ImageReveal";
 import ParallaxStack from "@/components/effects/ParallaxStack";
 import FluidImage from "@/components/effects/FluidImage";
 import SplitTextChars from "@/components/effects/SplitTextChars";
+import ImageMarquee from "@/components/effects/ImageMarquee";
+import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
 
 // Page démo — échantillon des 8 effets d'animation qui peuvent être
 // posés partout sur le site. Chaque section montre l'effet + son nom
@@ -143,9 +145,55 @@ export default function EffectsDemo() {
           </div>
         </section>
 
-        {/* 8. Cursor morph on link — indication */}
+        {/* 8. Image marquee — bande d'images qui défile */}
         <section style={section}>
-          <p style={eyebrow}>08 · Cursor morph</p>
+          <p style={eyebrow}>08 · Image marquee</p>
+          <h2 style={label}>Bande d&apos;images infinie.</h2>
+          <p style={note}>
+            Défile en horizontal en boucle. Pause au hover. Signature
+            Aesop / Studio Freight — bandeau de références visuelles
+            sans jamais s&apos;arrêter.
+          </p>
+          <ImageMarquee
+            speed={55}
+            height={300}
+            items={[
+              { src: "/motif-compo.jpg", width: 240 },
+              { src: "/motif-bodhi.jpg", width: 260 },
+              { src: "/albatre-lisse.jpg", width: 320 },
+              { src: "/motif-compo.jpg", width: 220 },
+              { src: "/albatre-lisse-full.jpg", width: 300 },
+              { src: "/motif-bodhi.jpg", width: 240 },
+            ]}
+          />
+        </section>
+
+        {/* 9. Scroll drift gallery — parallax horizontal au scroll */}
+        <section style={section}>
+          <p style={eyebrow}>09 · Scroll drift</p>
+          <h2 style={label}>Les visuels dérivent quand tu descends.</h2>
+          <p style={note}>
+            Rangée d&apos;images qui glisse latéralement au fil du scroll
+            vertical. L&apos;amplitude et la direction sont réglables. Test :
+            scrolle lentement à travers cette section.
+          </p>
+          <ScrollDriftGallery
+            direction="left"
+            amplitude={35}
+            height={340}
+            items={[
+              { src: "/motif-compo.jpg", width: 280 },
+              { src: "/motif-bodhi.jpg", width: 300 },
+              { src: "/albatre-lisse.jpg", width: 260 },
+              { src: "/motif-compo.jpg", width: 320 },
+              { src: "/albatre-lisse-full.jpg", width: 280 },
+            ]}
+          />
+        </section>
+
+        {/* 10. Cursor morph on link — indication */}
+        <section style={section}>
+          <p style={eyebrow}>10 · Cursor morph</p>
           <h2 style={label}>Curseur qui change de forme sur les cibles.</h2>
           <p style={note}>
             Déjà en place globalement : approche le curseur d&apos;un lien
