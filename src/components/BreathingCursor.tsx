@@ -10,7 +10,10 @@ import { useEffect, useRef } from "react";
 // composition de transform (Safari est chiant sur var() imbriqués
 // dans un même transform).
 
-const BREATH_MS = 5500;
+// Cohérence cardiaque : 5.5 respirations/min = 5.5s d'inhale + 5.5s
+// d'exhale = 11s pour un cycle complet. Le sinus va d'un minimum à un
+// maximum et redescend en 11s, exactement comme l'IntroOverlay.
+const BREATH_MS = 11000;
 const HALO_LERP = 0.14;
 
 // Contrainte : au pic du souffle, le dot ne doit PAS dépasser la
