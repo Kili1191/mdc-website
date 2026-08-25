@@ -2,6 +2,7 @@ import { COLORS, FONTS } from "@/styles/tokens";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import MagneticButton from "@/components/effects/MagneticButton";
 import AssetFrame from "@/components/effects/AssetFrame";
+import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
 
 const pageStyle: React.CSSProperties = {
   position: "relative",
@@ -186,6 +187,24 @@ export default function SessionsPage() {
           </p>
           <p style={{ ...microStyle, marginTop: 40 }}>By arrangement</p>
         </div>
+      </div>
+
+      {/* Bandeau atmosphérique — les 4 salles qui dérivent horizontalement
+          au scroll, chaque image en distorsion fluide sous le curseur */}
+      <div style={{ marginTop: 160, position: "relative", zIndex: 5 }}>
+        <ScrollDriftGallery
+          direction="left"
+          amplitude={30}
+          height={420}
+          gap={32}
+          fluid
+          items={[
+            { src: "/photos/si-01.jpg", width: 300, alt: "" },
+            { src: "/photos/si-02.jpg", width: 340, alt: "" },
+            { src: "/photos/si-03.jpg", width: 300, alt: "" },
+            { src: "/photos/si-04.jpg", width: 340, alt: "" },
+          ]}
+        />
       </div>
     </main>
   );

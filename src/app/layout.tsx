@@ -29,8 +29,25 @@ const greatVibes = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Maison du Calme",
+  metadataBase: new URL("https://maisonducalme.com"),
+  title: {
+    default: "Maison du Calme",
+    template: "%s · Maison du Calme",
+  },
   description: "For those who carry everything inside.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    url: "https://maisonducalme.com",
+    siteName: "Maison du Calme",
+    title: "Maison du Calme",
+    description: "For those who carry everything inside.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Maison du Calme",
+    description: "For those who carry everything inside.",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

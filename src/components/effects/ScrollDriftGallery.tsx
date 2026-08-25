@@ -2,21 +2,26 @@
 
 import { useEffect, useRef } from "react";
 import { scrollStore } from "@/lib/scrollStore";
+import FluidImage from "./FluidImage";
 
 // ScrollDriftGallery — rangée d'images qui glisse latéralement au fil
 // du scroll vertical de la page. Effet "les visuels dérivent quand tu
-// descends" (Studio Freight, Active Theory). Direction et amplitude
-// configurables.
+// descends" (Studio Freight, Active Theory).
+// Option `fluid` : chaque image reçoit une distorsion WebGL ripple
+// sous le curseur (pas cumulable avec beaucoup d'images — 3-5 max
+// recommandé pour rester à 60fps).
 export type DriftItem = { src: string; alt?: string; width?: number };
 
 export default function ScrollDriftGallery({
   items, direction = "left", amplitude = 40, height = 360, gap = 24,
+  fluid = false,
 }: {
   items: DriftItem[];
   direction?: "left" | "right";
-  amplitude?: number;     // px de drift entre l'entrée et la sortie de viewport
+  amplitude?: number;   // vw d'amplitude entre entrée et sortie viewport
   height?: number;
   gap?: number;
+  fluid?: boolean;      // WebGL ripple distortion sur chaque image
 }) {
   const outerRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -29,15 +34,11 @@ export default function ScrollDriftGallery({
     const sign = direction === "left" ? -1 : 1;
     const tick = () => {
       const rect = outer.getBoundingClientRect();
-      // 0 quand la section entre dans le bas du viewport, 1 quand elle
-      // sort par le haut. Linéaire, sans easing.
       const p = 1 - Math.max(0, Math.min(1, (rect.top + rect.height * 0.5) / window.innerHeight));
       inner.style.transform = `translate3d(${sign * (p - 0.5) * amplitude * 2}vw, 0, 0)`;
       raf = requestAnimationFrame(tick);
     };
-    // read from scrollStore to sync (les deux marchent mais scrollStore
-    // évite un ticker isolé)
-    const unsubscribe = scrollStore.subscribe(() => {}); // keep store warm
+    const unsubscribe = scrollStore.subscribe(() => {});
     raf = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(raf);
@@ -59,12 +60,16 @@ export default function ScrollDriftGallery({
           const w = it.width ?? 260;
           return (
             <div key={i} style={{ height: "100%", width: w, flex: "none", overflow: "hidden" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={it.src}
-                alt={it.alt ?? ""}
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-              />
+              {fluid ? (
+                <FluidImage src={it.src} aspect={`${w}/${height}`} />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={it.src}
+                  alt={it.alt ?? ""}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                />
+              )}
             </div>
           );
         })}

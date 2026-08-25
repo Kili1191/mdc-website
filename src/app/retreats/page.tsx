@@ -2,6 +2,7 @@ import { COLORS, FONTS } from "@/styles/tokens";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import MagneticButton from "@/components/effects/MagneticButton";
 import AssetFrame from "@/components/effects/AssetFrame";
+import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
 
 const pageStyle: React.CSSProperties = {
   position: "relative", zIndex: 5, minHeight: "100vh",
@@ -82,6 +83,22 @@ export default function RetreatsPage() {
             activities, no group of strangers. If that is what you are looking for, this
             is not it, and we would rather say so.
           </p>
+      </div>
+
+      {/* Bandeau atmosphérique retreat, drift + fluid distortion */}
+      <div style={{ marginTop: 160, position: "relative", zIndex: 5 }}>
+        <ScrollDriftGallery
+          direction="right"
+          amplitude={28}
+          height={420}
+          gap={28}
+          fluid
+          items={[
+            { src: "/photos/rt-01.jpg", width: 380, alt: "" },
+            { src: "/photos/lp-02.jpg", width: 300, alt: "" },
+            { src: "/photos/rt-01.jpg", width: 340, alt: "" },
+          ]}
+        />
       </div>
     </main>
   );
