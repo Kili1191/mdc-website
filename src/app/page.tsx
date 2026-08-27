@@ -6,6 +6,7 @@ import BreathReveal from "@/components/BreathReveal";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import MagneticButton from "@/components/effects/MagneticButton";
 import AssetFrame from "@/components/effects/AssetFrame";
+import HeroMarbleVideo from "@/components/HeroMarbleVideo";
 import { useIntroReady } from "@/lib/introReady";
 import { COLORS, FONTS } from "@/styles/tokens";
 import { scrollStore } from "@/lib/scrollStore";
@@ -106,14 +107,16 @@ export default function Home() {
       <HomeStage />
 
       <div ref={rootRef}>
-        {/* 1. SEUIL — VD-01 hero video derrière + SplitTextChars sur titre */}
+        {/* 1. SEUIL — hero "video" = shader WebGL live (HeroMarbleVideo)
+            plutôt qu'un mp4 pré-rendu. Effet Awwwards signature : marbre
+            procédural, halo chaud qui dérive, poussière, souffle 11s. */}
         <section className="mdc-station" style={stationStyle}>
           <div style={{
-            position: "absolute", inset: "10% 8vw 22% 8vw", zIndex: -1,
-            opacity: 0.35, mixBlendMode: "multiply",
+            position: "absolute", inset: "8% 6vw 18% 6vw", zIndex: -1,
+            opacity: 0.55, mixBlendMode: "multiply",
+            borderRadius: 2, overflow: "hidden",
           }}>
-            <AssetFrame slot="VD-01" kind="video" src="/videos/vd-01.mp4" aspect="21/9"
-              prompt="Slow drift over pale onyx marble, sourceless warm light, dust particles, no people, seamless 8s loop, Sugimoto/Turrell." />
+            <HeroMarbleVideo aspect="21/9" />
           </div>
           <div style={{
             ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)",
