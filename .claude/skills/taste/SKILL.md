@@ -1,142 +1,221 @@
 ---
 name: taste
-description: Le jugement esthétique du site Maison du Calme — quoi accepter, quoi refuser, quoi retirer. À charger AVANT d'écrire ou de modifier toute surface visible (composant, page, couleur, typo, espacement, animation, shader), avant de relire un écran, et avant de dire qu'un écran est fini. Se déclenche sur : design, UI, visuel, style, look, esthétique, couleur, palette, typo, spacing, layout, animation, motion, transition, hero, landing, "c'est moche", "ça fait cheap", "améliore le rendu", design review, polish.
+description: Design taste judgment for Maison du Calme (MDC). Encodes concrete rules learned from the project's design decisions — palette, typography, motion, restraint, content density, copy discipline — so any future session knows when a screen is *done* vs *over-decorated / jarring / off-brand*. Invoke before finalising any UI change on this site, or when asked "does this look right?".
+type: judgment
 ---
 
-# Taste — MDC
+# taste — MDC design judgment
 
-Ce fichier ne décrit pas des goûts. Il décrit **des décisions déjà prises** (VISION.md, `src/styles/tokens.ts`, COPY_V13.md) et **la manière de juger** ce qui n'est pas écrit ailleurs.
+The MDC design language is **Aman × The Row × Aesop** filtered through **Sugimoto / Turrell / Kiefer / Bill Viola** in the Aube Encens palette. Everything on the site defers to that. If a decision reads as "clever," "modern for its own sake," "generic Awwwards," or "designer showing off," it is wrong. Restraint is the highest value.
 
-Ordre d'autorité : `VISION.md` > ce fichier > l'intuition. En cas de conflit avec du code existant, VISION.md gagne.
+## When to invoke
 
----
+- Before shipping any UI change (component, page, effect, animation)
+- Before writing new copy (spoiler: don't — see rule §7)
+- When the user asks "does this look right / is this good / what do you think"
+- When choosing between two visual options
+- When adding a new library, effect, or pattern
 
-## 0. Non négociables — un manquement = régression, pas un avis
+## Absolute rules (never break)
 
-- **Jamais de dark theme.** Fond Parchemin `#EDE4D0`, toujours. La profondeur se rend par la densité du marbre, jamais par le noir.
-- **Jamais `#FFF` ni `#000`.** Le blanc pur et le noir pur n'existent pas dans cette maison. `--color-ink #0A0806` est réservé à la profondeur WebGL, jamais à du texte ni à un fond d'UI.
-- **Palette fermée à 7 couleurs** (`src/styles/tokens.ts`). Aucune huitième, jamais, pas même « juste pour un état hover ».
-- **Typo verrouillée** : Prata = corps + display. Higuen = gros titres uniquement. Great Vibes = **une seule occurrence sur tout le site** (page Kilian). Si tu en ajoutes une deuxième, tu casses la seule qui comptait.
-- **Copy = COPY_V13.md, au mot près.** Aucune réécriture, aucun « j'ai amélioré la formulation ».
-- **NERVANA Guard** : aucun nom de technique, de phase ou de mécanique de protocole en public. Uniquement les 5 familles (ANTARA, VAYU, SOMA, TRANSMISSION, URDHVA) + résultats et sensations.
-- **`prefers-reduced-motion` respecté partout**, et le chemin réduit doit rester *beau* — pas une version amputée.
-- **60fps.** Un effet à 45fps n'est pas un effet, c'est un bug qui se déguise.
-- **Zéro scroll horizontal accidentel.** L'horizontal est un geste voulu (§2 VISION), jamais un débordement.
+### 1. Palette — Aube Encens only, no exception
+Legal colors:
+- `#EDE4D0` Parchemin — bg, 55% of surface
+- `#4A3B2A` Brou — text, 15%
+- `#2F2519` Brou foncé — strong titles
+- `#8C8B6A` Sauge — vegetal accent, ≤ 12%, sparse
+- `#A89A85` Taupe — neutral pause, 10%
+- `#B89968` Ocre — warm accent, ≤ 5%
+- `#A55A3E` Rouille — logo, CTAs, highlights, ≤ 3%
 
----
+Illegal:
+- Any dark mode
+- Any color outside the palette (that includes greys, whites, pure blacks, bright accents, gradients into off-palette hues)
+- Neon, cool blues, purples, saturated brights
+- CSS defaults (default blue link, default black text)
 
-## 1. Les cinq tests — le goût proprement dit
+If a component looks correct but uses a non-palette color, it is wrong.
 
-Applique-les dans l'ordre. Le premier qui échoue commande la correction.
+### 2. Typography — three fonts, exact hierarchy
+- **Prata** — body, subtitles, microcopy, everything default
+- **Higuen** — big display titles, section labels, room names (ANTARA/VAYU/SOMA/TRANSMISSION), quotes
+- **Great Vibes** — **one single occurrence on the entire site**: the Practitioner page quote `I don't fix anyone. Nothing is broken.` Nowhere else.
 
-### Test 1 — « Safe » (Porges)
-Le premier frame doit dire *sécurité* au système nerveux avant que le cerveau lise quoi que ce soit.
-- Courbes organiques, jamais d'angles durs. Un `border-radius: 4px` est un angle dur déguisé — soit c'est franchement rond, soit ce n'est pas un cadre.
-- Lumière chaude, jamais froide. Une ombre bleutée est une faute.
-- Rythme lent, jamais d'urgence. Aucun compte à rebours, aucun clignotement, aucun « plus que 3 places ».
+Illegal:
+- Any other font
+- All-caps used freely (only in Higuen labels/eyebrows with letter-spacing 0.14–0.32em)
+- Font weights other than 400 (single weight per font family)
+- Bold, italic used for emphasis in body
 
-**Échec si** : l'écran donne envie de se dépêcher.
+### 3. Motion — cohérence cardiaque 5.5s, subtle, never showy
+- Half-breath: **3000ms** (post-shortening) or **5500ms** (contexts requiring true 5.5s coherence, e.g. cursor)
+- Any oscillating element must synchronise to this rhythm or a coherent multiple
+- Ease: `cubic-bezier(0.16, 1, 0.3, 1)` for reveals (out-quart-like), `cubic-bezier(0.4, 0, 0.6, 1)` for exits
+- No `bounce`, no `elastic`, no cartoon ease
+- Reveal amplitude: `translateY` between 0.4em and 0.6em, never more
+- Duration: fades 700–950ms, transitions 400–600ms, page transitions 450ms out / 700ms in
+- No motion that fights the reader — every animation must feel like breath, not a spring
 
-### Test 2 — La matière porte la couleur, pas l'UI
-La couleur vit **dans le marbre**. L'interface, elle, est du parchemin et du brou.
-- Un bouton coloré, un badge, un liseré ocre autour d'une carte → faute.
-- Un CTA se signale par l'espace autour de lui et par la typo, pas par un fond.
+Never:
+- Element scaling > 1.4 unless it's a hero moment (house zoom, intro exit)
+- Rotations > 15° on content
+- Any hover animation with a "pop" character
+- CSS animation on properties that trigger layout (width, height, top, left) — GPU only (transform, opacity, filter)
 
-**Échec si** : en supprimant le calque marbre, il reste des taches de couleur.
+### 4. Spacing — generous, ritualistic
+- Section-to-section vertical: 96–200px (`SPACE.lg`–`xxl`), never < 64px
+- Container max-width: 640–780px for reading, 940 for feature pages
+- Container horizontal padding: `8vw` on desktop, tighter on mobile via clamp/`6vw`
+- Paragraph-to-paragraph gap: 24px
+- Title to body: 40px
+- Body font-size: 18px minimum, line-height 1.75
 
-### Test 3 — Le retrait
-Retire un élément de l'écran. Si l'écran n'est pas *moins bon*, laisse-le retiré.
-- Le luxe se lit à ce qui est absent. Pas de sous-titre explicatif sous un titre qui se suffit, pas d'icône à côté d'un mot clair, pas de flèche « scroll » si le contenu appelle déjà le scroll.
-- Deux éléments qui disent la même chose : garde le plus silencieux.
+If a screen feels "tight," add whitespace before touching anything else.
 
-**Échec si** : tu as ajouté quelque chose pour « remplir » un vide. Le vide était le sujet.
+### 5. Frames, cards, overlays — near-invisible
+- Content containers use `background: rgba(237, 228, 208, 0.28)` + `backdrop-filter: blur(3px)` — a *voile*, not a card
+- Never a visible border on content
+- Never a shadow on content (except cinematic vignette in shaders)
+- The marble (SiteMarble) is the persistent background — content floats over it, does not sit on cards
+- No visible rectangle around media (no dashed placeholder, no border on images)
 
-### Test 4 — La respiration
-- Espacements **exclusivement** depuis `SPACE` : 8 / 16 / 32 / 64 / 120 / 200. Aucune valeur arbitraire, jamais un `margin-top: 47px`.
-- Deux blocs distincts séparés par moins de `lg` (64px) en desktop se disputent l'attention. Une séparation de section, c'est `xl` (120) minimum.
-- Longueur de ligne 60–70 caractères. `line-height` ≥ 1.5 sur le corps de texte.
+### 6. The house = the logo, always
+- The house on the Home MAISON station and everywhere the house appears is `/public/mdc-logo.svg`
+- Not a custom architectural 3D house (walls, roof, door)
+- Rendered as **solid fill** in Rouille (matching IntroOverlay), not wireframe outlines
+- Max scale in HomeStage: **0.48** — never fills the viewport
+- If someone builds a "realistic 3D house," it is wrong
 
-**Échec si** : l'écran est plein. Il doit être *habité*, ce n'est pas pareil.
+### 7. Copy — validated set only, never invented
+- All visible text on the site comes from the validated set:
+  - `COPY_V13.md` (internal pages)
+  - User-provided copy in chat (Home 6 stations, Great Vibes quote, session-specific corrections)
+  - Future canonical files when added: `MDC_Site_V6`, `SITE_Prototype_V5_Valide_Typo_Figee`, `HOME_Traversee_Maison_Remplace_5Etats`, `WARROOM_Site_Decision_Finale`
+- **Zero new user-facing copy** by the agent. Ever. If a section seems to need text that doesn't exist, place a TODO placeholder and flag it to Kilian.
+- **No em dashes** (`—`) anywhere in visible text. Replace with `,`, `.`, `:`, or `·` per context.
+- **No meta/defensive sections** — the house never justifies itself. No "Why we don't do X," no "Why no names, no dates," no FAQ that defends the practice. If it explains the discretion, it violates the discretion.
+- **NERVANA Guard** — the internal method name never appears publicly. The five family names do (ANTARA, VAYU, SOMA, TRANSMISSION, URDHVA). Descriptions of what a session does are OK. Descriptions of *how* are internal only.
 
-### Test 5 — Miyazaki
-Le monde doit sembler avoir toujours existé, découvert et non construit pour le visiteur.
-- Rien qui sente le template : pas de grille de 3 cartes, pas de « as seen in », pas de section témoignages en carrousel, pas de bandeau cookie stylisé comme une pub.
-- Pas d'animation d'entrée sur chaque bloc au scroll. Ce qui apparaît partout n'apparaît nulle part.
+### 8. Density — content > quote wallpaper
+- A page that is only 6 short phrases with nothing else is not enough. That was the frustration on Home traversée v1.
+- Each station / section needs at least one of: real image (`AssetFrame` placeholder now, real asset later), a 3D moment (House, DepthImageLayer), meaningful whitespace with a marble reveal, or interactive matter.
+- If a page reads as "quotes scrolling with nothing between," it fails the taste check.
 
-**Échec si** : on reconnaît le composant avant de lire le contenu.
+### 9. Effects — one signature per section, not a demo reel
+Effects available (`src/components/effects/`): `SplitTextChars`, `BreathReveal`, `MagneticButton`, `TextScramble`, `Marquee`, `ImageReveal`, `FluidImage`, `ImageMarquee`, `ScrollDriftGallery`, `ParallaxStack`.
 
----
+Rules:
+- **One primary effect per section** — never stack SplitTextChars + Marquee + Parallax + Fluid on the same block
+- Big titles: SplitTextChars OR BreathReveal, not both
+- CTAs: MagneticButton, always, not a plain `<a>`
+- Body text: no effect (readability wins)
+- Image slots: `ImageReveal` for atmospheric, `FluidImage` for feature moments, `ScrollDriftGallery` for atmospheric strips — never all three on one page
+- Marquee (text): once per page maximum, footer-style, not headline
+- Cursor: BreathingCursor is enough — no additional trailing, sparkles, blob morphs
 
-## 2. Décisions par domaine
+### 10. Performance — 60fps or it doesn't ship
+- All animations on GPU (transform + opacity only in rAF)
+- No `width` / `height` animations
+- No blur > 10px on animated elements (blur is expensive)
+- `will-change` on animated properties, removed after animation
+- No more than ONE persistent WebGL context outside home (SiteMarble). Effects with their own canvas (FluidImage, HomeStage, DepthImageLayer) are OK if they exist only where used
+- On mobile: WebGL and heavy interactions gate on `pointer: fine` (BreathingCursor, SoundToggle already do; extend the pattern)
+- Test in production build (`npm run build && npm start`) before declaring a motion "done" — dev mode overhead lies
 
-### Couleur
-Ratios visés (surface perçue, pas nombre d'usages) : Parchemin 55% · Brou 15% · Sauge 12% · Taupe 10% · Ocre 5% · Rouille 3%.
-- **Sauge refroidit.** Usage mesuré, jamais en masse, jamais en fond de section.
-- **Rouille** = logo et highlights rares. Trois pour cent, c'est presque rien : tiens-t'y.
-- **Brou foncé `#2F2519`** pour les titres forts uniquement, pas pour du corps de texte.
+## Checklist before shipping any UI change
 
-### Typographie
-- Higuen uniquement au-dessus de ~48px. En dessous il devient illisible et fait « police décorative ».
-- Jamais de faux gras (`font-weight` synthétique sur Prata), jamais de corps de texte en capitales.
-- `letter-spacing` positif seulement sur Higuen en capitales. Sur Prata, l'espacement par défaut est le bon.
+Run mentally, silently, top to bottom. If any answer is "no" or "not sure," fix before declaring done.
 
-### Mouvement
-- **Tempo de base : la cohérence cardiaque, 5.5s / 5.5s.** Toute animation lente s'aligne dessus ou sur ses divisions. C'est la signature du site, pas une décoration.
-- Easing sortant long (≥ 1.2s sur les révélations). Jamais de `bounce`, jamais d'`elastic` — ce sont des signaux d'urgence.
-- Rien ne boucle mécaniquement. Ce qui se répète à l'identique se remarque, et ce qui se remarque casse l'immersion (Anadol : jamais deux fois pareil).
-- Le monde répond à la présence (Lusion) : si un élément bouge sans rapport avec le visiteur, demande-toi pourquoi il bouge.
+1. Every visible color is in the Aube Encens palette?
+2. Every font used is Prata, Higuen, or Great Vibes (and Great Vibes only in *the one place*)?
+3. All copy text comes from a validated source (V13, user chat, canonical Drive doc)?
+4. No em dashes anywhere?
+5. No meta/defensive sections (no "why we don't", no FAQ that defends discretion)?
+6. NERVANA name absent from public UI?
+7. Every reveal/motion synchronises to the breath rhythm or is completely still?
+8. Every animation uses only `transform` / `opacity` / `filter`?
+9. Every hover on a CTA uses `MagneticButton`, not a plain link with hover style?
+10. Every image uses `AssetFrame` (so missing files degrade gracefully) OR is a proven local asset?
+11. No visible frame, border, shadow, or card on content?
+12. Section vertical spacing ≥ 96px?
+13. Body font-size ≥ 18px, line-height ≥ 1.75?
+14. If this section is copy-only, is there also a non-textual moment (image slot, 3D, matter)?
+15. The 3D house is the logo (Rouille fill, ≤ 0.48 scale), not a custom architecture?
+16. On mobile (< 640px), does everything still fit without horizontal scroll and stay readable, with every full-screen height in `svh` rather than `vh` (see Technical traps)?
+17. Does it run at 60fps in the production build?
+18. If a user glances at this for 2 seconds, does it say "Sugimoto/Aman quiet" or "designer showing off"?
 
-### Texte au-dessus du marbre
-- Le contraste se mesure **contre l'image de fond la plus claire que le shader puisse produire**, pas contre la moyenne. Minimum 4.5:1 dans ce pire cas.
-- Marbre **interactif** sur l'accueil, **calme** sur les pages de contenu. Un texte long sur un fond qui bouge n'est pas lisible, quelle que soit sa beauté.
-- Pour asseoir un texte : voile parchemin en dégradé doux. **Jamais une carte** avec un fond opaque et un bord — ça ramène l'UI par la fenêtre (voir Test 2).
+## Anti-patterns — automatic fail
 
-### Navigation
-- Pas de header fixe permanent. La nav apparaît au besoin, s'efface sinon.
-- Le fallback `<nav>` sémantique reste complet et présent pour les crawlers, masqué en CSS une fois le WebGL prêt. Ne le simplifie jamais « puisqu'il est invisible ».
+Any one of these means the change must be reworked:
 
----
+- Orange glow (emissive Rouille pulsing loud)
+- Wireframe rendering of anything (unless deliberately architectural at low scale)
+- 3D element filling more than 60% of viewport height
+- Bright accent color introduced (blue, green, purple)
+- Sans-serif fallback rendering (means font not loaded — must fix)
+- Text over animated shader without contrast guarantee (voile card if unsure)
+- CTA without magnetic hover
+- Any element that scales > 20% on hover
+- Any transition longer than 1.5s that isn't the intro or the home hero traversal
+- Adding a section named "About" or "Why us"
+- Writing new sentences for the client because "it feels missing"
+- Using `!important` more than three times in a component
 
-## 3. Revue d'écran — à passer avant de dire « c'est fini »
+## Judgement calls the agent should make
 
-```
-[ ] iOS Safari 390px : aucun débordement horizontal, `svh` et non `vh` (voir §4)
-[ ] prefers-reduced-motion : l'écran reste complet et beau
-[ ] contraste texte ≥ 4.5:1 contre le frame de fond le plus clair
-[ ] espacements uniquement dans l'échelle SPACE
-[ ] ratios de palette à l'œil ; aucune 8e couleur ; aucun #FFF / #000
-[ ] `grep -rn "font-great-vibes" src/app src/components` → une seule *utilisation*
-    (page practitioner) en plus de la déclaration dans `layout.tsx`
-[ ] copy identique à COPY_V13.md (diff, pas lecture rapide)
-[ ] 60fps sur l'écran le plus chargé
-[ ] build vert
-```
+- Between two acceptable options, pick the one closer to *Aman restraint*
+- Between one striking option and one quiet option, quiet wins by default (only override with explicit user approval)
+- If uncertain about a color, use Taupe (safe neutral)
+- If uncertain about a type size, go smaller
+- If uncertain about a motion amplitude, go subtler
+- If uncertain about copy, use exactly what exists in the validated set, or TODO placeholder
 
----
+## Technical traps in this repo (they look like taste failures)
 
-## 4. Pièges connus de ce repo
+Each of these produces something that reads as bad design but is caused by a mechanism, not a judgment call.
 
-- **Unités de viewport — `vh` est toujours faux ici.** `100vh` vaut le viewport *large*
-  (barre d'URL masquée), donc sur iOS avec la barre visible une section « plein écran »
-  dépasse la zone visible et casse le rythme une-station-un-écran.
-  - **`svh` pour toute hauteur plein écran** (`minHeight: "100svh"`) : viewport *petit*,
-    valeur **stable** — indispensable ici, où ScrollTrigger et Lenis calculent des
-    positions de scroll qu'un recalcul en cours de route décale.
-  - **`dvh` seulement** si l'élément doit épouser la zone visible en direct ET qu'aucune
-    mesure liée au scroll n'en dépend : il change quand la barre d'URL se rétracte,
-    donc il provoque un reflow pendant le scroll.
-  - `vh` reste acceptable pour un `padding` ou une hauteur décorative, où quelques
-    pixels de variation ne se voient pas.
-- Le calque WebGL **vole les événements de pointeur et le scroll** sur iOS s'il n'a pas `pointer-events: none` quand il est décoratif.
-- Un `transform` 3D sur un parent **floute le texte enfant** au rendu. Sors le texte du contexte 3D plutôt que d'ajuster le `translateZ`.
-- **Les valeurs du marbre sont gravées** : `uSpread 1.00`, `uDecay 0.93`, `uRadius 0.29`, `lerp 0.65`, `uReflet 0.05`, `uIrisation 0.09`. On ne les retouche pas.
-- Leva sert au réglage, jamais à la production : une valeur validée à l'œil est **écrite en dur** dans le code, immédiatement.
-- Next.js 16 dans ce repo n'est pas celui de ta mémoire d'entraînement — lis `node_modules/next/dist/docs/` avant d'écrire (`AGENTS.md`).
+### Viewport units — `vh` is always wrong for full-screen height
+`100vh` is the *large* viewport, measured with the iOS URL bar retracted. With the bar visible, every "full-screen" section overflows the readable area and the one-station-one-screen rhythm slips.
 
----
+- **`svh` for any full-screen height** (`minHeight: "100svh"`). The small viewport is a **stable** value — essential here, where `src/lib/scroll.ts`, Lenis and ScrollTrigger measure a document height that must stay true *during* the scroll.
+- **`dvh` only** when an element must track the visible area live AND no scroll-linked measurement depends on it: it changes as the bar retracts, so it reflows mid-scroll.
+- `vh` remains fine for padding or decorative heights, where a few pixels of drift are invisible.
+- The home stations take their height from `.mdc-station` in `globals.css` — the only place the pre-2022 `height: 100vh; height: 100svh;` fallback can be written. An inline style object cannot express it.
 
-## 5. Méthode
+### The WebGL layer steals the pointer on iOS
+A decorative canvas without `pointer-events: none` swallows taps and scroll on iOS specifically. The page looks frozen, not broken.
 
-- **Fondation validée à l'œil, puis on empile.** Un chantier à la fois, build vert + commit entre chaque. Tout brancher d'un coup finit systématiquement en chevauchements où plus rien ne marche.
-- Kilian valide **visuellement**, souvent sur iOS Safari. Un « ça compile » n'est pas une validation.
-- Quand quelque chose est laid : **nomme la règle enfreinte** (le test ou la ligne ci-dessus), puis propose **le plus petit correctif** qui la respecte. Pas de refonte non demandée, pas de nouvelle librairie de composants, pas de « j'en ai profité pour ».
+### A 3D `transform` on a parent blurs the child text
+Text inside a 3D rendering context is resampled and goes soft. Move the text out of the 3D context — adjusting `translateZ` does not fix it.
+
+### Contrast is measured against the worst frame, not the average
+Rule §5's voile is the remedy; this is how to know it is needed. Measure text contrast against the **lightest frame the shader can produce**, not a screenshot of one moment. Minimum 4.5:1 in that worst case.
+
+### Graven values, never retuned
+The marble is locked at `uSpread 1.00`, `uDecay 0.93`, `uRadius 0.29`, `lerp 0.65`, `uReflet 0.05`, `uIrisation 0.09`. Leva is for finding a value, never for shipping one: once validated by eye, a value is hard-coded immediately.
+
+### Next.js 16 is not the Next.js in your training data
+Read `node_modules/next/dist/docs/` before writing framework code (see `AGENTS.md`).
+
+## Files that encode taste (read these before major changes)
+
+- `VISION.md` — canonical design vision
+- `AGENTS.md` / `CLAUDE.md` — project rules
+- `COPY_V13.md` — validated copy
+- `ASSETS_PLAN.md` — asset slots and prompts
+- `ASSETS_NANOBANANA.md` — image generation prompts + workflow
+- `DEPLOY.md` — production standard
+- `src/styles/tokens.ts` — color and font source of truth
+
+## What "done" feels like
+
+A screen is done when:
+- Nothing on it is trying to be noticed
+- The reader's eye lands on the copy, not on the effect
+- Removing any element would degrade the ritual, not simplify it
+- The palette is warm and quiet, no cool tones detected
+- Motion, if present, feels like breath — not like a spring, ping, or slide
+- A photograph of the screen could sit next to Aman's website without looking cheap
+
+If any of those isn't true, take one more pass.

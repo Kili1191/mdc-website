@@ -1,5 +1,9 @@
 @AGENTS.md
 
+# Design taste
+
+Before shipping ANY UI change, copy edit, effect, animation, or color decision — read `.claude/skills/taste/SKILL.md`. It encodes MDC's concrete design judgment (palette, typography, motion, spacing, copy discipline, anti-patterns, checklist for "done"). This overrides personal taste, current trends, and defaults. When uncertain, quieter wins.
+
 # Sources of truth (canonical)
 
 These docs live at repo root and win over anything in code when they conflict:
