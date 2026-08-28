@@ -13,9 +13,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EVENT, shouldBypassIntro } from '@/lib/introReady';
 
-const T = 5500;        // demi-souffle ms
-const HOLD = 2400;     // pause après yeux + titre
-const EXIT = 2600;     // durée du zoom d'entrée
+const T = 3000;        // demi-souffle ms (rythme respiratoire ressenti)
+const HOLD = 1200;     // pause après yeux + titre
+const EXIT = 1600;     // durée du zoom d'entrée
 
 const LABELS = ['inhale', 'exhale', 'inhale', 'exhale'];
 

@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useRef } from "react";
 
-// Split text char-by-char : chaque caractère (lettre + espace) est
-// révélé indépendamment via un mask + stagger. Trigger à l'entrée
-// du viewport. Rendu plus riche que le mot-par-mot du BreathReveal.
+// Split text char-by-char : chaque caractère (lettre) est révélé avec
+// un stagger. Trigger à l'entrée du viewport.
+// Word-safe : split par mots d'abord, chars à l'intérieur de spans
+// nowrap → le wrap ne peut se faire QU'ENTRE mots, jamais au milieu.
 export default function SplitTextChars({
   text, delay = 20, duration = 900,
 }: { text: string; delay?: number; duration?: number }) {
@@ -38,24 +39,38 @@ export default function SplitTextChars({
     return () => io.disconnect();
   }, [text, delay, duration]);
 
-  const chars = Array.from(text);
+  const parts = text.split(/(\s+)/);
   return (
-    <span ref={ref} style={{ display: "inline-block", overflow: "visible" }}>
-      {chars.map((c, i) => (
-        <span
-          key={i}
-          className="mdc-char"
-          style={{
-            display: "inline-block",
-            opacity: 0,
-            transform: "translateY(0.6em)",
-            willChange: "opacity, transform",
-            paddingBottom: "0.05em",
-          }}
-        >
-          {c === " " ? " " : c}
-        </span>
-      ))}
+    <span ref={ref} style={{ display: "inline", overflow: "visible" }}>
+      {parts.map((part, wi) => {
+        if (/^\s+$/.test(part)) return <span key={wi}>{part}</span>;
+        return (
+          <span
+            key={wi}
+            style={{
+              display: "inline-block",
+              whiteSpace: "nowrap",
+              overflow: "visible",
+            }}
+          >
+            {Array.from(part).map((c, i) => (
+              <span
+                key={i}
+                className="mdc-char"
+                style={{
+                  display: "inline-block",
+                  opacity: 0,
+                  transform: "translateY(0.6em)",
+                  willChange: "opacity, transform",
+                  paddingBottom: "0.05em",
+                }}
+              >
+                {c}
+              </span>
+            ))}
+          </span>
+        );
+      })}
     </span>
   );
 }

@@ -12,16 +12,26 @@
 
 html,
 body {
-  background-color: #000000;
-  color: #EDE4D0;
+  background-color: #EDE4D0;
+  color: #4A3B2A;
 }
 
 html {
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   font-family: var(--font-prata), Georgia, "Times New Roman", serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Mobile — ajustements responsives globaux */
+@media (max-width: 640px) {
+  html { font-size: 15px; }
+}
+@media (max-width: 420px) {
+  html { font-size: 14px; }
 }

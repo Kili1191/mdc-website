@@ -28,6 +28,13 @@ const greatVibes = localFont({
   display: "swap",
 });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover" as const,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://maisonducalme.com"),
   title: {

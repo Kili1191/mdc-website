@@ -6,7 +6,6 @@ import BreathReveal from "@/components/BreathReveal";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import MagneticButton from "@/components/effects/MagneticButton";
 import AssetFrame from "@/components/effects/AssetFrame";
-import HeroMarbleVideo from "@/components/HeroMarbleVideo";
 import { useIntroReady } from "@/lib/introReady";
 import { COLORS, FONTS } from "@/styles/tokens";
 import { scrollStore } from "@/lib/scrollStore";
@@ -47,9 +46,12 @@ const linkStyle: React.CSSProperties = {
 };
 const stationStyle: React.CSSProperties = {
   position: "relative", zIndex: 5,
-  height: "100vh", width: "100%",
+  // dvh gère la barre d'adresse mobile Safari, fallback vh sur old browsers
+  height: "100dvh",
+  minHeight: "100vh",
+  width: "100%",
   display: "flex", alignItems: "center", justifyContent: "center",
-  padding: "0 8vw",
+  padding: "0 6vw",
   willChange: "opacity, transform",
 };
 
@@ -107,17 +109,9 @@ export default function Home() {
       <HomeStage />
 
       <div ref={rootRef}>
-        {/* 1. SEUIL — hero "video" = shader WebGL live (HeroMarbleVideo)
-            plutôt qu'un mp4 pré-rendu. Effet Awwwards signature : marbre
-            procédural, halo chaud qui dérive, poussière, souffle 11s. */}
+        {/* 1. SEUIL — pas de rectangle média, le marbre ambient (SiteMarble)
+            suffit. Le titre au centre. */}
         <section className="mdc-station" style={stationStyle}>
-          <div style={{
-            position: "absolute", inset: "8% 6vw 18% 6vw", zIndex: -1,
-            opacity: 0.55, mixBlendMode: "multiply",
-            borderRadius: 2, overflow: "hidden",
-          }}>
-            <HeroMarbleVideo aspect="21/9" />
-          </div>
           <div style={{
             ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)",
             maxWidth: 900, textAlign: "center",
