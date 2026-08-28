@@ -51,7 +51,7 @@ export default function Site() {
 
       {/* HERO */}
       <section style={{
-        minHeight: "100vh", display: "flex", flexDirection: "column",
+        minHeight: "100svh", display: "flex", flexDirection: "column",
         alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 8%",
       }}>
         <img src="/logo.png" alt="Maison du Calme" style={{

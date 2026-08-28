@@ -60,7 +60,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${prata.variable} ${higuen.variable} ${greatVibes.variable}`}>
-      <body style={{ margin: 0, minHeight: "100vh", background: "#EDE4D0", color: "#4A3B2A" }}>
+      <body style={{ margin: 0, minHeight: "100svh", background: "#EDE4D0", color: "#4A3B2A" }}>
         <SeoNav />
         <IntroOverlay />
         <ScrollProvider />

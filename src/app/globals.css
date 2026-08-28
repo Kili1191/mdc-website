@@ -35,3 +35,14 @@ body {
 @media (max-width: 420px) {
   html { font-size: 14px; }
 }
+
+/* Stations de l'accueil — hauteur d'écran STABLE.
+   `svh` = viewport petit : la valeur ne bouge pas quand la barre d'URL iOS se
+   rétracte. Lenis et ScrollTrigger mesurent alors une hauteur de document qui
+   ne change plus en cours de scroll (`dvh` la ferait varier et décalerait les
+   positions). Le premier `height` est le repli pour les navigateurs sans
+   unités de viewport dynamiques (avant 2022). */
+.mdc-station {
+  height: 100vh;
+  height: 100svh;
+}

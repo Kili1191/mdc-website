@@ -7,7 +7,7 @@ import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
 const pageStyle: React.CSSProperties = {
   position: "relative",
   zIndex: 5,
-  minHeight: "100vh",
+  minHeight: "100svh",
   paddingTop: 160,
   paddingBottom: 200,
 };

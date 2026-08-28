@@ -100,7 +100,7 @@ Ratios visés (surface perçue, pas nombre d'usages) : Parchemin 55% · Brou 15%
 ## 3. Revue d'écran — à passer avant de dire « c'est fini »
 
 ```
-[ ] iOS Safari 390px : aucun débordement horizontal, `dvh` et non `vh`
+[ ] iOS Safari 390px : aucun débordement horizontal, `svh` et non `vh` (voir §4)
 [ ] prefers-reduced-motion : l'écran reste complet et beau
 [ ] contraste texte ≥ 4.5:1 contre le frame de fond le plus clair
 [ ] espacements uniquement dans l'échelle SPACE
@@ -116,7 +116,17 @@ Ratios visés (surface perçue, pas nombre d'usages) : Parchemin 55% · Brou 15%
 
 ## 4. Pièges connus de ce repo
 
-- **`100vh` sur iOS Safari** casse la mise en page à cause de la barre d'URL → `100dvh`.
+- **Unités de viewport — `vh` est toujours faux ici.** `100vh` vaut le viewport *large*
+  (barre d'URL masquée), donc sur iOS avec la barre visible une section « plein écran »
+  dépasse la zone visible et casse le rythme une-station-un-écran.
+  - **`svh` pour toute hauteur plein écran** (`minHeight: "100svh"`) : viewport *petit*,
+    valeur **stable** — indispensable ici, où ScrollTrigger et Lenis calculent des
+    positions de scroll qu'un recalcul en cours de route décale.
+  - **`dvh` seulement** si l'élément doit épouser la zone visible en direct ET qu'aucune
+    mesure liée au scroll n'en dépend : il change quand la barre d'URL se rétracte,
+    donc il provoque un reflow pendant le scroll.
+  - `vh` reste acceptable pour un `padding` ou une hauteur décorative, où quelques
+    pixels de variation ne se voient pas.
 - Le calque WebGL **vole les événements de pointeur et le scroll** sur iOS s'il n'a pas `pointer-events: none` quand il est décoratif.
 - Un `transform` 3D sur un parent **floute le texte enfant** au rendu. Sors le texte du contexte 3D plutôt que d'ajuster le `translateZ`.
 - **Les valeurs du marbre sont gravées** : `uSpread 1.00`, `uDecay 0.93`, `uRadius 0.29`, `lerp 0.65`, `uReflet 0.05`, `uIrisation 0.09`. On ne les retouche pas.

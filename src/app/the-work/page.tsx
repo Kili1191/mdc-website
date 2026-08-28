@@ -3,7 +3,7 @@ import SplitTextChars from "@/components/effects/SplitTextChars";
 import MagneticButton from "@/components/effects/MagneticButton";
 
 const pageStyle: React.CSSProperties = {
-  position: "relative", zIndex: 5, minHeight: "100vh",
+  position: "relative", zIndex: 5, minHeight: "100svh",
   paddingTop: 160, paddingBottom: 200,
 };
 const containerStyle: React.CSSProperties = {
