@@ -1,0 +1,194 @@
+---
+name: taste
+description: Design taste judgment for Maison du Calme (MDC). Encodes concrete rules learned from the project's design decisions — palette, typography, motion, restraint, content density, copy discipline — so any future session knows when a screen is *done* vs *over-decorated / jarring / off-brand*. Invoke before finalising any UI change on this site, or when asked "does this look right?".
+type: judgment
+---
+
+# taste — MDC design judgment
+
+The MDC design language is **Aman × The Row × Aesop** filtered through **Sugimoto / Turrell / Kiefer / Bill Viola** in the Aube Encens palette. Everything on the site defers to that. If a decision reads as "clever," "modern for its own sake," "generic Awwwards," or "designer showing off," it is wrong. Restraint is the highest value.
+
+## When to invoke
+
+- Before shipping any UI change (component, page, effect, animation)
+- Before writing new copy (spoiler: don't — see rule §7)
+- When the user asks "does this look right / is this good / what do you think"
+- When choosing between two visual options
+- When adding a new library, effect, or pattern
+
+## Absolute rules (never break)
+
+### 1. Palette — Aube Encens only, no exception
+Legal colors:
+- `#EDE4D0` Parchemin — bg, 55% of surface
+- `#4A3B2A` Brou — text, 15%
+- `#2F2519` Brou foncé — strong titles
+- `#8C8B6A` Sauge — vegetal accent, ≤ 12%, sparse
+- `#A89A85` Taupe — neutral pause, 10%
+- `#B89968` Ocre — warm accent, ≤ 5%
+- `#A55A3E` Rouille — logo, CTAs, highlights, ≤ 3%
+
+Illegal:
+- Any dark mode
+- Any color outside the palette (that includes greys, whites, pure blacks, bright accents, gradients into off-palette hues)
+- Neon, cool blues, purples, saturated brights
+- CSS defaults (default blue link, default black text)
+
+If a component looks correct but uses a non-palette color, it is wrong.
+
+### 2. Typography — three fonts, exact hierarchy
+- **Prata** — body, subtitles, microcopy, everything default
+- **Higuen** — big display titles, section labels, room names (ANTARA/VAYU/SOMA/TRANSMISSION), quotes
+- **Great Vibes** — **one single occurrence on the entire site**: the Practitioner page quote `I don't fix anyone. Nothing is broken.` Nowhere else.
+
+Illegal:
+- Any other font
+- All-caps used freely (only in Higuen labels/eyebrows with letter-spacing 0.14–0.32em)
+- Font weights other than 400 (single weight per font family)
+- Bold, italic used for emphasis in body
+
+### 3. Motion — cohérence cardiaque 5.5s, subtle, never showy
+- Half-breath: **3000ms** (post-shortening) or **5500ms** (contexts requiring true 5.5s coherence, e.g. cursor)
+- Any oscillating element must synchronise to this rhythm or a coherent multiple
+- Ease: `cubic-bezier(0.16, 1, 0.3, 1)` for reveals (out-quart-like), `cubic-bezier(0.4, 0, 0.6, 1)` for exits
+- No `bounce`, no `elastic`, no cartoon ease
+- Reveal amplitude: `translateY` between 0.4em and 0.6em, never more
+- Duration: fades 700–950ms, transitions 400–600ms, page transitions 450ms out / 700ms in
+- No motion that fights the reader — every animation must feel like breath, not a spring
+
+Never:
+- Element scaling > 1.4 unless it's a hero moment (house zoom, intro exit)
+- Rotations > 15° on content
+- Any hover animation with a "pop" character
+- CSS animation on properties that trigger layout (width, height, top, left) — GPU only (transform, opacity, filter)
+
+### 4. Spacing — generous, ritualistic
+- Section-to-section vertical: 96–200px (`SPACE.lg`–`xxl`), never < 64px
+- Container max-width: 640–780px for reading, 940 for feature pages
+- Container horizontal padding: `8vw` on desktop, tighter on mobile via clamp/`6vw`
+- Paragraph-to-paragraph gap: 24px
+- Title to body: 40px
+- Body font-size: 18px minimum, line-height 1.75
+
+If a screen feels "tight," add whitespace before touching anything else.
+
+### 5. Frames, cards, overlays — near-invisible
+- Content containers use `background: rgba(237, 228, 208, 0.28)` + `backdrop-filter: blur(3px)` — a *voile*, not a card
+- Never a visible border on content
+- Never a shadow on content (except cinematic vignette in shaders)
+- The marble (SiteMarble) is the persistent background — content floats over it, does not sit on cards
+- No visible rectangle around media (no dashed placeholder, no border on images)
+
+### 6. The house = the logo, always
+- The house on the Home MAISON station and everywhere the house appears is `/public/mdc-logo.svg`
+- Not a custom architectural 3D house (walls, roof, door)
+- Rendered as **solid fill** in Rouille (matching IntroOverlay), not wireframe outlines
+- Max scale in HomeStage: **0.48** — never fills the viewport
+- If someone builds a "realistic 3D house," it is wrong
+
+### 7. Copy — validated set only, never invented
+- All visible text on the site comes from the validated set:
+  - `COPY_V13.md` (internal pages)
+  - User-provided copy in chat (Home 6 stations, Great Vibes quote, session-specific corrections)
+  - Future canonical files when added: `MDC_Site_V6`, `SITE_Prototype_V5_Valide_Typo_Figee`, `HOME_Traversee_Maison_Remplace_5Etats`, `WARROOM_Site_Decision_Finale`
+- **Zero new user-facing copy** by the agent. Ever. If a section seems to need text that doesn't exist, place a TODO placeholder and flag it to Kilian.
+- **No em dashes** (`—`) anywhere in visible text. Replace with `,`, `.`, `:`, or `·` per context.
+- **No meta/defensive sections** — the house never justifies itself. No "Why we don't do X," no "Why no names, no dates," no FAQ that defends the practice. If it explains the discretion, it violates the discretion.
+- **NERVANA Guard** — the internal method name never appears publicly. The five family names do (ANTARA, VAYU, SOMA, TRANSMISSION, URDHVA). Descriptions of what a session does are OK. Descriptions of *how* are internal only.
+
+### 8. Density — content > quote wallpaper
+- A page that is only 6 short phrases with nothing else is not enough. That was the frustration on Home traversée v1.
+- Each station / section needs at least one of: real image (`AssetFrame` placeholder now, real asset later), a 3D moment (House, DepthImageLayer), meaningful whitespace with a marble reveal, or interactive matter.
+- If a page reads as "quotes scrolling with nothing between," it fails the taste check.
+
+### 9. Effects — one signature per section, not a demo reel
+Effects available (`src/components/effects/`): `SplitTextChars`, `BreathReveal`, `MagneticButton`, `TextScramble`, `Marquee`, `ImageReveal`, `FluidImage`, `ImageMarquee`, `ScrollDriftGallery`, `ParallaxStack`.
+
+Rules:
+- **One primary effect per section** — never stack SplitTextChars + Marquee + Parallax + Fluid on the same block
+- Big titles: SplitTextChars OR BreathReveal, not both
+- CTAs: MagneticButton, always, not a plain `<a>`
+- Body text: no effect (readability wins)
+- Image slots: `ImageReveal` for atmospheric, `FluidImage` for feature moments, `ScrollDriftGallery` for atmospheric strips — never all three on one page
+- Marquee (text): once per page maximum, footer-style, not headline
+- Cursor: BreathingCursor is enough — no additional trailing, sparkles, blob morphs
+
+### 10. Performance — 60fps or it doesn't ship
+- All animations on GPU (transform + opacity only in rAF)
+- No `width` / `height` animations
+- No blur > 10px on animated elements (blur is expensive)
+- `will-change` on animated properties, removed after animation
+- No more than ONE persistent WebGL context outside home (SiteMarble). Effects with their own canvas (FluidImage, HomeStage, DepthImageLayer) are OK if they exist only where used
+- On mobile: WebGL and heavy interactions gate on `pointer: fine` (BreathingCursor, SoundToggle already do; extend the pattern)
+- Test in production build (`npm run build && npm start`) before declaring a motion "done" — dev mode overhead lies
+
+## Checklist before shipping any UI change
+
+Run mentally, silently, top to bottom. If any answer is "no" or "not sure," fix before declaring done.
+
+1. Every visible color is in the Aube Encens palette?
+2. Every font used is Prata, Higuen, or Great Vibes (and Great Vibes only in *the one place*)?
+3. All copy text comes from a validated source (V13, user chat, canonical Drive doc)?
+4. No em dashes anywhere?
+5. No meta/defensive sections (no "why we don't", no FAQ that defends discretion)?
+6. NERVANA name absent from public UI?
+7. Every reveal/motion synchronises to the breath rhythm or is completely still?
+8. Every animation uses only `transform` / `opacity` / `filter`?
+9. Every hover on a CTA uses `MagneticButton`, not a plain link with hover style?
+10. Every image uses `AssetFrame` (so missing files degrade gracefully) OR is a proven local asset?
+11. No visible frame, border, shadow, or card on content?
+12. Section vertical spacing ≥ 96px?
+13. Body font-size ≥ 18px, line-height ≥ 1.75?
+14. If this section is copy-only, is there also a non-textual moment (image slot, 3D, matter)?
+15. The 3D house is the logo (Rouille fill, ≤ 0.48 scale), not a custom architecture?
+16. On mobile (< 640px), does everything still fit without horizontal scroll and stay readable?
+17. Does it run at 60fps in the production build?
+18. If a user glances at this for 2 seconds, does it say "Sugimoto/Aman quiet" or "designer showing off"?
+
+## Anti-patterns — automatic fail
+
+Any one of these means the change must be reworked:
+
+- Orange glow (emissive Rouille pulsing loud)
+- Wireframe rendering of anything (unless deliberately architectural at low scale)
+- 3D element filling more than 60% of viewport height
+- Bright accent color introduced (blue, green, purple)
+- Sans-serif fallback rendering (means font not loaded — must fix)
+- Text over animated shader without contrast guarantee (voile card if unsure)
+- CTA without magnetic hover
+- Any element that scales > 20% on hover
+- Any transition longer than 1.5s that isn't the intro or the home hero traversal
+- Adding a section named "About" or "Why us"
+- Writing new sentences for the client because "it feels missing"
+- Using `!important` more than three times in a component
+
+## Judgement calls the agent should make
+
+- Between two acceptable options, pick the one closer to *Aman restraint*
+- Between one striking option and one quiet option, quiet wins by default (only override with explicit user approval)
+- If uncertain about a color, use Taupe (safe neutral)
+- If uncertain about a type size, go smaller
+- If uncertain about a motion amplitude, go subtler
+- If uncertain about copy, use exactly what exists in the validated set, or TODO placeholder
+
+## Files that encode taste (read these before major changes)
+
+- `VISION.md` — canonical design vision
+- `AGENTS.md` / `CLAUDE.md` — project rules
+- `COPY_V13.md` — validated copy
+- `ASSETS_PLAN.md` — asset slots and prompts
+- `ASSETS_NANOBANANA.md` — image generation prompts + workflow
+- `DEPLOY.md` — production standard
+- `src/styles/tokens.ts` — color and font source of truth
+
+## What "done" feels like
+
+A screen is done when:
+- Nothing on it is trying to be noticed
+- The reader's eye lands on the copy, not on the effect
+- Removing any element would degrade the ritual, not simplify it
+- The palette is warm and quiet, no cool tones detected
+- Motion, if present, feels like breath — not like a spring, ping, or slide
+- A photograph of the screen could sit next to Aman's website without looking cheap
+
+If any of those isn't true, take one more pass.
