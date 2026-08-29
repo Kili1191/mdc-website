@@ -3,6 +3,7 @@ import { useEffect, useState, type CSSProperties } from "react";
 import { COLORS, FONTS } from "@/styles/tokens";
 import ImageReveal from "./ImageReveal";
 import FluidImage from "./FluidImage";
+import { atmosphereFor } from "@/lib/assetSrc";
 
 // Slot placeholder pour un asset qui n'existe pas encore.
 // - Si `src` existe (HEAD 200), rend l'asset (video ou image via
@@ -12,14 +13,6 @@ import FluidImage from "./FluidImage";
 
 type Kind = "image" | "video";
 
-// Une atmosphere Aube Encens existe pour chaque slot image, generee par
-// scripts/generate_atmospheres.py. Elle n'est pas un pis-aller visible : c'est
-// un champ de lumiere, le registre meme de la reference (Turrell, Sugimoto).
-// Elle s'efface d'elle-meme des que la vraie photo est deposee.
-function atmosphereFor(src: string): string | null {
-  const m = /^\/photos\/([a-z0-9-]+)\.(jpg|jpeg|png|webp)$/i.exec(src);
-  return m ? `/photos/atmosphere/${m[1]}.jpg` : null;
-}
 type Props = {
   slot: string;             // ex "PH-01"
   kind: Kind;

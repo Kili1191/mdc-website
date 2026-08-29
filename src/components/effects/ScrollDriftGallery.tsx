@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { scrollStore } from "@/lib/scrollStore";
 import FluidImage from "./FluidImage";
+import { useResolvedAsset } from "@/lib/assetSrc";
 
 // ScrollDriftGallery — rangée d'images qui glisse latéralement au fil
 // du scroll vertical de la page. Effet "les visuels dérivent quand tu
@@ -56,24 +57,34 @@ export default function ScrollDriftGallery({
           willChange: "transform",
         }}
       >
-        {items.map((it, i) => {
-          const w = it.width ?? 260;
-          return (
-            <div key={i} style={{ height: "100%", width: w, flex: "none", overflow: "hidden" }}>
-              {fluid ? (
-                <FluidImage src={it.src} aspect={`${w}/${height}`} />
-              ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={it.src}
-                  alt={it.alt ?? ""}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                />
-              )}
-            </div>
-          );
-        })}
+        {items.map((it, i) => (
+          <DriftCell key={i} item={it} height={height} fluid={fluid} />
+        ))}
       </div>
+    </div>
+  );
+}
+
+
+// Une cellule par image : la resolution vraie-photo / atmosphere passe par un
+// hook, donc elle ne peut pas vivre dans le .map du parent.
+function DriftCell({
+  item, height, fluid,
+}: { item: DriftItem; height: number; fluid: boolean }) {
+  const w = item.width ?? 260;
+  const src = useResolvedAsset(item.src);
+  return (
+    <div style={{ height: "100%", width: w, flex: "none", overflow: "hidden" }}>
+      {!src ? null : fluid ? (
+        <FluidImage src={src} aspect={`${w}/${height}`} />
+      ) : (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={item.alt ?? ""}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        />
+      )}
     </div>
   );
 }
