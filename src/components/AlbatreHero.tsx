@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { hasWebGL } from "@/lib/webgl";
 
 // ===== Paliers : image du dessous + texte qui l'accompagne =====
 const PANELS = [
@@ -25,6 +26,10 @@ export default function AlbatreHero() {
     const W = () => mount.clientWidth;
     const H = () => mount.clientHeight;
     const N = PANELS.length;
+
+    // Pas de WebGL disponible : on ne construit rien plutot que de
+    // laisser THREE lever et demonter tout l'arbre React.
+    if (!hasWebGL()) return;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));

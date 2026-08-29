@@ -13,6 +13,7 @@ import { House } from "@/components/world/House";
 import { NeonSigns } from "@/components/world/NeonSigns";
 import { NotificationBubbles } from "@/components/world/NotificationBubbles";
 import { SmokeVolume } from "@/components/world/SmokeVolume";
+import { hasWebGL } from "@/lib/webgl";
 
 const BG = "#000000";
 
@@ -41,6 +42,10 @@ function GrenierBackground() {
 
 export function Scene() {
   const dpr: [number, number] = isTouchDevice() ? [1, 1.5] : [1, 2];
+
+  if (!hasWebGL()) {
+    return <div className="fixed inset-0" style={{ backgroundColor: BG }} />;
+  }
 
   return (
     <div className="fixed inset-0" style={{ backgroundColor: BG }}>

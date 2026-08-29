@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { hasWebGL } from "@/lib/webgl";
 
 // DepthImageLayer — spec HANDOFF_WEB07 / ASSETS_NANOBANANA.md
 //
@@ -56,6 +57,10 @@ export default function DepthImageLayer({
     if (!mount) return;
     const W = () => mount.clientWidth;
     const H = () => mount.clientHeight;
+
+    // Pas de WebGL disponible : on ne construit rien plutot que de
+    // laisser THREE lever et demonter tout l'arbre React.
+    if (!hasWebGL()) return;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));

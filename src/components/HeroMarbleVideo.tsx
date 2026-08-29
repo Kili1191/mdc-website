@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { hasWebGL } from "@/lib/webgl";
 
 // Hero « vidéo » du SEUIL — mais c'est un shader WebGL live, pas un
 // fichier vidéo. Rend :
@@ -30,6 +31,10 @@ export default function HeroMarbleVideo({
     if (!mount) return;
     const W = () => mount.clientWidth;
     const H = () => mount.clientHeight;
+
+    // Pas de WebGL disponible : on ne construit rien plutot que de
+    // laisser THREE lever et demonter tout l'arbre React.
+    if (!hasWebGL()) return;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
