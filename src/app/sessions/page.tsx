@@ -50,7 +50,7 @@ const dividerStyle: React.CSSProperties = {
 
 export const metadata = {
   title: "Sessions · Maison du Calme",
-  description: "Four private sessions at Maison du Calme. Silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees on request.",
+  description: "A sequence of private sessions at Maison du Calme, beginning with ANTARA. Silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees on request.",
 };
 
 export default function SessionsPage() {
@@ -59,17 +59,17 @@ export default function SessionsPage() {
       <div style={containerStyle}>
         <p style={eyebrowStyle}>Sessions</p>
         <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
-          <SplitTextChars text="Four ways to set it down." delay={26} duration={900} />
+          <SplitTextChars text="It begins with ANTARA." delay={26} duration={900} />
         </h1>
         <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
           Each begins the same way, in silence, fully clothed, with nothing required of you.
           Each leaves you somewhere different.
         </p>
         <p style={{ ...bodyStyle, marginTop: 40 }}>
-          There is no menu here, in the way spas mean a menu. There are four rooms of work,
-          chosen for you in conversation, not from a list. What they share: you are not
-          touched with oil, not asked to speak, not asked to perform being well. What they
-          change: the amount you are holding when you leave.
+          The work is a sequence, not a selection. Everyone begins with ANTARA. What
+          follows opens in its own order, in conversation, never from a list. What they
+          share: you are not touched with oil, not asked to speak, not asked to perform
+          being well. What they change: the amount you are holding when you leave.
         </p>
         <p style={{ ...bodyStyle, marginTop: 24 }}>Fees are shared on request.</p>
 
@@ -88,7 +88,7 @@ export default function SessionsPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: 40 }}>
             <p style={bodyStyle}>
               Ninety minutes for the thing underneath the other things. ANTARA is where
-              most people begin, and the session they return to. It is unhurried by
+              everyone begins, and the session they return to. It is unhurried by
               design, long enough for the body to stop bracing, and then to let go of
               what the bracing was holding.
             </p>

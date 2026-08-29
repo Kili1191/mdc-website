@@ -7,7 +7,13 @@
 3. **"This is not coyness" cut** from Sessions — the copy no longer justifies itself.
 4. **Teacher-introduction promise removed entirely** — superseded by point 5.
 5. **Lineage rebuilt without teacher names (V1.2) and without any dates or year-counts (V1.3).** The proof pivots from time to transmission: real places (Rishikesh, Dharamshala), an unbroken eight-generation line, one-student-at-a-time character. Verification moves to the room and to private attestations where genuinely warranted.
-6. **Response time set: two working days** (Begin page). No [FILL] placeholders remain — this copy is final and ready for repo integration.
+6. **Sessions corrigees en suite, non en menu (V1.4).** Le travail est une
+   sequence : on commence toujours par ANTARA, les autres suivent. "Four ways
+   to set it down", "four rooms of work, chosen for you" et "most people begin"
+   presentaient quatre alternatives au choix, ce qui contredit la signature.
+   "One house. One practitioner. Five doors." reste en suspens : cinq portes
+   quand la page Sessions en decrit quatre, source a trancher.
+7. **Response time set: two working days** (Begin page). No [FILL] placeholders remain — this copy is final and ready for repo integration.
 
 ---
 
@@ -73,13 +79,13 @@ Entry is by conversation, not by calendar. Tell us what you carry.
 
 ### Header
 **Headline:**
-Four ways to set it down.
+It begins with ANTARA.
 
 **Sub:**
 Each begins the same way — in silence, fully clothed, with nothing required of you. Each leaves you somewhere different.
 
 **Intro body:**
-There is no menu here, in the way spas mean a menu. There are four rooms of work, chosen for you in conversation, not from a list. What they share: you are not touched with oil, not asked to speak, not asked to perform being well. What they change: the amount you are holding when you leave.
+The work is a sequence, not a selection. Everyone begins with ANTARA. What follows opens in its own order, in conversation, never from a list. What they share: you are not touched with oil, not asked to speak, not asked to perform being well. What they change: the amount you are holding when you leave.
 
 Fees are shared on request.
 
@@ -90,7 +96,7 @@ Fees are shared on request.
 For the weight you have carried longest.
 
 **Body:**
-Ninety minutes for the thing underneath the other things. ANTARA is where most people begin, and the session they return to. It is unhurried by design — long enough for the body to stop bracing, and then to let go of what the bracing was holding.
+Ninety minutes for the thing underneath the other things. ANTARA is where everyone begins, and the session they return to. It is unhurried by design — long enough for the body to stop bracing, and then to let go of what the bracing was holding.
 
 You will not be asked what it is. The body knows where it is kept.
 
@@ -148,7 +154,7 @@ What is set down once can be set down more completely across a series. The Arc i
 
 **Microcopy:** By arrangement
 
-**Meta description:** Four private sessions at Maison du Calme — silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees on request.
+**Meta description:** A sequence of private sessions at Maison du Calme, beginning with ANTARA. Silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees on request.
 
 ---
 
