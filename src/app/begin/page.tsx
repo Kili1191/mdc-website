@@ -1,7 +1,6 @@
 import BeginForm from "./BeginForm";
 import { COLORS, FONTS } from "@/styles/tokens";
 import SplitTextChars from "@/components/effects/SplitTextChars";
-import TextScramble from "@/components/effects/TextScramble";
 
 const pageStyle: React.CSSProperties = {
   position: "relative", zIndex: 5, minHeight: "100vh",
@@ -61,7 +60,7 @@ export default function BeginPage() {
 
           <div style={{ marginTop: 96, marginBottom: 56 }}>
             <p style={questionStyle}>
-              <TextScramble text="What do you carry?" duration={1600} />
+              <SplitTextChars text="What do you carry?" delay={22} duration={900} />
             </p>
           </div>
 

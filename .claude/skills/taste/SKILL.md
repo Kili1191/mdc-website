@@ -94,7 +94,12 @@ If a screen feels "tight," add whitespace before touching anything else.
 - **Zero new user-facing copy** by the agent. Ever. If a section seems to need text that doesn't exist, place a TODO placeholder and flag it to Kilian.
 - **No em dashes** (`—`) anywhere in visible text. Replace with `,`, `.`, `:`, or `·` per context.
 - **No meta/defensive sections** — the house never justifies itself. No "Why we don't do X," no "Why no names, no dates," no FAQ that defends the practice. If it explains the discretion, it violates the discretion.
-- **NERVANA Guard** — the internal method name never appears publicly. The five family names do (ANTARA, VAYU, SOMA, TRANSMISSION, URDHVA). Descriptions of what a session does are OK. Descriptions of *how* are internal only.
+- **NERVANA is now public** (decision de Kilian, cette session). Le nom de la
+  methode s'ecrit sur le site : c'est sa technique, elle se pratique nulle part
+  ailleurs, et c'est la seule chose vraiment inimitable de l'offre. Les noms de
+  salles restent publics (ANTARA, VAYU, SOMA, TRANSMISSION, URDHVA).
+  Ce qui reste interne : le **comment**. Decrire ce qu'une seance fait, oui.
+  Decrire la mecanique par laquelle elle le fait, non.
 
 ### 8. Density — content > quote wallpaper
 - A page that is only 6 short phrases with nothing else is not enough. That was the frustration on Home traversée v1.

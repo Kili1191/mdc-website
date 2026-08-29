@@ -46,6 +46,16 @@ sont pas concernees.
 
 # Sources of truth (canonical)
 
+`SERVICES.md` — ce que Kilian propose reellement (suite silencieuse, retraites,
+coaching, enseignement Reiki niveau 1, sound healing) et ce que le site en
+montre. Interne, jamais publie. Le site ne couvre que deux offres sur cinq :
+lire avant de supposer que la pratique se resume aux Sessions.
+
+`DIRECTION.md` — l'immobilite comme interaction. Ce que le site fait de
+different, ce qui a ete retire pour y arriver, et ce qui reste. A lire avant
+d'ajouter le moindre effet.
+
+
 These docs live at repo root and win over anything in code when they conflict:
 
 - **VISION.md** — identité visuelle, système de scroll deux axes (vertical/horizontal, spirale à venir), arc émotionnel (avant/pendant/après), règles absolues (palette Aube Encens, NERVANA Guard, typo Prata/Higuen/Great Vibes, jamais de dark theme), méthode de build (fondation → empilement, un chantier à la fois, build vert + commit).

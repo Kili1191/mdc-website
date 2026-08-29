@@ -43,6 +43,14 @@ const linkStyle: React.CSSProperties = {
   textDecoration: "none",
   borderBottom: `1px solid ${COLORS.rouille}`, paddingBottom: 4,
 };
+const bodyStyle: React.CSSProperties = {
+  fontFamily: FONTS.prata,
+  fontSize: "clamp(17px, 1.5vw, 20px)",
+  lineHeight: 1.75,
+  color: COLORS.brou,
+  margin: 0,
+  maxWidth: 640,
+};
 const stationStyle: React.CSSProperties = {
   position: "relative", zIndex: 5,
   // dvh gère la barre d'adresse mobile Safari, fallback vh sur old browsers
@@ -79,8 +87,23 @@ export default function Home() {
     // entre son centre et celui du viewport, pas d'un progres global decoupe
     // en parts egales. Une station peut donc etre plus haute qu'une autre
     // sans casser la choregraphie, et aucune constante n'est a re-caler.
+    let lastY = window.scrollY;
+    let goingUp = false;
+    const downEls = root.querySelectorAll<HTMLElement>('[data-dir="down"]');
+    const upEls = root.querySelectorAll<HTMLElement>('[data-dir="up"]');
+
     const tick = () => {
       const vh = window.innerHeight;
+
+      // Hysteresis : un tremblement de trackpad ne doit pas faire clignoter
+      // la phrase. Il faut six pixels francs pour changer d'avis.
+      const y = window.scrollY;
+      if (y - lastY > 6) goingUp = false;
+      else if (lastY - y > 6) goingUp = true;
+      lastY = y;
+      downEls.forEach((e) => { e.style.opacity = goingUp ? "0" : "1"; });
+      upEls.forEach((e) => { e.style.opacity = goingUp ? "1" : "0"; });
+
       const last = stations.length - 1;
       stations.forEach((st, i) => {
         const r = st.getBoundingClientRect();
@@ -96,9 +119,14 @@ export default function Home() {
         st.style.transform = `translateY(${(1 - focus) * (d > 0 ? 14 : -14)}px)`;
         st.style.pointerEvents = focus > 0.15 ? "auto" : "none";
 
-        // La station MAISON publie son focus pour HomeStage. La maison n'est
-        // donc presente que la ou cette section domine reellement l'ecran.
-        if (st.dataset.station === "maison") houseFocus.set(focus);
+        // La station MAISON publie son etat pour le shader du marbre. La
+        // gravure n'existe donc que la ou cette section domine l'ecran.
+        if (st.dataset.station === "maison") {
+          // avancee du burin : 0 quand le haut de la station atteint le centre
+          // de l'ecran, 1 quand son bas l'atteint. Monotone avec le scroll.
+          const cut = Math.max(0, Math.min(1, (vh / 2 - r.top) / r.height));
+          houseFocus.set(focus, cut);
+        }
       });
       raf = requestAnimationFrame(tick);
     };
@@ -116,12 +144,35 @@ export default function Home() {
       <div ref={rootRef}>
         {/* 1. SEUIL — pas de rectangle média, le marbre ambient (SiteMarble)
             suffit. Le titre au centre. */}
-        <section className="mdc-station" style={stationStyle}>
+        <section className="mdc-station" style={{ ...stationStyle, flexDirection: "column" }}>
           <div style={{
             ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)",
             maxWidth: 900, textAlign: "center",
           }}>
             <SplitTextChars text="For those who carry everything inside." delay={22} duration={950} />
+          </div>
+          {/* La maison ne dit pas la meme chose a l'aller et au retour.
+              Les deux lignes sont superposees et se croisent selon le sens du
+              scroll : on descend, elle vous accueille ; on remonte, elle vous
+              dit ce que vous emportez. Rien ne se remonte en React, on ne
+              touche que l'opacite. */}
+          <div style={{ position: "relative", marginTop: 44, width: "100%", maxWidth: 620, minHeight: 92 }}>
+            <div data-dir="down" style={{ position: "absolute", inset: 0, transition: "opacity 900ms cubic-bezier(0.16,1,0.3,1)" }}>
+              <BreathReveal
+                as="p"
+                text="You have handled everything. This is the one room where you don't have to."
+                style={{ ...bodyStyle, textAlign: "center" }}
+                stagger={90}
+              />
+            </div>
+            <div data-dir="up" style={{ position: "absolute", inset: 0, opacity: 0, transition: "opacity 900ms cubic-bezier(0.16,1,0.3,1)" }}>
+              <BreathReveal
+                as="p"
+                text="You arrive carrying. You leave lighter. What happens between is felt, not explained."
+                style={{ ...bodyStyle, textAlign: "center" }}
+                stagger={90}
+              />
+            </div>
           </div>
         </section>
 
@@ -135,14 +186,35 @@ export default function Home() {
           />
         </section>
 
-        {/* 3. MAISON — pas de texte, la 3D parle. Station deux fois plus
-             haute : le moment signature a besoin d'un moment ou il est seul
-             a l'ecran. A hauteur egale, la fenetre ou aucune autre station
-             n'etait lisible ne durait que 2% du scroll. */}
+        {/* 3. LA MAISON — la station qui nomme ce que c'est. Elle precede
+             immediatement la gravure : le burin marque donc l'instant ou le
+             site dit ce qu'il est, au lieu de flotter au milieu du scroll.
+             Copy COPY_V13 §Home/The house, validee. */}
+        <section className="mdc-station" style={{ ...stationStyle, flexDirection: "column" }}>
+          <BreathReveal
+            as="p"
+            text="Maison du Calme is a private house in London for what cannot be said aloud."
+            style={{ ...displayItalic, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: 860, textAlign: "center", lineHeight: 1.35 }}
+            stagger={90}
+          />
+          <BreathReveal
+            as="p"
+            text="You arrive carrying. You leave lighter. What happens between is felt, not explained."
+            style={{ ...bodyStyle, marginTop: 40, textAlign: "center" }}
+            stagger={70}
+          />
+        </section>
+
+        {/* 4. MAISON — pas de texte, la gravure parle. Un peu plus haute que
+             les autres pour que le burin ait le temps de descendre, mais pas
+             plus : depuis que chaque station se mesure elle-meme, un voisin
+             est deja eteint des que la station depasse 0,22 hauteur d'ecran.
+             Les 200dvh dataient du systeme precedent et rendaient la
+             traversee interminable. */}
         <section
           className="mdc-station"
           data-station="maison"
-          style={{ ...stationStyle, height: "200dvh", minHeight: "200vh" }}
+          style={{ ...stationStyle, height: "130dvh", minHeight: "130vh" }}
           aria-hidden
         />
 
@@ -155,7 +227,8 @@ export default function Home() {
               style={displayCaps}
               stagger={140}
             />
-            <div style={{ marginTop: 48 }}>
+            <div style={{ marginTop: 48, display: "flex", gap: 28, justifyContent: "center", flexWrap: "wrap" }}>
+              <MagneticButton href="/sessions">Sessions</MagneticButton>
               <MagneticButton href="/the-work">The Work</MagneticButton>
             </div>
           </div>
@@ -180,11 +253,20 @@ export default function Home() {
         <section className="mdc-station" style={stationStyle}>
           <div style={{ textAlign: "center" }}>
             <div style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 56px)" }}>
-              <SplitTextChars text="Arriving is enough." delay={38} duration={950} />
+              <SplitTextChars text="Something in you already knows." delay={38} duration={950} />
             </div>
-            <div style={{ marginTop: 56 }}>
+            <BreathReveal
+              as="p"
+              text="Entry is by conversation, not by calendar. Tell us what you carry."
+              style={{ ...bodyStyle, marginTop: 40, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}
+              stagger={80}
+            />
+            <div style={{ marginTop: 52 }}>
               <MagneticButton href="/begin">Begin</MagneticButton>
             </div>
+            <p style={{ ...bodyStyle, fontSize: 13, opacity: 0.68, marginTop: 28, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
+              No forms you dread. One question, answered in your own time.
+            </p>
           </div>
         </section>
       </div>

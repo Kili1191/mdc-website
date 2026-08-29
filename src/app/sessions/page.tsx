@@ -50,7 +50,7 @@ const dividerStyle: React.CSSProperties = {
 
 export const metadata = {
   title: "Sessions · Maison du Calme",
-  description: "Four private sessions at Maison du Calme. Silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees on request.",
+  description: "A sequence of private sessions at Maison du Calme, beginning with ANTARA. Silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees on request.",
 };
 
 export default function SessionsPage() {
@@ -59,17 +59,22 @@ export default function SessionsPage() {
       <div style={containerStyle}>
         <p style={eyebrowStyle}>Sessions</p>
         <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
-          <SplitTextChars text="Four ways to set it down." delay={26} duration={900} />
+          <SplitTextChars text="It begins with ANTARA." delay={26} duration={900} />
         </h1>
         <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
           Each begins the same way, in silence, fully clothed, with nothing required of you.
           Each leaves you somewhere different.
         </p>
         <p style={{ ...bodyStyle, marginTop: 40 }}>
-          There is no menu here, in the way spas mean a menu. There are four rooms of work,
-          chosen for you in conversation, not from a list. What they share: you are not
-          touched with oil, not asked to speak, not asked to perform being well. What they
-          change: the amount you are holding when you leave.
+          The work practised here is called NERVANA. Kilian developed it, and it is
+          practised nowhere else.
+        </p>
+        <p style={{ ...bodyStyle, marginTop: 24 }}>
+          It is a suite, not a selection. ANTARA is the entrance. Everyone passes
+          through it, and what lies beyond opens in its own order, in conversation,
+          never from a list. What they share: you are not touched with oil, not asked
+          to speak, not asked to perform being well. What they change: the amount you
+          are holding when you leave.
         </p>
         <p style={{ ...bodyStyle, marginTop: 24 }}>Fees are shared on request.</p>
 
@@ -87,8 +92,8 @@ export default function SessionsPage() {
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: 40 }}>
             <p style={bodyStyle}>
-              Ninety minutes for the thing underneath the other things. ANTARA is where
-              most people begin, and the session they return to. It is unhurried by
+              Ninety minutes for the thing underneath the other things. ANTARA is the
+              entrance, and the session they return to. It is unhurried by
               design, long enough for the body to stop bracing, and then to let go of
               what the bracing was holding.
             </p>
@@ -171,6 +176,43 @@ export default function SessionsPage() {
           <div style={{ marginTop: 48 }}>
             <MagneticButton href="/begin">Apply</MagneticButton>
           </div>
+        </div>
+
+        <hr style={dividerStyle} />
+
+        {/* Les soins ayurvediques vivent APRES la suite et hors d'elle. NERVANA
+            promet "not touched with oil" : Abhyanga est un soin a l'huile, il ne
+            peut pas etre dans la meme promesse. Separer les deux protege la
+            phrase et la verite. */}
+        <div>
+          <p style={eyebrowStyle}>Also practised here</p>
+          <h2 style={{ ...sectionHeadStyle, marginTop: 32 }}>
+            Older than the house.
+          </h2>
+          <p style={{ ...bodyStyle, marginTop: 32 }}>
+            Three practices are offered apart from the suite. They are not part of
+            NERVANA, and they are not silent in the same way.
+          </p>
+
+          <p style={{ ...roomLabelStyle, marginTop: 48 }}>ABHYANGA</p>
+          <p style={{ ...bodyStyle, marginTop: 20 }}>
+            Warm oil, worked over the whole body in one unbroken rhythm. It is the
+            oldest practice in this house, and the only one that uses oil.
+          </p>
+
+          <p style={{ ...roomLabelStyle, marginTop: 40 }}>MARMA</p>
+          <p style={{ ...bodyStyle, marginTop: 20 }}>
+            The junctions where the body gathers what it holds. Marma work is
+            pressure and stillness at those points, slower than massage and more
+            deliberate.
+          </p>
+
+          <p style={{ ...roomLabelStyle, marginTop: 40 }}>SOUND</p>
+          <p style={{ ...bodyStyle, marginTop: 20 }}>
+            Bowls set directly on the body and struck softly, so the tone arrives
+            through the body before it reaches the ear. Fully clothed, face down,
+            then turned. It is the only work here you will hear.
+          </p>
         </div>
 
         <hr style={dividerStyle} />

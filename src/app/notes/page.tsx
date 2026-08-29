@@ -1,6 +1,5 @@
 import { COLORS, FONTS } from "@/styles/tokens";
 import SplitTextChars from "@/components/effects/SplitTextChars";
-import TextScramble from "@/components/effects/TextScramble";
 
 const pageStyle: React.CSSProperties = {
   position: "relative", zIndex: 5, minHeight: "100vh",
@@ -63,7 +62,7 @@ export default function NotesPage() {
 
           <hr style={dividerStyle} />
 
-          <p style={essayNumStyle}><TextScramble text="Essay 01" duration={900} /></p>
+          <p style={essayNumStyle}><SplitTextChars text="Essay 01" delay={22} duration={900} /></p>
           <h2 style={{ ...essayTitleStyle, marginTop: 20 }}>On carrying.</h2>
           <p style={{ ...bodyStyle, marginTop: 32 }}>
             Everyone you know is carrying something they have decided not to mention. The
@@ -77,7 +76,7 @@ export default function NotesPage() {
 
           <hr style={dividerStyle} />
 
-          <p style={essayNumStyle}><TextScramble text="Essay 02" duration={900} /></p>
+          <p style={essayNumStyle}><SplitTextChars text="Essay 02" delay={22} duration={900} /></p>
           <h2 style={{ ...essayTitleStyle, marginTop: 20 }}>
             The difference between quiet and silence.
           </h2>
@@ -92,7 +91,7 @@ export default function NotesPage() {
 
           <hr style={dividerStyle} />
 
-          <p style={essayNumStyle}><TextScramble text="Essay 03" duration={900} /></p>
+          <p style={essayNumStyle}><SplitTextChars text="Essay 03" delay={22} duration={900} /></p>
           <h2 style={{ ...essayTitleStyle, marginTop: 20 }}>What the body keeps.</h2>
           <p style={{ ...bodyStyle, marginTop: 32 }}>
             You forget on purpose; the body does not. It keeps a record: in the shoulders
