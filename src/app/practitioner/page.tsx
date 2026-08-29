@@ -89,7 +89,7 @@ export default function PractitionerPage() {
             </p>
           </div>
 
-          <div style={{ marginTop: 56 }}>
+          <div style={{ marginTop: 56, display: "flex", justifyContent: "center" }}>
             <MagneticButton href="/lineage">See the lineage</MagneticButton>
           </div>
 

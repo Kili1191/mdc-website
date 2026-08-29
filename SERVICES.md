@@ -15,6 +15,7 @@ personne ne l'avait ecrit.*
 | **Sound bath / sound healing** | **non, nulle part** | technique separee. Peter Hess non nomme, sur decision de Kilian |
 | **Abhyanga** (massage ayurvedique a l'huile) | oui, page Sessions, hors suite | seul soin a l'huile |
 | **Marma** (therapie des points) | oui, page Sessions, hors suite | |
+| **Reiki en seance** | oui, page Sessions, hors suite | distinct de l'enseignement, qui vit sur Practitioner |
 
 **Le site couvre deux offres sur cinq.** Ce n'est pas un detail de copy : trois
 lignes de metier sont absentes, sans page, sans mention, sans entree de nav.

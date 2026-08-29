@@ -72,7 +72,7 @@ export default function RetreatsPage() {
             </p>
           </div>
 
-          <div style={{ marginTop: 56 }}>
+          <div style={{ marginTop: 56, display: "flex", justifyContent: "center" }}>
             <MagneticButton href="/begin">Register interest</MagneticButton>
           </div>
 
