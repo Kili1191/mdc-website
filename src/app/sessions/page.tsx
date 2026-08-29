@@ -66,10 +66,11 @@ export default function SessionsPage() {
           Each leaves you somewhere different.
         </p>
         <p style={{ ...bodyStyle, marginTop: 40 }}>
-          The work is a sequence, not a selection. Everyone begins with ANTARA. What
-          follows opens in its own order, in conversation, never from a list. What they
-          share: you are not touched with oil, not asked to speak, not asked to perform
-          being well. What they change: the amount you are holding when you leave.
+          The work is a suite, not a selection. ANTARA is the entrance. Everyone
+          passes through it, and what lies beyond opens in its own order, in
+          conversation, never from a list. What they share: you are not touched with
+          oil, not asked to speak, not asked to perform being well. What they change:
+          the amount you are holding when you leave.
         </p>
         <p style={{ ...bodyStyle, marginTop: 24 }}>Fees are shared on request.</p>
 
@@ -87,8 +88,8 @@ export default function SessionsPage() {
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: 40 }}>
             <p style={bodyStyle}>
-              Ninety minutes for the thing underneath the other things. ANTARA is where
-              everyone begins, and the session they return to. It is unhurried by
+              Ninety minutes for the thing underneath the other things. ANTARA is the
+              entrance, and the session they return to. It is unhurried by
               design, long enough for the body to stop bracing, and then to let go of
               what the bracing was holding.
             </p>
