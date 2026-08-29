@@ -389,6 +389,22 @@ export default function MarbleBackground({
       // la main et le marbre se recouvre.
       active += (activeTarget - active) * (activeTarget > active ? 0.10 : 0.035);
       trailMat.uniforms.uActive.value = active;
+
+      // Vitesse de recouvrement.
+      //
+      // uDecay 0,93 fait tomber la revelation a 10% en 0,53 s : le marbre
+      // claquait sur l'image au lieu de la reprendre. Mais 0,93 est une des
+      // valeurs verrouillees du trail, et c'est elle qui donne son grain au
+      // sillage SOUS le doigt. On ne la remplace donc pas, on l'interpole :
+      // 0,93 tant qu'un doigt ou un curseur est la, 0,985 des qu'il part.
+      //
+      // 0,985 rend la fermeture en 2,54 s, soit un demi-souffle. Le marbre
+      // revient au rythme du site, il ne se referme pas comme un volet.
+      // On suit l'INTENTION (activeTarget), pas la valeur lissee. Branche sur
+      // `active`, la decroissance restait rapide juste apres le lever du doigt,
+      // c'est-a-dire precisement au moment ou elle devait ralentir : la
+      // fermeture durait encore 0,9 s au lieu de 2,5.
+      trailMat.uniforms.uDecay.value = activeTarget > 0.5 ? 0.930 : 0.985;
       const vel = mouse.distanceTo(last); last.copy(mouse);
       trailMat.uniforms.uPrev.value = rtA.texture;
       trailMat.uniforms.uMouse.value.copy(mouse);
