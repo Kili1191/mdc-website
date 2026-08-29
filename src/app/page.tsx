@@ -149,7 +149,7 @@ export default function Home() {
             ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)",
             maxWidth: 900, textAlign: "center",
           }}>
-            <SplitTextChars text="For those who carry everything inside." delay={22} duration={950} />
+            <SplitTextChars text="For those who carry everything inside." delay={22} duration={900} />
           </div>
           {/* La maison ne dit pas la meme chose a l'aller et au retour.
               Les deux lignes sont superposees et se croisent selon le sens du
@@ -157,7 +157,7 @@ export default function Home() {
               dit ce que vous emportez. Rien ne se remonte en React, on ne
               touche que l'opacite. */}
           <div style={{ position: "relative", marginTop: 44, width: "100%", maxWidth: 620, minHeight: 92 }}>
-            <div data-dir="down" style={{ position: "absolute", inset: 0, transition: "opacity 900ms cubic-bezier(0.16,1,0.3,1)" }}>
+            <div data-dir="down" style={{ position: "absolute", inset: 0, transition: "opacity 900ms cubic-bezier(0.16, 1, 0.3, 1)" }}>
               <BreathReveal
                 as="p"
                 text="You have handled everything. This is the one room where you don't have to."
@@ -165,7 +165,7 @@ export default function Home() {
                 stagger={90}
               />
             </div>
-            <div data-dir="up" style={{ position: "absolute", inset: 0, opacity: 0, transition: "opacity 900ms cubic-bezier(0.16,1,0.3,1)" }}>
+            <div data-dir="up" style={{ position: "absolute", inset: 0, opacity: 0, transition: "opacity 900ms cubic-bezier(0.16, 1, 0.3, 1)" }}>
               <BreathReveal
                 as="p"
                 text="You arrive carrying. You leave lighter. What happens between is felt, not explained."
@@ -182,7 +182,7 @@ export default function Home() {
             as="p"
             text="There is a kind of tiredness that rest doesn't reach…"
             style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 52px)", maxWidth: 900, textAlign: "center", position: "relative", zIndex: 1 }}
-            stagger={100}
+            stagger={90}
           />
         </section>
 
@@ -201,7 +201,7 @@ export default function Home() {
             as="p"
             text="You arrive carrying. You leave lighter. What happens between is felt, not explained."
             style={{ ...bodyStyle, marginTop: 40, textAlign: "center" }}
-            stagger={70}
+            stagger={90}
           />
         </section>
 
@@ -240,7 +240,7 @@ export default function Home() {
             <div style={{ ...displayItalic, fontSize: "clamp(24px, 3.8vw, 40px)" }}>
               <SplitTextChars
                 text="Chronic stress rarely looks like falling apart. It looks like being very good at your life."
-                delay={18} duration={800}
+                delay={22} duration={900}
               />
             </div>
             <div style={{ marginTop: 56 }}>
@@ -253,13 +253,13 @@ export default function Home() {
         <section className="mdc-station" style={stationStyle}>
           <div style={{ textAlign: "center" }}>
             <div style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 56px)" }}>
-              <SplitTextChars text="Something in you already knows." delay={38} duration={950} />
+              <SplitTextChars text="Something in you already knows." delay={60} duration={900} />
             </div>
             <BreathReveal
               as="p"
               text="Entry is by conversation, not by calendar. Tell us what you carry."
               style={{ ...bodyStyle, marginTop: 40, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}
-              stagger={80}
+              stagger={90}
             />
             <div style={{ marginTop: 52 }}>
               <MagneticButton href="/begin">Begin</MagneticButton>

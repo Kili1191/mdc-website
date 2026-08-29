@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { DURATION, EASE } from "@/lib/motion";
 
 // Transitions liquides entre routes — sans rechargement visuel.
 // 1. À l'entrée d'une nouvelle route (change de pathname) : le contenu
@@ -16,8 +17,8 @@ import { useEffect, useRef, useState } from "react";
 // motif sur pathname — ce composant s'occupe uniquement du contenu
 // et du voile.
 
-const LEAVE_MS = 450;
-const ENTER_MS = 700;
+const LEAVE_MS = DURATION.exit;
+const ENTER_MS = DURATION.reveal;
 
 export default function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -79,8 +80,8 @@ export default function PageTransition({ children }: { children: React.ReactNode
       ? "translateY(0)"
       : "translateY(12px)",
     transition: leaving
-      ? `opacity ${LEAVE_MS}ms cubic-bezier(0.4,0,0.6,1), transform ${LEAVE_MS}ms cubic-bezier(0.4,0,0.6,1)`
-      : `opacity ${ENTER_MS}ms cubic-bezier(0.16,1,0.3,1) 60ms, transform ${ENTER_MS}ms cubic-bezier(0.16,1,0.3,1) 60ms`,
+      ? `opacity ${LEAVE_MS}ms ${EASE.exit}, transform ${LEAVE_MS}ms ${EASE.exit}`
+      : `opacity ${ENTER_MS}ms ${EASE.reveal} 60ms, transform ${ENTER_MS}ms ${EASE.reveal} 60ms`,
     willChange: "opacity, transform",
   };
 
@@ -91,7 +92,7 @@ export default function PageTransition({ children }: { children: React.ReactNode
     background:
       "radial-gradient(120% 90% at 50% 55%, rgba(237,228,208,0.55) 0%, rgba(237,228,208,0) 65%)",
     opacity: leaving ? 1 : 0,
-    transition: `opacity ${LEAVE_MS}ms ease-out`,
+    transition: `opacity ${LEAVE_MS}ms ${EASE.exit}`,
     willChange: "opacity",
   };
 

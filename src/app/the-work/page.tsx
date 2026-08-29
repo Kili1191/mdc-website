@@ -49,7 +49,7 @@ export default function TheWorkPage() {
         <div style={containerStyle}>
           <p style={eyebrowStyle}>The Work</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
-            <SplitTextChars text="What actually happens." delay={26} duration={900} />
+            <SplitTextChars text="What actually happens." delay={22} duration={900} />
           </h1>
           <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
             A fair question. Here is an honest answer that gives away nothing, because the
@@ -93,7 +93,7 @@ export default function TheWorkPage() {
           <blockquote style={pullQuoteStyle}>
             <SplitTextChars
               text="We will tell you what you will feel. We will never tell you how. The how is years of training, and it is the reason the feeling is reliable."
-              delay={12} duration={800}
+              delay={22} duration={900}
             />
           </blockquote>
 

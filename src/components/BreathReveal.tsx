@@ -78,7 +78,7 @@ export default function BreathReveal({
     const reveal = () => {
       const words = Array.from(el.querySelectorAll<HTMLElement>(".mdc-breath-word"));
       words.forEach((w, i) => {
-        w.style.transition = `opacity ${duration}ms cubic-bezier(0.16,1,0.3,1), transform ${duration}ms cubic-bezier(0.16,1,0.3,1)`;
+        w.style.transition = `opacity ${duration}ms cubic-bezier(0.16, 1, 0.3, 1), transform ${duration}ms cubic-bezier(0.16, 1, 0.3, 1)`;
         w.style.transitionDelay = `${delay + i * stagger}ms`;
         requestAnimationFrame(() => {
           w.style.opacity = "1";
@@ -109,7 +109,6 @@ export default function BreathReveal({
   const rootStyle: CSSProperties = { overflow: "visible", ...style };
 
   return (
-    // @ts-expect-error dynamic tag
     <Tag ref={ref} className={className} style={rootStyle}>
       {lines.map((line, li) => (
         <span key={li} style={lineSpanStyle}>

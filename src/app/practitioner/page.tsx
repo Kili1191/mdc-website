@@ -48,7 +48,7 @@ export default function PractitionerPage() {
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Practitioner</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
-            <SplitTextChars text="Kilian." delay={35} duration={800} />
+            <SplitTextChars text="Kilian." delay={22} duration={900} />
           </h1>
           <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
             One practitioner. Every session, his. Nothing here is delivered by staff.
@@ -144,7 +144,7 @@ export default function PractitionerPage() {
 
           <p style={eyebrowStyle}>Discretion</p>
           <h2 style={{ ...sectionHeadStyle, marginTop: 32 }}>
-            <SplitTextChars text="No one is named. This is not a policy. It is the product." delay={16} duration={800} />
+            <SplitTextChars text="No one is named. This is not a policy. It is the product." delay={22} duration={900} />
           </h2>
           <p style={{ ...bodyStyle, marginTop: 40 }}>
             No client is ever named, referenced, or implied. Not on this site, not in

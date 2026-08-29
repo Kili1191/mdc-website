@@ -59,7 +59,7 @@ export default function SessionsPage() {
       <div style={containerStyle}>
         <p style={eyebrowStyle}>Sessions</p>
         <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
-          <SplitTextChars text="It begins with ANTARA." delay={26} duration={900} />
+          <SplitTextChars text="It begins with ANTARA." delay={22} duration={900} />
         </h1>
         <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
           Each begins the same way, in silence, fully clothed, with nothing required of you.

@@ -227,7 +227,7 @@ export default function IntroOverlay() {
         .mdc-brand{font-family:'Higuen','Higuen Elegant Serif',var(--font-prata),Georgia,serif;
           font-size:clamp(14px,3.4vw,22px);letter-spacing:.16em;
           color:#2F2519;opacity:0;transform:translateY(7px);
-          transition:opacity 2.2s cubic-bezier(.16,1,.3,1),transform 2.2s cubic-bezier(.16,1,.3,1);
+          transition:opacity 2.2s cubic-bezier(0.16, 1, 0.3, 1),transform 2.2s cubic-bezier(0.16, 1, 0.3, 1);
           text-align:center;margin-top:clamp(10px,2.4vw,17px);
           white-space:nowrap;pointer-events:none;user-select:none;}
         .mdc-brand-in{opacity:1 !important;transform:translateY(0) !important;}
