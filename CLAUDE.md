@@ -28,6 +28,22 @@ Order of authority, highest first:
 `design-md-catalogue` is study material. Never import another brand's tokens,
 palette, type scale or motion into this site.
 
+# Piege connu : `position: fixed` depuis une page
+
+`PageTransition` enveloppe `children` dans un div qui porte `transform` et
+`will-change: transform` en permanence. Les deux creent un bloc conteneur pour
+les descendants `position: fixed`. Une couche plein ecran rendue depuis une
+page se dimensionne donc sur la hauteur du document, pas sur le viewport.
+
+C'est ce qui rendait la maison de la Home six fois trop grande et rognee : le
+canvas R3F faisait 1440x5400 au lieu de 1440x900. Les constantes de zoom
+etaient justes depuis le debut, quatre passes de reglage n'y pouvaient rien.
+
+Toute couche plein ecran rendue depuis une page passe par un portal sur
+`<body>` (voir `HomeStage`). Les couches montees dans `layout.tsx` (SiteMarble,
+Nav, BreathingCursor, SoundToggle, IntroOverlay) sont hors du wrapper et ne
+sont pas concernees.
+
 # Sources of truth (canonical)
 
 These docs live at repo root and win over anything in code when they conflict:
