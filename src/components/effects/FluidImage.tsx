@@ -1,18 +1,24 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { hasWebGL } from "@/lib/webgl";
 
 // Fluid distortion : image texturée sur un plan, ses UV sont
 // distordus par un ripple animé qui suit le curseur (WebGL, GPU).
 // Style Studio Freight / Awwwards.
 export default function FluidImage({ src, aspect = "4/5" }: { src: string; aspect?: string }) {
   const mountRef = useRef<HTMLDivElement>(null);
+  const [webgl, setWebgl] = useState(true);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
     const W = () => mount.clientWidth;
     const H = () => mount.clientHeight;
+
+    // Pas de WebGL : on retombe sur une <img> nette plutot que de
+    // laisser THREE lever et faire disparaitre la photo.
+    if (!hasWebGL()) { setWebgl(false); return; }
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -101,6 +107,11 @@ export default function FluidImage({ src, aspect = "4/5" }: { src: string; aspec
       if (renderer.domElement.parentNode) mount.removeChild(renderer.domElement);
     };
   }, [src]);
+
+  if (!webgl) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={src} alt="" style={{ width: "100%", aspectRatio: aspect, objectFit: "cover", display: "block" }} />;
+  }
 
   return (
     <div ref={mountRef} style={{ width: "100%", aspectRatio: aspect, overflow: "hidden" }} />

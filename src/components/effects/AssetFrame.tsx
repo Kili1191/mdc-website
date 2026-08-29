@@ -34,29 +34,41 @@ export default function AssetFrame({
     return () => { cancelled = true; };
   }, [src]);
 
+  // En dev, le slot se voit (hachures + nom) pour reperer ce qui reste a
+  // produire. En production, un slot vide n'est PAS un rectangle en
+  // pointilles legende "image slot" : c'est une respiration, le marbre
+  // qu'on laisse passer. Taste §5 : aucun cadre visible autour d'un media.
+  const showSlotAffordance = process.env.NODE_ENV === "development";
+
   const placeholderStyle: CSSProperties = {
     width: "100%", aspectRatio: aspect,
-    background: "repeating-linear-gradient(45deg, rgba(168,154,133,0.10) 0, rgba(168,154,133,0.10) 12px, rgba(168,154,133,0.04) 12px, rgba(168,154,133,0.04) 24px)",
-    border: `1px dashed ${COLORS.taupe}`,
+    ...(showSlotAffordance ? {
+      background: "repeating-linear-gradient(45deg, rgba(168,154,133,0.10) 0, rgba(168,154,133,0.10) 12px, rgba(168,154,133,0.04) 12px, rgba(168,154,133,0.04) 24px)",
+      border: `1px dashed ${COLORS.taupe}`,
+      color: COLORS.taupe,
+      fontFamily: FONTS.prata, fontSize: 11, letterSpacing: "0.24em",
+      textTransform: "uppercase" as const,
+    } : null),
     display: "flex", flexDirection: "column",
     alignItems: "center", justifyContent: "center",
-    color: COLORS.taupe,
-    fontFamily: FONTS.prata, fontSize: 11, letterSpacing: "0.24em",
-    textTransform: "uppercase",
     ...style,
   };
 
   if (exists === false) {
     return (
-      <div style={placeholderStyle} title={prompt} data-slot={slot}>
-        <span style={{ opacity: 0.8 }}>{slot}</span>
-        <span style={{ fontSize: 9, letterSpacing: "0.14em", marginTop: 8, textTransform: "none", opacity: 0.6 }}>
-          {kind === "video" ? "video slot" : "image slot"}
-        </span>
+      <div style={placeholderStyle} title={prompt} data-slot={slot} aria-hidden>
+        {showSlotAffordance ? (
+          <>
+            <span style={{ opacity: 0.8 }}>{slot}</span>
+            <span style={{ fontSize: 9, letterSpacing: "0.14em", marginTop: 8, textTransform: "none", opacity: 0.6 }}>
+              {kind === "video" ? "video slot" : "image slot"}
+            </span>
+          </>
+        ) : null}
       </div>
     );
   }
-  if (exists === null) return <div style={placeholderStyle} data-slot={slot} />;
+  if (exists === null) return <div style={placeholderStyle} data-slot={slot} aria-hidden />;
 
   if (kind === "video") {
     return (

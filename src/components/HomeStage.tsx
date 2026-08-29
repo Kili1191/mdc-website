@@ -5,6 +5,7 @@ import { Suspense, useRef } from "react";
 import * as THREE from "three";
 import { House } from "@/components/world/House";
 import { scrollStore } from "@/lib/scrollStore";
+import { hasWebGL } from "@/lib/webgl";
 
 // Scène 3D unique et permanente sur la Home.
 // La caméra descend le long d'un axe pendant que tu scrolles — pas de
@@ -70,6 +71,9 @@ function HouseChoreo() {
 }
 
 export default function HomeStage() {
+  // La maison est un moment 3D : sans WebGL elle ne se degrade pas, elle
+  // s'absente. Le reste de la traversee (texte, marbre statique) tient seul.
+  if (!hasWebGL()) return null;
   return (
     <div
       aria-hidden

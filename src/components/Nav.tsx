@@ -52,7 +52,9 @@ export default function Nav() {
     };
 
     lastScrollY.current = window.scrollY;
-    scheduleHide(AUTO_HIDE_MS);
+    // En haut de page la nav reste : c'est le seul point d'entree vers le
+    // reste de la maison. Elle ne s'efface qu'une fois la lecture commencee.
+    if (window.scrollY >= EDGE_PX) scheduleHide(AUTO_HIDE_MS);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("keydown", onKey);
@@ -87,19 +89,19 @@ export default function Nav() {
           display: "flex", justifyContent: "space-between", alignItems: "center",
           padding: "22px 48px",
           background: "transparent",
-          pointerEvents: visible ? "none" : "none",
+          pointerEvents: "none",
           transform: visible ? "translateY(0)" : "translateY(-110%)",
           opacity: visible ? 1 : 0,
           transition: "transform 0.55s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease",
         }}
       >
-        <a href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", pointerEvents: "auto" }}>
+        <a href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", pointerEvents: visible ? "auto" : "none" }}>
           <img src="/logo.png" alt="" style={{ height: 30, width: "auto", display: "block" }} />
           <span className="mdc-nav-wordmark" style={{ fontFamily: FONTS.higuen, fontSize: 15, letterSpacing: "0.22em", color: COLORS.brouFonce }}>
             MAISON DU CALME
           </span>
         </a>
-        <div className="mdc-nav-links" style={{ display: "flex", pointerEvents: "auto" }}>
+        <div className="mdc-nav-links" style={{ display: "flex", pointerEvents: visible ? "auto" : "none" }}>
           {LINKS.map((l) => (
             <a key={l.label} href={l.href} style={{
               fontFamily: FONTS.prata, letterSpacing: "0.14em",

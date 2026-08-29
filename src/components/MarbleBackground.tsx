@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { hasWebGL } from "@/lib/webgl";
 
 // Marbre + motif révélé au curseur, en fond fixe.
 // Version allégée d'AlbatreHero : pas de scroll panels, pas de CTA, un seul motif.
@@ -15,8 +16,10 @@ export default function MarbleBackground({
   calme = false,
 }: { motif?: string; calme?: boolean }) {
   const mountRef = useRef<HTMLDivElement>(null);
+  const [webgl, setWebgl] = useState(true);
 
   useEffect(() => {
+    if (!hasWebGL()) { setWebgl(false); return; }
     const mount = mountRef.current;
     if (!mount) return;
     const W = () => mount.clientWidth;
@@ -267,6 +270,14 @@ export default function MarbleBackground({
       style={{
         position: "fixed", inset: 0, width: "100%", height: "100%",
         overflow: "hidden", background: "#EDE4D0", zIndex: 0, pointerEvents: "none",
+        // Sans WebGL, le voile d'albâtre reste en fond statique : la page
+        // garde sa matière et son fond parchemin, elle perd seulement la
+        // révélation au curseur.
+        ...(webgl ? null : {
+          backgroundImage: "url(/albatre-lisse.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }),
       }}
     />
   );
