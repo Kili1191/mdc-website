@@ -223,6 +223,19 @@ export default function MarbleBackground({
 
           // ---- la maison, gravee DANS la pierre ----
           if (uPresence > 0.004) {
+            // La gravure respire. Elle ne se contente pas de suivre le scroll :
+            // dans la station, elle s'enfonce a l'inspiration et s'allege a
+            // l'expiration, sur la meme horloge de 5500 ms que tout le reste.
+            //
+            // Deux amplitudes, pas une. La pierre elle-meme ne bouge que d'un
+            // quart : une geometrie qui palpite trop se voit et devient un
+            // effet. La braise au fond du sillon respire deux fois plus fort,
+            // parce que c'est une lumiere, et qu'une lumiere a le droit de
+            // vaciller la ou la pierre n'a pas le droit de bouger.
+            float bStone = 0.76 + 0.24 * uBreath;
+            float bEmber = 0.55 + 0.45 * uBreath;
+            float pres = uPresence * bStone;
+
             vec2 h = houseUV();
             float m = chisel(h);
             // pente du sillon : difference du trace sur ses voisins
@@ -240,13 +253,13 @@ export default function MarbleBackground({
             // desaturait la pierre chaude vers un gris argent. Tout passe
             // desormais par des facteurs multiplicatifs qui mordent d'abord
             // dans le bleu : la valeur descend, la teinte reste.
-            col *= 1.0 - m * uPresence * 0.34 * vec3(0.80, 1.00, 1.22);   // creux, chaud
-            col *= 1.0 - max(-lit,0.0) * uPresence * vec3(0.50, 0.68, 0.88);  // ombre du bord
-            col += vec3(0.86, 0.70, 0.46) * max(lit,0.0) * uPresence * 1.05;  // levre ocre
+            col *= 1.0 - m * pres * 0.34 * vec3(0.80, 1.00, 1.22);   // creux, chaud
+            col *= 1.0 - max(-lit,0.0) * pres * vec3(0.50, 0.68, 0.88);  // ombre du bord
+            col += vec3(0.86, 0.70, 0.46) * max(lit,0.0) * pres * 1.05;  // levre ocre
             // Rester immobile devant la maison enfonce le burin et ravive la
             // braise : la pierre repond a l'arret, pas au geste.
-            col *= 1.0 - m * calm * uPresence * 0.16 * vec3(0.80, 1.00, 1.22);
-            col += vec3(0.65, 0.35, 0.24) * m * uPresence * (0.11 + calm * 0.16); // braise
+            col *= 1.0 - m * calm * pres * 0.16 * vec3(0.80, 1.00, 1.22);
+            col += vec3(0.65, 0.35, 0.24) * m * uPresence * bEmber * (0.11 + calm * 0.16); // braise
           }
 
           float g = fract(sin(dot(vUv*900.0,vec2(12.9898,78.233)))*43758.5453)-0.5;
