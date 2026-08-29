@@ -20,6 +20,12 @@ export const DURATION = {
   exit: 450,
   /** Un croisement lent, deux etats qui se relaient sans qu'on les surprenne. */
   cross: 900,
+  /**
+   * Une traversee de la pierre, d'une page a l'autre. BREATH/4.
+   * Elle enjambe la sortie (450) ET l'entree (900) : la camera se pose apres
+   * le contenu, pas avant, sinon on lit deux gestes au lieu d'un.
+   */
+  traverse: 1375,
 } as const;
 
 export const STAGGER = {

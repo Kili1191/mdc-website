@@ -43,7 +43,7 @@ export default function NotesPage() {
   return (
     <main style={pageStyle}>
         <div style={containerStyle}>
-          <p style={eyebrowStyle}>Notes</p>
+          <p className="mdc-mark" style={eyebrowStyle}>Notes</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
             <SplitTextChars text="Notes." delay={60} duration={900} />
           </h1>

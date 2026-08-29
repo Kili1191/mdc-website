@@ -57,7 +57,7 @@ export default function SessionsPage() {
   return (
     <main style={pageStyle}>
       <div style={containerStyle}>
-        <p style={eyebrowStyle}>Sessions</p>
+        <p className="mdc-mark" style={eyebrowStyle}>Sessions</p>
         <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
           <SplitTextChars text="It begins with ANTARA." delay={22} duration={900} />
         </h1>
