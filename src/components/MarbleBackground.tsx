@@ -270,11 +270,43 @@ export default function MarbleBackground({
     composer.addPass(filmPass);
 
     const mouse = new THREE.Vector2(-10, -10), target = new THREE.Vector2(-10, -10), last = new THREE.Vector2(-10, -10);
-    const onMove = (e: MouseEvent) => {
+    // Presence du doigt ou du curseur. Sans elle, le tampon de revelation
+    // s'applique a chaque frame au dernier point connu : la decroissance du
+    // trail (0.93/frame) ne peut jamais gagner, puisque le shader composite en
+    // max(prev, stamp). Sur desktop on ne le voyait pas, la souris bouge
+    // toujours un peu. Sur mobile, un tap laissait le marbre ouvert pour
+    // toujours a l'endroit touche : rien ne disait que le doigt etait parti.
+    let active = 1, activeTarget = 1;
+
+    const setFromPoint = (cx: number, cy: number) => {
       const r = renderer.domElement.getBoundingClientRect();
-      target.set((e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height);
+      target.set((cx - r.left) / r.width, 1 - (cy - r.top) / r.height);
+    };
+
+    const onMove = (e: MouseEvent) => {
+      activeTarget = 1;
+      setFromPoint(e.clientX, e.clientY);
     };
     window.addEventListener("mousemove", onMove);
+
+    // Le curseur quitte la fenetre : la pierre se referme, comme au lever du doigt.
+    const onLeave = () => { activeTarget = 0; };
+    document.addEventListener("mouseleave", onLeave);
+
+    // Tactile. Le doigt ouvre la pierre, et la relacher la referme : c'est la
+    // meme grammaire que sur desktop, ou le marbre se recouvre derriere le
+    // curseur.
+    const onTouch = (e: TouchEvent) => {
+      const t0 = e.touches[0];
+      if (!t0) return;
+      activeTarget = 1;
+      setFromPoint(t0.clientX, t0.clientY);
+    };
+    const onTouchEnd = () => { activeTarget = 0; };
+    window.addEventListener("touchstart", onTouch, { passive: true });
+    window.addEventListener("touchmove", onTouch, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", onTouchEnd, { passive: true });
 
     // Réactivité gyroscope (mobile). La position "curseur virtuel" glisse
     // dans le cadre en fonction de l'inclinaison de l'appareil.
@@ -289,6 +321,8 @@ export default function MarbleBackground({
       gyro.x += (nx - gyro.x) * gyroSmoothing;
       gyro.y += (ny - gyro.y) * gyroSmoothing;
       target.set(gyro.x, gyro.y);
+      // L'inclinaison deplace le point, elle ne l'allume pas : sans ca le
+      // marbre resterait ouvert en permanence sur un telephone pose a plat.
     };
     // Ne s'active que sur mobile / capteurs présents (iOS demande permission
     // via un geste utilisateur : hors scope MVP, on écoute passivement).
@@ -309,6 +343,10 @@ export default function MarbleBackground({
       trailMat.uniforms.uTrailTime.value = t;
       filmPass.uniforms.uTime.value = t;
       mouse.lerp(target, 0.65);
+      // Fermeture douce : le tampon s'eteint, la decroissance du trail reprend
+      // la main et le marbre se recouvre.
+      active += (activeTarget - active) * 0.07;
+      trailMat.uniforms.uActive.value = active;
       const vel = mouse.distanceTo(last); last.copy(mouse);
       trailMat.uniforms.uPrev.value = rtA.texture;
       trailMat.uniforms.uMouse.value.copy(mouse);
@@ -339,6 +377,11 @@ export default function MarbleBackground({
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseleave", onLeave);
+      window.removeEventListener("touchstart", onTouch);
+      window.removeEventListener("touchmove", onTouch);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
       window.removeEventListener("deviceorientation", onOrient);
       rtA.dispose(); rtB.dispose(); texMotif.dispose(); texVeil.dispose(); renderer.dispose();
       if (renderer.domElement.parentNode) mount.removeChild(renderer.domElement);
