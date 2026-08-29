@@ -8,7 +8,6 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { hasWebGL } from "@/lib/webgl";
 import { houseFocus } from "@/lib/houseFocus";
 import { stillness, breath } from "@/lib/stillness";
-import { traverse } from "@/lib/traverse";
 import { DURATION, EASE } from "@/lib/motion";
 
 // Marbre + motif révélé au curseur, en fond fixe.
@@ -111,18 +110,13 @@ export default function MarbleBackground({
       requestAnimationFrame(() => { renderer.domElement.style.opacity = "1"; });
     };
 
-    // La camera se deplace sur la dalle a chaque changement de page : elle
-    // sort donc du cadre de la texture. En ClampToEdge, la ligne de pixels du
-    // bord s'etirait en trainee — le contraire de la pierre. En miroir, le
-    // veinage se prolonge sans couture : la dalle parait simplement plus
-    // grande que l'ecran, ce qui est exactement ce qu'on raconte.
-    const load = (p: string, counts = false, wrap: THREE.Wrapping = THREE.ClampToEdgeWrapping) => {
+    const load = (p: string, counts = false) => {
       const t = loader.load(p, () => { onResize(); if (counts) reveal(); });
-      t.wrapS = wrap; t.wrapT = wrap;
+      t.wrapS = THREE.ClampToEdgeWrapping; t.wrapT = THREE.ClampToEdgeWrapping;
       return t;
     };
-    const texMotif = load(motif, true, THREE.MirroredRepeatWrapping);
-    const texVeil = load("/albatre-lisse.jpg", true, THREE.MirroredRepeatWrapping);
+    const texMotif = load(motif, true);
+    const texVeil = load("/albatre-lisse.jpg", true);
     // Le logo sert de burin : son alpha est le trace de l'incision.
     const texHouse = load("/logo.png");
 
@@ -145,8 +139,6 @@ export default function MarbleBackground({
         uPresence: { value: 0.0 },      // visibilite de la gravure
         uStill: { value: 0.0 },         // 0 on bouge, 1 on s'est arrete
         uBreath: { value: 0.0 },        // horloge de souffle partagee
-        uPan: { value: new THREE.Vector2(0, 0) },    // ou l'on est sur la dalle
-        uSmear: { value: new THREE.Vector2(0, 0) },  // vitesse de la camera
       },
       vertexShader: `varying vec2 vUv; void main(){vUv=uv; gl_Position=vec4(position,1.0);}`,
       fragmentShader: `
@@ -159,7 +151,6 @@ export default function MarbleBackground({
         uniform sampler2D uHouseTex;
         uniform float uHouseAspect,uHouseHalfH,uCarve;
         uniform float uStill,uBreath,uPresence;
-        uniform vec2 uPan,uSmear;
         varying vec2 vUv;
 
         // Le trace du burin, en espace ecran. Rien n'est dessine PAR-DESSUS
@@ -189,8 +180,7 @@ export default function MarbleBackground({
           float sa=uScreenRes.x/uScreenRes.y, ia=uRes.x/uRes.y; vec2 o=uv;
           if(sa>ia){float s=ia/sa; o.y=(o.y-0.5)*s+0.5;} else {float s=sa/ia; o.x=(o.x-0.5)*s+0.5;}
           o=(o-0.5)/uZoom+0.5;
-          // La dalle ne bouge pas, la camera si. Chaque page a sa coordonnee.
-          return o + uPan;
+          return o;
         }
 
         void main(){
@@ -216,18 +206,8 @@ export default function MarbleBackground({
           vec2 flow = vec2(sin(uv.y*16.0+uTime*1.3), cos(uv.x*16.0+uTime*1.1))*0.004*r*houseMask;
           vec2 uvMotif = uv + flow;
 
-          // Pendant une traversee, le veinage file dans l'axe du deplacement.
-          // Trois prises le long du trajet reel de la camera, ponderees par sa
-          // vitesse : le file naît et meurt avec le mouvement, il n'a pas de
-          // courbe a lui. Au repos uSmear vaut zero et les trois prises se
-          // confondent — donc aucun cout perceptible hors trajet.
-          vec2 sm = uSmear * 9.0;
           vec3 veil  = texture2D(uVeil,  uv).rgb;
-          vec3 motifCol = (
-            texture2D(uMotif, uvMotif).rgb * 0.50 +
-            texture2D(uMotif, uvMotif - sm).rgb * 0.28 +
-            texture2D(uMotif, uvMotif + sm * 0.6).rgb * 0.22
-          );
+          vec3 motifCol = texture2D(uMotif, uvMotif).rgb;
           vec3 col = mix(veil, motifCol, r);
 
           vec3 warmLight = vec3(0.98, 0.92, 0.78);
@@ -393,8 +373,6 @@ export default function MarbleBackground({
     }
 
     const clock = new THREE.Clock(); let raf = 0;
-    const panOut = { x: 0, y: 0 };
-    const smearOut = { x: 0, y: 0 };
     const animate = () => {
       const t = clock.getElapsedTime();
       finalMat.uniforms.uTime.value = t;
@@ -404,12 +382,6 @@ export default function MarbleBackground({
       finalMat.uniforms.uPresence.value = houseFocus.presence();
       finalMat.uniforms.uStill.value = stillness.get();
       finalMat.uniforms.uBreath.value = breath();
-      // La camera glisse d'une page a l'autre. Une seule lecture par frame :
-      // `pan` avance l'horloge de la traversee, `smear` ne fait que la relire.
-      traverse.pan(panOut);
-      traverse.smear(smearOut);
-      finalMat.uniforms.uPan.value.set(panOut.x, panOut.y);
-      finalMat.uniforms.uSmear.value.set(smearOut.x, smearOut.y);
       trailMat.uniforms.uTrailTime.value = t;
       filmPass.uniforms.uTime.value = t;
       mouse.lerp(target, 0.65);

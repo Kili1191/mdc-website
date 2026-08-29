@@ -61,66 +61,61 @@ fonctionnel, et affaiblissait l'ensemble.
 
 - **Une seule loi de mouvement.** Tout sur 5500 ms ou un multiple propre, deux
   courbes d'easing au total. Les durees sont encore dispersees.
+- **La navigation traverse la pierre.** Un changement de route n'est pas un
+  fondu : la camera se deplace sur une meme dalle et la marque de la
+  destination s'y grave a l'arrivee. La gravure devient la grammaire du site.
 - **`MagneticButton`** : la signature Awwwards la plus generique qui soit. A
   reconstruire sur le souffle, ou a retirer.
 
-## La navigation traverse la pierre — fait
+## Ce qui a ete essaye pour la navigation, et retire
 
-Un changement de route n'est plus un fondu. La dalle est une seule pierre et
-chaque page occupe une coordonnee PRECISE dessus (`src/lib/traverse.ts`).
-Naviguer fait glisser la camera d'un point a l'autre.
+La navigation a traverse la pierre pendant deux versions : chaque page avait une
+coordonnee sur la dalle, la camera glissait de l'une a l'autre, et le nom de la
+page glissait avec elle via la View Transitions API. La geographie fonctionnait,
+mesuree au pixel pres. Tout a ete retire.
 
-                       notes
-         practitioner     |
-                 .    [ ACCUEIL ]    .   sessions
-            lineage       |
-                      the-work
-                          |
-                      retreats
+**Une view transition remplace la page par des instantanes, et un canvas WebGL
+ne survit pas a l'instantane.** Pendant toute la traversee, le marbre n'etait
+plus a l'ecran : fond parchemin plat, deux copies fantomes du logo qui se
+croisaient dessus. Contraste global de l'image : 12,13 au depart, 7,75 au
+milieu. Lui donner son propre `view-transition-name` n'y changeait rien
+(8,60 contre 7,75).
 
-    begin est en retrait derriere le seuil : on ressort par ou l'on est entre.
+Anime en CSS sur le wrapper de contenu, sans instantane, le marbre tenait la
+mesure (15,42 / 15,16 / 14,98). Ca ne suffisait pas non plus : deplacer la
+pierre entre deux pages, meme sans jamais la capturer, se lit encore comme une
+couche qui change. Retire sur demande.
 
-Les coordonnees sont fixes, donc la geographie s'apprend : aller de l'accueil
-aux seances deplace toujours la pierre de la meme facon, et revenir refait le
-chemin en sens inverse. C'est la difference entre un effet, qui se remarque une
-fois, et une structure.
+**La regle qui en sort, et qui prime sur toute idee de navigation :** le marbre
+n'apparait pas, ne disparait pas, ne se deplace pas d'une page a l'autre. C'est
+le sol du site, pas une couche parmi d'autres. Toute technique qui le capture,
+le fige, le fond ou le fait glisser est disqualifiee, quelle que soit sa valeur
+par ailleurs.
 
-Deux choses se produisent ensemble :
+## Le vrai coupable etait ailleurs, et il etait la depuis le debut
 
-1. **la dalle glisse** — `uPan` dans le shader, des le clic, avant que le
-   contenu ne parte ;
-2. **le contenu se croise a contre-sens** — l'ancienne page sort du cote d'ou
-   l'on vient, la nouvelle entre du cote ou l'on va. Si les deux partaient du
-   meme cote, le deplacement se lirait comme un fondu de plus.
+Apres avoir tout remis en etat, le defaut restait. Il ne venait pas des
+transitions de page.
 
-**Verifie.** Correlation de phase entre les captures du marbre seul, quatre
-paires de pages : ecart mesure a moins d'un pixel de l'ecart predit par la
-carte (attendu (-24.4, 51.7), mesure (24, 52) ; attendu (58.5, -78.9), mesure
-(-58, -79) ; attendu (151.1, 70.7), mesure (-151, 71) — le signe en x est une
-convention de correlation, celui en y l'axe inverse des textures WebGL).
+`SiteMarble` choisissait un motif PAR PAGE — bodhi sur practitioner, lineage et
+the-work, compo ailleurs. Or le motif est une prop de `MarbleBackground`, dont
+l'effet WebGL depend. Changer de page detruisait donc le renderer, retirait le
+canvas du DOM et en reconstruisait un autre, opacite zero, en attendant le
+telechargement de la nouvelle texture.
 
-## La regle qui a coute le plus cher : le marbre ne participe a rien
+Mesure sur le build de production, /sessions -> /practitioner, releve toutes
+les 120 ms : canvas remplace, **opacite 0 de 2,4 s a 4,2 s**, pleine opacite a
+4,9 s. Pres de deux secondes de fond parchemin plat, puis la pierre revient en
+fondu.
 
-La View Transitions API avait ete cablee pour la navigation. Elle permettait de
-faire GLISSER le nom de la page d'une position a l'autre, nativement, par le
-compositeur. Elle a ete retiree.
+Le motif est desormais unique pour tout le site. Une variation de matiere entre
+les pages ne vaut pas deux secondes de vide. Verifie par un tour complet des
+huit pages, releve toutes les 60 ms : zero frame sans canvas, zero frame avec
+un autre canvas, opacite minimale observee 1.
 
-Une view transition remplace la page par des instantanes, et **un canvas WebGL
-ne survit pas a l'instantane**. Pendant toute la traversee, le marbre n'etait
-donc plus a l'ecran : fond parchemin plat, avec deux copies fantomes du logo
-qui se croisaient dessus. Mesure en gelant la transition a un instant choisi
-puis en photographiant — contraste global de l'image : 12,13 au depart, **7,75
-au milieu**. Donner au marbre son propre `view-transition-name` n'y changeait
-rien de mesurable (8,60 contre 7,75).
-
-Tout est donc anime sur le wrapper de contenu, en CSS, et la pierre vit dessous
-sans jamais etre capturee. Meme mesure apres correction, bande de marbre pur :
-15,42 avant le clic, **15,16 au milieu**, 14,98 apres. La pierre ne bouge plus
-d'un cheveu.
-
-**Le marbre n'apparait pas et ne disparait pas. Jamais.** C'est le sol du site,
-pas une couche parmi d'autres : toute technique qui le capture, le fige ou le
-fond est disqualifiee, quelle que soit sa valeur par ailleurs.
+Reste a savoir, si la variation de matiere revient un jour : elle devra se
+faire par un fondu de texture DANS le shader, sans jamais reconstruire la
+couche.
 
 ## Le blocage, dit franchement
 
