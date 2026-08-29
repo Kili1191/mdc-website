@@ -33,9 +33,27 @@ export default function ScrollDriftGallery({
     if (!outer || !inner) return;
     let raf = 0;
     const sign = direction === "left" ? -1 : 1;
+    // La derive se mesurait sur la traversee complete du viewport par le
+    // bandeau : il fallait que son centre atteigne le haut de l'ecran pour que
+    // la course s'acheve. Or ce bandeau est le DERNIER element de la page. La
+    // page cesse de defiler avant, et la derive se figeait a mi-course.
+    //
+    // Mesure avant correction, en bas de page : 29,1vw parcourus sur 60
+    // possibles sur Sessions, 27,2 sur 56 sur Retreats. Moitie de la course,
+    // puis arret net.
+    //
+    // On rapporte donc l'avancee au scroll REELLEMENT disponible : la fenetre
+    // pendant laquelle l'element est visible, bornee par la fin du document.
+    // La course s'acheve toujours, que l'element soit au milieu ou en dernier.
     const tick = () => {
       const rect = outer.getBoundingClientRect();
-      const p = 1 - Math.max(0, Math.min(1, (rect.top + rect.height * 0.5) / window.innerHeight));
+      const y = window.scrollY;
+      const vh = window.innerHeight;
+      const docMax = Math.max(0, document.documentElement.scrollHeight - vh);
+      const elTop = rect.top + y;
+      const start = Math.max(0, elTop - vh);
+      const end = Math.min(docMax, elTop + rect.height);
+      const p = Math.max(0, Math.min(1, (y - start) / Math.max(1, end - start)));
       inner.style.transform = `translate3d(${sign * (p - 0.5) * amplitude * 2}vw, 0, 0)`;
       raf = requestAnimationFrame(tick);
     };
