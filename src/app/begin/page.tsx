@@ -51,7 +51,7 @@ export default function BeginPage() {
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Begin</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
-            <SplitTextChars text="Begin." delay={70} duration={900} />
+            <SplitTextChars text="Begin." delay={60} duration={900} />
           </h1>
           <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
             There is no booking calendar. There is a conversation. It starts with one

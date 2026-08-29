@@ -44,7 +44,7 @@ export default function RetreatsPage() {
         <div style={containerStyle}>
           <p style={eyebrowStyle}>Retreats</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
-            <SplitTextChars text="Once a year. Very few people. Somewhere quiet." delay={18} duration={950} />
+            <SplitTextChars text="Once a year. Very few people. Somewhere quiet." delay={22} duration={900} />
           </h1>
           <div style={{ maxWidth: 640, margin: "48px auto 0" }}>
             <AssetFrame slot="RT-01" kind="image" src="/photos/rt-01.jpg" aspect="21/9" effect="reveal"

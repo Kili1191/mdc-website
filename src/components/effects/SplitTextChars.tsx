@@ -24,7 +24,7 @@ export default function SplitTextChars({
         if (!e.isIntersecting) return;
         const chars = Array.from(el.querySelectorAll<HTMLElement>(".mdc-char"));
         chars.forEach((c, i) => {
-          c.style.transition = `opacity ${duration}ms cubic-bezier(0.16,1,0.3,1), transform ${duration}ms cubic-bezier(0.16,1,0.3,1)`;
+          c.style.transition = `opacity ${duration}ms cubic-bezier(0.16, 1, 0.3, 1), transform ${duration}ms cubic-bezier(0.16, 1, 0.3, 1)`;
           c.style.transitionDelay = `${i * delay}ms`;
           requestAnimationFrame(() => {
             c.style.opacity = "1";

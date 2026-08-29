@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { COLORS, FONTS } from "@/styles/tokens";
+import { DURATION, EASE } from "@/lib/motion";
 
 // Bouton discret bas-droite : toggle une nappe audio (binaural pad).
 // Off par défaut, préférence persistée en localStorage.
@@ -76,7 +77,7 @@ export default function SoundToggle() {
           background: "transparent", border: 0, cursor: "pointer",
           fontFamily: FONTS.prata, fontSize: 10, letterSpacing: "0.24em",
           textTransform: "lowercase", color: COLORS.rouille,
-          opacity: 0.55, transition: "opacity 0.4s ease",
+          opacity: 0.55, transition: `opacity ${DURATION.exit}ms ${EASE.exit}`,
           padding: 0,
         }}
         onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; }}

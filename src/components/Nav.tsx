@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { COLORS, FONTS } from "@/styles/tokens";
 import { useIntroReady } from "@/lib/introReady";
+import { DURATION, EASE } from "@/lib/motion";
 
 const LINKS = [
   { label: "Sessions", href: "/sessions" },
@@ -92,7 +93,7 @@ export default function Nav() {
           pointerEvents: "none",
           transform: visible ? "translateY(0)" : "translateY(-110%)",
           opacity: visible ? 1 : 0,
-          transition: "transform 0.55s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease",
+          transition: `transform ${DURATION.reveal}ms ${EASE.reveal}, opacity ${DURATION.exit}ms ${EASE.exit}`,
         }}
       >
         <a href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none", pointerEvents: visible ? "auto" : "none" }}>

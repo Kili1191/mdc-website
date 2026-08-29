@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
+import { DURATION, EASE } from "@/lib/motion";
 
 // Image reveal : rideau qui s'ouvre via clip-path anime a l'entree dans le
 // viewport.
@@ -32,8 +33,8 @@ export default function ImageReveal({
     const reveal = () => {
       if (done) return;
       done = true;
-      clip.style.transition = `clip-path ${duration}ms cubic-bezier(0.7, 0, 0.2, 1)`;
-      img.style.transition = `transform ${duration + 400}ms cubic-bezier(0.16, 1, 0.3, 1)`;
+      clip.style.transition = `clip-path ${duration}ms ${EASE.reveal}`;
+      img.style.transition = `transform ${duration + 400}ms ${EASE.reveal}`;
       requestAnimationFrame(() => {
         clip.style.clipPath = "inset(0% 0% 0% 0%)";
         img.style.transform = "scale(1)";
