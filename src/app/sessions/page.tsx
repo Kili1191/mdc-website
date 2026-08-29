@@ -173,7 +173,7 @@ export default function SessionsPage() {
               If you feel it is yours, say so.
             </p>
           </div>
-          <div style={{ marginTop: 48 }}>
+          <div style={{ marginTop: 48, display: "flex", justifyContent: "center" }}>
             <MagneticButton href="/begin">Apply</MagneticButton>
           </div>
         </div>
@@ -190,7 +190,7 @@ export default function SessionsPage() {
             Older than the house.
           </h2>
           <p style={{ ...bodyStyle, marginTop: 32 }}>
-            Three practices are offered apart from the suite. They are not part of
+            Four practices are offered apart from the suite. They are not part of
             NERVANA, and they are not silent in the same way.
           </p>
 
@@ -205,6 +205,12 @@ export default function SessionsPage() {
             The junctions where the body gathers what it holds. Marma work is
             pressure and stillness at those points, slower than massage and more
             deliberate.
+          </p>
+
+          <p style={{ ...roomLabelStyle, marginTop: 40 }}>REIKI</p>
+          <p style={{ ...bodyStyle, marginTop: 20 }}>
+            Hands resting on the body, or just above it, and held. Nothing is
+            pressed and nothing is moved. Fully clothed, in silence.
           </p>
 
           <p style={{ ...roomLabelStyle, marginTop: 40 }}>SOUND</p>

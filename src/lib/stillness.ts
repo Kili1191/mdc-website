@@ -20,7 +20,22 @@
 
 export const BREATH_MS = 5500;          // coherence cardiaque, 5,5 resp/min
 
-const GRACE_MS = 900;                   // temps mort avant de compter l'arret
+// Temps mort avant que l'arret compte.
+//
+// Sur telephone, un visiteur est immobile presque tout le temps : il tape,
+// puis il lit. Avec le meme delai que sur desktop, l'immobilite devenait
+// l'etat par defaut et la pierre restait ouverte en permanence. Pire, elle se
+// rouvrait deux secondes apres chaque tap, plus fort que le tap lui-meme :
+// on ne voyait donc jamais le marbre se refermer.
+//
+// Mesure du conflit, apres un tap, en restant immobile : detail local 6,06 a
+// une seconde, 3,12 a deux secondes (la pierre s'est bien refermee), puis
+// 10,56 a sept secondes. L'immobilite ecrasait la recuperation.
+//
+// Au doigt, l'arret doit donc etre choisi, pas subi. Il faut poser le
+// telephone, pas simplement cesser de scroller.
+const GRACE_MS_POINTER = 900;
+const GRACE_MS_TOUCH = 3800;
 const RISE_MS = BREATH_MS;              // pleine recompense apres un souffle
 const RISE_K = 0.020;                   // lissage a la montee
 const FALL_K = 0.140;                   // lissage a la descente, 7x plus vif
@@ -29,12 +44,13 @@ let lastInput = 0;
 let value = 0;
 let started = false;
 let reduced = false;
+let grace = GRACE_MS_POINTER;
 
 function markInput() { lastInput = performance.now(); }
 
 function loop() {
   const now = performance.now();
-  const idle = now - lastInput - GRACE_MS;
+  const idle = now - lastInput - grace;
   const target = reduced ? 0 : Math.max(0, Math.min(1, idle / RISE_MS));
   value += (target - value) * (target > value ? RISE_K : FALL_K);
   requestAnimationFrame(loop);
@@ -45,6 +61,8 @@ function start() {
   started = true;
   lastInput = performance.now();
   reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Un pointeur grossier, c'est un doigt : l'arret y est la norme, pas un geste.
+  if (window.matchMedia("(pointer: coarse)").matches) grace = GRACE_MS_TOUCH;
 
   const opts = { passive: true } as const;
   window.addEventListener("scroll", markInput, opts);

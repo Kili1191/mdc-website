@@ -107,7 +107,7 @@ export default function TheWorkPage() {
             tell you honestly if it is not for you.
           </p>
 
-          <div style={{ marginTop: 56 }}>
+          <div style={{ marginTop: 56, display: "flex", justifyContent: "center" }}>
             <MagneticButton href="/begin">Begin</MagneticButton>
           </div>
       </div>
