@@ -122,9 +122,19 @@ export default function Home() {
         // La station MAISON publie son etat pour le shader du marbre. La
         // gravure n'existe donc que la ou cette section domine l'ecran.
         if (st.dataset.station === "maison") {
-          // avancee du burin : 0 quand le haut de la station atteint le centre
-          // de l'ecran, 1 quand son bas l'atteint. Monotone avec le scroll.
-          const cut = Math.max(0, Math.min(1, (vh / 2 - r.top) / r.height));
+          // Avancee du burin. Elle doit s'achever QUAND la maison est la plus
+          // visible, pas quand elle s'en va.
+          //
+          // La version precedente divisait par la hauteur entiere de la
+          // station : le trait n'etait acheve qu'une fois le BAS de la station
+          // au centre de l'ecran, or a ce moment la presence est deja retombee
+          // a zero. La maison etait donc a moitie gravee a son apogee, et
+          // entierement gravee au moment ou plus personne ne la voyait.
+          //
+          // On divise par la demi-hauteur : le trait se termine quand le CENTRE
+          // de la station atteint le centre de l'ecran, c'est-a-dire au pic de
+          // presence. Ensuite il reste acheve.
+          const cut = Math.max(0, Math.min(1, (vh / 2 - r.top) / (r.height / 2)));
           houseFocus.set(focus, cut);
         }
       });
