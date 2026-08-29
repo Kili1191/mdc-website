@@ -43,6 +43,14 @@ const linkStyle: React.CSSProperties = {
   textDecoration: "none",
   borderBottom: `1px solid ${COLORS.rouille}`, paddingBottom: 4,
 };
+const bodyStyle: React.CSSProperties = {
+  fontFamily: FONTS.prata,
+  fontSize: "clamp(17px, 1.5vw, 20px)",
+  lineHeight: 1.75,
+  color: COLORS.brou,
+  margin: 0,
+  maxWidth: 640,
+};
 const stationStyle: React.CSSProperties = {
   position: "relative", zIndex: 5,
   // dvh gère la barre d'adresse mobile Safari, fallback vh sur old browsers
@@ -116,13 +124,19 @@ export default function Home() {
       <div ref={rootRef}>
         {/* 1. SEUIL — pas de rectangle média, le marbre ambient (SiteMarble)
             suffit. Le titre au centre. */}
-        <section className="mdc-station" style={stationStyle}>
+        <section className="mdc-station" style={{ ...stationStyle, flexDirection: "column" }}>
           <div style={{
             ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)",
             maxWidth: 900, textAlign: "center",
           }}>
             <SplitTextChars text="For those who carry everything inside." delay={22} duration={950} />
           </div>
+          <BreathReveal
+            as="p"
+            text="You have handled everything. This is the one room where you don't have to."
+            style={{ ...bodyStyle, marginTop: 44, textAlign: "center", maxWidth: 620 }}
+            stagger={90}
+          />
         </section>
 
         {/* 2. PIERRE — PH-01 image derrière + titre */}
@@ -135,7 +149,26 @@ export default function Home() {
           />
         </section>
 
-        {/* 3. MAISON — pas de texte, la 3D parle. Station deux fois plus
+        {/* 3. LA MAISON — la station qui nomme ce que c'est. Elle precede
+             immediatement la gravure : le burin marque donc l'instant ou le
+             site dit ce qu'il est, au lieu de flotter au milieu du scroll.
+             Copy COPY_V13 §Home/The house, validee. */}
+        <section className="mdc-station" style={{ ...stationStyle, flexDirection: "column" }}>
+          <BreathReveal
+            as="p"
+            text="Maison du Calme is a private house in London for what cannot be said aloud."
+            style={{ ...displayItalic, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: 860, textAlign: "center", lineHeight: 1.35 }}
+            stagger={90}
+          />
+          <BreathReveal
+            as="p"
+            text="You arrive carrying. You leave lighter. What happens between is felt, not explained."
+            style={{ ...bodyStyle, marginTop: 40, textAlign: "center" }}
+            stagger={70}
+          />
+        </section>
+
+        {/* 4. MAISON — pas de texte, la 3D parle. Station deux fois plus
              haute : le moment signature a besoin d'un moment ou il est seul
              a l'ecran. A hauteur egale, la fenetre ou aucune autre station
              n'etait lisible ne durait que 2% du scroll. */}
@@ -155,7 +188,8 @@ export default function Home() {
               style={displayCaps}
               stagger={140}
             />
-            <div style={{ marginTop: 48 }}>
+            <div style={{ marginTop: 48, display: "flex", gap: 28, justifyContent: "center", flexWrap: "wrap" }}>
+              <MagneticButton href="/sessions">Sessions</MagneticButton>
               <MagneticButton href="/the-work">The Work</MagneticButton>
             </div>
           </div>
@@ -180,11 +214,20 @@ export default function Home() {
         <section className="mdc-station" style={stationStyle}>
           <div style={{ textAlign: "center" }}>
             <div style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 56px)" }}>
-              <SplitTextChars text="Arriving is enough." delay={38} duration={950} />
+              <SplitTextChars text="Something in you already knows." delay={38} duration={950} />
             </div>
-            <div style={{ marginTop: 56 }}>
+            <BreathReveal
+              as="p"
+              text="Entry is by conversation, not by calendar. Tell us what you carry."
+              style={{ ...bodyStyle, marginTop: 40, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}
+              stagger={80}
+            />
+            <div style={{ marginTop: 52 }}>
               <MagneticButton href="/begin">Begin</MagneticButton>
             </div>
+            <p style={{ ...bodyStyle, fontSize: 13, opacity: 0.68, marginTop: 28, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
+              No forms you dread. One question, answered in your own time.
+            </p>
           </div>
         </section>
       </div>
