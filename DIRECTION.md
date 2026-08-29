@@ -56,6 +56,7 @@ fonctionnel, et affaiblissait l'ensemble.
 | `ParallaxStack`, `DepthImageLayer` | idem, code mort |
 | `HorizontalScroll`, `SmoothScroll` | doublons de `ScrollProvider` |
 | `/effects`, `/test-site` | pages de demonstration servies en production |
+| `MagneticButton` | le bouton courait apres le curseur. Mesure : jusqu'a 21,4 px hors de son axe quand le curseur passait a 88 px sans jamais le toucher, une boucle `requestAnimationFrame` par instance a vie (quatre sur l'accueil), et rien du tout au doigt. Remplace par `QuietButton` : la pierre se rechauffe sous la main, rien ne bouge. Decalage mesure apres : 0,0 px |
 
 ## Ce qui reste a faire
 
@@ -64,8 +65,6 @@ fonctionnel, et affaiblissait l'ensemble.
 - **La navigation traverse la pierre.** Un changement de route n'est pas un
   fondu : la camera se deplace sur une meme dalle et la marque de la
   destination s'y grave a l'arrivee. La gravure devient la grammaire du site.
-- **`MagneticButton`** : la signature Awwwards la plus generique qui soit. A
-  reconstruire sur le souffle, ou a retirer.
 
 ## Ce qui a ete essaye pour la navigation, et retire
 

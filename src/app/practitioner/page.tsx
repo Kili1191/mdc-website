@@ -1,6 +1,6 @@
 import { COLORS, FONTS } from "@/styles/tokens";
 import SplitTextChars from "@/components/effects/SplitTextChars";
-import MagneticButton from "@/components/effects/MagneticButton";
+import QuietButton from "@/components/effects/QuietButton";
 import AssetFrame from "@/components/effects/AssetFrame";
 
 const pageStyle: React.CSSProperties = {
@@ -90,7 +90,7 @@ export default function PractitionerPage() {
           </div>
 
           <div style={{ marginTop: 56, display: "flex", justifyContent: "center" }}>
-            <MagneticButton href="/lineage">See the lineage</MagneticButton>
+            <QuietButton href="/lineage">See the lineage</QuietButton>
           </div>
 
           <hr style={dividerStyle} />

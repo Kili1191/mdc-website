@@ -1,6 +1,6 @@
 import { COLORS, FONTS } from "@/styles/tokens";
 import SplitTextChars from "@/components/effects/SplitTextChars";
-import MagneticButton from "@/components/effects/MagneticButton";
+import QuietButton from "@/components/effects/QuietButton";
 import AssetFrame from "@/components/effects/AssetFrame";
 import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
 
@@ -73,7 +73,7 @@ export default function RetreatsPage() {
           </div>
 
           <div style={{ marginTop: 56, display: "flex", justifyContent: "center" }}>
-            <MagneticButton href="/begin">Register interest</MagneticButton>
+            <QuietButton href="/begin">Register interest</QuietButton>
           </div>
 
           <hr style={dividerStyle} />

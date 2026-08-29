@@ -35,3 +35,38 @@ body {
 @media (max-width: 420px) {
   html { font-size: 14px; }
 }
+
+/* Le bouton de la maison — voir src/components/effects/QuietButton.tsx.
+   Aucune transformation : la pierre se rechauffe sous la main, elle ne se
+   deplace pas. Les durees et les courbes viennent de src/lib/motion.ts
+   (reveal 900 ms, exit 450 ms) ; le CSS ne pouvant pas importer le module,
+   toute modification se fait aux deux endroits. */
+.mdc-button {
+  display: inline-block;
+  padding: 22px 52px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  background-color: rgba(165, 90, 62, 0);
+  transition:
+    background-color 450ms cubic-bezier(0.4, 0, 0.6, 1),
+    box-shadow 450ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.mdc-button:hover,
+.mdc-button:focus-visible {
+  background-color: rgba(165, 90, 62, 0.07);
+  /* Une lueur tres basse, comme une braise sous la pierre. */
+  box-shadow: 0 0 0 1px rgba(165, 90, 62, 0.16);
+  transition:
+    background-color 900ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mdc-button:focus-visible {
+  outline: 2px solid rgba(165, 90, 62, 0.55);
+  outline-offset: 3px;
+}
