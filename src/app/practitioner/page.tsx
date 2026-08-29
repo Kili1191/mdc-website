@@ -108,6 +108,40 @@ export default function PractitionerPage() {
 
           <hr style={dividerStyle} />
 
+          {/* Ce que Kilian enseigne. Le fait marquant n'est pas la maitrise,
+              c'est le refus : habilite a enseigner tous les niveaux, il n'en
+              enseigne qu'un. Cette maison est batie sur des refus, la forme de
+              preuve qu'elle sait deja porter. */}
+          <p style={eyebrowStyle}>What he teaches</p>
+          <h2 style={{ ...sectionHeadStyle, marginTop: 32 }}>
+            He teaches the first level only.
+          </h2>
+          <p style={{ ...bodyStyle, marginTop: 32 }}>
+            He is a Reiki master, qualified to teach every level. He teaches the
+            first, and stops there.
+          </p>
+          <p style={{ ...bodyStyle, marginTop: 24 }}>
+            The first level is the one you keep for yourself: the hand positions,
+            the attunements, and the practice of laying them on your own body
+            before anyone else&apos;s. It is taught in person, and rarely.
+          </p>
+
+          <hr style={dividerStyle} />
+
+          {/* Le coaching n'a pas la promesse de la maison. Il est nomme sans
+              etre installe au meme etage : la maison reste silencieuse. */}
+          <p style={eyebrowStyle}>The other door</p>
+          <h2 style={{ ...sectionHeadStyle, marginTop: 32 }}>
+            Some people arrive needing to speak.
+          </h2>
+          <p style={{ ...bodyStyle, marginTop: 32 }}>
+            That work happens in conversation, and it is arranged separately. It
+            is not the house, and it is not silent. Ask, and you will be told
+            whether it is the right door.
+          </p>
+
+          <hr style={dividerStyle} />
+
           <p style={eyebrowStyle}>Discretion</p>
           <h2 style={{ ...sectionHeadStyle, marginTop: 32 }}>
             <SplitTextChars text="No one is named. This is not a policy. It is the product." delay={16} duration={800} />

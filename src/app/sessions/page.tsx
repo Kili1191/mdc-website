@@ -190,8 +190,8 @@ export default function SessionsPage() {
             Older than the house.
           </h2>
           <p style={{ ...bodyStyle, marginTop: 32 }}>
-            Two Ayurvedic practices are offered apart from the suite. They are not
-            part of NERVANA, and they are not silent in the same way.
+            Three practices are offered apart from the suite. They are not part of
+            NERVANA, and they are not silent in the same way.
           </p>
 
           <p style={{ ...roomLabelStyle, marginTop: 48 }}>ABHYANGA</p>
@@ -205,6 +205,13 @@ export default function SessionsPage() {
             The junctions where the body gathers what it holds. Marma work is
             pressure and stillness at those points, slower than massage and more
             deliberate.
+          </p>
+
+          <p style={{ ...roomLabelStyle, marginTop: 40 }}>SOUND</p>
+          <p style={{ ...bodyStyle, marginTop: 20 }}>
+            Bowls set directly on the body and struck softly, so the tone arrives
+            through the body before it reaches the ear. Fully clothed, face down,
+            then turned. It is the only work here you will hear.
           </p>
         </div>
 
