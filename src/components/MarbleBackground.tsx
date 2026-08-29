@@ -115,6 +115,7 @@ export default function MarbleBackground({
         uHouseAspect: { value: 574.0 / 480.0 },
         uHouseHalfH: { value: 0.17 },   // demi-hauteur, en fraction d'ecran
         uCarve: { value: 0.0 },         // 0 pierre intacte, 1 gravure achevee
+        uPresence: { value: 0.0 },      // visibilite de la gravure
         uStill: { value: 0.0 },         // 0 on bouge, 1 on s'est arrete
         uBreath: { value: 0.0 },        // horloge de souffle partagee
       },
@@ -128,7 +129,7 @@ export default function MarbleBackground({
         uniform float uHouseInner,uHouseOuter;
         uniform sampler2D uHouseTex;
         uniform float uHouseAspect,uHouseHalfH,uCarve;
-        uniform float uStill,uBreath;
+        uniform float uStill,uBreath,uPresence;
         varying vec2 vUv;
 
         // Le trace du burin, en espace ecran. Rien n'est dessine PAR-DESSUS
@@ -178,7 +179,7 @@ export default function MarbleBackground({
           // la station MAISON, la laisser remonter mettrait deux maisons a
           // l'ecran : la gravure du site et celle de la pierre. On retient
           // donc l'ouverture la ou le burin travaille.
-          float calm = uStill * (0.58 + 0.42 * uBreath) * (1.0 - uCarve * 0.80);
+          float calm = uStill * (0.58 + 0.42 * uBreath) * (1.0 - uPresence * 0.80);
           r = max(r, calm * 0.38 * uEffectScale);
 
           vec2 flow = vec2(sin(uv.y*16.0+uTime*1.3), cos(uv.x*16.0+uTime*1.1))*0.004*r*houseMask;
@@ -200,7 +201,7 @@ export default function MarbleBackground({
           col += sheen * r * uIrisation;
 
           // ---- la maison, gravee DANS la pierre ----
-          if (uCarve > 0.001) {
+          if (uPresence > 0.004) {
             vec2 h = houseUV();
             float m = chisel(h);
             // pente du sillon : difference du trace sur ses voisins
@@ -218,13 +219,13 @@ export default function MarbleBackground({
             // desaturait la pierre chaude vers un gris argent. Tout passe
             // desormais par des facteurs multiplicatifs qui mordent d'abord
             // dans le bleu : la valeur descend, la teinte reste.
-            col *= 1.0 - m * 0.34 * vec3(0.80, 1.00, 1.22);          // creux, chaud
-            col *= 1.0 - max(-lit,0.0) * vec3(0.50, 0.68, 0.88);     // ombre du bord, chaude
-            col += vec3(0.86, 0.70, 0.46) * max(lit,0.0) * 1.05;     // levre : ocre, pas blanc
+            col *= 1.0 - m * uPresence * 0.34 * vec3(0.80, 1.00, 1.22);   // creux, chaud
+            col *= 1.0 - max(-lit,0.0) * uPresence * vec3(0.50, 0.68, 0.88);  // ombre du bord
+            col += vec3(0.86, 0.70, 0.46) * max(lit,0.0) * uPresence * 1.05;  // levre ocre
             // Rester immobile devant la maison enfonce le burin et ravive la
             // braise : la pierre repond a l'arret, pas au geste.
-            col *= 1.0 - m * calm * 0.16 * vec3(0.80, 1.00, 1.22);
-            col += vec3(0.65, 0.35, 0.24) * m * (0.11 + calm * 0.16);   // braise au fond
+            col *= 1.0 - m * calm * uPresence * 0.16 * vec3(0.80, 1.00, 1.22);
+            col += vec3(0.65, 0.35, 0.24) * m * uPresence * (0.11 + calm * 0.16); // braise
           }
 
           float g = fract(sin(dot(vUv*900.0,vec2(12.9898,78.233)))*43758.5453)-0.5;
@@ -301,7 +302,8 @@ export default function MarbleBackground({
       finalMat.uniforms.uTime.value = t;
       // La gravure suit le scroll dans la station MAISON : plus on descend,
       // plus le burin est descendu.
-      finalMat.uniforms.uCarve.value = houseFocus.get();
+      finalMat.uniforms.uCarve.value = houseFocus.progress();
+      finalMat.uniforms.uPresence.value = houseFocus.presence();
       finalMat.uniforms.uStill.value = stillness.get();
       finalMat.uniforms.uBreath.value = breath();
       trailMat.uniforms.uTrailTime.value = t;

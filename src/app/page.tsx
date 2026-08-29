@@ -87,8 +87,23 @@ export default function Home() {
     // entre son centre et celui du viewport, pas d'un progres global decoupe
     // en parts egales. Une station peut donc etre plus haute qu'une autre
     // sans casser la choregraphie, et aucune constante n'est a re-caler.
+    let lastY = window.scrollY;
+    let goingUp = false;
+    const downEls = root.querySelectorAll<HTMLElement>('[data-dir="down"]');
+    const upEls = root.querySelectorAll<HTMLElement>('[data-dir="up"]');
+
     const tick = () => {
       const vh = window.innerHeight;
+
+      // Hysteresis : un tremblement de trackpad ne doit pas faire clignoter
+      // la phrase. Il faut six pixels francs pour changer d'avis.
+      const y = window.scrollY;
+      if (y - lastY > 6) goingUp = false;
+      else if (lastY - y > 6) goingUp = true;
+      lastY = y;
+      downEls.forEach((e) => { e.style.opacity = goingUp ? "0" : "1"; });
+      upEls.forEach((e) => { e.style.opacity = goingUp ? "1" : "0"; });
+
       const last = stations.length - 1;
       stations.forEach((st, i) => {
         const r = st.getBoundingClientRect();
@@ -104,9 +119,14 @@ export default function Home() {
         st.style.transform = `translateY(${(1 - focus) * (d > 0 ? 14 : -14)}px)`;
         st.style.pointerEvents = focus > 0.15 ? "auto" : "none";
 
-        // La station MAISON publie son focus pour HomeStage. La maison n'est
-        // donc presente que la ou cette section domine reellement l'ecran.
-        if (st.dataset.station === "maison") houseFocus.set(focus);
+        // La station MAISON publie son etat pour le shader du marbre. La
+        // gravure n'existe donc que la ou cette section domine l'ecran.
+        if (st.dataset.station === "maison") {
+          // avancee du burin : 0 quand le haut de la station atteint le centre
+          // de l'ecran, 1 quand son bas l'atteint. Monotone avec le scroll.
+          const cut = Math.max(0, Math.min(1, (vh / 2 - r.top) / r.height));
+          houseFocus.set(focus, cut);
+        }
       });
       raf = requestAnimationFrame(tick);
     };
@@ -131,12 +151,29 @@ export default function Home() {
           }}>
             <SplitTextChars text="For those who carry everything inside." delay={22} duration={950} />
           </div>
-          <BreathReveal
-            as="p"
-            text="You have handled everything. This is the one room where you don't have to."
-            style={{ ...bodyStyle, marginTop: 44, textAlign: "center", maxWidth: 620 }}
-            stagger={90}
-          />
+          {/* La maison ne dit pas la meme chose a l'aller et au retour.
+              Les deux lignes sont superposees et se croisent selon le sens du
+              scroll : on descend, elle vous accueille ; on remonte, elle vous
+              dit ce que vous emportez. Rien ne se remonte en React, on ne
+              touche que l'opacite. */}
+          <div style={{ position: "relative", marginTop: 44, width: "100%", maxWidth: 620, minHeight: 92 }}>
+            <div data-dir="down" style={{ position: "absolute", inset: 0, transition: "opacity 900ms cubic-bezier(0.16,1,0.3,1)" }}>
+              <BreathReveal
+                as="p"
+                text="You have handled everything. This is the one room where you don't have to."
+                style={{ ...bodyStyle, textAlign: "center" }}
+                stagger={90}
+              />
+            </div>
+            <div data-dir="up" style={{ position: "absolute", inset: 0, opacity: 0, transition: "opacity 900ms cubic-bezier(0.16,1,0.3,1)" }}>
+              <BreathReveal
+                as="p"
+                text="You arrive carrying. You leave lighter. What happens between is felt, not explained."
+                style={{ ...bodyStyle, textAlign: "center" }}
+                stagger={90}
+              />
+            </div>
+          </div>
         </section>
 
         {/* 2. PIERRE — PH-01 image derrière + titre */}
@@ -168,14 +205,16 @@ export default function Home() {
           />
         </section>
 
-        {/* 4. MAISON — pas de texte, la 3D parle. Station deux fois plus
-             haute : le moment signature a besoin d'un moment ou il est seul
-             a l'ecran. A hauteur egale, la fenetre ou aucune autre station
-             n'etait lisible ne durait que 2% du scroll. */}
+        {/* 4. MAISON — pas de texte, la gravure parle. Un peu plus haute que
+             les autres pour que le burin ait le temps de descendre, mais pas
+             plus : depuis que chaque station se mesure elle-meme, un voisin
+             est deja eteint des que la station depasse 0,22 hauteur d'ecran.
+             Les 200dvh dataient du systeme precedent et rendaient la
+             traversee interminable. */}
         <section
           className="mdc-station"
           data-station="maison"
-          style={{ ...stationStyle, height: "200dvh", minHeight: "200vh" }}
+          style={{ ...stationStyle, height: "130dvh", minHeight: "130vh" }}
           aria-hidden
         />
 

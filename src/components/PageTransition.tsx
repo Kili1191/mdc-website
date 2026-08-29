@@ -70,7 +70,7 @@ export default function PageTransition({ children }: { children: React.ReactNode
   // document) et non sur le viewport, et il scrolle avec la page.
   //
   // Une couche plein ecran rendue depuis une page doit donc passer par un
-  // portal sur <body> (voir HomeStage), pas par `position: fixed` seul.
+  // portal sur <body>, pas par `position: fixed` seul.
   const contentStyle: React.CSSProperties = {
     opacity: leaving ? 0 : entered ? 1 : 0,
     transform: leaving
