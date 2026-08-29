@@ -61,11 +61,52 @@ fonctionnel, et affaiblissait l'ensemble.
 
 - **Une seule loi de mouvement.** Tout sur 5500 ms ou un multiple propre, deux
   courbes d'easing au total. Les durees sont encore dispersees.
-- **La navigation traverse la pierre.** Un changement de route n'est pas un
-  fondu : la camera se deplace sur une meme dalle et la marque de la
-  destination s'y grave a l'arrivee. La gravure devient la grammaire du site.
 - **`MagneticButton`** : la signature Awwwards la plus generique qui soit. A
   reconstruire sur le souffle, ou a retirer.
+
+## La navigation traverse la pierre — fait
+
+Un changement de route n'est plus un fondu. La dalle est une seule pierre et
+chaque page occupe une coordonnee PRECISE dessus (`src/lib/traverse.ts`).
+Naviguer fait glisser la camera d'un point a l'autre.
+
+                       notes
+         practitioner     |
+                 .    [ ACCUEIL ]    .   sessions
+            lineage       |
+                      the-work
+                          |
+                      retreats
+
+    begin est en retrait derriere le seuil : on ressort par ou l'on est entre.
+
+Les coordonnees sont fixes, donc la geographie s'apprend : aller de l'accueil
+aux seances deplace toujours la pierre de la meme facon, et revenir refait le
+chemin en sens inverse. C'est la difference entre un effet, qui se remarque une
+fois, et une structure.
+
+Trois choses se produisent ensemble :
+
+1. **la dalle glisse** — `uPan` dans le shader, des le clic, avant que le
+   contenu ne parte ;
+2. **le contenu se croise a contre-sens** — l'ancienne page sort du cote d'ou
+   l'on vient, la nouvelle entre du cote ou l'on va (`--mdc-dx/--mdc-dy`) ;
+3. **la marque se grave** — chaque page porte son nom une fois, sous
+   `view-transition-name: mdc-mark`. Le navigateur fait GLISSER ce nom d'une
+   position a l'autre au lieu de l'effacer puis de le reecrire.
+
+Le point 3 passe par la View Transitions API : le morph est calcule par le
+compositeur, pas par du JavaScript de frame. Sans elle — ou sous
+`prefers-reduced-motion` — on retombe sur le fondu manuel, et la camera se pose
+d'un coup au lieu de voyager.
+
+**Verifie.** Correlation de phase entre les captures du marbre seul, quatre
+paires de pages : ecart mesure a moins d'un pixel de l'ecart predit par la
+carte (attendu (-24.4, 51.7), mesure (24, 52) ; attendu (58.5, -78.9), mesure
+(-58, -79) ; attendu (151.1, 70.7), mesure (-151, 71) — le signe en x est une
+convention de correlation, celui en y l'axe inverse des textures WebGL). Cout :
+218 a 333 ms de gel au clic, pendant lesquels la courbe de deplacement n'a
+franchi que 10 %.
 
 ## Le blocage, dit franchement
 

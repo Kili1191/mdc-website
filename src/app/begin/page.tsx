@@ -49,7 +49,7 @@ export default function BeginPage() {
   return (
     <main style={pageStyle}>
         <div style={containerStyle}>
-          <p style={eyebrowStyle}>Begin</p>
+          <p className="mdc-mark" style={eyebrowStyle}>Begin</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
             <SplitTextChars text="Begin." delay={60} duration={900} />
           </h1>

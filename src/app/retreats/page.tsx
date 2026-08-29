@@ -42,7 +42,7 @@ export default function RetreatsPage() {
   return (
     <main style={pageStyle}>
         <div style={containerStyle}>
-          <p style={eyebrowStyle}>Retreats</p>
+          <p className="mdc-mark" style={eyebrowStyle}>Retreats</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
             <SplitTextChars text="Once a year. Very few people. Somewhere quiet." delay={22} duration={900} />
           </h1>
