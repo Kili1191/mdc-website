@@ -8,6 +8,7 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { hasWebGL } from "@/lib/webgl";
 import { houseFocus } from "@/lib/houseFocus";
 import { stillness, breath } from "@/lib/stillness";
+import { DURATION, EASE } from "@/lib/motion";
 
 // Marbre + motif révélé au curseur, en fond fixe.
 // Version allégée d'AlbatreHero : pas de scroll panels, pas de CTA, un seul motif.
@@ -28,9 +29,17 @@ export default function MarbleBackground({
     const H = () => mount.clientHeight;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
+    // Le noir est hors charte. Trois.js efface en noir par defaut : sur la
+    // moindre frame rendue avant que le shader n'ait de quoi peindre, l'ecran
+    // partirait au noir.
+    renderer.setClearColor(0xEDE4D0, 1);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(W(), H());
     renderer.domElement.style.display = "block";
+    // Invisible tant que les textures ne sont pas la. Le div parent porte deja
+    // le parchemin : on voit donc du parchemin, puis le marbre s'y fond.
+    renderer.domElement.style.opacity = "0";
+    renderer.domElement.style.transition = `opacity ${DURATION.reveal}ms ${EASE.reveal}`;
     renderer.domElement.style.width = "100%";
     renderer.domElement.style.height = "100%";
     mount.appendChild(renderer.domElement);
@@ -89,13 +98,25 @@ export default function MarbleBackground({
     trailScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), trailMat));
 
     const loader = new THREE.TextureLoader();
-    const load = (p: string) => {
-      const t = loader.load(p, () => onResize());
+
+    // TextureLoader.load rend la texture AVANT que l'image existe, et
+    // echantillonner une texture incomplete donne du noir opaque. Le shader
+    // final calculait donc mix(noir, noir) tant que les deux jpg n'etaient pas
+    // telecharges : ecran noir a chaque ouverture et a chaque rafraichissement,
+    // d'autant plus long que les fichiers etaient lourds.
+    let pending = 2;                       // le voile et le motif portent la couleur
+    const reveal = () => {
+      if (--pending > 0) return;
+      requestAnimationFrame(() => { renderer.domElement.style.opacity = "1"; });
+    };
+
+    const load = (p: string, counts = false) => {
+      const t = loader.load(p, () => { onResize(); if (counts) reveal(); });
       t.wrapS = THREE.ClampToEdgeWrapping; t.wrapT = THREE.ClampToEdgeWrapping;
       return t;
     };
-    const texMotif = load(motif);
-    const texVeil = load("/albatre-lisse.jpg");
+    const texMotif = load(motif, true);
+    const texVeil = load("/albatre-lisse.jpg", true);
     // Le logo sert de burin : son alpha est le trace de l'incision.
     const texHouse = load("/logo.png");
 
