@@ -46,7 +46,7 @@ export default function PractitionerPage() {
   return (
     <main style={pageStyle}>
         <div style={containerStyle}>
-          <p className="mdc-mark" style={eyebrowStyle}>Practitioner</p>
+          <p style={eyebrowStyle}>Practitioner</p>
           <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
             <SplitTextChars text="Kilian." delay={22} duration={900} />
           </h1>
