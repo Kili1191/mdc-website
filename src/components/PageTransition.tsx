@@ -64,6 +64,13 @@ export default function PageTransition({ children }: { children: React.ReactNode
     return () => document.removeEventListener("click", onClick);
   }, [router]);
 
+  // ATTENTION — ce wrapper porte `transform` et `will-change: transform` en
+  // permanence, y compris au repos. Les deux creent un bloc conteneur : tout
+  // descendant `position: fixed` se dimensionne alors sur CE div (hauteur du
+  // document) et non sur le viewport, et il scrolle avec la page.
+  //
+  // Une couche plein ecran rendue depuis une page doit donc passer par un
+  // portal sur <body> (voir HomeStage), pas par `position: fixed` seul.
   const contentStyle: React.CSSProperties = {
     opacity: leaving ? 0 : entered ? 1 : 0,
     transform: leaving

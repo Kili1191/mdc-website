@@ -1,7 +1,8 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Suspense, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import * as THREE from "three";
 import { House } from "@/components/world/House";
 import { scrollStore } from "@/lib/scrollStore";
@@ -71,10 +72,26 @@ function HouseChoreo() {
 }
 
 export default function HomeStage() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   // La maison est un moment 3D : sans WebGL elle ne se degrade pas, elle
   // s'absente. Le reste de la traversee (texte, marbre statique) tient seul.
-  if (!hasWebGL()) return null;
-  return (
+  if (!mounted || !hasWebGL()) return null;
+
+  // Monte en portal sur <body>, hors de PageTransition.
+  //
+  // PageTransition enveloppe children dans un div qui porte en permanence
+  // `transform` et `will-change: transform`. Les deux creent un bloc
+  // conteneur pour les descendants `position: fixed` : ce layer ne se
+  // dimensionnait donc pas au viewport mais a la hauteur du document,
+  // 5400px au lieu de 900. Le canvas R3F suivait, et la maison sortait
+  // six fois trop grande, rognee sur les quatre bords.
+  //
+  // Les constantes de zoom (0.35 -> 0.48) etaient justes depuis le debut :
+  // le calcul donnait bien 23% de la hauteur ecran. C'est le canvas qui
+  // mentait. Le portal rend `fixed` a nouveau relatif au viewport.
+  return createPortal(
     <div
       aria-hidden
       style={{
@@ -94,6 +111,7 @@ export default function HomeStage() {
           <HouseChoreo />
         </Suspense>
       </Canvas>
-    </div>
+    </div>,
+    document.body,
   );
 }
