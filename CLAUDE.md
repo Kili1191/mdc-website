@@ -4,6 +4,30 @@
 
 Before shipping ANY UI change, copy edit, effect, animation, or color decision — read `.claude/skills/taste/SKILL.md`. It encodes MDC's concrete design judgment (palette, typography, motion, spacing, copy discipline, anti-patterns, checklist for "done"). This overrides personal taste, current trends, and defaults. When uncertain, quieter wins.
 
+## Precedence over the installed design skills
+
+`.claude/skills/` also carries a general frontend-design library (13 skills from
+Leonxlnx/taste-skill, plus `web-interface-guidelines` and `design-md-catalogue`).
+They are useful for technique. They are **not** authoritative here.
+
+Most of them optimise for "premium agency" maximalism: bold type, dense bento
+grids, layered shadows, strong motion, brand-forward color. Maison du Calme is
+the opposite bet — restraint, one effect per section, Aube Encens only, motion
+tied to a 5.5s breath. A skill telling you to add gradients, a hero with three
+stacked effects, or a non-palette accent is wrong **on this repo**, however
+good the advice is in general.
+
+Order of authority, highest first:
+
+1. `VISION.md`, `COPY_V13.md`, `ASSETS_NANOBANANA.md` (canonical, repo root)
+2. `.claude/skills/taste/SKILL.md` (MDC design judgment)
+3. `.claude/skills/web-interface-guidelines/` (accessibility, input, performance
+   craft — applies as written, it is not a visual style)
+4. everything else in `.claude/skills/` (technique only, never a mandate)
+
+`design-md-catalogue` is study material. Never import another brand's tokens,
+palette, type scale or motion into this site.
+
 # Sources of truth (canonical)
 
 These docs live at repo root and win over anything in code when they conflict:
