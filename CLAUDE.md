@@ -46,6 +46,11 @@ sont pas concernees.
 
 # Sources of truth (canonical)
 
+`DIRECTION.md` — l'immobilite comme interaction. Ce que le site fait de
+different, ce qui a ete retire pour y arriver, et ce qui reste. A lire avant
+d'ajouter le moindre effet.
+
+
 These docs live at repo root and win over anything in code when they conflict:
 
 - **VISION.md** — identité visuelle, système de scroll deux axes (vertical/horizontal, spirale à venir), arc émotionnel (avant/pendant/après), règles absolues (palette Aube Encens, NERVANA Guard, typo Prata/Higuen/Great Vibes, jamais de dark theme), méthode de build (fondation → empilement, un chantier à la fois, build vert + commit).
