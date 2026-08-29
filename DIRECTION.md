@@ -85,28 +85,42 @@ aux seances deplace toujours la pierre de la meme facon, et revenir refait le
 chemin en sens inverse. C'est la difference entre un effet, qui se remarque une
 fois, et une structure.
 
-Trois choses se produisent ensemble :
+Deux choses se produisent ensemble :
 
 1. **la dalle glisse** — `uPan` dans le shader, des le clic, avant que le
    contenu ne parte ;
 2. **le contenu se croise a contre-sens** — l'ancienne page sort du cote d'ou
-   l'on vient, la nouvelle entre du cote ou l'on va (`--mdc-dx/--mdc-dy`) ;
-3. **la marque se grave** — chaque page porte son nom une fois, sous
-   `view-transition-name: mdc-mark`. Le navigateur fait GLISSER ce nom d'une
-   position a l'autre au lieu de l'effacer puis de le reecrire.
-
-Le point 3 passe par la View Transitions API : le morph est calcule par le
-compositeur, pas par du JavaScript de frame. Sans elle — ou sous
-`prefers-reduced-motion` — on retombe sur le fondu manuel, et la camera se pose
-d'un coup au lieu de voyager.
+   l'on vient, la nouvelle entre du cote ou l'on va. Si les deux partaient du
+   meme cote, le deplacement se lirait comme un fondu de plus.
 
 **Verifie.** Correlation de phase entre les captures du marbre seul, quatre
 paires de pages : ecart mesure a moins d'un pixel de l'ecart predit par la
 carte (attendu (-24.4, 51.7), mesure (24, 52) ; attendu (58.5, -78.9), mesure
 (-58, -79) ; attendu (151.1, 70.7), mesure (-151, 71) — le signe en x est une
-convention de correlation, celui en y l'axe inverse des textures WebGL). Cout :
-218 a 333 ms de gel au clic, pendant lesquels la courbe de deplacement n'a
-franchi que 10 %.
+convention de correlation, celui en y l'axe inverse des textures WebGL).
+
+## La regle qui a coute le plus cher : le marbre ne participe a rien
+
+La View Transitions API avait ete cablee pour la navigation. Elle permettait de
+faire GLISSER le nom de la page d'une position a l'autre, nativement, par le
+compositeur. Elle a ete retiree.
+
+Une view transition remplace la page par des instantanes, et **un canvas WebGL
+ne survit pas a l'instantane**. Pendant toute la traversee, le marbre n'etait
+donc plus a l'ecran : fond parchemin plat, avec deux copies fantomes du logo
+qui se croisaient dessus. Mesure en gelant la transition a un instant choisi
+puis en photographiant — contraste global de l'image : 12,13 au depart, **7,75
+au milieu**. Donner au marbre son propre `view-transition-name` n'y changeait
+rien de mesurable (8,60 contre 7,75).
+
+Tout est donc anime sur le wrapper de contenu, en CSS, et la pierre vit dessous
+sans jamais etre capturee. Meme mesure apres correction, bande de marbre pur :
+15,42 avant le clic, **15,16 au milieu**, 14,98 apres. La pierre ne bouge plus
+d'un cheveu.
+
+**Le marbre n'apparait pas et ne disparait pas. Jamais.** C'est le sol du site,
+pas une couche parmi d'autres : toute technique qui le capture, le fige ou le
+fond est disqualifiee, quelle que soit sa valeur par ailleurs.
 
 ## Le blocage, dit franchement
 
