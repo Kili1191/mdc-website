@@ -1,6 +1,6 @@
 import { COLORS, FONTS } from "@/styles/tokens";
 import SplitTextChars from "@/components/effects/SplitTextChars";
-import MagneticButton from "@/components/effects/MagneticButton";
+import QuietButton from "@/components/effects/QuietButton";
 
 const pageStyle: React.CSSProperties = {
   position: "relative", zIndex: 5, minHeight: "100vh",
@@ -108,7 +108,7 @@ export default function TheWorkPage() {
           </p>
 
           <div style={{ marginTop: 56, display: "flex", justifyContent: "center" }}>
-            <MagneticButton href="/begin">Begin</MagneticButton>
+            <QuietButton href="/begin">Begin</QuietButton>
           </div>
       </div>
     </main>

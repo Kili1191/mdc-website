@@ -107,12 +107,14 @@ If a screen feels "tight," add whitespace before touching anything else.
 - If a page reads as "quotes scrolling with nothing between," it fails the taste check.
 
 ### 9. Effects — one signature per section, not a demo reel
-Effects available (`src/components/effects/`): `SplitTextChars`, `BreathReveal`, `MagneticButton`, `TextScramble`, `Marquee`, `ImageReveal`, `FluidImage`, `ImageMarquee`, `ScrollDriftGallery`, `ParallaxStack`.
+Effects available (`src/components/effects/`): `SplitTextChars`, `ImageReveal`, `FluidImage`, `ScrollDriftGallery`, `AssetFrame`, `QuietButton`. Plus `BreathReveal` in `src/components/`.
+
+That list is short on purpose. `TextScramble`, `Marquee`, `ImageMarquee`, `ParallaxStack`, `DepthImageLayer` and `HorizontalScroll` were deleted — see DIRECTION.md. Do not reintroduce them, and do not assume a component exists because this file once named it.
 
 Rules:
 - **One primary effect per section** — never stack SplitTextChars + Marquee + Parallax + Fluid on the same block
 - Big titles: SplitTextChars OR BreathReveal, not both
-- CTAs: MagneticButton, always, not a plain `<a>`
+- CTAs: `QuietButton`, always. **Never a magnetic / cursor-attracted button.** `MagneticButton` was removed: it pulled the button toward the pointer at 0.35 of a 90px radius, so a centred CTA could sit 31px off its axis just because the cursor passed nearby — visible on the home stations, and the thing Kilian noticed. It also kept a permanent `requestAnimationFrame` loop and a window `mousemove` listener per instance (four on the home page, on top of the marble's WebGL loop), and it did nothing at all on touch. In a silent house, nothing chases anyone.
 - Body text: no effect (readability wins)
 - Image slots: `ImageReveal` for atmospheric, `FluidImage` for feature moments, `ScrollDriftGallery` for atmospheric strips — never all three on one page
 - Marquee (text): once per page maximum, footer-style, not headline
@@ -123,7 +125,8 @@ Rules:
 - No `width` / `height` animations
 - No blur > 10px on animated elements (blur is expensive)
 - `will-change` on animated properties, removed after animation
-- No more than ONE persistent WebGL context outside home (SiteMarble). Effects with their own canvas (FluidImage, HomeStage, DepthImageLayer) are OK if they exist only where used
+- No more than ONE persistent WebGL context outside home (SiteMarble). Effects with their own canvas (FluidImage, HomeStage) are OK if they exist only where used
+- **The marble layer is never rebuilt.** `SiteMarble` must not depend on the route: making the motif a prop of `MarbleBackground` tore down the renderer on navigation and left the screen without marble for 1.8s. Measured. See DIRECTION.md
 - On mobile: WebGL and heavy interactions gate on `pointer: fine` (BreathingCursor, SoundToggle already do; extend the pattern)
 - Test in production build (`npm run build && npm start`) before declaring a motion "done" — dev mode overhead lies
 
@@ -136,10 +139,10 @@ Run mentally, silently, top to bottom. If any answer is "no" or "not sure," fix 
 3. All copy text comes from a validated source (V13, user chat, canonical Drive doc)?
 4. No em dashes anywhere?
 5. No meta/defensive sections (no "why we don't", no FAQ that defends discretion)?
-6. NERVANA name absent from public UI?
+6. NERVANA named where it belongs, and the *method* still internal? (The name is public since Kilian's decision — see §above. How it works is not.)
 7. Every reveal/motion synchronises to the breath rhythm or is completely still?
 8. Every animation uses only `transform` / `opacity` / `filter`?
-9. Every hover on a CTA uses `MagneticButton`, not a plain link with hover style?
+9. Every CTA is a `QuietButton`, and nothing on the page follows or flees the cursor?
 10. Every image uses `AssetFrame` (so missing files degrade gracefully) OR is a proven local asset?
 11. No visible frame, border, shadow, or card on content?
 12. Section vertical spacing ≥ 96px?

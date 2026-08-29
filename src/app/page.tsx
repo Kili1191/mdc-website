@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import BreathReveal from "@/components/BreathReveal";
 import SplitTextChars from "@/components/effects/SplitTextChars";
-import MagneticButton from "@/components/effects/MagneticButton";
+import QuietButton from "@/components/effects/QuietButton";
 import AssetFrame from "@/components/effects/AssetFrame";
 import { useIntroReady } from "@/lib/introReady";
 import { COLORS, FONTS } from "@/styles/tokens";
@@ -238,8 +238,8 @@ export default function Home() {
               stagger={140}
             />
             <div style={{ marginTop: 48, display: "flex", gap: 28, justifyContent: "center", flexWrap: "wrap" }}>
-              <MagneticButton href="/sessions">Sessions</MagneticButton>
-              <MagneticButton href="/the-work">The Work</MagneticButton>
+              <QuietButton href="/sessions">Sessions</QuietButton>
+              <QuietButton href="/the-work">The Work</QuietButton>
             </div>
           </div>
         </section>
@@ -254,7 +254,7 @@ export default function Home() {
               />
             </div>
             <div style={{ marginTop: 56 }}>
-              <MagneticButton href="/practitioner">Kilian</MagneticButton>
+              <QuietButton href="/practitioner">Kilian</QuietButton>
             </div>
           </div>
         </section>
@@ -272,7 +272,7 @@ export default function Home() {
               stagger={90}
             />
             <div style={{ marginTop: 52 }}>
-              <MagneticButton href="/begin">Begin</MagneticButton>
+              <QuietButton href="/begin">Begin</QuietButton>
             </div>
             <p style={{ ...bodyStyle, fontSize: 13, opacity: 0.68, marginTop: 28, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
               No forms you dread. One question, answered in your own time.
