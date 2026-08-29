@@ -66,11 +66,15 @@ export default function SessionsPage() {
           Each leaves you somewhere different.
         </p>
         <p style={{ ...bodyStyle, marginTop: 40 }}>
-          The work is a suite, not a selection. ANTARA is the entrance. Everyone
-          passes through it, and what lies beyond opens in its own order, in
-          conversation, never from a list. What they share: you are not touched with
-          oil, not asked to speak, not asked to perform being well. What they change:
-          the amount you are holding when you leave.
+          The work practised here is called NERVANA. Kilian developed it, and it is
+          practised nowhere else.
+        </p>
+        <p style={{ ...bodyStyle, marginTop: 24 }}>
+          It is a suite, not a selection. ANTARA is the entrance. Everyone passes
+          through it, and what lies beyond opens in its own order, in conversation,
+          never from a list. What they share: you are not touched with oil, not asked
+          to speak, not asked to perform being well. What they change: the amount you
+          are holding when you leave.
         </p>
         <p style={{ ...bodyStyle, marginTop: 24 }}>Fees are shared on request.</p>
 
@@ -172,6 +176,36 @@ export default function SessionsPage() {
           <div style={{ marginTop: 48 }}>
             <MagneticButton href="/begin">Apply</MagneticButton>
           </div>
+        </div>
+
+        <hr style={dividerStyle} />
+
+        {/* Les soins ayurvediques vivent APRES la suite et hors d'elle. NERVANA
+            promet "not touched with oil" : Abhyanga est un soin a l'huile, il ne
+            peut pas etre dans la meme promesse. Separer les deux protege la
+            phrase et la verite. */}
+        <div>
+          <p style={eyebrowStyle}>Also practised here</p>
+          <h2 style={{ ...sectionHeadStyle, marginTop: 32 }}>
+            Older than the house.
+          </h2>
+          <p style={{ ...bodyStyle, marginTop: 32 }}>
+            Two Ayurvedic practices are offered apart from the suite. They are not
+            part of NERVANA, and they are not silent in the same way.
+          </p>
+
+          <p style={{ ...roomLabelStyle, marginTop: 48 }}>ABHYANGA</p>
+          <p style={{ ...bodyStyle, marginTop: 20 }}>
+            Warm oil, worked over the whole body in one unbroken rhythm. It is the
+            oldest practice in this house, and the only one that uses oil.
+          </p>
+
+          <p style={{ ...roomLabelStyle, marginTop: 40 }}>MARMA</p>
+          <p style={{ ...bodyStyle, marginTop: 20 }}>
+            The junctions where the body gathers what it holds. Marma work is
+            pressure and stillness at those points, slower than massage and more
+            deliberate.
+          </p>
         </div>
 
         <hr style={dividerStyle} />

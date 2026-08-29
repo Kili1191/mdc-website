@@ -12,7 +12,9 @@ personne ne l'avait ecrit.*
 | **Retraites** | oui, page Retreats | sur candidature |
 | **Coaching** | **non, nulle part** | formation Jay Shetty Coaching School |
 | **Enseignement Reiki** | **non, nulle part** | Maitre Reiki, habilite a enseigner tous les niveaux, **choisit de n'enseigner que le niveau 1** |
-| **Sound bath / sound healing** | **non, nulle part** | formation Peter Hess. Statut a clarifier, voir plus bas |
+| **Sound bath / sound healing** | **non, nulle part** | technique separee. Peter Hess non nomme, sur decision de Kilian |
+| **Abhyanga** (massage ayurvedique a l'huile) | oui, page Sessions, hors suite | seul soin a l'huile |
+| **Marma** (therapie des points) | oui, page Sessions, hors suite | |
 
 **Le site couvre deux offres sur cinq.** Ce n'est pas un detail de copy : trois
 lignes de metier sont absentes, sans page, sans mention, sans entree de nav.
@@ -58,14 +60,19 @@ client. C'est une decision de positionnement, pas de design.
 
 ## Ce qui est deja tenu
 
-- **NERVANA n'apparait nulle part** dans `src/` ni `public/`. Le nom de la
-  methode reste interne, la suite se dit sans lui.
+- **NERVANA est desormais nomme sur le site.** Guard leve sur instruction
+  explicite. C'est la technique inventee par Kilian, pratiquee nulle part
+  ailleurs, et donc la seule part inimitable de l'offre. Le **comment** reste
+  interne.
+- **Abhyanga et Marma sont poses hors de la suite.** NERVANA promet "not
+  touched with oil" et Abhyanga est un soin a l'huile : les melanger aurait
+  rendu la promesse fausse.
 - ANTARA est formule comme **l'entree** de la suite, plus comme la premiere
   d'une liste de quatre.
 
 ## Decisions en attente
 
-1. Le sound healing : dans la suite, ou offre a part ?
+1. Le sound healing : offre a part, confirmee, mais toujours absente du site.
 2. Les certifications : nommees, ou l'argument Lineage tient ?
 3. Le coaching : page dans cette maison, site separe, ou une ligne sur
    Practitioner ?
