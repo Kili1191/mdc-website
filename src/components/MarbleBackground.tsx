@@ -195,10 +195,18 @@ export default function MarbleBackground({
             // lumiere rasante venue du haut-gauche, comme partout sur le site
             float lit = dx * -0.62 + dy * 0.78;
 
-            col *= 1.0 - m * 0.40;                                  // creux
-            col += vec3(0.99,0.94,0.82) * max(lit,0.0) * 1.15;      // levre eclairee
-            col -= vec3(0.34,0.24,0.16) * max(-lit,0.0) * 0.95;     // ombre du bord
-            col += vec3(0.65,0.35,0.24) * m * 0.09;                 // braise au fond
+            // De l'onyx creme reste creme quand on le creuse. Le sillon est
+            // plus profond, pas plus froid.
+            //
+            // La version precedente SOUSTRAYAIT vec3(0.34,0.24,0.16) pour
+            // l'ombre : elle retirait plus de rouge que de bleu, donc elle
+            // desaturait la pierre chaude vers un gris argent. Tout passe
+            // desormais par des facteurs multiplicatifs qui mordent d'abord
+            // dans le bleu : la valeur descend, la teinte reste.
+            col *= 1.0 - m * 0.34 * vec3(0.80, 1.00, 1.22);          // creux, chaud
+            col *= 1.0 - max(-lit,0.0) * vec3(0.50, 0.68, 0.88);     // ombre du bord, chaude
+            col += vec3(0.86, 0.70, 0.46) * max(lit,0.0) * 1.05;     // levre : ocre, pas blanc
+            col += vec3(0.65, 0.35, 0.24) * m * 0.11;                // braise au fond
           }
 
           float g = fract(sin(dot(vUv*900.0,vec2(12.9898,78.233)))*43758.5453)-0.5;
