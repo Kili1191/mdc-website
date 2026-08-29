@@ -46,6 +46,11 @@ sont pas concernees.
 
 # Sources of truth (canonical)
 
+`SERVICES.md` — ce que Kilian propose reellement (suite silencieuse, retraites,
+coaching, enseignement Reiki niveau 1, sound healing) et ce que le site en
+montre. Interne, jamais publie. Le site ne couvre que deux offres sur cinq :
+lire avant de supposer que la pratique se resume aux Sessions.
+
 `DIRECTION.md` — l'immobilite comme interaction. Ce que le site fait de
 different, ce qui a ete retire pour y arriver, et ce qui reste. A lire avant
 d'ajouter le moindre effet.
