@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import dynamic from "next/dynamic";
 import BreathReveal from "@/components/BreathReveal";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import MagneticButton from "@/components/effects/MagneticButton";
@@ -11,7 +10,6 @@ import { COLORS, FONTS } from "@/styles/tokens";
 import { scrollStore } from "@/lib/scrollStore";
 import { houseFocus } from "@/lib/houseFocus";
 
-const HomeStage = dynamic(() => import("@/components/HomeStage"), { ssr: false });
 
 // Home = "la traversée de la maison" — 6 stations scroll-scrub.
 // Pas de pin. Le scroll est libre (Lenis). Chaque station est 100vh.
@@ -114,7 +112,6 @@ export default function Home() {
 
   return (
     <>
-      <HomeStage />
 
       <div ref={rootRef}>
         {/* 1. SEUIL — pas de rectangle média, le marbre ambient (SiteMarble)
