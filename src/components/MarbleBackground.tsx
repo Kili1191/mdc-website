@@ -317,30 +317,38 @@ export default function MarbleBackground({
       target.set((cx - r.left) / r.width, 1 - (cy - r.top) / r.height);
     };
 
-    const onMove = (e: MouseEvent) => {
+    // Pointer events uniquement.
+    //
+    // La version precedente ecoutait mousemove ET les evenements tactiles, et
+    // se faisait battre par l'ordre des evenements du navigateur. Mesure sur
+    // un tap mobile :
+    //
+    //   pointerdown -> touchstart -> pointerup -> touchend -> mousemove -> ...
+    //
+    // Le mousemove de compatibilite arrive APRES touchend. On eteignait donc
+    // la presence au lever du doigt, et le navigateur la rallumait aussitot,
+    // pour toujours, puisque plus aucun mousemove ne suivait. Le marbre restait
+    // ouvert exactement comme avant la correction.
+    //
+    // Les pointer events unifient souris et tactile sans ce doublon.
+    const onPointer = (e: PointerEvent) => {
+      // Un doigt ne compte que s'il touche encore l'ecran. Une souris compte
+      // toujours : elle survole sans appuyer.
+      if (e.pointerType !== "mouse" && e.buttons === 0 && e.type === "pointermove") return;
       activeTarget = 1;
       setFromPoint(e.clientX, e.clientY);
     };
-    window.addEventListener("mousemove", onMove);
-
-    // Le curseur quitte la fenetre : la pierre se referme, comme au lever du doigt.
-    const onLeave = () => { activeTarget = 0; };
-    document.addEventListener("mouseleave", onLeave);
-
-    // Tactile. Le doigt ouvre la pierre, et la relacher la referme : c'est la
-    // meme grammaire que sur desktop, ou le marbre se recouvre derriere le
-    // curseur.
-    const onTouch = (e: TouchEvent) => {
-      const t0 = e.touches[0];
-      if (!t0) return;
-      activeTarget = 1;
-      setFromPoint(t0.clientX, t0.clientY);
+    const onRelease = (e: PointerEvent) => {
+      if (e.pointerType === "mouse") return;   // la souris ne se "leve" pas
+      activeTarget = 0;
     };
-    const onTouchEnd = () => { activeTarget = 0; };
-    window.addEventListener("touchstart", onTouch, { passive: true });
-    window.addEventListener("touchmove", onTouch, { passive: true });
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
-    window.addEventListener("touchcancel", onTouchEnd, { passive: true });
+    const onLeave = () => { activeTarget = 0; };
+
+    window.addEventListener("pointermove", onPointer, { passive: true });
+    window.addEventListener("pointerdown", onPointer, { passive: true });
+    window.addEventListener("pointerup", onRelease, { passive: true });
+    window.addEventListener("pointercancel", onRelease, { passive: true });
+    document.addEventListener("pointerleave", onLeave);
 
     // Réactivité gyroscope (mobile). La position "curseur virtuel" glisse
     // dans le cadre en fonction de l'inclinaison de l'appareil.
@@ -379,7 +387,7 @@ export default function MarbleBackground({
       mouse.lerp(target, 0.65);
       // Fermeture douce : le tampon s'eteint, la decroissance du trail reprend
       // la main et le marbre se recouvre.
-      active += (activeTarget - active) * 0.07;
+      active += (activeTarget - active) * (activeTarget > active ? 0.10 : 0.035);
       trailMat.uniforms.uActive.value = active;
       const vel = mouse.distanceTo(last); last.copy(mouse);
       trailMat.uniforms.uPrev.value = rtA.texture;
@@ -410,12 +418,11 @@ export default function MarbleBackground({
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
-      window.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mouseleave", onLeave);
-      window.removeEventListener("touchstart", onTouch);
-      window.removeEventListener("touchmove", onTouch);
-      window.removeEventListener("touchend", onTouchEnd);
-      window.removeEventListener("touchcancel", onTouchEnd);
+      window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("pointerdown", onPointer);
+      window.removeEventListener("pointerup", onRelease);
+      window.removeEventListener("pointercancel", onRelease);
+      document.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("deviceorientation", onOrient);
       rtA.dispose(); rtB.dispose(); texMotif.dispose(); texVeil.dispose(); renderer.dispose();
       if (renderer.domElement.parentNode) mount.removeChild(renderer.domElement);
