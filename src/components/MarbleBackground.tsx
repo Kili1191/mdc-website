@@ -6,6 +6,7 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { hasWebGL } from "@/lib/webgl";
+import { houseFocus } from "@/lib/houseFocus";
 
 // Marbre + motif révélé au curseur, en fond fixe.
 // Version allégée d'AlbatreHero : pas de scroll panels, pas de CTA, un seul motif.
@@ -94,6 +95,8 @@ export default function MarbleBackground({
     };
     const texMotif = load(motif);
     const texVeil = load("/albatre-lisse.jpg");
+    // Le logo sert de burin : son alpha est le trace de l'incision.
+    const texHouse = load("/logo.png");
 
     const scene = new THREE.Scene();
     const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
@@ -107,6 +110,10 @@ export default function MarbleBackground({
         uHouseInner: { value: 0.11 },
         uHouseOuter: { value: 0.24 },
         uEffectScale: { value: calme ? 0.35 : 1.0 },
+        uHouseTex: { value: texHouse },
+        uHouseAspect: { value: 574.0 / 480.0 },
+        uHouseHalfH: { value: 0.17 },   // demi-hauteur, en fraction d'ecran
+        uCarve: { value: 0.0 },         // 0 pierre intacte, 1 gravure achevee
       },
       vertexShader: `varying vec2 vUv; void main(){vUv=uv; gl_Position=vec4(position,1.0);}`,
       fragmentShader: `
@@ -116,7 +123,32 @@ export default function MarbleBackground({
         uniform vec2 uScreenRes,uRes;
         uniform vec2 uHouseCenter;
         uniform float uHouseInner,uHouseOuter;
+        uniform sampler2D uHouseTex;
+        uniform float uHouseAspect,uHouseHalfH,uCarve;
         varying vec2 vUv;
+
+        // Le trace du burin, en espace ecran. Rien n'est dessine PAR-DESSUS
+        // le marbre : on modifie la pierre elle-meme, donc le veinage et la
+        // lumiere continuent a l'interieur du sillon.
+        vec2 houseUV(){
+          vec2 sc = vUv - 0.5;
+          sc.x *= uScreenRes.x / uScreenRes.y;
+          sc /= uHouseHalfH * 2.0;
+          sc.x /= uHouseAspect;
+          return sc + 0.5;
+        }
+
+        // Le sillon s'ouvre du faite vers le sol au fil du scroll : le burin
+        // descend, il n'apparait pas d'un bloc.
+        float chisel(vec2 h){
+          if (h.x < 0.0 || h.x > 1.0 || h.y < 0.0 || h.y > 1.0) return 0.0;
+          float ink = texture2D(uHouseTex, h).a;
+          // d : distance le long du trace, 0 au faite, 1 au sol.
+          // Un point est grave des que le burin l'a depasse.
+          float d = 1.0 - h.y;
+          float sweep = smoothstep(d - 0.14, d + 0.02, uCarve * 1.18);
+          return ink * sweep;
+        }
 
         vec2 coverUV(vec2 uv){
           float sa=uScreenRes.x/uScreenRes.y, ia=uRes.x/uRes.y; vec2 o=uv;
@@ -151,6 +183,23 @@ export default function MarbleBackground({
             0.5 + 0.5*sin((uv.x+uv.y)*12.0 + uTime + 4.0)
           );
           col += sheen * r * uIrisation;
+
+          // ---- la maison, gravee DANS la pierre ----
+          if (uCarve > 0.001) {
+            vec2 h = houseUV();
+            float m = chisel(h);
+            // pente du sillon : difference du trace sur ses voisins
+            float e = 0.0035;
+            float dx = chisel(h + vec2(e,0.0)) - chisel(h - vec2(e,0.0));
+            float dy = chisel(h + vec2(0.0,e)) - chisel(h - vec2(0.0,e));
+            // lumiere rasante venue du haut-gauche, comme partout sur le site
+            float lit = dx * -0.62 + dy * 0.78;
+
+            col *= 1.0 - m * 0.40;                                  // creux
+            col += vec3(0.99,0.94,0.82) * max(lit,0.0) * 1.15;      // levre eclairee
+            col -= vec3(0.34,0.24,0.16) * max(-lit,0.0) * 0.95;     // ombre du bord
+            col += vec3(0.65,0.35,0.24) * m * 0.09;                 // braise au fond
+          }
 
           float g = fract(sin(dot(vUv*900.0,vec2(12.9898,78.233)))*43758.5453)-0.5;
           col += g*0.010;
@@ -224,6 +273,9 @@ export default function MarbleBackground({
     const animate = () => {
       const t = clock.getElapsedTime();
       finalMat.uniforms.uTime.value = t;
+      // La gravure suit le scroll dans la station MAISON : plus on descend,
+      // plus le burin est descendu.
+      finalMat.uniforms.uCarve.value = houseFocus.get();
       trailMat.uniforms.uTrailTime.value = t;
       filmPass.uniforms.uTime.value = t;
       mouse.lerp(target, 0.65);
