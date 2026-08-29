@@ -11,6 +11,15 @@ import FluidImage from "./FluidImage";
 // - Zéro changement de code quand Kilian dépose le fichier.
 
 type Kind = "image" | "video";
+
+// Une atmosphere Aube Encens existe pour chaque slot image, generee par
+// scripts/generate_atmospheres.py. Elle n'est pas un pis-aller visible : c'est
+// un champ de lumiere, le registre meme de la reference (Turrell, Sugimoto).
+// Elle s'efface d'elle-meme des que la vraie photo est deposee.
+function atmosphereFor(src: string): string | null {
+  const m = /^\/photos\/([a-z0-9-]+)\.(jpg|jpeg|png|webp)$/i.exec(src);
+  return m ? `/photos/atmosphere/${m[1]}.jpg` : null;
+}
 type Props = {
   slot: string;             // ex "PH-01"
   kind: Kind;
@@ -25,6 +34,7 @@ export default function AssetFrame({
   slot, kind, src, aspect = "4/5", prompt, effect = "reveal", style,
 }: Props) {
   const [exists, setExists] = useState<boolean | null>(null);
+  const atmosphere = kind === "image" ? atmosphereFor(src) : null;
 
   useEffect(() => {
     let cancelled = false;
@@ -53,6 +63,17 @@ export default function AssetFrame({
     alignItems: "center", justifyContent: "center",
     ...style,
   };
+
+  // Vraie photo absente mais atmosphere disponible : on rend l'atmosphere,
+  // avec le meme effet, au meme format. Zero difference de code le jour ou la
+  // photo arrive.
+  if (exists === false && atmosphere) {
+    if (effect === "fluid") return <FluidImage src={atmosphere} aspect={aspect} />;
+    if (effect === "reveal") return <ImageReveal src={atmosphere} aspect={aspect} />;
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={atmosphere} alt="" data-slot={slot} data-atmosphere=""
+      style={{ width: "100%", aspectRatio: aspect, objectFit: "cover", display: "block", ...style }} />;
+  }
 
   if (exists === false) {
     return (

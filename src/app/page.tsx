@@ -122,9 +122,14 @@ export default function Home() {
 
         {/* 2. PIERRE — PH-01 image derrière + titre */}
         <section className="mdc-station" style={stationStyle}>
+          {/* La pierre ne doit pas etre un rectangle pose sur le marbre :
+              ses bords se fondent (mask radial), elle affleure. Taste §5 :
+              aucun cadre visible autour d'un media. */}
           <div style={{
-            position: "absolute", inset: "18% 20vw", zIndex: -1,
-            opacity: 0.55, filter: "contrast(0.9)",
+            position: "absolute", inset: "30% 27vw -4% 27vw", zIndex: -1,
+            opacity: 0.70,
+            maskImage: "radial-gradient(66% 60% at 50% 46%, #000 30%, transparent 80%)",
+            WebkitMaskImage: "radial-gradient(66% 60% at 50% 46%, #000 30%, transparent 80%)",
           }}>
             <AssetFrame slot="PH-01" kind="image" src="/photos/ph-01.jpg" aspect="4/5"
               effect="reveal"
