@@ -9,6 +9,7 @@ import AssetFrame from "@/components/effects/AssetFrame";
 import { useIntroReady } from "@/lib/introReady";
 import { COLORS, FONTS } from "@/styles/tokens";
 import { scrollStore } from "@/lib/scrollStore";
+import { houseFocus } from "@/lib/houseFocus";
 
 const HomeStage = dynamic(() => import("@/components/HomeStage"), { ssr: false });
 
@@ -76,23 +77,30 @@ export default function Home() {
     // Boucle rAF qui lit le scrollStore et met à jour l'opacité + le Y
     // de chaque station en continu. Zéro re-render React.
     let raf = 0;
+    // Chaque station se mesure elle-meme : son focus depend de la distance
+    // entre son centre et celui du viewport, pas d'un progres global decoupe
+    // en parts egales. Une station peut donc etre plus haute qu'une autre
+    // sans casser la choregraphie, et aucune constante n'est a re-caler.
     const tick = () => {
-      const p = scrollStore.get().progress;
+      const vh = window.innerHeight;
+      const last = stations.length - 1;
       stations.forEach((st, i) => {
-        const center = (i + 0.5) / N_STATIONS;
-        const sigma = 0.7 / N_STATIONS;
-        // Première station : plein focus tant qu'on n'a pas dépassé son
-        // centre (hero doit toujours être clean à l'arrivée, pas voilé).
-        // Dernière station : idem en sortie.
-        let vis: number;
-        if (i === 0 && p <= center) vis = 1;
-        else if (i === N_STATIONS - 1 && p >= center) vis = 1;
-        else vis = gaussian(p, center, sigma);
+        const r = st.getBoundingClientRect();
+        const stCenter = r.top + r.height / 2;
+        // distance normalisee : 0 au centre de l'ecran, 1 a une hauteur d'ecran
+        const d = (stCenter - vh / 2) / vh;
+        let vis = gaussian(d, 0, 0.42);
+        // Premiere station nette a l'arrivee, derniere nette en sortie.
+        if (i === 0 && d >= 0) vis = 1;
+        else if (i === last && d <= 0) vis = 1;
         const focus = Math.max(0, (vis - 0.35) / 0.65);
         st.style.opacity = String(focus);
-        const dy = (1 - focus) * (p < center ? 14 : -14);
-        st.style.transform = `translateY(${dy}px)`;
+        st.style.transform = `translateY(${(1 - focus) * (d > 0 ? 14 : -14)}px)`;
         st.style.pointerEvents = focus > 0.15 ? "auto" : "none";
+
+        // La station MAISON publie son focus pour HomeStage. La maison n'est
+        // donc presente que la ou cette section domine reellement l'ecran.
+        if (st.dataset.station === "maison") houseFocus.set(focus);
       });
       raf = requestAnimationFrame(tick);
     };
@@ -122,19 +130,6 @@ export default function Home() {
 
         {/* 2. PIERRE — PH-01 image derrière + titre */}
         <section className="mdc-station" style={stationStyle}>
-          {/* La pierre ne doit pas etre un rectangle pose sur le marbre :
-              ses bords se fondent (mask radial), elle affleure. Taste §5 :
-              aucun cadre visible autour d'un media. */}
-          <div style={{
-            position: "absolute", inset: "30% 27vw -4% 27vw", zIndex: -1,
-            opacity: 0.70,
-            maskImage: "radial-gradient(66% 60% at 50% 46%, #000 30%, transparent 80%)",
-            WebkitMaskImage: "radial-gradient(66% 60% at 50% 46%, #000 30%, transparent 80%)",
-          }}>
-            <AssetFrame slot="PH-01" kind="image" src="/photos/ph-01.jpg" aspect="4/5"
-              effect="reveal"
-              prompt="Onyx stone slab with faint house engraving, warm amber inside the lines, Brou dominant, Ocre glow, Sugimoto meets Kiefer." />
-          </div>
           <BreathReveal
             as="p"
             text="There is a kind of tiredness that rest doesn't reach…"
@@ -143,9 +138,16 @@ export default function Home() {
           />
         </section>
 
-        {/* 3. MAISON — pas de texte, la 3D parle. Station vide qui laisse
-             respirer la maison qu'HomeStage anime au même progrès. */}
-        <section className="mdc-station" style={stationStyle} aria-hidden />
+        {/* 3. MAISON — pas de texte, la 3D parle. Station deux fois plus
+             haute : le moment signature a besoin d'un moment ou il est seul
+             a l'ecran. A hauteur egale, la fenetre ou aucune autre station
+             n'etait lisible ne durait que 2% du scroll. */}
+        <section
+          className="mdc-station"
+          data-station="maison"
+          style={{ ...stationStyle, height: "200dvh", minHeight: "200vh" }}
+          aria-hidden
+        />
 
         {/* 4. TRAVAIL */}
         <section className="mdc-station" style={stationStyle}>
