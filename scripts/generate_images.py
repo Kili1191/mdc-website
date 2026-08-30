@@ -179,7 +179,7 @@ def save(arr, name, long_edge=1600, quality=82):
 # etalonnage (chaleur, profondeur, voile), vignettage, grain
 PLAN = [
     # ANTARA — l'entree. Le cadre le plus ouvert : on voit ou l'on entre.
-    ("si-01", SRC_STONE, (0.235, 0.56, 0.40, 1.0, 4 / 5),
+    ("si-01", SRC_STONE, (0.285, 0.545, 0.355, 1.0, 4 / 5),
      (0.24, 0.16, 0.98, 0.64, 0.50), (0.38, 0.46, 0.88, 7.0),
      (0.34, 0.28, 0.05), 0.28, 0.020),
 

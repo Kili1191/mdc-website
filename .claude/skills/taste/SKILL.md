@@ -130,6 +130,38 @@ Rules:
 - On mobile: WebGL and heavy interactions gate on `pointer: fine` (BreathingCursor, SoundToggle already do; extend the pattern)
 - Test in production build (`npm run build && npm start`) before declaring a motion "done" — dev mode overhead lies
 
+### 11. Le taupe n'ecrit pas
+
+`COLORS.taupe` (#A89A85) is a **pause** colour — a rule, a border, a divider.
+It is not a text colour. Measured against the site's marble ground
+(~rgb(221,205,185)): **1.77:1**. Small text needs 4.5:1. `COLORS.brou` gives
+**6.93:1**.
+
+This was not cosmetic. Every duration and every fee line on the Sessions page
+— the information that actually sells — was written in taupe italic at 12px.
+It was, in practice, invisible. Use `brou` for eyebrows and micro-labels, with
+opacity no lower than 0.78, and drop the italic: small caps + wide tracking +
+italic at 12px is three legibility costs stacked on one line.
+
+### 12. A page is not a column
+
+One centred 720px column with `<hr>` between sections is not a layout, it is a
+default. What a page owes the reader:
+
+- **An index when there is more than one offer.** Before: you had to scroll
+  four long sections to learn there were four rooms. A four-line index at the
+  top — number, name, one-line promise, duration — is the single change that
+  moves a page from "quotes scrolling past" to "here is what I can take".
+- **Alternating spreads**, image one side and text the other, side swapping
+  down the page. Stacking everything in the same order at the same width reads
+  as a document, not a design.
+- **A number instead of a rule.** `<hr>` is a free separation; `01` says where
+  you are.
+- **No translucent blurred card over the background.** A frosted box is an
+  admission that you do not trust your own ground. The marble is light
+  (luminance 205); brou reads on it directly.
+- **Body measure capped** around 62ch.
+
 ## Checklist before shipping any UI change
 
 Run mentally, silently, top to bottom. If any answer is "no" or "not sure," fix before declaring done.
@@ -144,8 +176,10 @@ Run mentally, silently, top to bottom. If any answer is "no" or "not sure," fix 
 8. Every animation uses only `transform` / `opacity` / `filter`?
 9. Every CTA is a `QuietButton`, and nothing on the page follows or flees the cursor?
 10. Every image uses `AssetFrame` (so missing files degrade gracefully) OR is a proven local asset?
-11. No visible frame, border, shadow, or card on content?
+11. No visible frame, border, shadow, or card on content? (A `backdrop-filter` box counts as a card.)
 12. Section vertical spacing ≥ 96px?
+13. Every text colour ≥ 4.5:1 against the marble — i.e. no text written in taupe?
+14. If the page presents more than one offer, is there an index at the top?
 13. Body font-size ≥ 18px, line-height ≥ 1.75?
 14. If this section is copy-only, is there also a non-textual moment (image slot, 3D, matter)?
 15. The 3D house is the logo (Rouille fill, ≤ 0.48 scale), not a custom architecture?
