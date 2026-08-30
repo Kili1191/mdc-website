@@ -130,6 +130,28 @@ Rules:
 - On mobile: WebGL and heavy interactions gate on `pointer: fine` (BreathingCursor, SoundToggle already do; extend the pattern)
 - Test in production build (`npm run build && npm start`) before declaring a motion "done" — dev mode overhead lies
 
+### 10b. Le fond ne s'ouvre que sur un geste
+
+The marble opens under a pointer or a finger. **Nothing else opens it** — no
+timer, no idle detection, no breath clock.
+
+A stillness reward was built and removed. From the inside it is a reward for
+stopping; from the outside nobody knows they were rewarded, so it reads as a
+background changing on its own, and on a content page it floated the motif's
+engraved house up *behind the body text*. Measured, visitor perfectly still:
+local background detail went 34.81 → 36.79 over ten seconds and kept climbing;
+after removal it is 34.61 at every sample.
+
+An interaction the user cannot attribute to their own gesture is not an
+interaction, it is instability.
+
+Stillness survives in exactly one place, because Kilian asked for it there: on
+the home MAISON station it drives the chisel deeper and revives the ember in
+the groove. It never touches the ground again.
+
+**Anything that varies per route is a uniform read per frame** (`marbleMode`),
+never a prop — a prop of `MarbleBackground` rebuilds the WebGL layer.
+
 ### 11. Le taupe n'ecrit pas
 
 `COLORS.taupe` (#A89A85) is a **pause** colour — a rule, a border, a divider.
@@ -179,6 +201,7 @@ Run mentally, silently, top to bottom. If any answer is "no" or "not sure," fix 
 11. No visible frame, border, shadow, or card on content? (A `backdrop-filter` box counts as a card.)
 12. Section vertical spacing ≥ 96px?
 13. Every text colour ≥ 4.5:1 against the marble — i.e. no text written in taupe?
+15. Does anything change on screen without the user having done something? (A timer, an idle clock, a breath driving the background — all forbidden on the ground layer.)
 14. If the page presents more than one offer, is there an index at the top?
 13. Body font-size ≥ 18px, line-height ≥ 1.75?
 14. If this section is copy-only, is there also a non-textual moment (image slot, 3D, matter)?

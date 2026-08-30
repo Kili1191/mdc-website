@@ -10,39 +10,63 @@ un site : on pouvait retirer chaque effet sans que rien ne change dans la facon
 dont il fonctionne. L'idee etait ecrite dans les documents, elle n'etait pas
 dans la structure.
 
-## L'idee
+## L'idee, et ce qu'il en reste
 
-**Tout le web recompense l'input. Ce site recompense l'arret.**
+**Tout le web recompense l'input. Ce site devait recompenser l'arret.**
 
-Scroller plus, survoler plus, cliquer plus : c'est le contrat implicite de
-toutes les interfaces. Maison du Calme s'adresse a des gens qui n'arrivent plus
-a s'arreter. Le site doit donc faire l'inverse de ce que fait le web.
+Quand le scroll et le pointeur se taisaient, la pierre s'ouvrait : le motif
+remontait a la surface, la matiere se rechauffait, le burin s'enfoncait tout
+seul. C'etait la direction canonique de ce document.
 
-Quand le scroll et le pointeur se taisent, la pierre s'ouvre. Le motif grave
-remonte a la surface, la matiere se rechauffe, le burin s'enfonce tout seul.
-Au premier mouvement, tout se retire.
+**Le fond ne le fait plus.** Retire sur signalement de Kilian, deux fois : « le
+fond respire entre la couche 1 et la couche 2 », et sur Sessions « c'est la
+maison gravee ».
 
-Il y a donc deux axes de progression, pas un :
+Il avait raison, et l'erreur etait de conception, pas de reglage. De
+l'interieur, une pierre qui s'ouvre quand on s'arrete est une recompense. De
+l'exterieur, personne ne sait qu'il a ete recompense : on voit un fond qui
+change tout seul, sans qu'on ait rien fait, et sur une page de contenu on voit
+la maison gravee du motif remonter DERRIERE le texte. Une interaction que
+l'utilisateur ne peut pas attribuer a son propre geste n'est pas une
+interaction, c'est une instabilite.
 
-| axe | mesure | recompense |
-|---|---|---|
-| scroll | jusqu'ou on est descendu | la traversee, les stations |
-| **immobilite** | **combien de temps on s'est arrete** | **la pierre s'ouvre** |
+Mesure, visiteur parfaitement immobile sur l'accueil, detail local du fond :
+avant 34,81 puis 36,79 apres dix secondes, et ca continuait de monter ; apres,
+34,61 a chaque echantillon, sans une decimale d'ecart. Sur Sessions, texte
+masque, la zone ou la gravure remontait : avant 4,94 / 3,92 / 5,39 / 4,21 ;
+apres 3,38 / 3,41 / 3,41 / 3,41.
 
-Le second est invisible tant qu'on ne s'arrete pas. C'est voulu.
+### Ce qui reste de l'idee
+
+L'immobilite n'a pas disparu : elle a ete rendue a l'endroit ou Kilian l'avait
+demandee. Sur la station MAISON de l'accueil, rester tranquille enfonce le
+burin et ravive la braise au fond du sillon. La gravure y respire, comme
+demande. Le FOND, lui, ne bouge plus jamais tout seul.
+
+C'est la meme regle que pour la couche marbre : **le sol du site ne change pas
+sans qu'on le lui demande.** Le pointeur et le doigt l'ouvrent — c'est un geste,
+on sait ce qu'on a fait. Rien d'autre ne l'ouvre.
+
+### Le regime par page passe par des uniforms, jamais par des props
+
+Sur une page de contenu, la revelation s'attenue ET evite la gravure du motif :
+deux maisons a l'ecran, celle du site et celle de la pierre, ne s'expliquent
+pas. Ce reglage vit dans `src/lib/marbleMode.ts`, lu a la frame et lisse sur un
+demi-souffle.
+
+Il ne peut PAS etre une prop de `MarbleBackground` : l'effet WebGL en
+dependrait, donc chaque navigation detruirait le renderer. C'est exactement ce
+qui laissait l'ecran sans marbre pendant pres de deux secondes.
 
 ## Les regles qui tiennent l'idee
 
-1. **La montee dure un souffle.** `stillness` passe de 0 a 1 sur 5500 ms, la
-   coherence cardiaque du site. La recompense arrive au rythme de la
-   respiration, jamais d'un minuteur.
-2. **On perd le calme plus vite qu'on ne le gagne.** La descente est sept fois
-   plus vive que la montee. C'est aussi vrai hors du navigateur.
+1. **Le fond ne s'ouvre que sur un geste.** Pointeur ou doigt. Ni minuteur, ni
+   immobilite, ni horloge.
+2. **La couche marbre ne se reconstruit jamais.** Ce qui varie par page est un
+   uniform lu a la frame.
 3. **L'immobilite revele de la matiere, jamais des mots.** Aucun texte
-   n'apparait a l'arret. La copy reste celle du corpus valide, sans exception.
-4. **Un onglet en arriere-plan n'est pas de l'immobilite choisie.** Le compteur
-   se reinitialise sur `visibilitychange`.
-5. **`prefers-reduced-motion` desactive entierement l'effet.**
+   n'apparait a l'arret.
+4. **`prefers-reduced-motion` desactive entierement l'effet.**
 
 ## Ce qui a ete retire, et pourquoi
 

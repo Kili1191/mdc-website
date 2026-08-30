@@ -8,6 +8,7 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { hasWebGL } from "@/lib/webgl";
 import { houseFocus } from "@/lib/houseFocus";
 import { stillness, breath } from "@/lib/stillness";
+import { marbleMode } from "@/lib/marbleMode";
 import { DURATION, EASE } from "@/lib/motion";
 
 // Marbre + motif révélé au curseur, en fond fixe.
@@ -138,6 +139,7 @@ export default function MarbleBackground({
         uCarve: { value: 0.0 },         // 0 pierre intacte, 1 gravure achevee
         uPresence: { value: 0.0 },      // visibilite de la gravure
         uStill: { value: 0.0 },         // 0 on bouge, 1 on s'est arrete
+        uQuiet: { value: calme ? 1.0 : 0.0 },  // 1 sur une page de contenu
         uBreath: { value: 0.0 },        // horloge de souffle partagee
       },
       vertexShader: `varying vec2 vUv; void main(){vUv=uv; gl_Position=vec4(position,1.0);}`,
@@ -150,7 +152,7 @@ export default function MarbleBackground({
         uniform float uHouseInner,uHouseOuter;
         uniform sampler2D uHouseTex;
         uniform float uHouseAspect,uHouseHalfH,uCarve;
-        uniform float uStill,uBreath,uPresence;
+        uniform float uStill,uBreath,uPresence,uQuiet;
         varying vec2 vUv;
 
         // Le trace du burin, en espace ecran. Rien n'est dessine PAR-DESSUS
@@ -193,15 +195,26 @@ export default function MarbleBackground({
           float houseMask = smoothstep(uHouseInner, uHouseOuter, length(hd));
           r *= uEffectScale;
 
-          // L'immobilite ouvre la pierre d'elle-meme. Le curseur n'est plus la
-          // seule facon de voir le motif : rester tranquille suffit, et la
-          // revelation respire au lieu de suivre la souris.
-          // Le motif porte deja une maison gravee en haut au centre. Pendant
-          // la station MAISON, la laisser remonter mettrait deux maisons a
-          // l'ecran : la gravure du site et celle de la pierre. On retient
-          // donc l'ouverture la ou le burin travaille.
+          // L'IMMOBILITE N'OUVRE PLUS LA PIERRE.
+          //
+          // Elle le faisait : r = max(r, calm * 0.38 * uEffectScale). La
+          // pierre s'ouvrait toute seule des qu'on s'arretait, puis se
+          // refermait au moindre geste. De l'exterieur ca ne se lit pas comme
+          // une recompense : ca se lit comme un fond qui respire entre deux
+          // couches, tout seul, sans qu'on ait rien demande. Et sur une page
+          // de contenu ca faisait remonter la maison gravee du motif DERRIERE
+          // le texte.
+          //
+          // Ce qui reste de l'immobilite : elle enfonce le burin sur la
+          // station MAISON, la ou Kilian l'avait demandee. Elle ne touche plus
+          // au fond.
           float calm = uStill * (0.58 + 0.42 * uBreath) * (1.0 - uPresence * 0.80);
-          r = max(r, calm * 0.38 * uEffectScale);
+
+          // Sur une page de contenu, la revelation evite la gravure du motif :
+          // deux maisons a l'ecran, celle du site et celle de la pierre, ne
+          // s'expliquent pas.
+          float quietMask = smoothstep(0.13, 0.44, length(hd));
+          r *= mix(1.0, quietMask, uQuiet);
 
           vec2 flow = vec2(sin(uv.y*16.0+uTime*1.3), cos(uv.x*16.0+uTime*1.1))*0.004*r*houseMask;
           vec2 uvMotif = uv + flow;
@@ -212,7 +225,6 @@ export default function MarbleBackground({
 
           vec3 warmLight = vec3(0.98, 0.92, 0.78);
           col += warmLight * r * uReflet;
-          col += warmLight * calm * 0.040;
 
           vec3 sheen = vec3(
             0.5 + 0.5*sin(uv.x*12.0 + uTime*1.5),
@@ -381,6 +393,9 @@ export default function MarbleBackground({
       finalMat.uniforms.uCarve.value = houseFocus.progress();
       finalMat.uniforms.uPresence.value = houseFocus.presence();
       finalMat.uniforms.uStill.value = stillness.get();
+      const mode = marbleMode.step();
+      finalMat.uniforms.uEffectScale.value = mode.scale;
+      finalMat.uniforms.uQuiet.value = mode.quiet;
       finalMat.uniforms.uBreath.value = breath();
       trailMat.uniforms.uTrailTime.value = t;
       filmPass.uniforms.uTime.value = t;
