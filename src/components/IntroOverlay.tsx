@@ -224,11 +224,16 @@ export default function IntroOverlay() {
           pointer-events:none;user-select:none;
           opacity:0;font-size:19px;
           will-change:transform,opacity;}
+        /* Le nom de la maison sous le dessin.
+           Il etait a clamp(14px,3.4vw,22px) : sur un telephone de 390 px, 3,4vw
+           vaut 13,3 px, donc la borne basse s'appliquait et le nom sortait a
+           14 px sous une maison de 265 px de large. Le dessin ecrasait la
+           marque. Le nom vaut au moins un quinzieme de la largeur du dessin. */
         .mdc-brand{font-family:'Higuen','Higuen Elegant Serif',var(--font-prata),Georgia,serif;
-          font-size:clamp(14px,3.4vw,22px);letter-spacing:.16em;
+          font-size:clamp(21px,6.4vw,34px);letter-spacing:.14em;
           color:#2F2519;opacity:0;transform:translateY(7px);
           transition:opacity 2.2s cubic-bezier(0.16, 1, 0.3, 1),transform 2.2s cubic-bezier(0.16, 1, 0.3, 1);
-          text-align:center;margin-top:clamp(10px,2.4vw,17px);
+          text-align:center;margin-top:clamp(16px,3.6vw,26px);
           white-space:nowrap;pointer-events:none;user-select:none;}
         .mdc-brand-in{opacity:1 !important;transform:translateY(0) !important;}
         .mdc-threshold{position:fixed;inset:0;z-index:10000;
