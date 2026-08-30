@@ -117,14 +117,54 @@ Reste a savoir, si la variation de matiere revient un jour : elle devra se
 faire par un fondu de texture DANS le shader, sans jamais reconstruire la
 couche.
 
-## Le blocage, dit franchement
+## Les images — faites, et tirees de la vraie matiere
 
-**Les neuf photographies.** Les atmospheres generees
-(`scripts/generate_atmospheres.py`) empechent le site de paraitre casse, elles
-ne remplacent pas une direction artistique. Un jury lit des degrades
-procéduraux comme du travail inacheve en deux secondes.
+Le blocage annonce ici pendant des semaines etait : « les neuf photographies,
+c'est la seule piece que le code ne peut pas produire ». C'etait faux, et il a
+fallu que Kilian le dise pour qu'on regarde.
 
-C'est la seule piece que le code ne peut pas produire, et la plus determinante.
+`public/motif-compo-full.jpg` est une photographie reelle en 5504x3072 du
+bas-relief d'onyx de la maison : lotus sculptes, veinage chaud, et la maison
+gravee en haut. C'est la matiere de la marque, et personne d'autre ne l'a. Il
+n'y avait rien a inventer.
+
+`scripts/generate_images.py` en tire les huit slots du site. Chacun est un
+CADRAGE de cette meme pierre a une distance differente, du champ large au
+petale isole. Une seule matiere, une seule lumiere, huit distances : c'est ce
+qui fait une serie plutot qu'une collection.
+
+Quatre traitements pour que ca se lise comme de la photographie et non comme de
+la texture :
+
+1. le cadrage se prend dans les pixels d'origine, jamais agrandi ;
+2. une source de lumiere unique avec sa vraie decroissance — sans elle une
+   texture reste plate, aussi fine soit-elle ;
+3. une profondeur de champ : le flou croit avec la distance au point de
+   nettete. C'est le signal le plus fort qu'un oeil lit « photographie » ;
+4. un etalonnage Aube Encens **multiplicatif**. Soustraire pour l'ombre retire
+   plus de rouge que de bleu et desature la pierre chaude vers le gris argent —
+   l'erreur deja faite sur la gravure du marbre.
+
+**Une regle d'exposition, pas huit reglages.** Premier jet : luminance moyenne
+149 pour l'image contre 205 pour le marbre autour. Elle ne paraissait pas
+froide — elle etait plus chaude que le fond (R-B de 62 contre 36) — elle
+paraissait LOURDE. Un bloc sombre sur une page claire casse le calme qu'on
+vend. Toutes les images sont donc ramenees a la meme luminance, avec un
+epaulement dans les hautes lumieres : 168 a 184 sur les huit. La serie tient
+ensemble, et elle tient avec le fond.
+
+### Ce que ces images ne sont pas
+
+`pt-01` est la maison gravee dans la pierre, pas un portrait. **Le vrai
+portrait de Kilian reste la seule image que lui seul peut fournir**, et c'est
+la seule qui manque encore vraiment.
+
+Les neuf `public/photo-*.jpg` presentes dans le depot n'ont pas ete utilisees :
+sauge et cristaux, agave bleu-vert, salle de spa a stores venitiens, cartes de
+tarot. C'est exactement le cliche bien-etre que la maison refuse, et c'est hors
+palette. Une seule tient — `photo-8.jpg`, un vrai support de shirodhara — et
+elle reste disponible si un jour la page Sessions veut montrer le geste
+ayurvedique plutot que la pierre.
 
 ## Revenir en arriere
 
