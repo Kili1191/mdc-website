@@ -1,3 +1,4 @@
+import { COLORS } from "@/styles/tokens";
 import { pageStyle, body, lead, bigHead, sectionHead, eyebrow, micro } from "@/styles/page";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
@@ -30,6 +31,18 @@ export default function TheWorkPage() {
         <p style={{ ...lead, marginTop: 40 }}>
           A fair question. Here is an honest answer that gives away nothing, because the
           giving-away is not the point.
+        </p>
+
+        {/* COPY NOUVELLE — a valider.
+            La page disait « There is no oil » sans jamais dire de quel travail
+            elle parlait. Un visiteur en concluait que la maison n'utilise
+            jamais d'huile, alors que Kilian pratique l'Abhyanga, et que la page
+            Sessions dit exactement l'inverse : « the only one that uses oil ».
+            Deux pages du meme site se contredisaient sur un fait.
+            Nommer ce que la page decrit suffit a lever la contradiction. */}
+        <p style={{ ...body, marginTop: 28, color: COLORS.brouFonce }}>
+          This describes NERVANA, the silent work. The oil work — Abhyanga, Marma — is
+          also practised here, and it is not this. It is described on Sessions.
         </p>
 
         <div className="mdc-measure" style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: 88 }}>
@@ -106,7 +119,7 @@ export default function TheWorkPage() {
               illness, and it makes no medical claim. It is not for everyone, and we will
               tell you honestly if it is not for you.
             </p>
-            <p style={{ ...micro, marginTop: 32 }}>Fully clothed · In silence · One to one</p>
+            <p style={{ ...micro, marginTop: 32 }}>Fully clothed · In silence · No oil · One to one</p>
             <div style={{ marginTop: 44 }}>
               <QuietButton href="/begin">Begin</QuietButton>
             </div>
