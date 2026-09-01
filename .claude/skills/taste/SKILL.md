@@ -94,6 +94,7 @@ If a screen feels "tight," add whitespace before touching anything else.
 - **Zero new user-facing copy** by the agent. Ever. If a section seems to need text that doesn't exist, place a TODO placeholder and flag it to Kilian.
 - **No em dashes** (`—`) anywhere in visible text. Replace with `,`, `.`, `:`, or `·` per context.
 - **No meta/defensive sections** — the house never justifies itself. No "Why we don't do X," no "Why no names, no dates," no FAQ that defends the practice. If it explains the discretion, it violates the discretion.
+  - **This rule was written here and then broken by a whole page.** `/lineage` existed to explain what the house would not say — from whom Kilian learned. Kilian removed it: *"nonsense for people, people need trust not someone hiding."* He is right, and the rule above already said so. A page that explains at length what you are withholding points at the withholding; it manufactures suspicion in the one place you were trying to build trust. What must be said is said in conversation, one to one. The route now redirects to `/practitioner`.
 - **NERVANA is now public** (decision de Kilian, cette session). Le nom de la
   methode s'ecrit sur le site : c'est sa technique, elle se pratique nulle part
   ailleurs, et c'est la seule chose vraiment inimitable de l'offre. Les noms de

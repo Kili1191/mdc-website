@@ -7,7 +7,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "",
     "/sessions",
     "/practitioner",
-    "/lineage",
     "/retreats",
     "/the-work",
     "/notes",

@@ -69,13 +69,16 @@ export default function PractitionerPage() {
             cannot hold, and the restraint to do less, more precisely, than someone with
             half the training would.
           </p>
+          {/* Deux lignes nouvelles, en remplacement de la page Lineage.
+              Elles disent la meme chose que l'ancienne page — ou il a appris
+              reste prive — mais dans l'autre sens : ce n'est pas une chose
+              qu'on refuse de dire, c'est une chose qu'il dit lui-meme. */}
           <p style={body}>
-            The shape of it is on the next page: the places, the line, the way it was
-            passed. Read it if you need to. Most people, once they have sat with the
-            work, do not.
+            Where he trained, and with whom, he will tell you himself. In conversation,
+            not on a website.
           </p>
           <div style={{ marginTop: 22 }}>
-            <QuietButton href="/lineage">See the lineage</QuietButton>
+            <QuietButton href="/begin">Ask him</QuietButton>
           </div>
         </section>
 

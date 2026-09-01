@@ -7,7 +7,6 @@ const LINKS = [
   { label: "Home", href: "/" },
   { label: "Sessions", href: "/sessions" },
   { label: "Practitioner", href: "/practitioner" },
-  { label: "Lineage", href: "/lineage" },
   { label: "Retreats", href: "/retreats" },
   { label: "The Work", href: "/the-work" },
   { label: "Notes", href: "/notes" },

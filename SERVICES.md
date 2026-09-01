@@ -74,7 +74,12 @@ client. C'est une decision de positionnement, pas de design.
 ## Decisions en attente
 
 1. Le sound healing : offre a part, confirmee, mais toujours absente du site.
-2. Les certifications : nommees, ou l'argument Lineage tient ?
+2. ~~Les certifications : nommees, ou l'argument Lineage tient ?~~ **Tranche.**
+   Ni l'un ni l'autre. La page Lineage est supprimee : une page entiere
+   consacree a expliquer ce qu'on ne dira pas attire l'attention sur le fait
+   qu'on cache, et fabrique de la mefiance la ou on cherchait de la confiance.
+   Decision de Kilian : « people need trust not someone hiding, i prefer not to
+   say and talk in private 1-1 ». Ou il a appris se dit en conversation.
 3. Le coaching : page dans cette maison, site separe, ou une ligne sur
    Practitioner ?
 4. L'enseignement Reiki niveau 1 : page, ou une ligne ?
