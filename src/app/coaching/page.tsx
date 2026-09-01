@@ -24,6 +24,24 @@ import QuietButton from "@/components/effects/QuietButton";
 // contre-exemple de son propre argument. Kilian tranche : c'est bon pour le
 // marketing. C'est sa decision.
 //
+// LE TITRE EST CELUI DU CERTIFICAT, ET RIEN DE PLUS.
+//
+// J'avais ecrit « regulated by Ofqual, the UK qualifications regulator ». Le
+// certificat de Kilian dit : « International Postgraduate Diploma in Coaching
+// and Leadership Development (Level 7) », reference JSS210301, centre d'etudes
+// Jay Shetty Certification School.
+//
+// Deux signaux disent que ce n'est PAS une qualification reguleee Ofqual : le
+// mot « International » dans le titre, et une reference JSS210301 qui n'a pas
+// la forme d'un numero RQF (603/1234/5). OTHM delivre les deux familles.
+//
+// OTHM en tant qu'organisme est reconnu par l'Ofqual ; ce diplome-la, on n'en
+// sait rien. Presenter une qualification comme reguleee quand elle ne l'est pas
+// est une fausse declaration, et sur une page qui vend de la confiance c'est le
+// pire endroit possible pour se tromper. On ecrit donc exactement ce que dit le
+// certificat : le titre, le niveau, l'organisme, le centre. Ne pas rajouter
+// « Ofqual » sans le numero RQF sous les yeux.
+//
 // La contradiction se resout en la disant au lieu de la masquer. « Le travail
 // silencieux n'a pas ete appris dans un certificat. Celui-ci, si. » Les deux
 // affirmations deviennent alors plus credibles, pas moins : un praticien qui
@@ -68,10 +86,10 @@ export default function CoachingPage() {
               Dire la difference au lieu de la laisser se decouvrir. */}
           <p style={body}>
             The silent work was not learned from a certificate. This was, and deliberately
-            so. Kilian holds an OTHM Level 7 diploma — postgraduate level, regulated by
-            Ofqual, the UK qualifications regulator — and trained at the Jay Shetty
-            Certification School, accredited by the Association for Coaching. Two
-            different kinds of knowing, and it is worth being clear about which is which.
+            so. Kilian holds the International Postgraduate Diploma in Coaching and
+            Leadership Development (Level 7), awarded by OTHM, completed at the Jay Shetty
+            Certification School. Two different kinds of knowing, and it is worth being
+            clear about which is which.
           </p>
         </div>
 
@@ -110,8 +128,12 @@ export default function CoachingPage() {
             a conversation. They are two different rooms, and you choose the one you came
             for. Many people only ever use one.
           </p>
+          <p style={{ ...body, marginTop: 30 }}>
+            An hour is the usual shape. It runs shorter or longer when it needs to. The
+            clock is not what you came for.
+          </p>
           <p style={{ ...micro, marginTop: 34 }}>
-            One to one · By conversation · Fee on request
+            One to one · Around an hour · Fee on request
           </p>
           <div style={{ marginTop: 44 }}>
             <QuietButton href="/begin">Ask about this door</QuietButton>
