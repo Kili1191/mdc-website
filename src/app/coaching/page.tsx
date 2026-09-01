@@ -149,8 +149,36 @@ export default function CoachingPage() {
           <p style={{ ...micro, marginTop: 34 }}>
             One to one · By call · Around an hour · Fee on request
           </p>
+        </section>
+
+        {/* COPY NOUVELLE — a valider.
+            Kilian veut un appel d'introduction gratuit, mais pas appele
+            « discovery call » : l'expression sent le coaching industriel a
+            trois metres, et elle promet une decouverte alors que ce qui se
+            joue est plus simple — savoir si on se supporte.
+            « The first call » ne promet rien qu'il ne tienne. Et les deux
+            lignes qui suivent sont la pour desamorcer la seule crainte reelle :
+            que l'appel gratuit soit une vente deguisee. */}
+        <section className="mdc-gap">
+          <p style={eyebrow}>Before you decide</p>
+          <h2 style={{ ...sectionHead, marginTop: 26 }}>
+            The first call is free.
+          </h2>
+          <div className="mdc-measure" style={{ marginTop: 30, display: "flex", flexDirection: "column", gap: 22 }}>
+            <p style={body}>
+              Before any of this costs you anything, there is a call. You say what is going
+              on. Kilian says whether he is the right person for it, and if he is not, he
+              says who might be.
+            </p>
+            <p style={body}>
+              Nothing is sold on that call. You are not asked to decide at the end of it,
+              and you will not be followed up twice. If it is right, you will know without
+              being persuaded.
+            </p>
+          </div>
+          <p style={{ ...micro, marginTop: 34 }}>No charge · No obligation</p>
           <div style={{ marginTop: 44 }}>
-            <QuietButton href="/begin">Ask about this door</QuietButton>
+            <QuietButton href="/begin">Ask for the first call</QuietButton>
           </div>
         </section>
       </div>
