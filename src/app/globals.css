@@ -133,3 +133,74 @@ body {
   .mdc-gap { margin-top: 128px; }
   .mdc-gap--sm { margin-top: 88px; }
 }
+
+/* ─── L'onglet ou l'on est se grave dans la pierre ──────────────────────
+   Demande de Kilian : « que l'onglet ou on est dedans se grave sur le marbre,
+   une animation rapide comme un coup de balai magique ».
+
+   Deux temps, et c'est leur ordre qui fait la gravure :
+
+     1. LE COUP DE BALAI passe une fois, vite. Une bande de lumiere chaude
+        traverse le mot en biais, comme un outil qu'on passe sur la pierre.
+     2. LE CREUX RESTE. Derriere le balai, le mot garde une ombre haute et une
+        levre claire en bas — c'est la lecture d'un caractere grave dans une
+        pierre eclairee d'en haut, la meme lumiere que le burin du marbre.
+
+   520 ms : la duree de sortie du site (450) plus une marge. « Rapide » etait
+   dans la demande, et une gravure lente se lirait comme un survol.
+
+   Le creux ne s'anime pas, il s'installe : c'est l'etat de la page ou l'on est,
+   pas un effet qui se rejoue. Le balai, lui, ne passe qu'une fois, a l'arrivee.
+
+   `mdc-here` est pose par Nav sur le lien de la route courante. Quand la route
+   change, la classe quitte un lien et arrive sur un autre : l'animation repart
+   d'elle-meme sur le nouveau, sans qu'on ait rien a remonter. */
+
+.mdc-here {
+  position: relative;
+  /* le creux, installe */
+  text-shadow:
+    0 1px 0 rgba(255, 252, 244, 0.85),
+    0 -1px 1px rgba(74, 59, 42, 0.55);
+  animation: mdc-creuser 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.mdc-here::after {
+  /* le coup de balai */
+  content: "";
+  position: absolute;
+  inset: -3px -10px;
+  pointer-events: none;
+  background: linear-gradient(
+    104deg,
+    rgba(255, 252, 244, 0) 0%,
+    rgba(255, 252, 244, 0.92) 42%,
+    rgba(184, 153, 104, 0.55) 54%,
+    rgba(255, 252, 244, 0) 76%
+  );
+  transform: translateX(-130%);
+  animation: mdc-balai 520ms cubic-bezier(0.36, 0, 0.12, 1) both;
+}
+
+@keyframes mdc-creuser {
+  from { text-shadow: 0 0 0 rgba(255, 252, 244, 0), 0 0 0 rgba(74, 59, 42, 0); }
+}
+
+/* Le balai APPARAIT, passe, et disparait.
+   Sans l'opacite il finissait sa course gare sur le mot voisin : translater de
+   130 % la largeur d'un mot de nav ne suffit pas a sortir du champ, et
+   `both` conservait l'etat final. On voyait donc une bande claire posee en
+   permanence sur le lien d'a cote. */
+@keyframes mdc-balai {
+  0%   { transform: translateX(-130%); opacity: 0; }
+  16%  { opacity: 1; }
+  78%  { opacity: 1; }
+  100% { transform: translateX(130%); opacity: 0; }
+}
+
+/* Personne ne recoit un coup de balai contre son gre. Le creux reste : c'est
+   une information — vous etes ici — pas une animation. */
+@media (prefers-reduced-motion: reduce) {
+  .mdc-here { animation: none; }
+  .mdc-here::after { display: none; }
+}

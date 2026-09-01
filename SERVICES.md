@@ -10,7 +10,7 @@ personne ne l'avait ecrit.*
 |---|---|---|
 | **La suite silencieuse** (ANTARA, VAYU, SOMA, TRANSMISSION) | oui, page Sessions | le coeur. ANTARA est l'entree, tout le monde y passe |
 | **Retraites** | oui, page Retreats | sur candidature |
-| **Coaching** | **non, nulle part** | formation Jay Shetty Coaching School |
+| **Coaching** | oui, page Coaching | OTHM Level 7 (Ofqual) + Jay Shetty Certification School (Association for Coaching) |
 | **Enseignement Reiki** | **non, nulle part** | Maitre Reiki, habilite a enseigner tous les niveaux, **choisit de n'enseigner que le niveau 1** |
 | **Sound bath / sound healing** | **non, nulle part** | technique separee. Peter Hess non nomme, sur decision de Kilian |
 | **Abhyanga** (massage ayurvedique a l'huile) | oui, page Sessions, hors suite | seul soin a l'huile |
@@ -80,8 +80,18 @@ client. C'est une decision de positionnement, pas de design.
    qu'on cache, et fabrique de la mefiance la ou on cherchait de la confiance.
    Decision de Kilian : « people need trust not someone hiding, i prefer not to
    say and talk in private 1-1 ». Ou il a appris se dit en conversation.
-3. Le coaching : page dans cette maison, site separe, ou une ligne sur
-   Practitioner ?
+3. ~~Le coaching : page dans cette maison, site separe, ou une ligne sur
+   Practitioner ?~~ **Tranche : page dans cette maison.** `/coaching`, avec
+   son entree de nav. Kilian : « tu proposes jamais mes services en tant que
+   life coach ? it deserves another onglet ». Une ligne de metier entiere etait
+   invisible : trois lignes au milieu de Practitioner, rien dans la nav, rien
+   dans le sitemap.
+   La tension — la maison vend le silence, le coaching est de la conversation —
+   est resolue en la NOMMANT plutot qu'en la masquant : une maison, deux portes,
+   et on vous dit laquelle est la votre.
+   Les diplomes sont nommes, sur decision de Kilian (« cest bien pour le
+   marketing »), en menant par le titre regule : OTHM Level 7, Ofqual, puis Jay
+   Shetty Certification School / Association for Coaching.
 4. L'enseignement Reiki niveau 1 : page, ou une ligne ?
 5. "One house. One practitioner. Five doors." : cinq portes quand Sessions en
    decrit quatre. Source perimee a identifier.
