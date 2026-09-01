@@ -44,6 +44,36 @@ export default function IntroOverlay() {
     setMounted(true);
   }, []);
 
+  // LE DOCUMENT NE DOIT PAS DEFILER SOUS L'INTRO.
+  //
+  // L'intro dure quinze secondes et couvre tout l'ecran, mais la page derriere
+  // elle mesure deja 6161 px et reste scrollable. Un visiteur qui attend sans
+  // voir bouger fait ce que tout le monde fait : il swipe. Rien ne lui indique
+  // que son geste agit, et quand le voile se leve il se retrouve la ou il a
+  // scrolle.
+  //
+  // Reproduit : six swipes pendant l'intro amenent le document a 4083 px ;
+  // l'intro se leve a 4200 px, soit 79 % de la page, en plein dans le bandeau
+  // d'images des seances. C'est exactement ce que Kilian decrivait : « ca
+  // ouvre directement en bas de la page sessions ».
+  useEffect(() => {
+    if (!mounted) return;
+    const html = document.documentElement;
+    const body = document.body;
+    const memo = {
+      htmlOverflow: html.style.overflow, bodyOverflow: body.style.overflow,
+      htmlOverscroll: html.style.overscrollBehavior,
+    };
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    html.style.overscrollBehavior = "none";
+    return () => {
+      html.style.overflow = memo.htmlOverflow;
+      body.style.overflow = memo.bodyOverflow;
+      html.style.overscrollBehavior = memo.htmlOverscroll;
+    };
+  }, [mounted]);
+
   useEffect(() => {
     if (!mounted) return;
 
@@ -137,6 +167,16 @@ export default function IntroOverlay() {
         }
         if (p < 1) requestAnimationFrame(exitTick);
         else {
+          // On rend la main EN HAUT DE LA PAGE, sans condition. Le verrou
+          // ci-dessus empeche le defilement pendant l'intro, mais un navigateur
+          // peut aussi restaurer une position d'une visite precedente pendant
+          // que le voile la cache. On n'arrive jamais chez quelqu'un au milieu
+          // de sa maison.
+          const html = document.documentElement;
+          html.style.overflow = "";
+          document.body.style.overflow = "";
+          html.style.overscrollBehavior = "";
+          window.scrollTo(0, 0);
           window.dispatchEvent(new CustomEvent(INTRO_DONE_EVENT));
           setDone(true);
         }
@@ -201,6 +241,7 @@ export default function IntroOverlay() {
     <>
       <style>{`
         .mdc-intro{position:fixed;inset:0;z-index:9999;background:#EDE4D0;
+          touch-action:none;overscroll-behavior:none;
           display:flex;flex-direction:column;align-items:center;justify-content:center;
           will-change:opacity;isolation:isolate;contain:layout paint;
           transform:translateZ(0);}
