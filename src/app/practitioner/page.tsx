@@ -47,13 +47,31 @@ export default function PractitionerPage() {
               There is no team behind a curtain. The person you meet is the person who
               spent years training to meet you, and the only person who will.
             </p>
+            {/* COPY NOUVELLE — a valider.
+                Le site ne disait rien de ce qui est la vraie rarete de cette
+                pratique. L'ancien texte disait « aux sources », « la ou elles
+                sont vecues, pas la ou elles sont vendues » : c'est abstrait, et
+                tout le monde ecrit ca.
+                Les faits de Kilian sont concrets et invendables : ses
+                enseignants ne font pas commerce avec les Occidentaux, n'ont pas
+                de site, ne peuvent pas etre reserves, et il y RETOURNE encore.
+                Le present compte autant que le fait.
+                On l'ecrit comme un fait sur le monde, jamais comme une chose
+                qu'on refuse de dire — c'est cette difference qui avait coule la
+                page Lineage. Personne n'a besoin qu'on lui explique un secret :
+                il suffit de dire ce qui est. */}
             <p style={body}>
-              Kilian did not arrive at this work through a weekend or a certificate. He
-              went to the sources, to the places where these traditions are still passed
-              from one person to the next, in person, over years, the way they have always
-              been passed. He learned them where they are lived, not where they are
-              marketed. Some of what he carries came from teachers who accepted very few
-              students. Some of it took years before he was permitted to practise it at all.
+              Kilian did not arrive at this work through a weekend or a certificate, and
+              he has not finished arriving. He still goes back to India, to the same
+              teachers. They do not run courses for Westerners. They have no website and
+              no dates, and there is nothing to book. They are found in person, on the
+              ground, by word of mouth, or they are not found at all.
+            </p>
+            <p style={body}>
+              What he practises has not been adapted. Most of what is sold as this work in
+              the West has been shortened, softened and fitted around a timetable. What he
+              was taught is the old form, unchanged, because the people who taught it had
+              no reason to change it and nothing to sell.
             </p>
             <p style={body}>
               He does not talk about any of this while he works. He does not talk at all.
