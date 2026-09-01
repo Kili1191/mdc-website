@@ -228,6 +228,7 @@ export default function SessionsPage() {
           }}>
             <div>
               <p style={{ ...label, fontSize: 19 }}>ABHYANGA</p>
+              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>60 minutes · Fee on request</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 Warm oil, worked over the whole body in one unbroken rhythm. It is the
                 oldest practice in this house, and the only one that uses oil.
@@ -235,6 +236,7 @@ export default function SessionsPage() {
             </div>
             <div>
               <p style={{ ...label, fontSize: 19 }}>MARMA</p>
+              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>60 minutes · Fee on request</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 The junctions where the body gathers what it holds. Marma work is
                 pressure and stillness at those points, slower than massage and more
@@ -243,6 +245,7 @@ export default function SessionsPage() {
             </div>
             <div>
               <p style={{ ...label, fontSize: 19 }}>REIKI</p>
+              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>60 minutes · Fee on request</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 Hands resting on the body, or just above it, and held. Nothing is
                 pressed and nothing is moved. Fully clothed, in silence.
@@ -250,6 +253,7 @@ export default function SessionsPage() {
             </div>
             <div>
               <p style={{ ...label, fontSize: 19 }}>SOUND</p>
+              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>60 minutes · Fee on request</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 Bowls set directly on the body and struck softly, so the tone arrives
                 through the body before it reaches the ear. Fully clothed, face down,
