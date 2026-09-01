@@ -113,6 +113,57 @@ export default function RetreatsPage() {
           </div>
         </section>
 
+        {/* COPY NOUVELLE — a valider.
+            Kilian veut un recit qui cree de la communaute. C'est en tension
+            frontale avec le reste de la maison : un a un, silencieux, personne
+            n'est nomme. La retraite est le seul endroit ou plusieurs personnes
+            sont ensemble, donc le seul endroit ou la communaute a sa place.
+            Le piege serait le cercle de parole et les presentations : ces
+            gens-la fuient exactement ca. Ce qu'ils n'ont jamais, en revanche,
+            c'est une piece ou ils ne sont pas le plus solide. La communaute
+            se joue donc dans la RECONNAISSANCE, pas dans l'echange — et elle
+            reste compatible avec le silence que le site vend partout ailleurs. */}
+        <section className="mdc-gap mdc-two">
+          <div>
+            <p style={eyebrow}>Who else is there</p>
+            <h2 style={{ ...sectionHead, marginTop: 26 }}>
+              Everyone in the room is carrying something.
+            </h2>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+            <p style={body}>
+              You will not have to explain yourself. Not because nobody asks — nobody
+              will — but because the people beside you came for the same reason, and they
+              already know what it costs to be the one everybody leans on.
+            </p>
+            <p style={body}>
+              Most people this work is for have never been in a room where that was true.
+              They are the capable one, at work and at home, and they are the capable one
+              on holiday too. Here, for a few days, nobody needs anything from you.
+            </p>
+            <p style={body}>
+              Nothing is required of you socially either. There is no circle, no sharing
+              round, no introductions where you say what you do for a living. Some people
+              are talking by the third day. Some never do, and leave with the same thing.
+            </p>
+          </div>
+        </section>
+
+        {/* Faits donnes par Kilian : repas et logement compris, vol non. */}
+        <section className="mdc-gap--sm">
+          <p style={eyebrow}>What is included</p>
+          <h2 style={{ ...sectionHead, marginTop: 26 }}>
+            Everything once you land.
+          </h2>
+          <p style={{ ...body, marginTop: 28 }}>
+            Accommodation and every meal are included, and so is the work itself. Flights
+            are not — you book your own, and you come from wherever you are.
+          </p>
+          <p style={{ ...micro, marginTop: 30 }}>
+            Accommodation and meals included · Flights not included
+          </p>
+        </section>
+
         <section className="mdc-gap--sm">
           <p style={{ ...body, color: COLORS.brouFonce }}>
             If you would like to be told when it opens, tell us. Nothing more is asked
