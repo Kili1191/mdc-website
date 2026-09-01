@@ -70,3 +70,66 @@ body {
   outline: 2px solid rgba(165, 90, 62, 0.55);
   outline-offset: 3px;
 }
+
+/* ─── La grammaire editoriale des pages ─────────────────────────────────
+   Elle vivait dans un <style> a l'interieur de sessions/page.tsx. Les six
+   autres pages ne l'avaient pas, donc elles gardaient la colonne centree.
+   Elle est ici pour que toutes les pages en heritent, et pour qu'une
+   correction ne se fasse qu'une fois. */
+
+.mdc-wrap { max-width: 1180px; margin: 0 auto; padding: 0 7vw; }
+.mdc-measure { max-width: 660px; }
+
+/* Un index : une ligne par offre, lisible en diagonale. Sans lui, il faut
+   scroller toutes les sections pour savoir combien il y en a. */
+.mdc-index { margin-top: 72px; border-top: 1px solid rgba(168,154,133,0.35); }
+.mdc-index a,
+.mdc-index .mdc-index__row {
+  display: grid; grid-template-columns: 3.5rem 12rem 1fr auto;
+  gap: 24px; align-items: baseline;
+  padding: 26px 0; text-decoration: none;
+  border-bottom: 1px solid rgba(168,154,133,0.35);
+}
+/* Un sommaire d'essais : les titres sont des phrases, pas des noms de salles.
+   Douze rem les cassaient en trois lignes. */
+.mdc-index--wide a,
+.mdc-index--wide .mdc-index__row { grid-template-columns: 3.5rem 22rem 1fr auto; }
+
+.mdc-index a { transition: background-color 900ms cubic-bezier(0.16,1,0.3,1); }
+.mdc-index a:hover, .mdc-index a:focus-visible {
+  background-color: rgba(165,90,62,0.05);
+  transition: background-color 450ms cubic-bezier(0.4,0,0.6,1);
+}
+
+/* Une section = une double page. Le cote alterne en descendant. */
+.mdc-room { display: grid; grid-template-columns: 1fr 1fr; gap: 88px;
+            align-items: center; margin-top: 168px; }
+.mdc-room--flip .mdc-room__art { order: 2; }
+
+/* Un numero plutot qu'un filet : il dit ou l'on en est. */
+.mdc-num { font-family: var(--font-higuen), Georgia, serif;
+           font-size: 92px; line-height: 1; color: #A89A85; opacity: 0.30;
+           margin: 0 0 28px; }
+
+/* Deux colonnes de texte, sans image. */
+.mdc-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+           gap: 64px; }
+
+/* L'espace remplace le filet. */
+.mdc-gap { margin-top: 200px; }
+.mdc-gap--sm { margin-top: 128px; }
+
+@media (max-width: 900px) {
+  .mdc-room { grid-template-columns: 1fr; gap: 44px; margin-top: 112px; }
+  .mdc-room--flip .mdc-room__art { order: 0; }
+  .mdc-index a,
+  .mdc-index .mdc-index__row,
+  .mdc-index--wide a,
+  .mdc-index--wide .mdc-index__row { grid-template-columns: 2.6rem 1fr; row-gap: 6px; padding: 20px 0; }
+  .mdc-index a > :nth-child(3), .mdc-index .mdc-index__row > :nth-child(3) { grid-column: 2; }
+  .mdc-index a > :nth-child(4), .mdc-index .mdc-index__row > :nth-child(4) { grid-column: 2; }
+  .mdc-num { font-size: 64px; }
+  .mdc-two { gap: 44px; }
+  .mdc-gap { margin-top: 128px; }
+  .mdc-gap--sm { margin-top: 88px; }
+}

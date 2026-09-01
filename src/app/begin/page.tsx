@@ -1,98 +1,95 @@
-import BeginForm from "./BeginForm";
 import { COLORS, FONTS } from "@/styles/tokens";
+import { pageStyle, body, lead, bigHead, sectionHead, eyebrow, micro } from "@/styles/page";
 import SplitTextChars from "@/components/effects/SplitTextChars";
+import BeginForm from "./BeginForm";
 
-const pageStyle: React.CSSProperties = {
-  position: "relative", zIndex: 5, minHeight: "100vh",
-  paddingTop: 160, paddingBottom: 200,
-};
-const containerStyle: React.CSSProperties = {
-  maxWidth: 720, margin: "0 auto", padding: "48px 8vw",
-  background: "rgba(237,228,208,0.28)",
-  backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)",
-  borderRadius: 2,
-};
-const bodyStyle: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 18, lineHeight: 1.75, color: COLORS.brou, margin: 0,
-};
-const bigHeadStyle: React.CSSProperties = {
-  fontFamily: FONTS.higuen, fontSize: "clamp(32px, 5vw, 56px)",
-  lineHeight: 1.2, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
-};
-const sectionHeadStyle: React.CSSProperties = {
-  fontFamily: FONTS.higuen, fontSize: "clamp(22px, 3vw, 32px)",
-  lineHeight: 1.3, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
-};
-const eyebrowStyle: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 11, letterSpacing: "0.28em",
-  textTransform: "uppercase", color: COLORS.taupe, margin: 0,
-};
-const questionStyle: React.CSSProperties = {
-  fontFamily: FONTS.higuen, fontSize: "clamp(36px, 6vw, 64px)",
-  lineHeight: 1.15, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
-  textAlign: "center",
-};
-const microStyle: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 13, lineHeight: 1.7,
-  color: COLORS.taupe, margin: 0, fontStyle: "italic",
-};
-const dividerStyle: React.CSSProperties = {
-  height: 1, background: COLORS.taupe, opacity: 0.28, border: 0, margin: "96px 0",
-};
+// Begin — la seule page ou le visiteur donne quelque chose.
+//
+// Ce qui decide quelqu'un a ecrire ici n'est pas la question, c'est la
+// PROMESSE DE DISCRETION. Elle etait en bas de page, apres deux filets, en
+// taupe italique — soit un contraste de 1,77:1 sur le marbre, c'est-a-dire
+// invisible, a l'endroit exact ou personne ne lit.
+//
+// Elle est maintenant a cote du formulaire, lisible, la ou la main hesite.
+// Et « ce qui se passe ensuite » devient trois temps nommes plutot qu'un
+// paragraphe : quelqu'un qui hesite veut savoir ce qu'il declenche.
 
 export const metadata = {
   title: "Begin · Maison du Calme",
   description: "Begin with Maison du Calme. Not a booking, a conversation. Tell us what you carry. Read by Kilian alone, held in confidence, never shared.",
 };
 
+const SUITE = [
+  { n: "01", quoi: "He reads it himself", detail: "Not a system, not an assistant." },
+  { n: "02", quoi: "He answers personally", detail: "Within two working days." },
+  { n: "03", quoi: "He says yes, or he says no", detail: "And if no, he points you somewhere better." },
+];
+
 export default function BeginPage() {
   return (
     <main style={pageStyle}>
-        <div style={containerStyle}>
-          <p style={eyebrowStyle}>Begin</p>
-          <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
-            <SplitTextChars text="Begin." delay={60} duration={900} />
-          </h1>
-          <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
-            There is no booking calendar. There is a conversation. It starts with one
-            question.
-          </p>
+      <div className="mdc-wrap">
+        <p style={eyebrow}>Begin</p>
+        <h1 style={{ ...bigHead, marginTop: 36 }}>
+          <SplitTextChars text="Begin." delay={60} duration={900} />
+        </h1>
+        <p style={{ ...lead, marginTop: 40 }}>
+          There is no booking calendar. There is a conversation. It starts with one
+          question.
+        </p>
 
-          <div style={{ marginTop: 96, marginBottom: 56 }}>
-            <p style={questionStyle}>
-              <SplitTextChars text="What do you carry?" delay={22} duration={900} />
+        <p style={{
+          fontFamily: FONTS.higuen, fontSize: "clamp(40px, 7.4vw, 82px)",
+          lineHeight: 1.1, color: COLORS.brouFonce, margin: "120px 0 0", fontWeight: 400,
+          maxWidth: "12ch",
+        }}>
+          <SplitTextChars text="What do you carry?" delay={22} duration={900} />
+        </p>
+
+        <section className="mdc-room" style={{ marginTop: 88, alignItems: "start" }}>
+          <div>
+            <p style={body}>
+              Answer in a sentence or in a page, however it comes. There is no right way to
+              say it, and no one but Kilian will read it. This is not a form to be
+              processed. It is the beginning of the only kind of conversation this work
+              starts with.
             </p>
+            <div style={{ marginTop: 40 }}>
+              <BeginForm />
+            </div>
           </div>
 
-          <p style={{ ...bodyStyle }}>
-            Answer in a sentence or in a page, however it comes. There is no right way to
-            say it, and no one but Kilian will read it. This is not a form to be
-            processed. It is the beginning of the only kind of conversation this work
-            starts with.
-          </p>
+          {/* La promesse de discretion, remontee a cote du formulaire.
+              C'est elle qui decide quelqu'un a ecrire, pas la question. */}
+          <div>
+            <p style={eyebrow}>What you write here</p>
+            <h2 style={{ ...sectionHead, marginTop: 26 }}>
+              Read by Kilian alone.
+            </h2>
+            <p style={{ ...body, marginTop: 28 }}>
+              What you write here is read by Kilian alone and held privately. It is never
+              shared, never shown, and no client is ever named. What you carry stays yours.
+            </p>
+            <p style={{ ...micro, marginTop: 32 }}>Answered personally · Within two working days</p>
+          </div>
+        </section>
 
-          <BeginForm />
-
-          <p style={{ ...microStyle, marginTop: 40 }}>
-            Read by Kilian alone. Answered personally, within two working days. Held in
-            confidence. Never shared, never named.
-          </p>
-
-          <hr style={dividerStyle} />
-
-          <h2 style={sectionHeadStyle}>What happens next.</h2>
-          <p style={{ ...bodyStyle, marginTop: 40 }}>
-            Kilian reads it himself. If the work is right for you, he will say so and
-            propose a time. If it is not, he will say that too, plainly, and point you
-            somewhere better. Either way, you will hear from a person, not a system.
-          </p>
-
-          <hr style={dividerStyle} />
-
-          <p style={{ ...bodyStyle, color: COLORS.taupe, fontStyle: "italic" }}>
-            What you write here is read by Kilian alone and held privately. It is never
-            shared, never shown, and no client is ever named. What you carry stays yours.
-          </p>
+        <section className="mdc-gap">
+          <p style={eyebrow}>What happens next</p>
+          <h2 style={{ ...sectionHead, marginTop: 26 }}>
+            You will hear from a person, not a system.
+          </h2>
+          <nav className="mdc-index" aria-label="What happens next">
+            {SUITE.map((e) => (
+              <div className="mdc-index__row" key={e.n}>
+                <span style={{ ...micro, opacity: 0.7 }}>{e.n}</span>
+                <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>{e.quoi}</span>
+                <span style={{ ...body, fontSize: 16, maxWidth: "none", opacity: 0.72 }}>{e.detail}</span>
+                <span />
+              </div>
+            ))}
+          </nav>
+        </section>
       </div>
     </main>
   );

@@ -1,4 +1,4 @@
-import { COLORS, FONTS } from "@/styles/tokens";
+import { pageStyle, body, lead, bigHead, sectionHead, eyebrow, micro, label } from "@/styles/page";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
 import AssetFrame from "@/components/effects/AssetFrame";
@@ -30,46 +30,6 @@ import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
 // La copy n'est pas reecrite : elle est bonne, et elle est validee. Seules les
 // lignes de l'index sont nouvelles, dans la meme voix.
 
-const page: React.CSSProperties = {
-  position: "relative", zIndex: 5, minHeight: "100vh",
-  paddingTop: 160, paddingBottom: 200,
-};
-const body: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 18, lineHeight: 1.75,
-  color: COLORS.brou, margin: 0, maxWidth: "62ch",
-};
-const bigHead: React.CSSProperties = {
-  fontFamily: FONTS.higuen, fontSize: "clamp(34px, 5.4vw, 62px)",
-  lineHeight: 1.14, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
-};
-const sectionHead: React.CSSProperties = {
-  fontFamily: FONTS.higuen, fontSize: "clamp(26px, 3.6vw, 40px)",
-  lineHeight: 1.22, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
-  maxWidth: "18ch",
-};
-// Le taupe est une couleur de PAUSE, pas une couleur de texte.
-//
-// Mesure sur le marbre du site (fond ~rgb(221,205,185)) : le taupe #A89A85
-// donne un contraste de 1,77:1. Il en faut 4,5 pour du petit texte. Les durees
-// et les tarifs — c'est-a-dire l'information qui vend — etaient donc
-// pratiquement invisibles. Le brou donne 6,93:1.
-//
-// Le taupe reste bon pour un filet ou une bordure. Il n'ecrit plus.
-const eyebrow: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 11, letterSpacing: "0.28em",
-  textTransform: "uppercase", color: COLORS.brou, opacity: 0.78, margin: 0,
-};
-const roomLabel: React.CSSProperties = {
-  fontFamily: FONTS.higuen, fontSize: 24, letterSpacing: "0.36em",
-  color: COLORS.rouille, margin: 0,
-};
-// L'italique en petites capitales tres espacees se lit mal a 12 px. Sur la
-// ligne qui porte la duree et le tarif, ce n'est pas un detail de style.
-const micro: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 12.5, letterSpacing: "0.20em",
-  textTransform: "uppercase", color: COLORS.brou, margin: 0,
-};
-
 export const metadata = {
   title: "Sessions · Maison du Calme",
   description: "A sequence of private sessions at Maison du Calme, beginning with ANTARA. Silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees on request.",
@@ -87,50 +47,15 @@ const INDEX = [
 
 export default function SessionsPage() {
   return (
-    <main style={page}>
-      <style>{`
-        .mdc-wrap { max-width: 1180px; margin: 0 auto; padding: 0 7vw; }
-        .mdc-measure { max-width: 660px; }
+    <main style={pageStyle}>
 
-        /* L'index : quatre lignes, lisibles en diagonale. */
-        .mdc-index { margin-top: 72px; border-top: 1px solid rgba(168,154,133,0.35); }
-        .mdc-index a {
-          display: grid; grid-template-columns: 3.5rem 12rem 1fr auto;
-          gap: 24px; align-items: baseline;
-          padding: 26px 0; text-decoration: none;
-          border-bottom: 1px solid rgba(168,154,133,0.35);
-          transition: background-color 900ms cubic-bezier(0.16,1,0.3,1);
-        }
-        .mdc-index a:hover, .mdc-index a:focus-visible {
-          background-color: rgba(165,90,62,0.05);
-          transition: background-color 450ms cubic-bezier(0.4,0,0.6,1);
-        }
-
-        /* Une salle = une double page. Le cote alterne en descendant. */
-        .mdc-room { display: grid; grid-template-columns: 1fr 1fr; gap: 88px;
-                    align-items: center; margin-top: 168px; }
-        .mdc-room--flip .mdc-room__art { order: 2; }
-
-        .mdc-num { font-family: var(--font-higuen), Georgia, serif;
-                   font-size: 92px; line-height: 1; color: #A89A85; opacity: 0.30;
-                   margin: 0 0 28px; }
-
-        @media (max-width: 900px) {
-          .mdc-room { grid-template-columns: 1fr; gap: 44px; margin-top: 112px; }
-          .mdc-room--flip .mdc-room__art { order: 0; }
-          .mdc-index a { grid-template-columns: 2.6rem 1fr; row-gap: 6px; padding: 20px 0; }
-          .mdc-index a > :nth-child(3) { grid-column: 2; }
-          .mdc-index a > :nth-child(4) { grid-column: 2; }
-          .mdc-num { font-size: 64px; }
-        }
-      `}</style>
 
       <div className="mdc-wrap">
         <p style={eyebrow}>Sessions</p>
         <h1 style={{ ...bigHead, marginTop: 36 }}>
           <SplitTextChars text="It begins with ANTARA." delay={22} duration={900} />
         </h1>
-        <p style={{ ...body, marginTop: 40, fontSize: 21, color: COLORS.brouFonce }}>
+        <p style={{ ...lead, marginTop: 40 }}>
           Each begins the same way, in silence, fully clothed, with nothing required of you.
           Each leaves you somewhere different.
         </p>
@@ -155,7 +80,7 @@ export default function SessionsPage() {
           {INDEX.map((r) => (
             <a key={r.name} href={`#${r.name.toLowerCase()}`}>
               <span style={{ ...micro, fontStyle: "normal", opacity: 0.7 }}>{r.n}</span>
-              <span style={{ ...roomLabel, fontSize: 19 }}>{r.name}</span>
+              <span style={{ ...label, fontSize: 19 }}>{r.name}</span>
               <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>{r.line}</span>
               <span style={micro}>{r.meta}</span>
             </a>
@@ -171,7 +96,7 @@ export default function SessionsPage() {
           </div>
           <div>
             <p className="mdc-num">01</p>
-            <p style={roomLabel}>ANTARA</p>
+            <p style={label}>ANTARA</p>
             <p style={{ ...micro, marginTop: 14 }}>90 minutes · The threshold session</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
               For the weight you have carried longest.
@@ -203,7 +128,7 @@ export default function SessionsPage() {
           </div>
           <div>
             <p className="mdc-num">02</p>
-            <p style={roomLabel}>VAYU</p>
+            <p style={label}>VAYU</p>
             <p style={{ ...micro, marginTop: 14 }}>60 minutes · For the tightness that lives high</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
               When you cannot get a full breath.
@@ -230,7 +155,7 @@ export default function SessionsPage() {
           </div>
           <div>
             <p className="mdc-num">03</p>
-            <p style={roomLabel}>SOMA</p>
+            <p style={label}>SOMA</p>
             <p style={{ ...micro, marginTop: 14 }}>60 minutes · For what the body has stored</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
               The tension you have stopped noticing.
@@ -257,7 +182,7 @@ export default function SessionsPage() {
           </div>
           <div>
             <p className="mdc-num">04</p>
-            <p style={roomLabel}>TRANSMISSION</p>
+            <p style={label}>TRANSMISSION</p>
             <p style={{ ...micro, marginTop: 14 }}>By application · Limited to six per client each year</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
               The deepest room. Not for everyone, and not often.
@@ -287,7 +212,7 @@ export default function SessionsPage() {
             promet "not touched with oil" : Abhyanga est un soin a l'huile, il ne
             peut pas etre dans la meme promesse. Separer les deux protege la
             phrase et la verite. */}
-        <section style={{ marginTop: 200 }}>
+        <section className="mdc-gap">
           <p style={eyebrow}>Also practised here</p>
           <h2 style={{ ...sectionHead, marginTop: 30, maxWidth: "24ch" }}>
             Older than the house.
@@ -302,14 +227,14 @@ export default function SessionsPage() {
             gap: 56, marginTop: 72,
           }}>
             <div>
-              <p style={{ ...roomLabel, fontSize: 19 }}>ABHYANGA</p>
+              <p style={{ ...label, fontSize: 19 }}>ABHYANGA</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 Warm oil, worked over the whole body in one unbroken rhythm. It is the
                 oldest practice in this house, and the only one that uses oil.
               </p>
             </div>
             <div>
-              <p style={{ ...roomLabel, fontSize: 19 }}>MARMA</p>
+              <p style={{ ...label, fontSize: 19 }}>MARMA</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 The junctions where the body gathers what it holds. Marma work is
                 pressure and stillness at those points, slower than massage and more
@@ -317,14 +242,14 @@ export default function SessionsPage() {
               </p>
             </div>
             <div>
-              <p style={{ ...roomLabel, fontSize: 19 }}>REIKI</p>
+              <p style={{ ...label, fontSize: 19 }}>REIKI</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 Hands resting on the body, or just above it, and held. Nothing is
                 pressed and nothing is moved. Fully clothed, in silence.
               </p>
             </div>
             <div>
-              <p style={{ ...roomLabel, fontSize: 19 }}>SOUND</p>
+              <p style={{ ...label, fontSize: 19 }}>SOUND</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 Bowls set directly on the body and struck softly, so the tone arrives
                 through the body before it reaches the ear. Fully clothed, face down,
@@ -334,7 +259,7 @@ export default function SessionsPage() {
           </div>
         </section>
 
-        <section style={{ marginTop: 200 }}>
+        <section className="mdc-gap">
           <p style={eyebrow}>The Arc</p>
           <h2 style={{ ...sectionHead, marginTop: 30 }}>
             The work is not a single visit.
