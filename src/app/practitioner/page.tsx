@@ -141,7 +141,9 @@ export default function PractitionerPage() {
               is not the house, and it is not silent. Ask, and you will be told
               whether it is the right door.
             </p>
-            <p style={{ ...micro, marginTop: 30 }}>Arranged separately</p>
+            <p style={{ ...micro, marginTop: 30 }}>
+              <a href="/coaching" style={{ color: "inherit" }}>Coaching &rarr;</a>
+            </p>
           </div>
         </section>
 

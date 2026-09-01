@@ -8,6 +8,7 @@ const LINKS = [
   { label: "Sessions", href: "/sessions" },
   { label: "Practitioner", href: "/practitioner" },
   { label: "Retreats", href: "/retreats" },
+  { label: "Coaching", href: "/coaching" },
   { label: "The Work", href: "/the-work" },
   { label: "Notes", href: "/notes" },
   { label: "Begin", href: "/begin" },

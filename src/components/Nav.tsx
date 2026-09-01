@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { COLORS, FONTS } from "@/styles/tokens";
 import { useIntroReady } from "@/lib/introReady";
 import { DURATION, EASE } from "@/lib/motion";
@@ -9,6 +10,7 @@ const LINKS = [
   { label: "Sessions", href: "/sessions" },
   { label: "Practitioner", href: "/practitioner" },
   { label: "Retreats", href: "/retreats" },
+  { label: "Coaching", href: "/coaching" },
   { label: "The Work", href: "/the-work" },
   { label: "Notes", href: "/notes" },
   { label: "Begin", href: "/begin" },
@@ -22,6 +24,7 @@ const SCROLL_HYSTERESIS = 6;
 
 export default function Nav() {
   const ready = useIntroReady();
+  const pathname = usePathname();
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
   const hideTimer = useRef<number | null>(null);
@@ -104,7 +107,12 @@ export default function Nav() {
         </a>
         <div className="mdc-nav-links" style={{ display: "flex", pointerEvents: visible ? "auto" : "none" }}>
           {LINKS.map((l) => (
-            <a key={l.label} href={l.href} style={{
+            // La page ou l'on est se grave. La classe change de lien a chaque
+            // route, donc l'animation repart seule sur le nouveau.
+            <a key={l.label} href={l.href}
+              className={pathname === l.href ? "mdc-here" : undefined}
+              aria-current={pathname === l.href ? "page" : undefined}
+              style={{
               fontFamily: FONTS.prata, letterSpacing: "0.14em",
               textTransform: "uppercase", textDecoration: "none",
               color: l.label === "Begin" ? COLORS.rouille : COLORS.brou, opacity: 0.82,
