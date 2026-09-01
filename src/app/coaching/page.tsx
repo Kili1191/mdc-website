@@ -1,6 +1,7 @@
 import { pageStyle, body, lead, bigHead, sectionHead, eyebrow, micro } from "@/styles/page";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
+import Testimonies from "@/components/effects/Testimonies";
 
 // Coaching — l'autre porte.
 //
@@ -150,6 +151,10 @@ export default function CoachingPage() {
             One to one · By call · Around an hour · Fee on request
           </p>
         </section>
+
+        {/* Les temoignages ne s'affichent que si les fichiers existent
+            (public/testimony/01.mp4, 02.mp4). Voir Testimonies.tsx. */}
+        <Testimonies />
 
         {/* COPY NOUVELLE — a valider.
             Kilian veut un appel d'introduction gratuit, mais pas appele
