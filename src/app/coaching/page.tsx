@@ -62,8 +62,8 @@ export default function CoachingPage() {
           <SplitTextChars text="The other door." delay={22} duration={900} />
         </h1>
         <p style={{ ...lead, marginTop: 40 }}>
-          Some people arrive needing to speak. This is the room where that is the work,
-          and not the thing we get underneath.
+          Some people arrive needing to speak. This is where that is the work, and not the
+          thing we get underneath.
         </p>
 
         <div className="mdc-measure" style={{ marginTop: 44, display: "flex", flexDirection: "column", gap: 22 }}>
@@ -121,11 +121,25 @@ export default function CoachingPage() {
         <section className="mdc-gap">
           <p style={eyebrow}>How it works</p>
           <h2 style={{ ...sectionHead, marginTop: 26 }}>
-            Arranged separately, and never mixed into a session.
+            This one does not need the house.
           </h2>
+          {/* COPY NOUVELLE — a valider.
+              Le coaching se fait UNIQUEMENT a distance. La page laissait croire
+              qu'on venait a Battersea comme pour le reste : « this is the room
+              where ». Sur une page qui vend la confiance, laisser quelqu'un
+              croire qu'il va se deplacer est le genre de malentendu qu'on
+              decouvre au pire moment.
+              Et c'est un avantage, pas un aveu : c'est la seule chose ici qui
+              ne depend pas d'une adresse. */}
           <p style={{ ...body, marginTop: 30 }}>
+            It happens on a call, and only on a call. Everything else in this house needs
+            the room you are lying in. This does not, which means it is the one thing here
+            you can do from another city, another country, or a hotel between two
+            meetings.
+          </p>
+          <p style={{ ...body, marginTop: 22 }}>
             It is not added on to the silent work, and the silent work is not turned into
-            a conversation. They are two different rooms, and you choose the one you came
+            a conversation. They are two different things, and you choose the one you came
             for. Many people only ever use one.
           </p>
           <p style={{ ...body, marginTop: 30 }}>
@@ -133,7 +147,7 @@ export default function CoachingPage() {
             clock is not what you came for.
           </p>
           <p style={{ ...micro, marginTop: 34 }}>
-            One to one · Around an hour · Fee on request
+            One to one · By call · Around an hour · Fee on request
           </p>
           <div style={{ marginTop: 44 }}>
             <QuietButton href="/begin">Ask about this door</QuietButton>
