@@ -86,7 +86,16 @@ export default function SessionsPage() {
             </a>
           ))}
         </nav>
-        <p style={{ ...micro, marginTop: 28 }}>Fees are shared on request</p>
+        {/* COPY NOUVELLE — a valider.
+            Le site disait « in London », deux fois, et rien d'autre. Pour une
+            maison privee ou l'on demande a quelqu'un d'ecrire avant de venir,
+            ne pas dire ou l'on est se lit comme une reticence, pas comme de la
+            discretion.
+            Le QUARTIER, pas l'adresse : SW11 2UG est une adresse, et une
+            adresse se donne dans la conversation, apres. */}
+        <p style={{ ...micro, marginTop: 28 }}>
+          Battersea, South West London · Fees are shared on request
+        </p>
 
         {/* ---- 01 ANTARA ---- */}
         <section id="antara" className="mdc-room">
@@ -219,7 +228,8 @@ export default function SessionsPage() {
           </h2>
           <p style={{ ...body, marginTop: 30 }}>
             Four practices are offered apart from the suite. They are not part of
-            NERVANA, and they are not silent in the same way.
+            NERVANA, and they are not silent in the same way. Abhyanga and Marma are
+            Ayurvedic, learned in India and practised in their old form.
           </p>
 
           <div style={{
@@ -228,7 +238,7 @@ export default function SessionsPage() {
           }}>
             <div>
               <p style={{ ...label, fontSize: 19 }}>ABHYANGA</p>
-              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>60 minutes · Fee on request</p>
+              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>Ayurvedic · 60 minutes · Fee on request</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 Warm oil, worked over the whole body in one unbroken rhythm. It is the
                 oldest practice in this house, and the only one that uses oil.
@@ -236,7 +246,7 @@ export default function SessionsPage() {
             </div>
             <div>
               <p style={{ ...label, fontSize: 19 }}>MARMA</p>
-              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>60 minutes · Fee on request</p>
+              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>Ayurvedic · 60 minutes · Fee on request</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 The junctions where the body gathers what it holds. Marma work is
                 pressure and stillness at those points, slower than massage and more
