@@ -22,6 +22,16 @@ import { body, sectionHead, eyebrow, micro } from "@/styles/page";
 //
 // Ces gens ont accepte de parler. C'est un pret, pas un acquis : leur visage
 // vaut plus pour eux que pour cette page.
+//
+// CE SONT DES CLIENTS DU COACHING, ET LA PAGE LE DIT.
+//
+// C'est plus qu'une precision : c'est ce qui transforme ces temoignages en
+// preuve de la discretion au lieu d'une entaille dedans. Un visiteur qui voit
+// deux visages sur un site promettant que personne n'est nomme se demande, a
+// juste titre, s'il finira lui aussi sur la page. Lui dire que le coaching
+// parle et que la maison se tait repond a la question avant qu'il ne la pose —
+// et montre que Kilian avait l'occasion de montrer ses clients des seances, et
+// ne l'a pas prise.
 
 const SOURCES = ["/testimony/01.mp4", "/testimony/02.mp4"];
 
@@ -51,7 +61,9 @@ export default function Testimonies() {
         They asked to say this.
       </h2>
       <p style={{ ...body, marginTop: 28 }}>
-        Nobody here is named unless they choose to be. These two chose to be.
+        Two people who did the coaching, and asked to say so. Nobody who comes to the
+        house is shown here, or anywhere, and that is not an oversight — the silent work
+        stays silent, including about who has done it.
       </p>
 
       <div style={{
@@ -60,7 +72,7 @@ export default function Testimonies() {
         gap: 48,
         marginTop: 64,
       }}>
-        {presentes.map((src, i) => (
+        {presentes.map((src) => (
           <figure key={src} style={{ margin: 0 }}>
             <video
               src={src}
@@ -75,7 +87,7 @@ export default function Testimonies() {
               }}
             />
             <figcaption style={{ ...micro, marginTop: 16, fontFamily: FONTS.prata }}>
-              {String(i + 1).padStart(2, "0")}
+              Coaching · In their own words
             </figcaption>
           </figure>
         ))}
