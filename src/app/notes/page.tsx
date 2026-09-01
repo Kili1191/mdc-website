@@ -1,70 +1,70 @@
-import { COLORS, FONTS } from "@/styles/tokens";
+import { pageStyle, body, lead, bigHead, eyebrow, micro } from "@/styles/page";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 
-const pageStyle: React.CSSProperties = {
-  position: "relative", zIndex: 5, minHeight: "100vh",
-  paddingTop: 160, paddingBottom: 200,
-};
-const containerStyle: React.CSSProperties = {
-  maxWidth: 720, margin: "0 auto", padding: "48px 8vw",
-  background: "rgba(237,228,208,0.28)",
-  backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)",
-  borderRadius: 2,
-};
-const bodyStyle: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 18, lineHeight: 1.75, color: COLORS.brou, margin: 0,
-};
-const bigHeadStyle: React.CSSProperties = {
-  fontFamily: FONTS.higuen, fontSize: "clamp(32px, 5vw, 56px)",
-  lineHeight: 1.2, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
-};
-const essayTitleStyle: React.CSSProperties = {
-  fontFamily: FONTS.higuen, fontSize: "clamp(22px, 3vw, 32px)",
-  lineHeight: 1.3, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
-};
-const essayNumStyle: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 12, letterSpacing: "0.32em",
-  textTransform: "uppercase", color: COLORS.rouille, margin: 0,
-};
-const eyebrowStyle: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 11, letterSpacing: "0.28em",
-  textTransform: "uppercase", color: COLORS.taupe, margin: 0,
-};
-const dividerStyle: React.CSSProperties = {
-  height: 1, background: COLORS.taupe, opacity: 0.28, border: 0, margin: "112px 0",
-};
+// Notes — trois essais, separes par des filets, tous du meme poids.
+//
+// C'etait une liste sans sommaire : il fallait traverser les trois pour savoir
+// qu'il y en avait trois, et rien ne disait lequel lire. Une revue se lit par
+// son sommaire.
+//
+// Les trois titres passent donc en index en haut de page, et chaque essai
+// devient une double page de texte : titre a gauche, resume a droite. C'est la
+// forme d'une revue, ce que cette page essaie d'etre.
 
 export const metadata = {
   title: "Notes · Maison du Calme",
-  description: "Notes from Maison du Calme. One long essay a month by Kilian, on weight, silence, and what the body keeps. Written to be read slowly. Nothing is being sold.",
+  description: "A long piece, once a month, from Maison du Calme. On weight, silence, what the body keeps, and the tiredness of people who hold everything together.",
 };
+
+const ESSAIS = [
+  { n: "01", titre: "On carrying.", sur: "The weight that files under nothing" },
+  { n: "02", titre: "The difference between quiet and silence.", sur: "Why silence is harder to reach" },
+  { n: "03", titre: "What the body keeps.", sur: "The record you did not choose to write" },
+];
 
 export default function NotesPage() {
   return (
     <main style={pageStyle}>
-        <div style={containerStyle}>
-          <p style={eyebrowStyle}>Notes</p>
-          <h1 style={{ ...bigHeadStyle, marginTop: 40 }}>
-            <SplitTextChars text="Notes." delay={60} duration={900} />
-          </h1>
-          <p style={{ ...bodyStyle, marginTop: 40, fontSize: 20, color: COLORS.brouFonce }}>
-            A long piece, once a month. Nothing to scroll past. Written to be read slowly,
-            or not at all.
-          </p>
+      <div className="mdc-wrap">
+        <p style={eyebrow}>Notes</p>
+        <h1 style={{ ...bigHead, marginTop: 36 }}>
+          <SplitTextChars text="Notes." delay={60} duration={900} />
+        </h1>
+        <p style={{ ...lead, marginTop: 40 }}>
+          A long piece, once a month. Nothing to scroll past. Written to be read slowly,
+          or not at all.
+        </p>
 
-          <p style={{ ...bodyStyle, marginTop: 40 }}>
+        <div className="mdc-measure" style={{ marginTop: 44 }}>
+          <p style={body}>
             There is no feed here, and no schedule of small posts. Once a month there is a
             single essay, on the things this work sits closest to: weight, silence, what
             the body keeps, and the particular tiredness of people who hold everything
             together. They are written by Kilian, in the quiet between sessions. You can
             read them or leave them. Nothing is being sold in them.
           </p>
+        </div>
 
-          <hr style={dividerStyle} />
+        {/* Le sommaire. Une revue se lit par la, pas en traversant tout. */}
+        <nav className="mdc-index mdc-index--wide" aria-label="The essays">
+          {ESSAIS.map((e) => (
+            <a key={e.n} href={`#essay-${e.n}`}>
+              <span style={{ ...micro, opacity: 0.7 }}>{e.n}</span>
+              <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>{e.titre}</span>
+              <span style={{ ...body, fontSize: 16, maxWidth: "none", opacity: 0.72 }}>{e.sur}</span>
+              <span style={micro}>Essay</span>
+            </a>
+          ))}
+        </nav>
 
-          <p style={essayNumStyle}><SplitTextChars text="Essay 01" delay={22} duration={900} /></p>
-          <h2 style={{ ...essayTitleStyle, marginTop: 20 }}>On carrying.</h2>
-          <p style={{ ...bodyStyle, marginTop: 32 }}>
+        <section id="essay-01" className="mdc-gap mdc-two">
+          <div>
+            <p className="mdc-num">01</p>
+            <h2 style={{ ...bigHead, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: "14ch" }}>
+              On carrying.
+            </h2>
+          </div>
+          <p style={body}>
             Everyone you know is carrying something they have decided not to mention. The
             most capable people carry the most, and mention it least, it is often the
             reason they became capable. This first Note is about the weight that has no
@@ -73,14 +73,16 @@ export default function NotesPage() {
             it costs more to keep pretending you aren&apos;t. And what happens, physically,
             in the hour you finally stop.
           </p>
+        </section>
 
-          <hr style={dividerStyle} />
-
-          <p style={essayNumStyle}><SplitTextChars text="Essay 02" delay={22} duration={900} /></p>
-          <h2 style={{ ...essayTitleStyle, marginTop: 20 }}>
-            The difference between quiet and silence.
-          </h2>
-          <p style={{ ...bodyStyle, marginTop: 32 }}>
+        <section id="essay-02" className="mdc-gap--sm mdc-two">
+          <div>
+            <p className="mdc-num">02</p>
+            <h2 style={{ ...bigHead, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: "14ch" }}>
+              The difference between quiet and silence.
+            </h2>
+          </div>
+          <p style={body}>
             Quiet is the absence of noise. Silence is something else, a fuller thing,
             harder to reach, and increasingly rare. This Note is about why the people
             with the most sophisticated lives have the least access to real silence, why
@@ -88,12 +90,16 @@ export default function NotesPage() {
             on its own what no amount of effort can force. A piece about doing less, and
             the strange difficulty of it.
           </p>
+        </section>
 
-          <hr style={dividerStyle} />
-
-          <p style={essayNumStyle}><SplitTextChars text="Essay 03" delay={22} duration={900} /></p>
-          <h2 style={{ ...essayTitleStyle, marginTop: 20 }}>What the body keeps.</h2>
-          <p style={{ ...bodyStyle, marginTop: 32 }}>
+        <section id="essay-03" className="mdc-gap--sm mdc-two">
+          <div>
+            <p className="mdc-num">03</p>
+            <h2 style={{ ...bigHead, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: "14ch" }}>
+              What the body keeps.
+            </h2>
+          </div>
+          <p style={body}>
             You forget on purpose; the body does not. It keeps a record: in the shoulders
             that never come down, the breath taken in halves, the jaw held through a
             decade of composure. This Note is about that record: how it is written, why
@@ -102,6 +108,7 @@ export default function NotesPage() {
             it. Written for people who have tried thinking their way out and found the
             thinking was part of the problem.
           </p>
+        </section>
       </div>
     </main>
   );
