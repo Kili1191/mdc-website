@@ -152,6 +152,32 @@ the groove. It never touches the ground again.
 **Anything that varies per route is a uniform read per frame** (`marbleMode`),
 never a prop — a prop of `MarbleBackground` rebuilds the WebGL layer.
 
+### 10c. Rien ne defile sous un voile plein ecran
+
+The intro covers the screen for ~15 s while the page behind it is already
+6161 px tall and scrollable. A visitor who sees nothing happening swipes —
+everyone does — and lands wherever they scrolled when the veil lifts.
+Reproduced: six swipes during the intro put the document at 4083 px; the intro
+lifted at **79 % of the page**, in the middle of the session images.
+
+A CSS lock is not enough. `overflow: hidden` on `html` and `body` stops
+*native* scrolling, but **Lenis does not scroll natively** — it swallows the
+wheel and the touch and moves the window in JavaScript, and programmatic
+scrolling walks straight through `overflow: hidden`. Measured with the CSS lock
+in place and Lenis running: one wheel of 1500 still reached 610 px, a real
+touch swipe 750 px.
+
+So a full-screen veil owes three things, not one:
+
+1. `overflow: hidden` on `html` and `body` (native scrolling),
+2. **`lenis.stop()`** until the veil lifts (JavaScript scrolling),
+3. `window.scrollTo(0, 0)` when it lifts — a browser can also restore a
+   position from an earlier visit while the veil hides it. You never arrive in
+   the middle of someone's house.
+
+And a safety timeout that restarts Lenis regardless. A page that can no longer
+scroll is worse than anything the lock was fixing.
+
 ### 11. Le taupe n'ecrit pas
 
 `COLORS.taupe` (#A89A85) is a **pause** colour — a rule, a border, a divider.
@@ -201,7 +227,8 @@ Run mentally, silently, top to bottom. If any answer is "no" or "not sure," fix 
 11. No visible frame, border, shadow, or card on content? (A `backdrop-filter` box counts as a card.)
 12. Section vertical spacing ≥ 96px?
 13. Every text colour ≥ 4.5:1 against the marble — i.e. no text written in taupe?
-15. Does anything change on screen without the user having done something? (A timer, an idle clock, a breath driving the background — all forbidden on the ground layer.)
+15. If a full-screen overlay is up, is scrolling stopped in JS as well as CSS, and is the page returned to the top when it lifts?
+16. Does anything change on screen without the user having done something? (A timer, an idle clock, a breath driving the background — all forbidden on the ground layer.)
 14. If the page presents more than one offer, is there an index at the top?
 13. Body font-size ≥ 18px, line-height ≥ 1.75?
 14. If this section is copy-only, is there also a non-textual moment (image slot, 3D, matter)?
