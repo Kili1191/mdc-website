@@ -152,12 +152,22 @@ export default function PractitionerPage() {
           <h2 style={{ ...bigHead, marginTop: 30, maxWidth: "22ch" }}>
             <SplitTextChars text="No one is named. This is not a policy. It is the product." delay={22} duration={900} />
           </h2>
+          {/* COPY MODIFIEE — a valider.
+              La phrase disait « not ever ». Des que Kilian publie un temoignage
+              client, meme avec accord, elle devient fausse — et c'est la phrase
+              sur laquelle repose la confiance de tout le site.
+              La reparer la rend plus forte, pas plus faible : la discretion
+              cesse d'etre une regle de la maison pour devenir la propriete du
+              client. Une maison qui garde un secret est prudente ; une maison
+              qui dit « ce secret est le votre, pas le mien » est d'un autre
+              niveau. Et c'est vrai, ce que « not ever » n'etait plus. */}
           <p style={{ ...body, marginTop: 44 }}>
-            No client is ever named, referenced, or implied. Not on this site, not in
-            conversation, not to another client, not ever. Discretion at this level is not
-            a promise we make. It is a condition we work inside. If you are the kind of
-            person for whom that matters, you already understand why it is the first thing
-            we say and the last.
+            No client is named, referenced, or implied. Not on this site, not in
+            conversation, not to another client. The only exception is someone who asks to
+            speak for themselves, and that is theirs to give — never ours to take, and
+            never ours to ask for. Discretion at this level is not a promise we make. It is
+            a condition we work inside. If you are the kind of person for whom that
+            matters, you already understand why it is the first thing we say and the last.
           </p>
         </section>
       </div>
