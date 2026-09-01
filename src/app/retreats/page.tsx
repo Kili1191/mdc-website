@@ -42,14 +42,30 @@ export default function RetreatsPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             <p style={body}>
               There is one retreat. It is small, small enough that it is arranged around
-              the people in it, not the other way round. It happens rarely, in a place
-              chosen for its silence, and it is offered by application only.
+              the people in it, not the other way round. It happens rarely, and it is
+              offered by application only.
+            </p>
+            {/* COPY NOUVELLE — a valider.
+                L'ancien texte disait « nous ne sommes pas prets a dire ou ni
+                quand » : ca se lit comme un projet mal ficele, pas comme de la
+                rigueur. Kilian a donne le vrai critere — l'Asie, chaud et loin,
+                mais rejete des que ca klaxonne — et ce critere est bien plus
+                fort que n'importe quelle destination. Toutes les retraites
+                choisissent la villa photogenique ; celle-ci choisit le silence,
+                et n'a pas encore trouve. L'absence de lieu devient la preuve du
+                serieux au lieu d'en etre le contraire.
+                Ce qui reste INTERNE et n'a rien a faire ici : « cheap to
+                operate ». C'est de l'economie, pas une promesse. */}
+            <p style={body}>
+              It will be far, and warm — the kind of distance that makes the return
+              flight feel like a decision rather than a commute. Asia, most likely.
             </p>
             <p style={body}>
-              We are not ready to say where, or when, and we will not promise a date we
-              might have to move. What we will say is this: it is the same work,
-              uninterrupted, over days instead of minutes. And for the few who have gone
-              all the way in a single session, it is the natural next thing.
+              The place is not chosen for how it photographs. It is chosen for what you
+              cannot hear from the room. Most of the beautiful ones fail that test: an
+              ocean in front and a road behind it is not silence, and one horn at six in
+              the morning undoes a week. We have not named a place yet because we have
+              not found one quiet enough.
             </p>
             <p style={micro}>By application · No fixed dates</p>
           </div>
@@ -65,6 +81,34 @@ export default function RetreatsPage() {
               There is no programme, no schedule of activities, no group of strangers.
               If that is what you are looking for, this is not it, and we would rather
               say so.
+            </p>
+          </div>
+        </section>
+
+        {/* COPY NOUVELLE — a valider.
+            Le point que Kilian voulait et que la page ne disait pas : ce n'est
+            pas un sejour, c'est une COUPURE. Le meme travail sur des jours au
+            lieu de minutes, et surtout une vie quotidienne mise a distance
+            assez longtemps pour cesser de decider a votre place. */}
+        <section className="mdc-gap--sm mdc-two">
+          <div>
+            <p style={eyebrow}>What it is for</p>
+            <h2 style={{ ...sectionHead, marginTop: 26 }}>
+              Long enough to stop being reachable.
+            </h2>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+            <p style={body}>
+              A session gives the body an hour where nothing is required of it. Days give
+              it something else. The first day is spent putting down the phone. The second
+              is spent noticing how much of you was running the phone. What happens after
+              that is the reason to go.
+            </p>
+            <p style={body}>
+              It is the same work, uninterrupted, over days instead of minutes — and for
+              the few who have gone all the way in a single session, it is the natural next
+              thing. Not a break from your life. A distance from it, long enough to hear
+              yourself over it.
             </p>
           </div>
         </section>
