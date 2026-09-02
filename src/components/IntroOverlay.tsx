@@ -13,9 +13,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EVENT, shouldBypassIntro } from '@/lib/introReady';
 
-const T = 3000;        // demi-souffle ms (rythme respiratoire ressenti)
-const HOLD = 1200;     // pause après yeux + titre
-const EXIT = 1600;     // durée du zoom d'entrée
+// Le budget de l'intro est 5 x T + HOLD + EXIT. A 3000/1200/1600 il faisait
+// 17,8 s — mesure sur une premiere visite, sans localStorage. Une porte de
+// dix-huit secondes devant un site qui doit faire s'inscrire des gens ne se
+// defend pas : la plupart partent avant de l'avoir vue s'ouvrir.
+// A 700/800/1200, le meme geste tient en 5,5 s. Les quatre phases restent :
+// ce sont elles qui dessinent la maison trait par trait, en retirer une
+// laisserait le trace incomplet. C'est le tempo qui change, pas le dessin.
+const T = 700;         // demi-souffle ms
+const HOLD = 800;      // pause apres yeux + titre
+const EXIT = 1200;     // duree du zoom d'entree
 
 const LABELS = ['inhale', 'exhale', 'inhale', 'exhale'];
 
@@ -283,13 +290,13 @@ export default function IntroOverlay() {
             rgba(237,228,208,.7) 35%,
             rgba(237,228,208,0) 72%);
           opacity:0;pointer-events:none;will-change:opacity,transform;}
-        .mdc-skip{position:fixed;bottom:18px;right:22px;
-          background:none;border:none;
+        .mdc-skip{position:fixed;bottom:22px;right:26px;
+          background:none;border:none;border-bottom:1px solid rgba(74,59,42,.45);
           font-family:var(--font-prata),Georgia,serif;
-          font-size:10px;letter-spacing:.24em;color:#A89A85;
-          opacity:.25;text-transform:lowercase;cursor:pointer;
-          padding:8px 4px;transition:opacity .4s;z-index:10001;}
-        .mdc-skip:hover{opacity:.65;}
+          font-size:11.5px;letter-spacing:.22em;color:#4A3B2A;
+          opacity:.72;text-transform:lowercase;cursor:pointer;
+          padding:6px 2px;transition:opacity .4s;z-index:10001;}
+        .mdc-skip:hover,.mdc-skip:focus-visible{opacity:1;}
       `}</style>
 
       <div className="mdc-threshold" ref={thresholdRef} />

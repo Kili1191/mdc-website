@@ -200,11 +200,11 @@ export default function RetreatsPage() {
           </h2>
           <div className="mdc-measure" style={{ marginTop: 30, display: "flex", flexDirection: "column", gap: 22 }}>
             <p style={body}>
-              One retreat a year, and very few places. They are offered to the people on
-              this list before they are offered anywhere else.
+              Very few places, and they are offered to the people on this list before they
+              are offered anywhere else.
             </p>
             <p style={body}>
-              You will hear from us once, when it opens. Not before, not about anything
+              You will hear from Kilian once, when it opens. Not before, not about anything
               else, and never from anyone but Kilian.
             </p>
           </div>

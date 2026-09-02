@@ -146,7 +146,7 @@ Le blocage annonce ici pendant des semaines etait : « les neuf photographies,
 c'est la seule piece que le code ne peut pas produire ». C'etait faux, et il a
 fallu que Kilian le dise pour qu'on regarde.
 
-`public/motif-compo-full.jpg` est une photographie reelle en 5504x3072 du
+`assets-source/motif-compo-full.jpg` est une photographie reelle en 5504x3072 du
 bas-relief d'onyx de la maison : lotus sculptes, veinage chaud, et la maison
 gravee en haut. C'est la matiere de la marque, et personne d'autre ne l'a. Il
 n'y avait rien a inventer.
