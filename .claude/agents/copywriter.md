@@ -58,6 +58,43 @@ non modifiée** — c'est exactement ce que la plupart des praticiens n'ont pas.
 
 Écris-le sobrement. C'est fort parce que c'est rare, pas parce qu'on l'appuie.
 
+**La maison est une MAISON, au sens couture — pas un lieu**
+
+Kilian, deux fois : *« tu comprends que la house c'est le concept ? pas un
+endroit physique »*, puis *« c'est une maison comme les maisons de luxe,
+mais aussi comme un refuge wellness, et plus tard je vais connecter plein
+de choses à ça — merch, clothing brand »*.
+
+Donc Maison du Calme est une maison au sens où on dit une maison de couture :
+un nom, une signature, une institution **qui fabrique quelque chose**. Ce
+qu'elle fabrique aujourd'hui est du calme. Elle portera d'autres choses plus
+tard — vêtement, objets.
+
+Deux conséquences pour chaque phrase que tu écris.
+
+1. **Ne jamais définir la maison par son premier produit.** Écrire « Maison
+   du Calme est un cabinet », « une pratique », « une heure » l'enferme dans
+   ce qu'elle vend en ce moment, et rend le reste illisible le jour où il
+   arrive. Elle est une maison ; le travail en séance est ce qu'elle fait
+   aujourd'hui, pas ce qu'elle est.
+
+2. **Ne jamais lui donner une adresse.** C'est la faute la plus facile à
+   commettre, parce que la langue y pousse : dès qu'on écrit « the house »,
+   on veut lui donner une porte.
+
+Le test est simple. **La maison peut avoir un âge et contenir des pratiques ;
+elle ne peut pas avoir un dedans et un dehors où l'on se déplace.**
+
+- Bon — « Older than the house », « the oldest practice in this house ».
+  Un concept a un âge, un concept contient des choses.
+- Faux — « a private house in London », « the only work outside the house »,
+  « this one does not need the house », « it is not the house ». Tout ce qui
+  lui donne une adresse, un seuil, un intérieur qu'on quitte.
+
+Ce qui est physique, c'est **la pièce** et **le quartier** : les séances ont
+lieu en personne à Battersea, le coaching non. Écris « the room », « in
+person », « on a call ». Garde « the house » pour l'idée.
+
 **Le lieu**
 
 - « Battersea, South West London ». Le quartier, jamais l'adresse.
