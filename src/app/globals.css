@@ -237,3 +237,19 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .mdc-here::before { animation: none; transform: scaleX(1); }
 }
+
+/* ─── Le pied de page ───────────────────────────────────────────────────
+   Quatre colonnes : la signature de la maison, puis ses metiers. La
+   premiere est plus large — c'est elle qui parle, les autres listent.
+   Le jour ou le vetement arrive, il prend une colonne de plus et la
+   grille n'a pas a etre refaite. */
+.mdc-foot {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .mdc-foot { grid-template-columns: 1fr 1fr; gap: 48px 32px; }
+  .mdc-foot > :first-child { grid-column: 1 / -1; }
+}

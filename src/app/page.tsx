@@ -223,16 +223,29 @@ export default function Home() {
              « la house c'est le concept, pas un endroit physique », et « une
              maison comme les maisons de luxe, mais aussi un refuge ».
 
-             Donc une MAISON au sens couture — un nom, une signature, une
-             institution qui fabrique quelque chose. Ce qu'elle fabrique
-             aujourd'hui est du calme ; elle portera d'autres choses plus tard
-             (vetement, objets). La phrase doit donc tenir sans jamais dire
-             qu'elle est un cabinet, sinon elle enferme la marque dans son
-             premier produit. */}
+             DEUX VERBES, parce qu'il a nomme deux sens.
+
+             « It asks nothing of you » — le refuge. Deux mots essayes avant :
+             « takes you in », ecarte parce qu'en anglais britannique « taken
+             in » veut aussi dire berne ; puis « shelters », ecarte par Kilian
+             — « shelter makes me remember homeless ». C'est juste : en
+             anglais, shelter appartient au vocabulaire du foyer d'accueil et
+             du refuge pour animaux. Le registre welfare, pas celui d'une
+             maison. Ce qui reste dit le refuge sans nommer l'abri, et vise
+             exactement son client : celui a qui on demande tout, partout.
+
+             « What it makes » — la maison de couture. Une maison est une
+             institution qui FABRIQUE. Ce qu'elle fabrique aujourd'hui est du
+             calme ; elle portera du vetement plus tard, et la phrase tiendra
+             sans retouche.
+
+             D'ou ce qu'elle ne dit jamais : ni cabinet, ni pratique, ni une
+             heure. Chacun de ces mots enfermerait la marque dans son premier
+             produit. */}
         <section className="mdc-station" style={{ ...stationStyle, flexDirection: "column" }}>
           <BreathReveal
             as="p"
-            text="Maison du Calme is a house, not an address. What it makes is calm."
+            text="Maison du Calme is a house, not an address. It asks nothing of you, and what it makes is calm."
             style={{ ...displayItalic, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: 860, textAlign: "center", lineHeight: 1.35 }}
             stagger={90}
           />

@@ -139,7 +139,10 @@ Le registre est celui d'un praticien sérieux qui n'a pas besoin de convaincre �
 pas celui d'une marque de bien-être. Le calme du texte vient de son assurance,
 jamais d'adjectifs apaisants.
 
-**Bannis** — journey, holistic, unlock, transform your life, sacred space,
+**Bannis** — **shelter** (Kilian : *« shelter makes me remember homeless »* —
+en anglais c'est le vocabulaire du foyer d'accueil et du refuge pour animaux,
+jamais celui d'une maison ; pour le refuge, écris ce que la maison ne demande
+pas, ou dis qu'elle **reçoit**), journey, holistic, unlock, transform your life, sacred space,
 wellness journey, nurture, empower, dive deep, game-changer, elevate,
 « energy » employé vaguement. Pas de point d'exclamation. Pas d'emoji.
 Pas de superlatif sur soi-même (« the best », « world-class »).
