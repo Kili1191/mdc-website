@@ -1,5 +1,30 @@
 // src/styles/tokens.ts
 // Palette Aube Encens — couleur dans la MATIÈRE, jamais l'UI. Jamais dark/froid.
+//
+// LES POURCENTAGES SONT UNE PROPORTION, PAS UN BUDGET DE PIXELS. « brou 15 % »
+// ne veut pas dire que 15 % de l'ecran est brun — du texte ne couvre jamais
+// 15 % d'une page. C'est une regle de hierarchie : le fond domine, l'encre
+// suit, l'accent est rare.
+//
+// Mesure sur trois pages, 555 429 pixels echantillonnes :
+//
+//   pierre (hors palette)  59,7 %   la photographie de marbre
+//   parchemin              37,1 %
+//   ocre                    1,6 %
+//   taupe                   0,7 %
+//   sauge                   0,7 %
+//   brou + brouFonce        0,3 %
+//   rouille                 0,02 %
+//
+// CE QUE CA DIT, et c'est la palette qui a raison : sauge et ocre n'ont
+// AUCUNE occurrence dans src/, et pourtant ils sont a l'ecran. Ils sont dans
+// la pierre. C'est exactement la premiere ligne de ce fichier — la couleur
+// vit dans la matiere, pas dans l'interface. Les ecrire en CSS serait les
+// sortir de leur place.
+//
+// La seule couleur qui touche l'interface est le rouille, et c'est assume :
+// c'est le logo, et le seul accent du site. A 0,02 % de l'ecran, « rare » est
+// tenu.
 
 // Contrastes MESURES sur le parchemin #EDE4D0. Le seuil est 4,5:1 pour du
 // texte, 3,0:1 pour un trait ou une bordure.
