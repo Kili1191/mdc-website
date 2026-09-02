@@ -168,27 +168,31 @@ export default function RetreatsPage() {
           </p>
         </section>
 
-        {/* COPY NOUVELLE — a valider.
-            Rien n'est decide : ni les dates, ni le lieu, ni la duree, ni le
-            prix. On ne peut donc pas vendre la retraite. On peut construire la
-            liste — et c'est un meilleur travail, a condition de donner deux
-            vraies raisons d'y entrer maintenant plutot que plus tard.
+        {/* La confiance se lit dans ce qu'on NE dit pas.
+            Premiere version, ecartee par Kilian : « si je lisais ca sur un
+            site je ne m'inscrirais jamais, ca fait tres amateur ». Il a
+            raison, et l'erreur est instructive — elle faisait trois choses
+            qu'une marque premium ne fait jamais.
 
-            1. LA PRIORITE. Peu de places, une fois par an, sur candidature :
-               qui attend l'annonce publique arrive apres. C'est vrai, donc on
-               peut le dire. Une rarete inventee se sent ; celle-la est reelle.
+            Elle ENUMERAIT CE QU'ELLE N'AVAIT PAS : « ni le pays, ni les dates,
+            ni la duree ». Trois aveux dans une seule respiration.
 
-            2. L'INFLUENCE. Puisque rien n'est fixe, ceux qui repondent
-               maintenant faconnent ce qui sera construit. C'est du bon
-               marketing — participer engage plus que recevoir — et c'est
-               surtout de la vraie recherche produit pour Kilian, qui n'a pas
-               encore tranche la duree.
+            Elle SE FELICITAIT D'ETRE HONNETE — « that is the honest position ».
+            Personne ne dit ca en ayant autre chose a offrir.
 
-            Et la friction reelle qu'on leve : la peur de la liste de diffusion.
-            Ces gens-la n'entrent pas dans une liste sans savoir ce qui en sort.
+            Et elle DEMANDAIT AU CLIENT DE CONCEVOIR LE PRODUIT : « si dix jours
+            c'est impossible et cinq non, dites-le-nous ». On transformait
+            l'acheteur en chef de projet.
 
-            L'ancien bouton disait « Register interest » — la langue des
-            salons professionnels. On demande une chose humaine. */}
+            L'incertitude est deja traitee plus haut, et bien : le lieu n'est
+            pas nomme parce qu'aucun n'etait assez silencieux. C'est un
+            CRITERE, pas une excuse. Le repeter ici en langue d'excuse annulait
+            la force de la premiere.
+
+            Il reste trois phrases, et rien sur ce qui n'est pas decide.
+            L'envie de faire participer les inscrits n'est pas mauvaise — mais
+            sa place est dans la reponse privee de Kilian, pas dans la vitrine.
+            Une vitrine affirme ; on negocie a l'interieur. */}
         <section className="mdc-gap">
           <p style={eyebrow}>If you want to be there</p>
           <h2 style={{ ...sectionHead, marginTop: 26, maxWidth: "22ch" }}>
@@ -196,19 +200,11 @@ export default function RetreatsPage() {
           </h2>
           <div className="mdc-measure" style={{ marginTop: 30, display: "flex", flexDirection: "column", gap: 22 }}>
             <p style={body}>
-              There will be very few places, once a year. They will be offered to the
-              people who asked first, before anything is announced anywhere. If you wait
-              for the announcement, there will be nothing left to announce.
+              One retreat a year, and very few places. They are offered to the people on
+              this list before they are offered anywhere else.
             </p>
             <p style={body}>
-              Nothing is fixed yet — not the country, not the dates, not the length. That
-              is the honest position, and it is also the reason to write now rather than
-              later: the people on this list are the ones it gets built around. If ten
-              days is impossible and five is not, that is worth saying while it can still
-              change.
-            </p>
-            <p style={body}>
-              You will hear from us once, when it exists. Not before, not about anything
+              You will hear from us once, when it opens. Not before, not about anything
               else, and never from anyone but Kilian.
             </p>
           </div>
