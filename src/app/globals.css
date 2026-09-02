@@ -135,60 +135,71 @@ body {
 }
 
 /* ─── L'onglet ou l'on est se grave dans la pierre ──────────────────────
-   Deuxieme version. La premiere avait pris « coup de balai » au pied de la
-   lettre : une bande de lumiere passait SUR le mot, et le mot lui-meme ne
-   changeait pas. Kilian : « j'ai pas voulu voir un coup de balai, juste
-   l'ecriture a un mouvement de balayage, et rien n'est engraved ».
+   Demande de Kilian : « que l'ecriture ait un mouvement de balayage, et que
+   ce soit vraiment grave ».
 
-   Ce qu'il faut, et que la premiere version ne faisait pas :
+   TROIS VERSIONS ONT ECHOUE avant celle-ci, et leur echec dit la contrainte.
 
-   1. C'EST L'ECRITURE QUI SE GRAVE, pas une lumiere qui passe devant. Le
-      sillon avance de gauche a droite et laisse les lettres creusees derriere
-      lui — le geste du burin, pas celui du projecteur. Un calque jumeau porte
-      la version gravee et son clip-path s'ouvre : la ou le burin est passe, la
-      lettre est creuse ; devant lui, elle est encore plate.
+   1. Une bande de lumiere passait SUR le mot. Kilian : « j'ai pas voulu voir
+      un coup de balai ». C'etait un projecteur, pas un burin.
+   2. Les lettres elles-memes, en creux : fond sombre + levre blanche franche.
+      Lu comme un contour de sticker — de l'encre avec une ombre portee.
+   3. Les memes, adoucies pour ne plus faire contour : devenues invisibles.
 
-   2. CA DOIT SE VOIR. La premiere version posait une ombre a 0,55 sur du texte
-      de 12 px tres espace : invisible. Une lettre gravee dans une pierre
-      eclairee d'en haut se lit a trois signes — le fond du sillon plus sombre
-      que la surface, la paroi haute dans l'ombre, la levre basse qui prend la
-      lumiere. Les trois sont la, et assumes.
+   La raison est physique et elle est mesurable. A 12 px, les pleins de la
+   Prata font environ 1,5 px de large. Une gravure se lit a trois signes
+   empiles verticalement — paroi dans l'ombre, fond, levre eclairee. Il n'y a
+   pas trois pixels a empiler dans un trait d'1,5 px. Aucun reglage de
+   text-shadow ne peut y arriver : ce n'est pas une question de valeurs.
 
-   620 ms : le geste est net sans etre brusque. */
+   Donc on grave ce qui a la place de l'etre : un sillon dans la pierre, sous
+   le mot. 2 px de haut, c'est assez pour une vraie paroi et une vraie levre,
+   et c'est le trait de burin des enseignes gravees. Le balayage est le trajet
+   de l'outil — le sillon s'ouvre de gauche a droite, et le mot reste net. */
 
 .mdc-here {
   position: relative;
+  opacity: 1;            /* les autres sont a 0,82 : on est ici */
 }
 
 .mdc-here::before {
-  content: attr(data-label);
+  content: "";
   position: absolute;
-  inset: 0;
-  white-space: nowrap;
+  left: 0; right: 0; bottom: -7px;
+  height: 2px;
   pointer-events: none;
 
-  /* Le fond du sillon, plus sombre que la pierre. Premier essai a #6B563E
-     avec une ombre a 0,62 : la gravure se devinait au lieu de se voir. A 12 px
-     et 0,14em d'interlettrage, il n'y a pas de place pour la subtilite — un
-     sillon trop delicat ne se lit pas comme un sillon, il se lit comme un
-     defaut de rendu. */
-  color: #55412C;
-  text-shadow:
-    0 -1px 0 rgba(44, 32, 20, 0.78),      /* la paroi haute, dans l'ombre */
-    0 1px 0 rgba(255, 253, 248, 1),       /* la levre basse, en pleine lumiere */
-    0 2px 2px rgba(255, 250, 240, 0.42);  /* le debord de cette lumiere */
+  /* Le sillon, en coupe. Un pixel d'ombre au-dessus, un pixel de lumiere en
+     dessous : la lecture d'un creux dans une pierre eclairee d'en haut. */
+  background: linear-gradient(
+    to bottom,
+    rgba(40, 28, 16, 0.58) 0px,
+    rgba(40, 28, 16, 0.58) 1px,
+    rgba(255, 251, 241, 0.72) 1px,
+    rgba(255, 251, 241, 0.72) 2px
+  );
+  /* Equilibre : c'est l'OMBRE qui doit mener. Au premier essai la levre etait
+     a 0,96 contre 0,42 pour la paroi — on ne lisait plus un creux mais un
+     soulignement blanc. Sur une pierre pale, l'ombre porte l'information de
+     profondeur et la lumiere ne fait que confirmer l'arete. */
+  box-shadow: 0 1px 2px rgba(255, 250, 238, 0.34);
 
-  clip-path: inset(0 100% 0 0);
-  animation: mdc-graver 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform: scaleX(0);
+  transform-origin: left center;
+
+  /* 700 ms sur une courbe qui laisse VOIR le trajet. La precedente etait si
+     front-loaded qu'a 110 ms tout etait fini : le geste passait avant d'avoir
+     ete percu. Ici, 18 % du sillon a 240 ms, 55 % a 360, 87 % a 480. */
+  animation: mdc-graver 700ms cubic-bezier(0.65, 0.05, 0.36, 1) forwards;
 }
 
-/* Le burin avance. Derriere lui, la lettre est creusee. */
+/* Le degrade est vertical : l'etirer horizontalement ne le deforme pas. */
 @keyframes mdc-graver {
-  to { clip-path: inset(0 0 0 0); }
+  to { transform: scaleX(1); }
 }
 
-/* Personne ne recoit un burin contre son gre. La gravure reste : c'est une
+/* Personne ne recoit un burin contre son gre. Le sillon reste : c'est une
    information — vous etes ici — pas une animation. */
 @media (prefers-reduced-motion: reduce) {
-  .mdc-here::before { animation: none; clip-path: inset(0 0 0 0); }
+  .mdc-here::before { animation: none; transform: scaleX(1); }
 }
