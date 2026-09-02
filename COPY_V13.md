@@ -1,4 +1,21 @@
 # MDC — Site Copy V1.3 — FINAL
+
+> **DECISIONS DE KILIAN, 2 septembre 2026 — reportees dans le code le meme jour.**
+>
+> **La voix passe de « we » a « he ».** Kilian est seul ; un « we » institutionnel
+> contredisait la seule promesse invérifiable du site, qu'il n'y a personne
+> derriere le rideau. Les onze occurrences sont converties. Sur `The Work` et
+> `Retreats`, qui ne le nommaient jamais, le nom « Kilian » entre une fois par
+> page pour donner un antecedent au « he ». C'est la seule matiere ajoutee.
+>
+> **Retreats : « on en a pas encore fait ».** Aucune retraite n'a eu lieu, donc
+> toute affirmation sur sa frequence, sa duree, son nombre de places ou le
+> comportement de participants est retiree. Les passages barres ci-dessous ne
+> sont plus en ligne. Ne pas les restaurer sans une decision explicite.
+>
+> Detail et passages restants : `COPY_OUVERT.md`.
+
+
 *Corrected version — 6 July 2026. Voice: Aman × The Row × Aesop. NERVANA Guard enforced.*
 
 ## Changelog V1 → V1.3
@@ -208,7 +225,7 @@ Where the work comes from.
 Learned at the source. Named to no one — for the same reason you are named to no one.
 
 **Intro:**
-The traditions behind this work were learned in person, in the places where they are still passed from one person to the next — slowly, selectively, the way they have always been passed. We will tell you where it happened and how it was passed. We will not tell you from whom. The people who taught Kilian did not teach him so their names could be traded on a website, and what protects them is the same thing that protects you: here, nothing that matters is ever named.
+The traditions behind this work were learned in person, in the places where they are still passed from one person to the next — slowly, selectively, the way they have always been passed. He will tell you where it happened and how it was passed. He will not tell you from whom. The people who taught Kilian did not teach him so their names could be traded on a website, and what protects them is the same thing that protects you: here, nothing that matters is ever named.
 
 ### The line
 *Quiet vertical sequence — place and the character of the transmission. No names, no dates, no modality words.*
@@ -238,13 +255,13 @@ What can be verified is this: the places are real, the transmission is real, and
 
 ### Header
 **Headline:**
-Once a year. Very few people. Somewhere quiet.
+~~Once a year.~~ Very few people. Somewhere quiet.
 
 **Sub:**
 The work, given room and time it cannot have in a single afternoon in London.
 
 ### Body
-There is one retreat. It is small — small enough that it is arranged around the people in it, not the other way round. It happens rarely, in a place chosen for its silence, and it is offered by application only.
+There is one retreat. It is small — small enough that it is arranged around the people in it, not the other way round. ~~It happens rarely,~~ in a place chosen for its silence, and it is offered by application only.
 
 We are not ready to say where, or when, and we will not promise a date we might have to move. What we will say is this: it is the same work, uninterrupted, over days instead of minutes — and for the few who have gone all the way in a single session, it is the natural next thing.
 
@@ -253,7 +270,7 @@ If you would like to be told when it opens, tell us. Nothing more is asked of yo
 **Primary button:** `Register interest` → Contact / Begin (retreat mode)
 
 **Refusal line:**
-This is not a wellness holiday. There is no programme, no schedule of activities, no group of strangers. If that is what you are looking for, this is not it — and we would rather say so.
+This is not a wellness holiday. There is no programme, no schedule of activities, no group of strangers. If that is what you are looking for, this is not it. ~~and we would rather say so.~~
 
 **Meta description:** One private retreat from Maison du Calme — small, rare, by application. The work given days instead of minutes. No fixed dates. Register interest.
 
@@ -282,7 +299,7 @@ Sometimes what surfaces is only rest, very deep. Sometimes it is more than that 
 You leave lower, slower, and lighter. Most people are quiet for the rest of the day. The change is not dramatic and it is not marketing. It is the specific relief of putting down a weight you had stopped noticing you held.
 
 **Pull-quote:**
-We will tell you what you will feel. We will never tell you how. The how is years of training, and it is the reason the feeling is reliable.
+Kilian will tell you what you will feel. He will never tell you how. The how is years of training, and it is the reason the feeling is reliable.
 
 ### What it is not
 It is not massage. It is not therapy, and it is not a substitute for it. It is not religion, and it asks you to believe nothing. It is not a treatment for an illness, and it makes no medical claim. It is not for everyone, and we will tell you honestly if it is not for you.

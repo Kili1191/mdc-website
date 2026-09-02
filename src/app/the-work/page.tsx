@@ -48,7 +48,8 @@ export default function TheWorkPage() {
         <div className="mdc-measure" style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: 88 }}>
           <p style={body}>
             You arrive. You are not asked how you are, because you would answer the way
-            you always answer, and that answer is the thing we are here to get underneath.
+            you always answer, and that answer is the thing the work is here to get
+            underneath.
           </p>
           <p style={body}>
             You lie down, dressed. The room is quiet, and it stays quiet. Nothing is
@@ -100,7 +101,7 @@ export default function TheWorkPage() {
           fontSize: "clamp(26px, 3.6vw, 44px)", lineHeight: 1.26,
         }}>
           <SplitTextChars
-            text="We will tell you what you will feel. We will never tell you how. The how is years of training, and it is the reason the feeling is reliable."
+            text="Kilian will tell you what you will feel. He will never tell you how. The how is years of training, and it is the reason the feeling is reliable."
             delay={22} duration={900}
           />
         </blockquote>
@@ -109,14 +110,15 @@ export default function TheWorkPage() {
           <div>
             <p style={eyebrow}>What it is not</p>
             <h2 style={{ ...sectionHead, marginTop: 26 }}>
-              And we would rather say so.
+              He would rather say so.
             </h2>
           </div>
           <div>
             <p style={body}>
               It is not massage. It is not therapy, and it is not a substitute for it. It is
               not religion, and it asks you to believe nothing. It is not a treatment for an
-              illness, and it makes no medical claim. It is not for everyone, and we will tell you if it is not for you.
+              illness, and it makes no medical claim. It is not for everyone, and he will
+              tell you if it is not for you.
             </p>
             <p style={{ ...micro, marginTop: 32 }}>Fully clothed · In silence · No oil · One to one</p>
             <div style={{ marginTop: 44 }}>

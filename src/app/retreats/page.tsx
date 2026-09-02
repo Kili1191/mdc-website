@@ -22,7 +22,7 @@ export const metadata = {
   // phrase de vente qu'un visiteur lit, avant meme la page. Elle disait
   // « No fixed dates. Register interest. » — soit l'absence, puis la langue des
   // salons professionnels. Elle porte maintenant la rarete et l'urgence vraie.
-  description: "One retreat a year from Maison du Calme, very few places, by application. Somewhere far enough to stop being reachable. Places go to the list first.",
+  description: "One retreat from Maison du Calme, very few places, by application. Somewhere far enough to stop being reachable. Places go to the list first.",
 };
 
 export default function RetreatsPage() {
@@ -31,7 +31,7 @@ export default function RetreatsPage() {
       <div className="mdc-wrap">
         <p style={eyebrow}>Retreats</p>
         <h1 style={{ ...bigHead, marginTop: 36, maxWidth: "16ch" }}>
-          <SplitTextChars text="Once a year. Very few people. Somewhere quiet." delay={22} duration={900} />
+          <SplitTextChars text="Very few people. Somewhere quiet." delay={22} duration={900} />
         </h1>
         <p style={{ ...lead, marginTop: 40 }}>
           The work, given room and time it cannot have in a single afternoon in London.
@@ -46,8 +46,8 @@ export default function RetreatsPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             <p style={body}>
               There is one retreat. It is small, small enough that it is arranged around
-              the people in it, not the other way round. It happens rarely, and it is
-              offered by application only.
+              the people in it, not the other way round. It is offered by application
+              only.
             </p>
             {/* COPY NOUVELLE — a valider.
                 L'ancien texte disait « nous ne sommes pas prets a dire ou ni
@@ -68,7 +68,7 @@ export default function RetreatsPage() {
               The place is not chosen for how it photographs. It is chosen for what you
               cannot hear from the room. Most of the beautiful ones fail that test: an
               ocean in front and a road behind it is not silence, and one horn at six in
-              the morning undoes a week. We have not named a place yet because we have
+              the morning undoes a week. Kilian has not named a place yet because he has
               not found one quiet enough.
             </p>
             <p style={micro}>By application</p>
@@ -103,9 +103,7 @@ export default function RetreatsPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             <p style={body}>
               A session gives the body an hour where nothing is required of it. Days give
-              it something else. The first day is spent putting down the phone. The second
-              is spent noticing how much of you was running the phone. What happens after
-              that is the reason to go.
+              it something else.
             </p>
             <p style={body}>
               It is the same work, uninterrupted, over days instead of minutes, and for the few who have gone all the way in a single session, it is the natural next
@@ -140,12 +138,11 @@ export default function RetreatsPage() {
             <p style={body}>
               Most people this work is for have never been in a room where that was true.
               They are the capable one, at work and at home, and they are the capable one
-              on holiday too. Here, for a few days, nobody needs anything from you.
+              on holiday too. Here, nobody needs anything from you.
             </p>
             <p style={body}>
               Nothing is required of you socially either. There is no circle, no sharing
-              round, no introductions where you say what you do for a living. Some people
-              are talking by the third day. Some never do, and leave with the same thing.
+              round, no introductions where you say what you do for a living.
             </p>
           </div>
         </section>
@@ -196,11 +193,7 @@ export default function RetreatsPage() {
           </h2>
           <div className="mdc-measure" style={{ marginTop: 30, display: "flex", flexDirection: "column", gap: 22 }}>
             <p style={body}>
-              One retreat a year, and very few places. They are offered to the people on
-              this list before they are offered anywhere else.
-            </p>
-            <p style={body}>
-              You will hear from us once, when it opens. Not before, not about anything
+              You will hear once, when it opens. Not before, not about anything
               else, and never from anyone but Kilian.
             </p>
           </div>

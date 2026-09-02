@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     return Response.json({ erreur: "corps_illisible" }, { status: 400 });
   }
 
-  const message = {
+  const message: Record<string, string> = {
     carry: texte(corps.carry, LIMITES.carry),
     name: texte(corps.name, LIMITES.name),
     reach: texte(corps.reach, LIMITES.reach),
@@ -53,6 +53,17 @@ export async function POST(request: Request) {
     brings: texte(corps.brings, LIMITES.brings),
     recu: new Date().toISOString(),
   };
+
+  // « How to reach you » accepte un e-mail OU un telephone, au choix du
+  // visiteur. Quand c'est un e-mail, on le repete sous la cle `email` : c'est
+  // la convention que les services de formulaire lisent pour poser le
+  // « repondre a » du mail qu'ils envoient. Sans elle, Kilian doit recopier
+  // l'adresse a la main pour repondre a quelqu'un qui vient d'ecrire ce qu'il
+  // porte. Le test est volontairement grossier — il ne sert qu'a decider si on
+  // ajoute la cle, jamais a refuser un message.
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(message.reach)) {
+    message.email = message.reach;
+  }
 
   // Le navigateur pose deja `required`, mais on ne fait jamais confiance au
   // client : un POST direct contourne le formulaire.

@@ -53,47 +53,47 @@ La troisieme phrase annoncee ici — « ce champ est obligatoire » — n'est pl
 necessaire : `name` et `reach` portent `required`, et c'est le navigateur qui le
 dit, dans la langue du visiteur.
 
-### 1.2 Retreats affirme des faits que Kilian a dits non arretes
+### 1.2 Retreats — TRANCHE (2 sept. 2026)
 
-`SERVICES.md` et l'agent copywriter disent la meme chose : la retraite est un
-projet, rien n'est fixe. La page, elle, en fixe quatre.
+Kilian : **« on en a pas encore fait »**. Aucune retraite n'a eu lieu, donc
+aucune affirmation sur sa frequence, sa duree, son nombre de places ou le
+comportement de participants ne peut tenir. Tout est retire, par suppression
+pure. La page garde le refus (« this is not a wellness holiday »), le critere de
+silence, la liste d'attente et ce qui est inclus.
 
-| ou | ce qui est affirme |
-|---|---|
-| `retreats/page.tsx:34` (H1) et `:203` | `Once a year` / `One retreat a year, and very few places` |
-| `retreats/page.tsx:25` (meta) | idem, dans Google |
-| `retreats/page.tsx:143` | `Here, for a few days` — une duree |
-| `retreats/page.tsx:148` | **`Some people are talking by the third day. Some never do, and leave with the same thing.`** |
+L'agent copywriter a trouve **deux passages que la liste avait manques**, meme
+faute exactement : « It happens rarely » (un present sur ce qui n'a pas eu lieu,
+c'est-a-dire « Once a year » sous un autre mot) et le recit du premier et du
+deuxieme jour, qui raconte un sejour que personne n'a vecu.
 
-La derniere est la plus grave. Ces deux phrases racontent le comportement de
-participants a des retraites **qui n'ont pas eu lieu**. C'est un temoignage
-invente, sur la page qui demande de laisser son nom.
+**Reste a l'appreciation de Kilian, sans qu'un mot soit a ecrire :**
 
-**Ce que ces phrases doivent faire :** tenir la promesse sociale — personne ne
-te demande rien, personne n'a besoin de toi — au futur ou au conditionnel de
-l'intention, sans raconter un passe qui n'existe pas.
+- **« Very few people » dans le H1** est garde. C'est une intention de taille,
+  pas un compte de places deja tenu. S'il l'estime aussi indecide, le titre
+  devient `Somewhere quiet.` — toujours par simple suppression.
+- **Le trou laisse la ou vivait le recit des jours.** La section se tient sans,
+  et son titre (`Long enough to stop being reachable.`) porte deja l'idee. S'il
+  veut une raison d'y aller a cet endroit precis, c'est une phrase de lui.
 
-### 1.3 Onze « we », et Kilian est seul
+### 1.3 La voix — TRANCHE (2 sept. 2026)
 
-C'est le defaut de voix le plus repandu du site. A chaque fois, une entreprise
-imaginaire avec un service client parle a la place d'un homme seul — sur les
-trois pages qui vendent la confiance.
+Kilian : **« je sais pas, find the best answer »**. Verdict de l'agent
+copywriter, applique : **tout passe en « he »**, Kilian nomme.
 
-- `the-work/page.tsx:103` — pull-quote, le plus gros texte de la page :
-  `We will tell you what you will feel. We will never tell you how.`
-- `the-work/page.tsx:51` — `that answer is the thing we are here to get underneath`
-- `the-work/page.tsx:112` — titre de section : `And we would rather say so.`
-  (commence par « And », et pend dans le vide sous l'eyebrow)
-- `the-work/page.tsx:119` — `we will tell you if it is not for you`
-- `practitioner/page.tsx:167-170` — le bloc Discretion, quatre « we » et deux
-  « ours ». Porte aussi un des trois cadratins restants.
-- `retreats/page.tsx:72` — `We have not named a place yet because we have not found one quiet enough.`
-- `retreats/page.tsx:203` — `You will hear from us once, when it opens.`
-  **Se contredit a la ligne suivante :** `never from anyone but Kilian`.
+Sa raison, et elle est juste : le site vend une seule chose invérifiable, qu'il
+n'y a personne derriere le rideau. Le « we » etait la seule phrase du site qui
+la contredisait a chaque occurrence. La voix impersonnelle aurait ete le choix
+lache — elle enleve le faux collectif sans rendre le texte a quelqu'un, et sur
+le bloc Discretion elle transforme un homme qui tient parole en une politique
+d'entreprise.
 
-**Ce que ces phrases doivent faire :** garder exactement leur sens, en « he » ou
-en voix impersonnelle. Le reste du site tient Kilian en « he ». A trancher en
-une fois, pas en sept decisions separees.
+Verifie apres coup : **zero `we`, `us`, `our` sur tout le site.**
+
+**Un point qui demande son accord, pas son ecriture :** `The Work` et `Retreats`
+ne le nommaient jamais, donc « he » y serait sans antecedent. Le nom « Kilian »
+entre une fois par page, a la premiere occurrence. C'est la seule matiere
+ajoutee par cette passe — un nom deja present partout ailleurs, jamais une
+phrase.
 
 ---
 

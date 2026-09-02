@@ -164,10 +164,10 @@ export default function PractitionerPage() {
           <p style={{ ...body, marginTop: 44 }}>
             No client is named, referenced, or implied. Not on this site, not in
             conversation, not to another client. The only exception is someone who asks to
-            speak for themselves, and that is theirs to give — never ours to take, and
-            never ours to ask for. Discretion at this level is not a promise we make. It is
-            a condition we work inside. If you are the kind of person for whom that
-            matters, you already understand why it is the first thing we say and the last.
+            speak for themselves, and that is theirs to give, never his to take, and
+            never his to ask for. Discretion at this level is not a promise he makes. It is
+            a condition he works inside. If you are the kind of person for whom that
+            matters, you already understand why it is the first thing he says and the last.
           </p>
         </section>
       </div>
