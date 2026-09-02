@@ -54,9 +54,8 @@ const bodyStyle: React.CSSProperties = {
 };
 const stationStyle: React.CSSProperties = {
   position: "relative", zIndex: 5,
-  // dvh gère la barre d'adresse mobile Safari, fallback vh sur old browsers
-  height: "100dvh",
-  minHeight: "100vh",
+  // La hauteur vit dans .mdc-station (globals.css), pas ici : une regle inline
+  // ne peut pas porter le repli `height:100vh; height:100svh;`.
   width: "100%",
   display: "flex", alignItems: "center", justifyContent: "center",
   padding: "0 6vw",
@@ -267,9 +266,9 @@ export default function Home() {
              Les 200dvh dataient du systeme precedent et rendaient la
              traversee interminable. */}
         <section
-          className="mdc-station"
+          className="mdc-station mdc-station--haute"
           data-station="maison"
-          style={{ ...stationStyle, height: "130dvh", minHeight: "130vh" }}
+          style={stationStyle}
           aria-hidden
         />
 
