@@ -11,7 +11,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EVENT, shouldBypassIntro } from '@/lib/introReady';
+import { INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EVENT, prefersReducedMotion, shouldBypassIntro } from '@/lib/introReady';
 
 // Le budget de l'intro est 5 x T + HOLD + EXIT. A 3000/1200/1600 il faisait
 // 17,8 s — mesure sur une premiere visite, sans localStorage. Une porte de
@@ -23,6 +23,7 @@ import { INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EVENT, shouldBypassIn
 const T = 700;         // demi-souffle ms
 const HOLD = 800;      // pause apres yeux + titre
 const EXIT = 1200;     // duree du zoom d'entree
+const FIXE = 1600;     // temps de lecture de l'intro sans mouvement
 
 const LABELS = ['inhale', 'exhale', 'inhale', 'exhale'];
 
@@ -91,6 +92,8 @@ export default function IntroOverlay() {
       window.dispatchEvent(new CustomEvent(INTRO_PRELOAD_EVENT));
     }, 600);
 
+    const reduit = prefersReducedMotion();
+
     const easeIO = (x: number) => -(Math.cos(Math.PI * x) - 1) / 2;
     const easeExpoIn = (x: number) => (x === 0 ? 0 : Math.pow(2, 10 * x - 10));
 
@@ -155,15 +158,17 @@ export default function IntroOverlay() {
       window.dispatchEvent(new CustomEvent(INTRO_EXIT_EVENT));
 
       function exitTick(ts: number) {
-        const p = Math.min(1, (ts - e0) / EXIT);
+        const p = Math.min(1, (ts - e0) / (reduit ? 700 : EXIT));
         const z = easeExpoIn(p);
 
-        if (wrapRef.current) {
+        // En mouvement reduit, la maison ne se rapproche pas et rien ne
+        // floute : il ne reste que le fondu, qui n'est pas un deplacement.
+        if (!reduit && wrapRef.current) {
           wrapRef.current.style.transform = `translateZ(0) scale(${(1 + z * 26).toFixed(3)})`;
           wrapRef.current.style.transformOrigin = '50% 44%';
           wrapRef.current.style.filter = `blur(${(z * 9).toFixed(2)}px)`;
         }
-        if (thresholdRef.current) {
+        if (!reduit && thresholdRef.current) {
           const flash = Math.sin(Math.PI * Math.min(1, p / 0.82));
           thresholdRef.current.style.opacity = (flash * 0.85).toFixed(3);
           thresholdRef.current.style.transform = `translateZ(0) scale(${(1 + z * 3).toFixed(3)})`;
@@ -231,8 +236,21 @@ export default function IntroOverlay() {
     const skipBtn = document.getElementById('mdc-skip');
     skipBtn?.addEventListener('click', skipHandler);
 
-    rafId.current = requestAnimationFrame(tick);
+    // Mouvement reduit : on POSE l'etat final — maison tracee, yeux ouverts,
+    // nom en place — on laisse le temps de le lire, puis on entre. Aucune
+    // respiration, aucun trace progressif, aucun zoom. Le moment est le meme,
+    // c'est le mouvement qui disparait.
+    let minuteurFixe = 0;
+    if (reduit) {
+      wipe(4, 1); setEyes(1);
+      brandRef.current?.classList.add('mdc-brand-in');
+      updateBreath(0, 0, false);
+      minuteurFixe = window.setTimeout(() => enterHouse(), FIXE);
+    } else {
+      rafId.current = requestAnimationFrame(tick);
+    }
     return () => {
+      window.clearTimeout(minuteurFixe);
       window.clearTimeout(preloadTimer);
       cancelAnimationFrame(rafId.current);
       skipBtn?.removeEventListener('click', skipHandler);
