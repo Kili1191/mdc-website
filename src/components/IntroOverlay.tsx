@@ -295,7 +295,12 @@ export default function IntroOverlay() {
            vaut 13,3 px, donc la borne basse s'appliquait et le nom sortait a
            14 px sous une maison de 265 px de large. Le dessin ecrasait la
            marque. Le nom vaut au moins un quinzieme de la largeur du dessin. */
-        .mdc-brand{font-family:'Higuen','Higuen Elegant Serif',var(--font-prata),Georgia,serif;
+        /* var(--font-higuen) et non 'Higuen'. La police est chargee par
+           next/font/local, qui lui donne un nom de famille genere : la
+           demander par son nom d'origine ne matchait donc RIEN, et le
+           wordmark de l'intro retombait sur Prata — la seule fois de tout le
+           site ou le nom de la maison n'etait pas dans sa propre police. */
+        .mdc-brand{font-family:var(--font-higuen),var(--font-prata),Georgia,serif;
           font-size:clamp(21px,6.4vw,34px);letter-spacing:.14em;
           color:#2F2519;opacity:0;transform:translateY(7px);
           transition:opacity 2.2s cubic-bezier(0.16, 1, 0.3, 1),transform 2.2s cubic-bezier(0.16, 1, 0.3, 1);
