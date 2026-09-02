@@ -7,6 +7,7 @@ import QuietButton from "@/components/effects/QuietButton";
 import AssetFrame from "@/components/effects/AssetFrame";
 import { useIntroReady } from "@/lib/introReady";
 import { COLORS, FONTS } from "@/styles/tokens";
+import { body as pageBody, sectionHead, eyebrow, micro, label } from "@/styles/page";
 import { scrollStore } from "@/lib/scrollStore";
 import { houseFocus } from "@/lib/houseFocus";
 
@@ -67,7 +68,25 @@ function gaussian(x: number, mu: number, sigma: number) {
   return Math.exp(-0.5 * d * d);
 }
 
-const N_STATIONS = 6;
+// Le sommaire de la pratique. NERVANA est une SUITE et commence toujours par
+// ANTARA — d'ou le lien direct vers cette salle. Les quatre autres pratiques
+// ne font pas partie de la suite : elles vivent dans « Also practised here ».
+// Le coaching est la seule chose qui ne se passe pas dans la maison.
+const PRATIQUE = [
+  { n: "01", name: "NERVANA",  href: "/sessions#antara", meta: "In the room",
+    line: "The suite Kilian built. Every one of them begins with Antara." },
+  { n: "02", name: "ABHYANGA", href: "/sessions#also",   meta: "Ayurvedic",
+    line: "Warm oil, worked over the whole body in one unbroken rhythm." },
+  { n: "03", name: "MARMA",    href: "/sessions#also",   meta: "Ayurvedic",
+    line: "The junctions where the body gathers what it holds." },
+  { n: "04", name: "REIKI",    href: "/sessions#also",   meta: "In the room",
+    line: "Hands resting on the body, or just above it, and held." },
+  { n: "05", name: "SOUND",    href: "/sessions#also",   meta: "In the room",
+    line: "Bowls set on the body. The only work here you will hear." },
+  { n: "06", name: "COACHING", href: "/coaching",        meta: "By video",
+    line: "Six conversations, or one. The only work that is not in the house." },
+];
+
 
 export default function Home() {
   const ready = useIntroReady();
@@ -178,7 +197,7 @@ export default function Home() {
             <div data-dir="up" style={{ position: "absolute", inset: 0, opacity: 0, transition: "opacity 900ms cubic-bezier(0.16, 1, 0.3, 1)" }}>
               <BreathReveal
                 as="p"
-                text="You arrive carrying. You leave lighter. What happens between is felt, not explained."
+                text="Whatever you set down here stays here. Nothing is asked of you on the way out."
                 style={{ ...bodyStyle, textAlign: "center" }}
                 stagger={90}
               />
@@ -228,19 +247,53 @@ export default function Home() {
           aria-hidden
         />
 
-        {/* 4. TRAVAIL */}
-        <section className="mdc-station" style={stationStyle}>
-          <div style={{ textAlign: "center" }}>
-            <BreathReveal
-              as="p"
-              text="Up to ninety minutes. / Clothed. / In silence."
-              style={displayCaps}
-              stagger={140}
-            />
-            <div style={{ marginTop: 48, display: "flex", gap: 28, justifyContent: "center", flexWrap: "wrap" }}>
-              <QuietButton href="/sessions">Sessions</QuietButton>
-              <QuietButton href="/the-work">The Work</QuietButton>
-            </div>
+        {/* ── LE TRAVAIL ──────────────────────────────────────────────
+             Cette station ne disait que « Up to ninety minutes / Clothed /
+             In silence » et posait deux boutons. Reproche deja formule par
+             Kilian sur cette page : « la page ce n'est que quelques
+             citations, est-ce que ca vend et montre ce que je fais ? ».
+             C'etait encore vrai : l'accueil ne nommait aucune des pratiques.
+
+             Ce bloc n'est PAS une .mdc-station. Les stations s'effacent des
+             qu'elles quittent le centre de l'ecran — parfait pour une phrase,
+             illisible pour un sommaire. Il defile normalement, dans la
+             grammaire editoriale des autres pages (.mdc-wrap, .mdc-index). */}
+        <section className="mdc-wrap" style={{ position: "relative", zIndex: 5, paddingTop: 40, paddingBottom: 40 }}>
+          <p style={eyebrow}>What is practised here</p>
+          <h2 style={{ ...sectionHead, marginTop: 30, maxWidth: "20ch" }}>
+            Up to ninety minutes. Clothed, unless there is oil.
+          </h2>
+
+          <nav className="mdc-index" aria-label="The practice">
+            {PRATIQUE.map((r) => (
+              <a key={r.name} href={r.href}>
+                <span style={{ ...micro, opacity: 0.7 }}>{r.n}</span>
+                <span style={{ ...label, fontSize: 19 }}>{r.name}</span>
+                <span style={{ ...pageBody, fontSize: 17, maxWidth: "none" }}>{r.line}</span>
+                <span style={micro}>{r.meta}</span>
+              </a>
+            ))}
+          </nav>
+
+          <p style={{ ...micro, marginTop: 28 }}>
+            Battersea, South West London · Fees are shared on request
+          </p>
+
+          {/* La transmission. Kilian : « tu n'insistes pas sur le fait que je
+              pratique une technique tres ancienne, non modifiee ». Elle
+              n'apparaissait nulle part sur l'accueil. Elle se dit sobrement :
+              c'est fort parce que c'est rare, pas parce qu'on appuie. */}
+          <div className="mdc-gap">
+            <p style={eyebrow}>Where this comes from</p>
+            <h2 style={{ ...sectionHead, marginTop: 30, maxWidth: "22ch" }}>
+              Learned where it was never packaged.
+            </h2>
+            <p style={{ ...pageBody, marginTop: 36 }}>
+              Kilian still goes back to India, to teachers who do not run courses for
+              Westerners. You will not find them online and you cannot book a training
+              with them. You arrive, and word of mouth on the ground decides. What they
+              teach has not been shortened to fit a weekend.
+            </p>
           </div>
         </section>
 
