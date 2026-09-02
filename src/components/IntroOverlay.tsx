@@ -13,27 +13,33 @@
 import { useEffect, useRef, useState } from 'react';
 import { INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EVENT, prefersReducedMotion, shouldBypassIntro } from '@/lib/introReady';
 
-// DEUX CONTRAINTES QUI NE SONT PAS LA MEME.
+// UN VRAI CYCLE DE BREATHWORK, pas un aller-retour.
 //
-// La maison a besoin de QUATRE TRAITS pour etre dessinee — en retirer un
-// laisse le trace incomplet. Le souffle, lui, a besoin d'environ trois
-// secondes par demi-cycle : c'est ce qui fait qu'on le suit au lieu de le
-// regarder.
+// Kilian : « fait du vrai breathwork ». Il avait raison de reprendre : une
+// inspiration suivie d'une expiration de meme duree, c'est respirer, ce n'est
+// pas un exercice. Ce qui fait le travail, et c'est son metier :
 //
-// A l'origine les deux etaient liees, un trait = un demi-souffle a 3000 ms,
-// et l'intro faisait 17,8 s. En la ramenant a 700 ms j'ai tenu la duree mais
-// casse ce pour quoi elle existe : personne n'inspire en sept dixiemes de
-// seconde. Le mecanisme etait toujours la, le souffle non.
+//   L'EXPIRATION PLUS LONGUE QUE L'INSPIRATION. C'est elle qui bascule le
+//   systeme nerveux vers le parasympathique. Un rapport d'environ 1,5.
+//   LA RETENTION EN HAUT. Deux secondes de suspension : c'est ce temps
+//   d'arret qui fait qu'on suit un exercice au lieu de regarder une image.
 //
-// Elles sont maintenant separees : un demi-souffle dure DEUX traits. La
-// maison se dessine en quatre traits de 1400 ms, et l'on inspire pendant
-// 2800, on expire pendant 2800. Total 9 s, contre 17,8 au depart.
-const T = 1400;        // duree d'un trait ms — un demi-souffle en vaut deux
+// 4 s d'inspiration, 2 s de retention, 6 s d'expiration. Douze secondes, un
+// cycle complet, fait une seule fois.
+//
+// Le dessin suit le souffle au lieu de le contraindre : les quatre traits de
+// la maison se tracent PENDANT l'inspiration et la retention, et les yeux
+// s'ouvrent PENDANT l'expiration — la maison se detend quand on lache.
+const INSPIRE = 4000;
+const RETIENT = 2000;
+const EXPIRE  = 6000;
+const CYCLE   = INSPIRE + RETIENT + EXPIRE;   // 12 s
+const TRACE   = INSPIRE + RETIENT;            // les 4 traits tiennent la-dedans
 const HOLD = 800;      // pause apres yeux + titre
 const EXIT = 1200;     // duree du zoom d'entree
 const FIXE = 1600;     // temps de lecture de l'intro sans mouvement
 
-const LABELS = ['inhale', 'exhale'];
+const LABELS = { inspire: 'inhale', retient: 'hold', expire: 'exhale' };
 
 export default function IntroOverlay() {
   const [mounted, setMounted] = useState(false);
@@ -145,17 +151,14 @@ export default function IntroOverlay() {
     }
 
     let lastLabel = '';
-    function updateBreath(h: number, f: number, on: boolean) {
+    function updateBreath(mot: string, plein: number, visible: number, on: boolean) {
       const el = bwRef.current;
       if (!el) return;
       if (!on) { el.style.opacity = '0'; return; }
-      const isIn = h === 0;
-      const sz = isIn ? 10 + 9 * f : 19 - 9 * f;
-      const label = LABELS[Math.min(h, 1)];
-      if (label !== lastLabel) { el.textContent = label; lastLabel = label; }
-      // GPU transform scale instead of font-size (avoids per-frame text layout)
+      if (mot !== lastLabel) { el.textContent = mot; lastLabel = mot; }
+      const sz = 10 + 9 * plein;
       el.style.transform = `translate(-50%,-50%) scale(${(sz / 19).toFixed(4)})`;
-      el.style.opacity = (0.55 * Math.sin(Math.PI * f)).toFixed(4);
+      el.style.opacity = (0.55 * visible).toFixed(4);
     }
 
     function enterHouse(startTs?: number) {
@@ -208,27 +211,43 @@ export default function IntroOverlay() {
     function tick(ts: number) {
       if (t0 === null) t0 = ts;
       const t = ts - t0;
-      const h = Math.floor(t / T);
-      const f = easeIO((t - h * T) / T);
 
-      if (h < 4) {
-        wipe(h, f); setEyes(0);
-        brandRef.current?.classList.remove('mdc-brand-in');
-        const souffle = t / (2 * T);
-        updateBreath(Math.floor(souffle) % 2, souffle % 1, true);
+      if (t < CYCLE) {
+        // Le trace : quatre traits repartis sur l'inspiration et la retention.
+        const pTrace = Math.min(1, t / TRACE);
+        const trait = Math.min(3, Math.floor(pTrace * 4));
+        wipe(trait, easeIO((pTrace * 4) % 1));
+
+        if (t < INSPIRE) {
+          const f = t / INSPIRE;
+          setEyes(0);
+          brandRef.current?.classList.remove('mdc-brand-in');
+          // le mot apparait et s'efface dans le mouvement, jamais d'un coup
+          updateBreath(LABELS.inspire, easeIO(f), Math.sin(Math.PI * f), true);
+        } else if (t < TRACE) {
+          const f = (t - INSPIRE) / RETIENT;
+          setEyes(0);
+          // Poumons pleins, rien ne bouge. C'est le seul moment ou le repere
+          // reste immobile et lisible d'un bout a l'autre : c'est ce qu'on
+          // tient.
+          updateBreath(LABELS.retient, 1, Math.min(1, Math.sin(Math.PI * f) * 1.9), true);
+        } else {
+          const f = (t - TRACE) / EXPIRE;
+          wipe(4, 1);
+          // Les yeux s'ouvrent et le nom arrive PENDANT l'expiration : la
+          // maison se detend au moment ou l'on lache.
+          setEyes(easeIO(Math.min(1, f * 1.6)));
+          brandRef.current?.classList.toggle('mdc-brand-in', f > 0.12);
+          updateBreath(LABELS.expire, 1 - easeIO(f), Math.sin(Math.PI * f), true);
+        }
         rafId.current = requestAnimationFrame(tick);
         return;
       }
-      if (h === 4) {
-        wipe(4, 1); setEyes(f);
-        brandRef.current?.classList.toggle('mdc-brand-in', f > 0.05);
-        updateBreath(0, 0, false);
-        rafId.current = requestAnimationFrame(tick);
-        return;
-      }
-      if (t - 5 * T < HOLD) {
+
+      if (t - CYCLE < HOLD) {
         wipe(4, 1); setEyes(1);
         brandRef.current?.classList.add('mdc-brand-in');
+        updateBreath('', 0, 0, false);
         rafId.current = requestAnimationFrame(tick);
         return;
       }
@@ -239,7 +258,7 @@ export default function IntroOverlay() {
       cancelAnimationFrame(rafId.current);
       wipe(4, 1); setEyes(1);
       brandRef.current?.classList.add('mdc-brand-in');
-      updateBreath(0, 0, false);
+      updateBreath('', 0, 0, false);
       setTimeout(() => enterHouse(), 350);
     };
     const skipBtn = document.getElementById('mdc-skip');
@@ -253,7 +272,7 @@ export default function IntroOverlay() {
     if (reduit) {
       wipe(4, 1); setEyes(1);
       brandRef.current?.classList.add('mdc-brand-in');
-      updateBreath(0, 0, false);
+      updateBreath('', 0, 0, false);
       minuteurFixe = window.setTimeout(() => enterHouse(), FIXE);
     } else {
       rafId.current = requestAnimationFrame(tick);
