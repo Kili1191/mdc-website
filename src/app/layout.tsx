@@ -12,21 +12,22 @@ import BreathButton from "@/components/BreathButton";
 import SiteMarble from "@/components/SiteMarble";
 import SoundToggle from "@/components/SoundToggle";
 
+// WOFF2 et non TTF/OTF : 644 Ko de polices pour 223 Ko une fois converties,
+// 65 % de moins. Le TTF est un format de bureau, pas un format de transport.
+//
+// Great Vibes n'est PAS declaree ici. Elle ne sert qu'a une signature sur
+// /practitioner, et le layout la faisait telecharger sur les huit pages —
+// 435 Ko bruts pour une phrase qu'on ne voit nulle part ailleurs. Elle est
+// desormais declaree dans la page qui l'utilise.
 const prata = localFont({
-  src: "../../public/fonts/Prata-Regular.ttf",
+  src: "../../public/fonts/Prata-Regular.woff2",
   variable: "--font-prata",
   display: "swap",
 });
 
 const higuen = localFont({
-  src: "../../public/fonts/Higuen.otf",
+  src: "../../public/fonts/Higuen.woff2",
   variable: "--font-higuen",
-  display: "swap",
-});
-
-const greatVibes = localFont({
-  src: "../../public/fonts/GreatVibes-Regular.ttf",
-  variable: "--font-great-vibes",
   display: "swap",
 });
 
@@ -63,7 +64,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${prata.variable} ${higuen.variable} ${greatVibes.variable}`}>
+    <html lang="en" className={`${prata.variable} ${higuen.variable}`}>
       <body style={{ margin: 0, minHeight: "100vh", background: "#EDE4D0", color: "#4A3B2A" }}>
         <SeoNav />
         <IntroOverlay />

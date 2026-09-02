@@ -3,6 +3,16 @@ import { pageStyle, body, lead, bigHead, sectionHead, eyebrow, micro } from "@/s
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
 import AssetFrame from "@/components/effects/AssetFrame";
+import localFont from "next/font/local";
+
+// Declaree ICI et pas dans le layout : c'est la seule page qui s'en sert —
+// une signature, une fois. Dans le layout, ses 435 Ko partaient sur les huit
+// pages du site.
+const greatVibes = localFont({
+  src: "../../../public/fonts/GreatVibes-Regular.woff2",
+  variable: "--font-great-vibes",
+  display: "swap",
+});
 
 // Practitioner — la page ou l'on decide de faire confiance a quelqu'un.
 //
@@ -101,7 +111,7 @@ export default function PractitionerPage() {
         </section>
 
         <p className="mdc-gap" style={{
-          fontFamily: FONTS.greatVibes,
+          fontFamily: `${greatVibes.style.fontFamily}, cursive`,
           fontSize: "clamp(38px, 6.4vw, 68px)",
           lineHeight: 1.2,
           color: COLORS.brouFonce,
