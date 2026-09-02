@@ -131,13 +131,20 @@ You leave lower to the ground. Steadier. Returned to your own weight.
 **Microcopy:** Fee on request · By conversation
 
 ### TRANSMISSION — by application
-**Eyebrow:** Limited to six per client each year
+
+> **SUSPENDU, en attente de Kilian (2 sept. 2026).** La limite de six par client
+> et par an est retiree du site : « this i havent decided ». Elle figurait ici en
+> eyebrow ET dans le corps ci-dessous, donc elle avait ete posee de bonne foi
+> depuis ce fichier. Elle reste ecrite ici, barree, pour ne pas etre reinventee
+> ni restauree par erreur. Si Kilian la tranche, la remettre aux DEUX endroits.
+
+**Eyebrow:** ~~Limited to six per client each year~~
 
 **Headline:**
 The deepest room. Not for everyone, and not often.
 
 **Body:**
-TRANSMISSION is not booked. It is applied for, and it is granted rarely — no more than six times in a year to any one person, and to very few people at all.
+TRANSMISSION is not booked. It is applied for, and it is granted rarely, ~~no more than six times in a year to any one person,~~ and to very few people at all.
 
 It asks more of you and returns more. We say little about it in writing, and that is deliberate. Those it is for tend to recognise it before it is described.
 

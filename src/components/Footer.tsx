@@ -30,7 +30,13 @@ const METIERS = [
     { l: "Coaching", h: "/coaching" },
     { l: "Retreats", h: "/retreats" },
   ]},
-  { titre: "The house", liens: [
+  // « Maison » plutot que « The house », sur proposition de Kilian, verdict de
+  // l'agent copywriter. « The house » n'etait pas casse tout seul : lu en serie
+  // avec ses deux voisines — In the room / Beyond the room / The house — le set
+  // devenait un degrade de LIEUX (dedans, dehors, le batiment), et rendait a la
+  // maison la porte que toute la copy lui retire. Un nom ne s'arpente pas.
+  // Nom nu, jamais « The Maison » : l'article anglais le rhabille en lieu.
+  { titre: "Maison", liens: [
     { l: "Practitioner", h: "/practitioner" },
     { l: "Notes", h: "/notes" },
     { l: "Begin", h: "/begin" },
