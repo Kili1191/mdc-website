@@ -134,6 +134,40 @@ body {
   .mdc-gap--sm { margin-top: 88px; }
 }
 
+/* ─── La cible des liens de nav ────────────────────────────────────────
+   Kilian : « quand je clique sur le menu ca marche pas sur les mots, faut
+   cliquer un peu plus bas ».
+
+   Mesure. La boite du lien fait 18 px de haut ; l'encre, elle, est peinte
+   de +1 a +10,5 px sous le haut de cette boite. Il y a donc UN pixel de
+   tolerance au-dessus des lettres, et sept en dessous. Or on vise
+   naturellement le milieu optique de capitales de 12 px — c'est-a-dire
+   deux ou trois pixels trop haut. On rate, et on rattrape en cliquant plus
+   bas : exactement ce qu'il decrit.
+
+   On agrandit la cible sans toucher a la mise en page. Un calque invisible
+   deborde de 11 px en haut et en bas : la cible passe de 18 a 40 px, et
+   l'encre se retrouve au milieu au lieu d'etre collee au bord haut. Le
+   layout ne bouge pas d'un pixel — c'est pour ca qu'on ne met pas de
+   padding, qui aurait pousse la barre et deplace le sillon.
+
+   Les liens sont cote a cote avec un ecart horizontal : agrandir seulement
+   en vertical ne fait se chevaucher aucune cible. */
+
+.mdc-nav-links a {
+  position: relative;
+}
+
+.mdc-nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -11px;
+  bottom: -11px;
+  /* invisible : cet element ne sert qu'a recevoir le clic */
+}
+
 /* ─── L'onglet ou l'on est se grave dans la pierre ──────────────────────
    Demande de Kilian : « que l'ecriture ait un mouvement de balayage, et que
    ce soit vraiment grave ».

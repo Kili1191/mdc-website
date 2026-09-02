@@ -81,7 +81,13 @@ export default function Nav() {
         @media (max-width: 720px) {
           .mdc-nav { padding: 16px 20px !important; }
           .mdc-nav-wordmark { display: none; }
-          .mdc-nav-links { gap: 14px; flex-wrap: wrap; justify-content: flex-end; row-gap: 6px; }
+          /* row-gap 26 et non 6 : sous 720 px les liens passent sur deux
+             lignes, et chaque lien porte une cible de clic qui deborde de
+             11 px en haut et en bas (voir .mdc-nav-links a::after). Avec 6 px
+             entre les lignes, la cible de la ligne du bas mangeait la moitie
+             basse de celle du haut — mesure : 21 px utiles au lieu de 40.
+             Il faut au moins 22 px d'ecart pour que les deux respirent. */
+          .mdc-nav-links { gap: 14px; flex-wrap: wrap; justify-content: flex-end; row-gap: 26px; }
           .mdc-nav-links a { font-size: 10.5px; letter-spacing: 0.10em !important; }
         }
       `}</style>
