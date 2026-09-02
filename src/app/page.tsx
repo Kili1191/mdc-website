@@ -73,18 +73,18 @@ function gaussian(x: number, mu: number, sigma: number) {
 // ne font pas partie de la suite : elles vivent dans « Also practised here ».
 // Le coaching est la seule chose qui ne se passe pas dans la maison.
 const PRATIQUE = [
-  { n: "01", name: "NERVANA",  href: "/sessions#antara", meta: "In the room",
+  { n: "01", name: "NERVANA",  href: "/sessions#antara", meta: "From £180",
     line: "The suite Kilian built. Every one of them begins with Antara." },
-  { n: "02", name: "ABHYANGA", href: "/sessions#also",   meta: "Ayurvedic",
-    line: "Warm oil, worked over the whole body in one unbroken rhythm." },
-  { n: "03", name: "MARMA",    href: "/sessions#also",   meta: "Ayurvedic",
+  { n: "02", name: "ABHYANGA", href: "/sessions#also",   meta: "Ayurvedic · £160",
+    line: "Warm oil, worked over the body in one unbroken rhythm." },
+  { n: "03", name: "MARMA",    href: "/sessions#also",   meta: "Ayurvedic · £160",
     line: "The junctions where the body gathers what it holds." },
-  { n: "04", name: "REIKI",    href: "/sessions#also",   meta: "In the room",
+  { n: "04", name: "REIKI",    href: "/sessions#also",   meta: "£130",
     line: "Hands resting on the body, or just above it, and held." },
-  { n: "05", name: "SOUND",    href: "/sessions#also",   meta: "In the room",
+  { n: "05", name: "SOUND",    href: "/sessions#also",   meta: "£140",
     line: "Bowls set on the body. The only work here you will hear." },
-  { n: "06", name: "COACHING", href: "/coaching",        meta: "By video",
-    line: "Six conversations, or one. The only work that is not in the house." },
+  { n: "06", name: "COACHING", href: "/coaching",        meta: "By video · £150",
+    line: "Six conversations, or one. The only work outside the house." },
 ];
 
 
@@ -276,7 +276,7 @@ export default function Home() {
           </nav>
 
           <p style={{ ...micro, marginTop: 28 }}>
-            Battersea, South West London · Fees are shared on request
+            Battersea, South West London · In the room, £130 to £250 · Coaching, £150
           </p>
 
           {/* La transmission. Kilian : « tu n'insistes pas sur le fait que je
