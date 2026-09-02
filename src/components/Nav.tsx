@@ -111,6 +111,7 @@ export default function Nav() {
             // route, donc l'animation repart seule sur le nouveau.
             <a key={l.label} href={l.href}
               className={pathname === l.href ? "mdc-here" : undefined}
+              data-label={l.label}
               aria-current={pathname === l.href ? "page" : undefined}
               style={{
               fontFamily: FONTS.prata, letterSpacing: "0.14em",

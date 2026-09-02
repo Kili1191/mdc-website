@@ -135,72 +135,60 @@ body {
 }
 
 /* ─── L'onglet ou l'on est se grave dans la pierre ──────────────────────
-   Demande de Kilian : « que l'onglet ou on est dedans se grave sur le marbre,
-   une animation rapide comme un coup de balai magique ».
+   Deuxieme version. La premiere avait pris « coup de balai » au pied de la
+   lettre : une bande de lumiere passait SUR le mot, et le mot lui-meme ne
+   changeait pas. Kilian : « j'ai pas voulu voir un coup de balai, juste
+   l'ecriture a un mouvement de balayage, et rien n'est engraved ».
 
-   Deux temps, et c'est leur ordre qui fait la gravure :
+   Ce qu'il faut, et que la premiere version ne faisait pas :
 
-     1. LE COUP DE BALAI passe une fois, vite. Une bande de lumiere chaude
-        traverse le mot en biais, comme un outil qu'on passe sur la pierre.
-     2. LE CREUX RESTE. Derriere le balai, le mot garde une ombre haute et une
-        levre claire en bas — c'est la lecture d'un caractere grave dans une
-        pierre eclairee d'en haut, la meme lumiere que le burin du marbre.
+   1. C'EST L'ECRITURE QUI SE GRAVE, pas une lumiere qui passe devant. Le
+      sillon avance de gauche a droite et laisse les lettres creusees derriere
+      lui — le geste du burin, pas celui du projecteur. Un calque jumeau porte
+      la version gravee et son clip-path s'ouvre : la ou le burin est passe, la
+      lettre est creuse ; devant lui, elle est encore plate.
 
-   520 ms : la duree de sortie du site (450) plus une marge. « Rapide » etait
-   dans la demande, et une gravure lente se lirait comme un survol.
+   2. CA DOIT SE VOIR. La premiere version posait une ombre a 0,55 sur du texte
+      de 12 px tres espace : invisible. Une lettre gravee dans une pierre
+      eclairee d'en haut se lit a trois signes — le fond du sillon plus sombre
+      que la surface, la paroi haute dans l'ombre, la levre basse qui prend la
+      lumiere. Les trois sont la, et assumes.
 
-   Le creux ne s'anime pas, il s'installe : c'est l'etat de la page ou l'on est,
-   pas un effet qui se rejoue. Le balai, lui, ne passe qu'une fois, a l'arrivee.
-
-   `mdc-here` est pose par Nav sur le lien de la route courante. Quand la route
-   change, la classe quitte un lien et arrive sur un autre : l'animation repart
-   d'elle-meme sur le nouveau, sans qu'on ait rien a remonter. */
+   620 ms : le geste est net sans etre brusque. */
 
 .mdc-here {
   position: relative;
-  /* le creux, installe */
-  text-shadow:
-    0 1px 0 rgba(255, 252, 244, 0.85),
-    0 -1px 1px rgba(74, 59, 42, 0.55);
-  animation: mdc-creuser 520ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.mdc-here::after {
-  /* le coup de balai */
-  content: "";
+.mdc-here::before {
+  content: attr(data-label);
   position: absolute;
-  inset: -3px -10px;
+  inset: 0;
+  white-space: nowrap;
   pointer-events: none;
-  background: linear-gradient(
-    104deg,
-    rgba(255, 252, 244, 0) 0%,
-    rgba(255, 252, 244, 0.92) 42%,
-    rgba(184, 153, 104, 0.55) 54%,
-    rgba(255, 252, 244, 0) 76%
-  );
-  transform: translateX(-130%);
-  animation: mdc-balai 520ms cubic-bezier(0.36, 0, 0.12, 1) both;
+
+  /* Le fond du sillon, plus sombre que la pierre. Premier essai a #6B563E
+     avec une ombre a 0,62 : la gravure se devinait au lieu de se voir. A 12 px
+     et 0,14em d'interlettrage, il n'y a pas de place pour la subtilite — un
+     sillon trop delicat ne se lit pas comme un sillon, il se lit comme un
+     defaut de rendu. */
+  color: #55412C;
+  text-shadow:
+    0 -1px 0 rgba(44, 32, 20, 0.78),      /* la paroi haute, dans l'ombre */
+    0 1px 0 rgba(255, 253, 248, 1),       /* la levre basse, en pleine lumiere */
+    0 2px 2px rgba(255, 250, 240, 0.42);  /* le debord de cette lumiere */
+
+  clip-path: inset(0 100% 0 0);
+  animation: mdc-graver 620ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-@keyframes mdc-creuser {
-  from { text-shadow: 0 0 0 rgba(255, 252, 244, 0), 0 0 0 rgba(74, 59, 42, 0); }
+/* Le burin avance. Derriere lui, la lettre est creusee. */
+@keyframes mdc-graver {
+  to { clip-path: inset(0 0 0 0); }
 }
 
-/* Le balai APPARAIT, passe, et disparait.
-   Sans l'opacite il finissait sa course gare sur le mot voisin : translater de
-   130 % la largeur d'un mot de nav ne suffit pas a sortir du champ, et
-   `both` conservait l'etat final. On voyait donc une bande claire posee en
-   permanence sur le lien d'a cote. */
-@keyframes mdc-balai {
-  0%   { transform: translateX(-130%); opacity: 0; }
-  16%  { opacity: 1; }
-  78%  { opacity: 1; }
-  100% { transform: translateX(130%); opacity: 0; }
-}
-
-/* Personne ne recoit un coup de balai contre son gre. Le creux reste : c'est
-   une information — vous etes ici — pas une animation. */
+/* Personne ne recoit un burin contre son gre. La gravure reste : c'est une
+   information — vous etes ici — pas une animation. */
 @media (prefers-reduced-motion: reduce) {
-  .mdc-here { animation: none; }
-  .mdc-here::after { display: none; }
+  .mdc-here::before { animation: none; clip-path: inset(0 0 0 0); }
 }
