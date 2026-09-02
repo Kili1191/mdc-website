@@ -6,6 +6,14 @@ export const INTRO_PRELOAD_EVENT = 'mdc:intro-preload';
 export const INTRO_EXIT_EVENT = 'mdc:intro-exit-start';
 export const INTRO_DONE_EVENT = 'mdc:intro-done';
 
+// Rouvrir le souffle a la demande, depuis n'importe quelle page. L'intro
+// n'est plus seulement une porte : c'est un exercice qu'on peut refaire.
+export const BREATH_OPEN_EVENT = 'mdc:breathe';
+
+export function ouvrirLeSouffle() {
+  window.dispatchEvent(new CustomEvent(BREATH_OPEN_EVENT));
+}
+
 export function prefersReducedMotion(): boolean {
   if (typeof window === 'undefined') return false;
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -8,6 +8,7 @@ import PageTransition from "@/components/PageTransition";
 import ScrollProvider from "@/components/ScrollProvider";
 import SeoNav from "@/components/SeoNav";
 import Footer from "@/components/Footer";
+import BreathButton from "@/components/BreathButton";
 import SiteMarble from "@/components/SiteMarble";
 import SoundToggle from "@/components/SoundToggle";
 
@@ -71,6 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Nav />
         <BreathingCursor />
         <SoundToggle />
+        <BreathButton />
         <PageTransition>
           {children}
           <Footer />

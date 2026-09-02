@@ -11,7 +11,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EVENT, prefersReducedMotion, shouldBypassIntro } from '@/lib/introReady';
+import { BREATH_OPEN_EVENT, INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EVENT, prefersReducedMotion, shouldBypassIntro } from '@/lib/introReady';
 
 // UN VRAI CYCLE DE BREATHWORK, pas un aller-retour.
 //
@@ -44,6 +44,16 @@ const LABELS = { inspire: 'inhale', retient: 'hold', expire: 'exhale' };
 export default function IntroOverlay() {
   const [mounted, setMounted] = useState(false);
   const [done, setDone] = useState(false);
+  // Deux regimes pour la meme scene.
+  //   arrivee  — un cycle, puis on entre dans la maison (premiere visite)
+  //   pratique — le cycle BOUCLE, sans fin et sans couture, jusqu'a ce qu'on
+  //              ferme. C'est le mode exercice : on respire avec, autant de
+  //              fois qu'on veut.
+  const [pratique, setPratique] = useState(false);
+  const [session, setSession] = useState(0);
+  const [cycles, setCycles] = useState(0);
+  const pratiqueRef = useRef(false);
+  const cyclesRef = useRef(0);
 
   const introRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -61,10 +71,35 @@ export default function IntroOverlay() {
   useEffect(() => {
     if (shouldBypassIntro()) {
       setDone(true);
-      return;
+    } else {
+      setMounted(true);
     }
-    setMounted(true);
+    // Rouvrir a la demande, depuis n'importe ou. On repart d'une session
+    // neuve : c'est elle qui relance l'effet d'animation, deja monte.
+    const ouvrir = () => {
+      pratiqueRef.current = true;
+      exiting.current = false;
+      setPratique(true);
+      cyclesRef.current = 0;
+      setCycles(0);
+      setDone(false);
+      setMounted(true);
+      setSession((n) => n + 1);
+    };
+    window.addEventListener(BREATH_OPEN_EVENT, ouvrir);
+    return () => window.removeEventListener(BREATH_OPEN_EVENT, ouvrir);
   }, []);
+
+  // Fermer le mode exercice : pas de zoom, pas de localStorage, on rend juste
+  // la main. Rouvrir doit rester sans consequence.
+  const fermerPratique = () => {
+    const html = document.documentElement;
+    html.style.overflow = ""; document.body.style.overflow = "";
+    html.style.overscrollBehavior = "";
+    pratiqueRef.current = false;
+    setPratique(false);
+    setDone(true);
+  };
 
   // LE DOCUMENT NE DOIT PAS DEFILER SOUS L'INTRO.
   //
@@ -94,7 +129,7 @@ export default function IntroOverlay() {
       body.style.overflow = memo.bodyOverflow;
       html.style.overscrollBehavior = memo.htmlOverscroll;
     };
-  }, [mounted]);
+  }, [mounted, session]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -157,7 +192,7 @@ export default function IntroOverlay() {
       if (!on) { el.style.opacity = '0'; return; }
       if (mot !== lastLabel) { el.textContent = mot; lastLabel = mot; }
       const sz = 10 + 9 * plein;
-      el.style.transform = `translate(-50%,-50%) scale(${(sz / 19).toFixed(4)})`;
+      el.style.transform = `scale(${(sz / 19).toFixed(4)})`;
       el.style.opacity = (0.55 * visible).toFixed(4);
     }
 
@@ -214,19 +249,25 @@ export default function IntroOverlay() {
 
       if (t < CYCLE) {
         // Le trace : quatre traits repartis sur l'inspiration et la retention.
-        const pTrace = Math.min(1, t / TRACE);
-        const trait = Math.min(3, Math.floor(pTrace * 4));
-        wipe(trait, easeIO((pTrace * 4) % 1));
+        // En mode exercice a partir du deuxieme tour, la maison est deja la —
+        // la redessiner ferait clignoter la scene a chaque respiration.
+        if (pratiqueRef.current && cyclesRef.current > 0) {
+          wipe(4, 1);
+        } else {
+          const pTrace = Math.min(1, t / TRACE);
+          const trait = Math.min(3, Math.floor(pTrace * 4));
+          wipe(trait, easeIO((pTrace * 4) % 1));
+        }
 
+        const enBoucle = pratiqueRef.current && cyclesRef.current > 0;
         if (t < INSPIRE) {
           const f = t / INSPIRE;
-          setEyes(0);
-          brandRef.current?.classList.remove('mdc-brand-in');
+          if (!enBoucle) { setEyes(0); brandRef.current?.classList.remove('mdc-brand-in'); }
           // le mot apparait et s'efface dans le mouvement, jamais d'un coup
           updateBreath(LABELS.inspire, easeIO(f), Math.sin(Math.PI * f), true);
         } else if (t < TRACE) {
           const f = (t - INSPIRE) / RETIENT;
-          setEyes(0);
+          if (!enBoucle) setEyes(0);
           // Poumons pleins, rien ne bouge. C'est le seul moment ou le repere
           // reste immobile et lisible d'un bout a l'autre : c'est ce qu'on
           // tient.
@@ -236,10 +277,25 @@ export default function IntroOverlay() {
           wipe(4, 1);
           // Les yeux s'ouvrent et le nom arrive PENDANT l'expiration : la
           // maison se detend au moment ou l'on lache.
-          setEyes(easeIO(Math.min(1, f * 1.6)));
-          brandRef.current?.classList.toggle('mdc-brand-in', f > 0.12);
+          if (!enBoucle) {
+            setEyes(easeIO(Math.min(1, f * 1.6)));
+            brandRef.current?.classList.toggle('mdc-brand-in', f > 0.12);
+          }
           updateBreath(LABELS.expire, 1 - easeIO(f), Math.sin(Math.PI * f), true);
         }
+        rafId.current = requestAnimationFrame(tick);
+        return;
+      }
+
+      if (pratiqueRef.current) {
+        // MODE EXERCICE. Le cycle recommence a l'instant meme ou il finit :
+        // on ne rejoue pas le trace, la maison reste dessinee et les yeux
+        // ouverts. Il ne reste que le souffle, qui repart. Aucune couture,
+        // parce qu'il n'y a rien a raccorder — c'est le meme mouvement qui
+        // continue.
+        t0 = ts;
+        cyclesRef.current += 1;
+        setCycles(cyclesRef.current);
         rafId.current = requestAnimationFrame(tick);
         return;
       }
@@ -283,7 +339,7 @@ export default function IntroOverlay() {
       cancelAnimationFrame(rafId.current);
       skipBtn?.removeEventListener('click', skipHandler);
     };
-  }, [mounted]);
+  }, [mounted, session]);
 
   if (done) return null;
   if (!mounted) return (
@@ -308,8 +364,13 @@ export default function IntroOverlay() {
           transform:translateZ(0);}
         .mdc-stage svg{width:100%;height:100%;overflow:visible;display:block;
           pointer-events:none;transform:translateZ(0);}
-        .mdc-breath{position:absolute;left:50%;top:58%;
-          transform:translate(-50%,-50%) scale(0.526);
+        /* Sous le nom, plus dans la maison. A top:58 % le mot se posait
+           exactement dans les yeux : illisible des qu'ils sont ouverts —
+           c'est-a-dire pendant toute l'expiration, et a chaque tour du mode
+           exercice ou ils ne se referment plus. Ici il ne croise rien. */
+        .mdc-breath{position:relative;
+          margin-top:clamp(18px,3.4vw,28px);
+          transform:scale(0.526);
           transform-origin:center;
           font-family:var(--font-prata),'Cormorant Garamond',Georgia,serif;
           font-weight:300;font-style:italic;
@@ -375,11 +436,22 @@ export default function IntroOverlay() {
               <g clipPath="url(#cRF)"><g mask="url(#mRF)"><use href="#bV"/></g></g>
               <g ref={eyesG} mask="url(#mEY)" style={{ opacity: 0 }}><use href="#bV"/></g>
             </svg>
-            <div className="mdc-breath" ref={bwRef} />
           </div>
           <div className="mdc-brand" ref={brandRef}>Maison du Calme</div>
+          <div className="mdc-breath" ref={bwRef} />
         </div>
-        <button className="mdc-skip" id="mdc-skip">skip</button>
+        {/* Le meme coin, deux roles. A l'arrivee on passe ; en exercice on
+            ferme — et on ne « passe » pas un exercice, on le termine quand on
+            a fini. Le compteur ne s'affiche qu'a partir du deuxieme souffle :
+            annoncer « 1 » sur le premier ferait un objectif la ou il n'y en a
+            pas. */}
+        {pratique ? (
+          <button className="mdc-skip" onClick={fermerPratique}>
+            {cycles > 1 ? `${cycles} breaths · done` : 'done'}
+          </button>
+        ) : (
+          <button className="mdc-skip" id="mdc-skip">skip</button>
+        )}
       </div>
     </>
   );
