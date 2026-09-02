@@ -26,7 +26,7 @@ const METIERS = [
     { l: "Sessions", h: "/sessions" },
     { l: "The Work", h: "/the-work" },
   ]},
-  { titre: "Elsewhere", liens: [
+  { titre: "Beyond the room", liens: [
     { l: "Coaching", h: "/coaching" },
     { l: "Retreats", h: "/retreats" },
   ]},
@@ -57,7 +57,7 @@ export default function Footer() {
                 foyer d'accueil. « Receives » est au contraire le verbe des
                 maisons : une maison recoit. */}
             <p style={{ ...body, fontSize: 17, marginTop: 24, maxWidth: "34ch" }}>
-              A house receives. This one was built for the people who never say
+              A house receives. This one is for the people who never say
               they need it.
             </p>
             <p style={{ ...micro, marginTop: 28 }}>Battersea, South West London</p>
