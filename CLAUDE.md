@@ -53,6 +53,13 @@ toutes presentes sur le site ; le document reste la source des faits et de ce
 qui ne s'ecrit pas — a lire avant de supposer que la pratique se resume aux
 Sessions.
 
+`COPY_OUVERT.md` — les passages de copy qui attendent une phrase de Kilian, et
+pourquoi. Sorti de la passe complete de l'agent copywriter. Tout ce qui pouvait
+etre corrige sans ecrire un mot l'a deja ete ; ce qui reste demande une
+decision, jamais une invention. A lire avant de toucher a une page, et a vider
+au fur et a mesure que Kilian tranche — une entree resolue se reporte dans
+`COPY_V13.md` ET dans le code, sinon elle revient.
+
 `DIRECTION.md` — l'immobilite comme interaction. Ce que le site fait de
 different, ce qui a ete retire pour y arriver, et ce qui reste. A lire avant
 d'ajouter le moindre effet.
