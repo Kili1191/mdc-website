@@ -84,7 +84,7 @@ const PRATIQUE = [
   { n: "05", name: "SOUND",    href: "/sessions#also",   meta: "£140",
     line: "Bowls set on the body. The only work here you will hear." },
   { n: "06", name: "COACHING", href: "/coaching",        meta: "By video · £150",
-    line: "Six conversations, or one. The only work outside the house." },
+    line: "Six conversations, or one. This one happens on a call." },
 ];
 
 
@@ -218,11 +218,21 @@ export default function Home() {
         {/* 3. LA MAISON — la station qui nomme ce que c'est. Elle precede
              immediatement la gravure : le burin marque donc l'instant ou le
              site dit ce qu'il est, au lieu de flotter au milieu du scroll.
-             Copy COPY_V13 §Home/The house, validee. */}
+
+             Elle disait « a private house in London » : une adresse. Kilian :
+             « la house c'est le concept, pas un endroit physique », et « une
+             maison comme les maisons de luxe, mais aussi un refuge ».
+
+             Donc une MAISON au sens couture — un nom, une signature, une
+             institution qui fabrique quelque chose. Ce qu'elle fabrique
+             aujourd'hui est du calme ; elle portera d'autres choses plus tard
+             (vetement, objets). La phrase doit donc tenir sans jamais dire
+             qu'elle est un cabinet, sinon elle enferme la marque dans son
+             premier produit. */}
         <section className="mdc-station" style={{ ...stationStyle, flexDirection: "column" }}>
           <BreathReveal
             as="p"
-            text="Maison du Calme is a private house in London for what cannot be said aloud."
+            text="Maison du Calme is a house, not an address. What it makes is calm."
             style={{ ...displayItalic, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: 860, textAlign: "center", lineHeight: 1.35 }}
             stagger={90}
           />
@@ -276,7 +286,7 @@ export default function Home() {
           </nav>
 
           <p style={{ ...micro, marginTop: 28 }}>
-            Battersea, South West London · In the room, £130 to £250 · Coaching, £150
+            Battersea, South West London · In person, £130 to £250 · Coaching, £150
           </p>
 
           {/* La transmission. Kilian : « tu n'insistes pas sur le fait que je

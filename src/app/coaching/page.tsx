@@ -69,7 +69,7 @@ export default function CoachingPage() {
 
         <div className="mdc-measure" style={{ marginTop: 44, display: "flex", flexDirection: "column", gap: 22 }}>
           <p style={body}>
-            Everything else in this house is silent. You are not asked how you are, and
+            Everything else here is silent. You are not asked how you are, and
             you are not asked to explain yourself, because the body says it more
             accurately than you would. That is the whole design of it.
           </p>
@@ -122,7 +122,7 @@ export default function CoachingPage() {
         <section className="mdc-gap">
           <p style={eyebrow}>How it works</p>
           <h2 style={{ ...sectionHead, marginTop: 26 }}>
-            This one does not need the house.
+            This one does not need the room.
           </h2>
           {/* COPY NOUVELLE — a valider.
               Le coaching se fait UNIQUEMENT a distance. La page laissait croire
@@ -133,7 +133,7 @@ export default function CoachingPage() {
               Et c'est un avantage, pas un aveu : c'est la seule chose ici qui
               ne depend pas d'une adresse. */}
           <p style={{ ...body, marginTop: 30 }}>
-            It happens on a call, and only on a call. Everything else in this house needs
+            It happens on a call, and only on a call. Everything else here needs
             the room you are lying in. This does not, which means it is the one thing here
             you can do from another city, another country, or a hotel between two
             meetings.

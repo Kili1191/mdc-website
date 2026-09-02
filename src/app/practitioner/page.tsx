@@ -138,7 +138,7 @@ export default function PractitionerPage() {
             </h2>
             <p style={{ ...body, marginTop: 28 }}>
               That work happens in conversation, and it is arranged separately. It
-              is not the house, and it is not silent. Ask, and you will be told
+              is not the silent work, and it does not happen in the room. Ask, and you will be told
               whether it is the right door.
             </p>
             <p style={{ ...micro, marginTop: 30 }}>
