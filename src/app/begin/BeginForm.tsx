@@ -2,9 +2,20 @@
 
 import { COLORS, FONTS } from "@/styles/tokens";
 
+// Les libelles des champs etaient ecrits en taupe. Mesure sur le marbre du
+// site : 1,77:1, quand un petit texte en demande 4,5. « Your name », « How to
+// reach you », « What brings you » etaient donc illisibles en pratique, sur la
+// seule page qui transforme un visiteur en client.
+//
+// C'est la faute exacte que le §11 du skill taste decrit : le taupe est une
+// couleur de PAUSE, une regle ou un filet, jamais une couleur de texte. Elle
+// avait ete corrigee sur Sessions, ou elle mangeait les durees et les tarifs,
+// et personne n'etait revenu ici. Le brou donne 6,93:1.
+//
+// Le taupe reste juste au-dessous, en bordure de champ : c'est son emploi.
 const labelStyle: React.CSSProperties = {
   fontFamily: FONTS.prata, fontSize: 12, letterSpacing: "0.24em",
-  textTransform: "uppercase", color: COLORS.taupe, margin: 0,
+  textTransform: "uppercase", color: COLORS.brou, opacity: 0.82, margin: 0,
   display: "block", marginBottom: 12,
 };
 const inputStyle: React.CSSProperties = {

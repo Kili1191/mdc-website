@@ -15,7 +15,7 @@ import BeginForm from "./BeginForm";
 // paragraphe : quelqu'un qui hesite veut savoir ce qu'il declenche.
 
 export const metadata = {
-  title: "Begin · Maison du Calme",
+  title: "Begin",
   description: "Begin with Maison du Calme. Not a booking, a conversation. Tell Kilian what you carry. Read by Kilian alone, held in confidence, never shared.",
 };
 
@@ -50,9 +50,7 @@ export default function BeginPage() {
           <div>
             <p style={body}>
               Answer in a sentence or in a page, however it comes. There is no right way to
-              say it, and no one but Kilian will read it. This is not a form to be
-              processed. It is the beginning of the only kind of conversation this work
-              starts with.
+              say it, and no one but Kilian will read it. This is not a form to be processed.
             </p>
             <div style={{ marginTop: 40 }}>
               <BeginForm />
@@ -82,9 +80,9 @@ export default function BeginPage() {
           <nav className="mdc-index" aria-label="What happens next">
             {SUITE.map((e) => (
               <div className="mdc-index__row" key={e.n}>
-                <span style={{ ...micro, opacity: 0.7 }}>{e.n}</span>
+                <span style={{ ...micro, opacity: 0.82 }}>{e.n}</span>
                 <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>{e.quoi}</span>
-                <span style={{ ...body, fontSize: 16, maxWidth: "none", opacity: 0.72 }}>{e.detail}</span>
+                <span style={{ ...body, fontSize: 16, maxWidth: "none", opacity: 0.82 }}>{e.detail}</span>
                 <span />
               </div>
             ))}

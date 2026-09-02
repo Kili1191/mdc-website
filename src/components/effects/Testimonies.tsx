@@ -61,9 +61,7 @@ export default function Testimonies() {
         They asked to say this.
       </h2>
       <p style={{ ...body, marginTop: 28 }}>
-        Two people who did the coaching, and asked to say so. Nobody who comes to the
-        house is shown here, or anywhere, and that is not an oversight — the silent work
-        stays silent, including about who has done it.
+        Two people who did the coaching, and asked to say so. Nobody who comes to the house is shown here, or anywhere.
       </p>
 
       <div style={{

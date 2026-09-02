@@ -52,7 +52,7 @@ export const sectionHead: CSSProperties = {
 // Le taupe reste bon pour un filet ou une bordure. Il n'ecrit plus.
 export const eyebrow: CSSProperties = {
   fontFamily: FONTS.prata, fontSize: 11, letterSpacing: "0.28em",
-  textTransform: "uppercase", color: COLORS.brou, opacity: 0.78, margin: 0,
+  textTransform: "uppercase", color: COLORS.brou, opacity: 0.82, margin: 0,
 };
 
 export const micro: CSSProperties = {

@@ -291,7 +291,7 @@ export default function Home() {
           <nav className="mdc-index" aria-label="The practice">
             {PRATIQUE.map((r) => (
               <a key={r.name} href={r.href}>
-                <span style={{ ...micro, opacity: 0.7 }}>{r.n}</span>
+                <span style={{ ...micro, opacity: 0.82 }}>{r.n}</span>
                 <span style={{ ...label, fontSize: 19 }}>{r.name}</span>
                 <span style={{ ...pageBody, fontSize: 17, maxWidth: "none" }}>{r.line}</span>
                 <span style={micro}>{r.meta}</span>
@@ -350,7 +350,7 @@ export default function Home() {
             <div style={{ marginTop: 52 }}>
               <QuietButton href="/begin">Begin</QuietButton>
             </div>
-            <p style={{ ...bodyStyle, fontSize: 13, opacity: 0.68, marginTop: 28, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
+            <p style={{ ...bodyStyle, fontSize: 13, opacity: 0.82, marginTop: 28, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
               One question, answered in your own time.
             </p>
           </div>

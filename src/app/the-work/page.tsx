@@ -16,7 +16,7 @@ import AssetFrame from "@/components/effects/AssetFrame";
 // image en face. Aucun mot n'est ajoute ni retire ; c'est le rythme qui change.
 
 export const metadata = {
-  title: "The Work · Maison du Calme",
+  title: "The Work",
   description: "What actually happens in a session at Maison du Calme. You arrive, you lie down dressed, the room stays quiet. An honest answer that gives away nothing.",
 };
 
@@ -90,7 +90,7 @@ export default function TheWorkPage() {
         <div className="mdc-measure mdc-gap--sm">
           <p style={body}>
             You leave lower, slower, and lighter. Most people are quiet for the rest of
-            the day. The change is not dramatic and it is not marketing. It is the
+            the day. The change is not dramatic. It is the
             specific relief of putting down a weight you had stopped noticing you held.
           </p>
         </div>
@@ -116,8 +116,7 @@ export default function TheWorkPage() {
             <p style={body}>
               It is not massage. It is not therapy, and it is not a substitute for it. It is
               not religion, and it asks you to believe nothing. It is not a treatment for an
-              illness, and it makes no medical claim. It is not for everyone, and we will
-              tell you honestly if it is not for you.
+              illness, and it makes no medical claim. It is not for everyone, and we will tell you if it is not for you.
             </p>
             <p style={{ ...micro, marginTop: 32 }}>Fully clothed · In silence · No oil · One to one</p>
             <div style={{ marginTop: 44 }}>

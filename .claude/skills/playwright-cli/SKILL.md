@@ -83,6 +83,11 @@ await b.close();
   were expected — so a genuine 404 there is now a regression, not the norm.
   `AssetFrame` still HEAD-probes, so a missing file degrades quietly rather
   than breaking the page: check the network log, not just the screenshot.
+- **`/testimony/*.mp4` 404s ARE expected**, unlike the images above. `/coaching`
+  HEAD-probes `01.mp4` and `02.mp4` to decide whether to render the "In their
+  own words" section at all; the videos are not in the repo yet. Deposing a
+  file is meant to be the whole act, with no manifest to keep in sync. See
+  `public/testimony/README.txt`. Do not chase these two.
 - **Page height is a timing trap.** Measure `document.documentElement.scrollHeight`
   only after the wait. Measured too early the home page reads 900 instead of
   5400 and looks like the 6 stations vanished.

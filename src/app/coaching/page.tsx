@@ -50,7 +50,7 @@ import Testimonies from "@/components/effects/Testimonies";
 // formation est un praticien qu'on croit sur les deux.
 
 export const metadata = {
-  title: "Coaching · Maison du Calme",
+  title: "Coaching",
   description: "The other door at Maison du Calme. For people who arrive needing to speak. One to one, in conversation, arranged separately from the silent work.",
 };
 
@@ -156,7 +156,7 @@ export default function CoachingPage() {
               qu'il est le vrai format du travail, pas parce qu'on solde. */}
           <div className="mdc-index mdc-index--wide" style={{ marginTop: 56 }}>
             <div className="mdc-index__row">
-              <span style={{ ...micro, opacity: 0.7 }}>01</span>
+              <span style={{ ...micro, opacity: 0.82 }}>01</span>
               <span style={{ ...label, fontSize: 19 }}>ONE CONVERSATION</span>
               <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>
                 For one thing you need to think through with someone.
@@ -164,7 +164,7 @@ export default function CoachingPage() {
               <span style={micro}>£150</span>
             </div>
             <div className="mdc-index__row">
-              <span style={{ ...micro, opacity: 0.7 }}>02</span>
+              <span style={{ ...micro, opacity: 0.82 }}>02</span>
               <span style={{ ...label, fontSize: 19 }}>SIX CONVERSATIONS</span>
               <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>
                 Taken over a few months. This is the shape the work takes.

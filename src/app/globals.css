@@ -6,7 +6,12 @@
   --color-ocre: #B89968;
   --color-sauge: #8C8B6A;
   --color-rouille: #A55A3E;
-  --color-ink: #0A0806;
+  /* Pas de token d'encre noire ici, et ce n'est pas un oubli. `--color-ink:
+     #0A0806` y a vecu sans qu'aucune regle ne l'utilise : un quasi-noir hors
+     palette Aube Encens, sur un site ou le theme sombre est interdit. Un token
+     `--color-*` n'est pas une valeur morte, Tailwind en tire des utilitaires
+     (`text-ink`, `bg-ink`) : le noir etait donc a une classe de distance. Le
+     texte s'ecrit en Brou #4A3B2A, les titres forts en Brou fonce #2F2519. */
   --font-prata: var(--font-prata);
 }
 

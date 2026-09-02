@@ -31,7 +31,7 @@ import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
 // lignes de l'index sont nouvelles, dans la meme voix.
 
 export const metadata = {
-  title: "Sessions · Maison du Calme",
+  title: "Sessions",
   description: "The sessions of Maison du Calme. Silent, one to one, fully clothed, in Battersea. NERVANA begins with ANTARA. From £130 to £250.",
 };
 
@@ -79,7 +79,7 @@ export default function SessionsPage() {
         <nav className="mdc-index" aria-label="The four rooms">
           {INDEX.map((r) => (
             <a key={r.name} href={`#${r.name.toLowerCase()}`}>
-              <span style={{ ...micro, fontStyle: "normal", opacity: 0.7 }}>{r.n}</span>
+              <span style={{ ...micro, fontStyle: "normal", opacity: 0.82 }}>{r.n}</span>
               <span style={{ ...label, fontSize: 19 }}>{r.name}</span>
               <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>{r.line}</span>
               <span style={micro}>{r.meta}</span>
@@ -112,8 +112,7 @@ export default function SessionsPage() {
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: 34 }}>
               <p style={body}>
-                Ninety minutes for the thing underneath the other things. ANTARA is the
-                entrance, and the session they return to. It is unhurried by
+                Ninety minutes for the thing underneath the other things. ANTARA is the entrance. It is unhurried by
                 design, long enough for the body to stop bracing, and then to let go of
                 what the bracing was holding.
               </p>
@@ -199,7 +198,7 @@ export default function SessionsPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: 34 }}>
               <p style={body}>
                 TRANSMISSION is not booked. It is applied for, and it is granted rarely,
-                and to very few people at all.
+                to very few people at all.
               </p>
               <p style={body}>
                 It asks more of you and returns more. Those it is for tend to

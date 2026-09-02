@@ -21,8 +21,8 @@ import AssetFrame from "@/components/effects/AssetFrame";
 // seul portrait ne vaut pas un second GPU sur telephone.
 
 export const metadata = {
-  title: "Practitioner · Maison du Calme",
-  description: "Kilian, the sole practitioner of Maison du Calme. Years of study at the source, in India, teacher to student. Every session is his. No client is ever named.",
+  title: "Practitioner",
+  description: "Kilian, the sole practitioner of Maison du Calme. Years of study in India, teacher to student. Every session is his. No client is ever named.",
 };
 
 export default function PractitionerPage() {

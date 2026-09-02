@@ -12,7 +12,7 @@ import SplitTextChars from "@/components/effects/SplitTextChars";
 // forme d'une revue, ce que cette page essaie d'etre.
 
 export const metadata = {
-  title: "Notes · Maison du Calme",
+  title: "Notes",
   description: "A long piece, once a month, from Maison du Calme. On weight, silence, what the body keeps, and the tiredness of people who hold everything together.",
 };
 
@@ -49,9 +49,9 @@ export default function NotesPage() {
         <nav className="mdc-index mdc-index--wide" aria-label="The essays">
           {ESSAIS.map((e) => (
             <a key={e.n} href={`#essay-${e.n}`}>
-              <span style={{ ...micro, opacity: 0.7 }}>{e.n}</span>
+              <span style={{ ...micro, opacity: 0.82 }}>{e.n}</span>
               <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>{e.titre}</span>
-              <span style={{ ...body, fontSize: 16, maxWidth: "none", opacity: 0.72 }}>{e.sur}</span>
+              <span style={{ ...body, fontSize: 16, maxWidth: "none", opacity: 0.82 }}>{e.sur}</span>
               <span style={micro}>Essay</span>
             </a>
           ))}
@@ -66,8 +66,7 @@ export default function NotesPage() {
           </div>
           <p style={body}>
             Everyone you know is carrying something they have decided not to mention. The
-            most capable people carry the most, and mention it least, it is often the
-            reason they became capable. This first Note is about the weight that has no
+            most capable people carry the most, and mention it least. It is often the reason they became capable. This first Note is about the weight that has no
             name and files under nothing: not grief exactly, not stress exactly, just the
             accumulated load of being the one who copes. What it costs to hold it. What
             it costs more to keep pretending you aren&apos;t. And what happens, physically,

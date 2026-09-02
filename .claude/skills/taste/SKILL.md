@@ -195,9 +195,50 @@ It is not a text colour. Measured against the site's marble ground
 
 This was not cosmetic. Every duration and every fee line on the Sessions page
 — the information that actually sells — was written in taupe italic at 12px.
-It was, in practice, invisible. Use `brou` for eyebrows and micro-labels, with
-opacity no lower than 0.78, and drop the italic: small caps + wide tracking +
-italic at 12px is three legibility costs stacked on one line.
+It was, in practice, invisible. Use `brou` for eyebrows and micro-labels, and
+drop the italic: small caps + wide tracking + italic at 12px is three
+legibility costs stacked on one line.
+
+**The opacity floor is 0.82, not 0.78.** This file said 0.78 for months and
+0.78 does not clear its own bar. Measured, brou over the marble ground:
+
+| opacity | 0.78 | 0.82 | 0.85 | 1.00 |
+|---|---|---|---|---|
+| brou | **4.21** | 4.62 | 4.92 | 6.93 |
+
+Every eyebrow on the site, and every field label on the Begin form, sat at
+4.21 against a 4.5 requirement — including "Your name" and "What brings you",
+on the one page that turns a visitor into a client.
+
+### 11b. The palette itself cannot write, except in brou
+
+Measured on the same ground. This is the number that matters and it was never
+written down:
+
+| colour | contrast | usable as text? |
+|---|---|---|
+| Brou `#4A3B2A` | 6.93 | yes |
+| Brou foncé `#2F2519` | 9.65 | yes |
+| **Rouille `#A55A3E`** | **3.27** | **no** |
+| Sauge `#8C8B6A` | 2.25 | no |
+| Taupe `#A89A85` | 1.77 | no |
+| Ocre `#B89968` | 1.73 | no |
+
+Only two of the seven Aube Encens colours can carry text. Brou and brou foncé
+write; the other five are for matter, rules, borders and fills.
+
+**This puts two canonical rules in conflict, and the conflict is not resolved.**
+`VISION.md` assigns Rouille to CTAs and highlights; checklist item 13 demands
+4.5:1 for every text colour. Rouille reaches 3.27. So today every
+`QuietButton` label, every room name (ANTARA, VAYU, SOMA…) and the nav's
+`Begin` are below the bar — `Begin` in the nav worst of all at 2.59, because
+it also carries opacity.
+
+Do not silently darken Rouille to fix this: that leaves the palette, which
+`VISION.md` forbids, and `VISION.md` outranks this file. Do not silently
+accept it either. It is Kilian's arbitration, and until he makes it, a new
+element should not add more Rouille text — use brou for the words and Rouille
+for the rule, the underline or the mark beside them.
 
 ### 12. A page is not a column
 

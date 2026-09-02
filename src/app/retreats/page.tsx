@@ -17,7 +17,7 @@ import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
 // ecrit en taupe italique.
 
 export const metadata = {
-  title: "Retreats · Maison du Calme",
+  title: "Retreats",
   // La meta description est ce que Google affiche : c'est souvent la premiere
   // phrase de vente qu'un visiteur lit, avant meme la page. Elle disait
   // « No fixed dates. Register interest. » — soit l'absence, puis la langue des
@@ -61,7 +61,7 @@ export default function RetreatsPage() {
                 Ce qui reste INTERNE et n'a rien a faire ici : « cheap to
                 operate ». C'est de l'economie, pas une promesse. */}
             <p style={body}>
-              It will be far, and warm — the kind of distance that makes the return
+              It will be far, and warm, the kind of distance that makes the return
               flight feel like a decision rather than a commute. Asia, most likely.
             </p>
             <p style={body}>
@@ -71,7 +71,7 @@ export default function RetreatsPage() {
               the morning undoes a week. We have not named a place yet because we have
               not found one quiet enough.
             </p>
-            <p style={micro}>By application · No fixed dates</p>
+            <p style={micro}>By application</p>
           </div>
 
           {/* Le refus, remonte au rang de la promesse. En bas de page et en
@@ -83,8 +83,7 @@ export default function RetreatsPage() {
             </h2>
             <p style={{ ...body, marginTop: 28 }}>
               There is no programme, no schedule of activities, no group of strangers.
-              If that is what you are looking for, this is not it, and we would rather
-              say so.
+              If that is what you are looking for, this is not it.
             </p>
           </div>
         </section>
@@ -109,8 +108,7 @@ export default function RetreatsPage() {
               that is the reason to go.
             </p>
             <p style={body}>
-              It is the same work, uninterrupted, over days instead of minutes — and for
-              the few who have gone all the way in a single session, it is the natural next
+              It is the same work, uninterrupted, over days instead of minutes, and for the few who have gone all the way in a single session, it is the natural next
               thing. Not a break from your life. A distance from it, long enough to hear
               yourself over it.
             </p>
@@ -136,8 +134,7 @@ export default function RetreatsPage() {
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             <p style={body}>
-              You will not have to explain yourself. Not because nobody asks — nobody
-              will — but because the people beside you came for the same reason, and they
+              You will not have to explain yourself. Not because nobody asks, but because the people beside you came for the same reason, and they
               already know what it costs to be the one everybody leans on.
             </p>
             <p style={body}>
@@ -160,8 +157,7 @@ export default function RetreatsPage() {
             Everything once you land.
           </h2>
           <p style={{ ...body, marginTop: 28 }}>
-            Accommodation and every meal are included, and so is the work itself. Flights
-            are not — you book your own, and you come from wherever you are.
+            Accommodation and every meal are included, and so is the work itself. Flights are not. You book your own, and you come from wherever you are.
           </p>
           <p style={{ ...micro, marginTop: 30 }}>
             Accommodation and meals included · Flights not included
