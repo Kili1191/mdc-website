@@ -49,10 +49,12 @@ export const metadata: Metadata = {
     url: "https://maisonducalme.com",
     siteName: "Maison du Calme",
     title: "Maison du Calme",
+    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Maison du Calme" }],
     description: "Maison du Calme is a house for the people who hold everything and never say so. Silent one-to-one work in Battersea, South West London, and coaching on a call. From £130.",
   },
   twitter: {
     card: "summary_large_image",
+    images: ["/og.jpg"],
     title: "Maison du Calme",
     description: "Maison du Calme is a house for the people who hold everything and never say so. Silent one-to-one work in Battersea, South West London, and coaching on a call. From £130.",
   },

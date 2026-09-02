@@ -198,15 +198,14 @@ export default function SessionsPage() {
           <div>
             <p className="mdc-num">04</p>
             <p style={label}>TRANSMISSION</p>
-            <p style={{ ...micro, marginTop: 14 }}>By application · Limited to six per client each year</p>
+            <p style={{ ...micro, marginTop: 14 }}>By application · Rarely, and to few</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
               The deepest room. Not for everyone, and not often.
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: 34 }}>
               <p style={body}>
-                TRANSMISSION is not booked. It is applied for, and it is granted rarely,
-                no more than six times in a year to any one person, and to very few people
-                at all.
+                TRANSMISSION is not booked. It is applied for, and it is granted rarely, and
+                to very few people at all.
               </p>
               <p style={body}>
                 It asks more of you and returns more. Those it is for tend to

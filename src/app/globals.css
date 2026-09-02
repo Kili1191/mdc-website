@@ -375,3 +375,16 @@ body {
   min-height: 130vh;
   min-height: 130svh;
 }
+
+
+/* ─── La cible des liens du pied de page ────────────────────────────────
+   15 px de haut mesures a 393 px de large : trop petit pour un pouce. Meme
+   remede que la nav — un calque invisible, aucun deplacement de la mise en
+   page. Les entrees sont espacees de 12 px, on deborde donc de 8 : la cible
+   passe a 31 px et deux voisines ne se chevauchent pas. */
+.mdc-foot a { position: relative; display: inline-block; }
+.mdc-foot a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: -8px; bottom: -8px;
+}
