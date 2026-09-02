@@ -82,6 +82,47 @@ Vercel émet le certificat HTTPS automatiquement dès que le DNS résout. Tu voi
 
 ---
 
+## 4bis. Où vont les messages du formulaire Begin — À FAIRE
+
+Sans cette étape, `/begin` répond une erreur à chaque envoi. C'est délibéré :
+un envoi qui échoue visiblement vaut mieux qu'un envoi qui fait semblant.
+Personne ne doit pouvoir écrire ce qu'il porte et croire que c'est parti.
+
+La route `src/app/api/begin/route.ts` poste le message en JSON à l'URL donnée
+par **`MDC_BEGIN_FORWARD_URL`**. Aucun fournisseur n'est imposé et aucune clé
+n'est écrite dans le dépôt : ça peut être un formulaire hébergé, un webhook,
+une automatisation qui envoie l'e-mail.
+
+### Dans Vercel
+
+Settings → Environment Variables → Add
+
+    Nom     MDC_BEGIN_FORWARD_URL
+    Valeur  l'URL choisie
+    Envs    Production (et Preview si tu veux tester avant)
+
+Puis **redéployer** : une variable ajoutée ne s'applique pas au build en cours.
+
+### Vérifier
+
+    curl -i -X POST https://maisonducalme.com/api/begin \
+      -H 'content-type: application/json' \
+      -d '{"name":"Test","reach":"toi@exemple.com","carry":"essai"}'
+
+`200 {"ok":true}` et le message arrive à destination. `503
+destination_absente` veut dire que la variable n'est pas vue par ce
+déploiement.
+
+### Avant la mise en ligne
+
+Le formulaire porte **deux textes en placeholder** — ce qu'il dit une fois
+parti, et ce qu'il dit quand ça échoue. Ils s'affichent tels quels
+(`TODO — …`). Ils sont en haut de `src/app/begin/BeginForm.tsx` et listés dans
+`COPY_OUVERT.md` §1.1. Kilian les écrit, personne d'autre.
+
+Rien du contenu des messages n'est journalisé : les logs disent si l'envoi a
+réussi, jamais ce qu'il disait. La page promet le secret, le serveur le tient.
+
 ## 5. Vérifs post-déploiement
 
 - `https://maisonducalme.com` → doit servir le site (redirect www → apex ou l'inverse selon config Vercel, laisse ce que Vercel propose par défaut)

@@ -34,13 +34,24 @@ fausse : `begin/page.tsx:71` promet **« Read by Kilian alone… Answered
 personally, within two working days »**. C'est la seule promesse sur laquelle
 tout le site repose, et elle n'est pas tenue par le code.
 
-**Ce qu'il faut de Kilian :** ou vont les messages. Une adresse e-mail, un
-service (Formspree, Resend, une route API vers sa boite), ou un lien `mailto:`
-en depannage. Des que c'est tranche, le branchement est a moi.
+**LE BRANCHEMENT EST FAIT** (2 septembre 2026). `src/app/api/begin/route.ts`
+recoit le message, le valide et le poste a l'URL donnee par
+`MDC_BEGIN_FORWARD_URL`. Aucun fournisseur n'est impose : le choix reste entier.
+Rien du contenu n'est journalise, la page promet le secret. Tant que la variable
+n'est pas posee, la route repond 503 et le formulaire affiche son echec — un
+envoi qui rate visiblement vaut mieux qu'un envoi qui fait semblant.
 
-**Ce qui manquera alors, et qui n'existe nulle part :** le texte de
-confirmation d'envoi, le texte d'echec, et le message de champ obligatoire.
-Trois phrases.
+**Ce qu'il reste a Kilian, et rien d'autre :**
+
+1. **La destination.** Une URL a poser dans Vercel. Voir `DEPLOY.md` §4bis.
+2. **Deux phrases**, qui n'existent nulle part dans le set valide et qu'aucun
+   agent n'ecrira : ce que le formulaire dit une fois parti, et ce qu'il dit
+   quand ca echoue. Elles sont en placeholder visible en haut de
+   `src/app/begin/BeginForm.tsx` (`TODO_ENVOYE`, `TODO_ECHEC`).
+
+La troisieme phrase annoncee ici — « ce champ est obligatoire » — n'est plus
+necessaire : `name` et `reach` portent `required`, et c'est le navigateur qui le
+dit, dans la langue du visiteur.
 
 ### 1.2 Retreats affirme des faits que Kilian a dits non arretes
 
