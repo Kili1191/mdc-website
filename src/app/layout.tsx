@@ -42,19 +42,19 @@ export const metadata: Metadata = {
     default: "Maison du Calme",
     template: "%s · Maison du Calme",
   },
-  description: "For those who carry everything inside.",
+  description: "Maison du Calme is a house for the people who hold everything and never say so. Silent one-to-one work in Battersea, South West London, and coaching on a call. From £130.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: "https://maisonducalme.com",
     siteName: "Maison du Calme",
     title: "Maison du Calme",
-    description: "For those who carry everything inside.",
+    description: "Maison du Calme is a house for the people who hold everything and never say so. Silent one-to-one work in Battersea, South West London, and coaching on a call. From £130.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Maison du Calme",
-    description: "For those who carry everything inside.",
+    description: "Maison du Calme is a house for the people who hold everything and never say so. Silent one-to-one work in Battersea, South West London, and coaching on a call. From £130.",
   },
 };
 

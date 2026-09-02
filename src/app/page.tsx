@@ -174,12 +174,15 @@ export default function Home() {
         {/* 1. SEUIL — pas de rectangle média, le marbre ambient (SiteMarble)
             suffit. Le titre au centre. */}
         <section className="mdc-station" style={{ ...stationStyle, flexDirection: "column" }}>
-          <div style={{
+          {/* C'est le <h1> du site. L'accueil n'en avait aucun — les sept
+              autres pages en ont un — et cette phrase est deja le titre :
+              elle etait simplement dans un div. */}
+          <h1 style={{
             ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)",
-            maxWidth: 900, textAlign: "center",
+            maxWidth: 900, textAlign: "center", margin: 0, fontWeight: 400,
           }}>
             <SplitTextChars text="For those who carry everything inside." delay={22} duration={900} />
-          </div>
+          </h1>
           {/* La maison ne dit pas la meme chose a l'aller et au retour.
               Les deux lignes sont superposees et se croisent selon le sens du
               scroll : on descend, elle vous accueille ; on remonte, elle vous

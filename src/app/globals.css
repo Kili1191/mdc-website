@@ -329,3 +329,19 @@ body {
   .mdc-rail { gap: 18px; margin-top: 56px; }
   .mdc-rail__card { width: 74vw; min-height: 230px; padding: 26px 22px 24px; }
 }
+
+/* ─── L'anneau de focus ─────────────────────────────────────────────────
+   Le navigateur en pose un par defaut : 1 px noir, dessine pour du blanc.
+   Sur une pierre ivoire il est a la fois dur et peu lisible, et c'est le
+   seul endroit du site ou l'on voyait un reglage d'usine.
+   Celui-ci est du brou, decolle de deux pixels, avec un halo clair qui le
+   detache des veines du marbre — la meme lumiere que le sillon des onglets. */
+:focus-visible {
+  outline: 2px solid rgba(74, 59, 42, 0.85);
+  outline-offset: 3px;
+  border-radius: 2px;
+  box-shadow: 0 0 0 5px rgba(255, 251, 243, 0.55);
+}
+/* La souris ne merite pas d'anneau : :focus-visible ne se declenche qu'au
+   clavier, mais Safari pose encore un contour au clic sur les boutons. */
+:focus:not(:focus-visible) { outline: none; }
