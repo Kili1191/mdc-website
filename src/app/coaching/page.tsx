@@ -1,4 +1,4 @@
-import { pageStyle, body, lead, bigHead, sectionHead, eyebrow, micro } from "@/styles/page";
+import { pageStyle, body, lead, bigHead, sectionHead, eyebrow, micro, label } from "@/styles/page";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
 import Testimonies from "@/components/effects/Testimonies";
@@ -148,8 +148,32 @@ export default function CoachingPage() {
             clock is not what you came for.
           </p>
           <p style={{ ...micro, marginTop: 34 }}>
-            One to one · By call · Around an hour · Fee on request
+            One to one · By call · Around an hour
           </p>
+
+          {/* Le sommaire de l'accueil annonce « six conversations, or one » :
+              il fallait que la page le propose vraiment. Deux formes, deux
+              prix, sans justification — un tarif qui s'excuse invite a
+              negocier. Le cycle de six est moins cher a la seance parce
+              qu'il est le vrai format du travail, pas parce qu'on solde. */}
+          <div className="mdc-index mdc-index--wide" style={{ marginTop: 56 }}>
+            <div className="mdc-index__row">
+              <span style={{ ...micro, opacity: 0.7 }}>01</span>
+              <span style={{ ...label, fontSize: 19 }}>ONE CONVERSATION</span>
+              <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>
+                For one thing you need to think through with someone.
+              </span>
+              <span style={micro}>£150</span>
+            </div>
+            <div className="mdc-index__row">
+              <span style={{ ...micro, opacity: 0.7 }}>02</span>
+              <span style={{ ...label, fontSize: 19 }}>SIX CONVERSATIONS</span>
+              <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>
+                Taken over a few months. This is the shape the work actually takes.
+              </span>
+              <span style={micro}>£780</span>
+            </div>
+          </div>
         </section>
 
         {/* Les temoignages ne s'affichent que si les fichiers existent

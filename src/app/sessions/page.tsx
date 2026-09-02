@@ -32,16 +32,16 @@ import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
 
 export const metadata = {
   title: "Sessions · Maison du Calme",
-  description: "A sequence of private sessions at Maison du Calme, beginning with ANTARA. Silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees on request.",
+  description: "A sequence of private sessions at Maison du Calme, beginning with ANTARA. Silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees from £130 to £250.",
 };
 
 // L'index. Une ligne par salle, ecrite pour etre lue en diagonale : ce que
 // c'est, combien de temps, et pour quoi on vient. C'est la seule copy nouvelle
 // de la page.
 const INDEX = [
-  { n: "01", name: "ANTARA", meta: "90 minutes", line: "The weight you have carried longest." },
-  { n: "02", name: "VAYU", meta: "60 minutes", line: "When you cannot get a full breath." },
-  { n: "03", name: "SOMA", meta: "60 minutes", line: "The tension you have stopped noticing." },
+  { n: "01", name: "ANTARA", meta: "90 minutes · £250", line: "The weight you have carried longest." },
+  { n: "02", name: "VAYU", meta: "60 minutes · £180", line: "When you cannot get a full breath." },
+  { n: "03", name: "SOMA", meta: "60 minutes · £180", line: "The tension you have stopped noticing." },
   { n: "04", name: "TRANSMISSION", meta: "By application", line: "The deepest room. Not for everyone." },
 ];
 
@@ -94,7 +94,7 @@ export default function SessionsPage() {
             Le QUARTIER, pas l'adresse : SW11 2UG est une adresse, et une
             adresse se donne dans la conversation, apres. */}
         <p style={{ ...micro, marginTop: 28 }}>
-          Battersea, South West London · Fees are shared on request
+          Battersea, South West London · £130 to £250
         </p>
 
         {/* ---- 01 ANTARA ---- */}
@@ -125,7 +125,7 @@ export default function SessionsPage() {
                 something they could not have named on the way in.
               </p>
             </div>
-            <p style={{ ...micro, marginTop: 36 }}>Fee on request · By conversation</p>
+            <p style={{ ...micro, marginTop: 36 }}>£250 · 90 minutes · By conversation</p>
           </div>
         </section>
 
@@ -152,7 +152,7 @@ export default function SessionsPage() {
                 You leave with more room. Not a metaphor. More room.
               </p>
             </div>
-            <p style={{ ...micro, marginTop: 36 }}>Fee on request · By conversation</p>
+            <p style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · By conversation</p>
           </div>
         </section>
 
@@ -179,7 +179,7 @@ export default function SessionsPage() {
                 You leave lower to the ground. Steadier. Returned to your own weight.
               </p>
             </div>
-            <p style={{ ...micro, marginTop: 36 }}>Fee on request · By conversation</p>
+            <p style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · By conversation</p>
           </div>
         </section>
 
@@ -238,7 +238,7 @@ export default function SessionsPage() {
           }}>
             <div>
               <p style={{ ...label, fontSize: 19 }}>ABHYANGA</p>
-              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>Ayurvedic · 60 minutes · Fee on request</p>
+              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>Ayurvedic · 60 minutes · £160</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 Warm oil, worked over the whole body in one unbroken rhythm. It is the
                 oldest practice in this house, and the only one that uses oil.
@@ -246,7 +246,7 @@ export default function SessionsPage() {
             </div>
             <div>
               <p style={{ ...label, fontSize: 19 }}>MARMA</p>
-              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>Ayurvedic · 60 minutes · Fee on request</p>
+              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>Ayurvedic · 60 minutes · £160</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 The junctions where the body gathers what it holds. Marma work is
                 pressure and stillness at those points, slower than massage and more
@@ -255,7 +255,7 @@ export default function SessionsPage() {
             </div>
             <div>
               <p style={{ ...label, fontSize: 19 }}>REIKI</p>
-              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>60 minutes · Fee on request</p>
+              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>60 minutes · £130</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 Hands resting on the body, or just above it, and held. Nothing is
                 pressed and nothing is moved. Fully clothed, in silence.
@@ -270,7 +270,7 @@ export default function SessionsPage() {
             </div>
             <div>
               <p style={{ ...label, fontSize: 19 }}>SOUND</p>
-              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>60 minutes · Fee on request</p>
+              <p style={{ ...micro, marginTop: 12, fontSize: 11.5 }}>60 minutes · £140</p>
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 Bowls set directly on the body and struck softly, so the tone arrives
                 through the body before it reaches the ear. Fully clothed, face down,
