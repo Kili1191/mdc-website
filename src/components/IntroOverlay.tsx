@@ -13,19 +13,27 @@
 import { useEffect, useRef, useState } from 'react';
 import { INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EVENT, prefersReducedMotion, shouldBypassIntro } from '@/lib/introReady';
 
-// Le budget de l'intro est 5 x T + HOLD + EXIT. A 3000/1200/1600 il faisait
-// 17,8 s — mesure sur une premiere visite, sans localStorage. Une porte de
-// dix-huit secondes devant un site qui doit faire s'inscrire des gens ne se
-// defend pas : la plupart partent avant de l'avoir vue s'ouvrir.
-// A 700/800/1200, le meme geste tient en 5,5 s. Les quatre phases restent :
-// ce sont elles qui dessinent la maison trait par trait, en retirer une
-// laisserait le trace incomplet. C'est le tempo qui change, pas le dessin.
-const T = 700;         // demi-souffle ms
+// DEUX CONTRAINTES QUI NE SONT PAS LA MEME.
+//
+// La maison a besoin de QUATRE TRAITS pour etre dessinee — en retirer un
+// laisse le trace incomplet. Le souffle, lui, a besoin d'environ trois
+// secondes par demi-cycle : c'est ce qui fait qu'on le suit au lieu de le
+// regarder.
+//
+// A l'origine les deux etaient liees, un trait = un demi-souffle a 3000 ms,
+// et l'intro faisait 17,8 s. En la ramenant a 700 ms j'ai tenu la duree mais
+// casse ce pour quoi elle existe : personne n'inspire en sept dixiemes de
+// seconde. Le mecanisme etait toujours la, le souffle non.
+//
+// Elles sont maintenant separees : un demi-souffle dure DEUX traits. La
+// maison se dessine en quatre traits de 1400 ms, et l'on inspire pendant
+// 2800, on expire pendant 2800. Total 9 s, contre 17,8 au depart.
+const T = 1400;        // duree d'un trait ms — un demi-souffle en vaut deux
 const HOLD = 800;      // pause apres yeux + titre
 const EXIT = 1200;     // duree du zoom d'entree
 const FIXE = 1600;     // temps de lecture de l'intro sans mouvement
 
-const LABELS = ['inhale', 'exhale', 'inhale', 'exhale'];
+const LABELS = ['inhale', 'exhale'];
 
 export default function IntroOverlay() {
   const [mounted, setMounted] = useState(false);
@@ -141,9 +149,9 @@ export default function IntroOverlay() {
       const el = bwRef.current;
       if (!el) return;
       if (!on) { el.style.opacity = '0'; return; }
-      const isIn = h === 0 || h === 2;
+      const isIn = h === 0;
       const sz = isIn ? 10 + 9 * f : 19 - 9 * f;
-      const label = LABELS[Math.min(h, 3)];
+      const label = LABELS[Math.min(h, 1)];
       if (label !== lastLabel) { el.textContent = label; lastLabel = label; }
       // GPU transform scale instead of font-size (avoids per-frame text layout)
       el.style.transform = `translate(-50%,-50%) scale(${(sz / 19).toFixed(4)})`;
@@ -206,7 +214,8 @@ export default function IntroOverlay() {
       if (h < 4) {
         wipe(h, f); setEyes(0);
         brandRef.current?.classList.remove('mdc-brand-in');
-        updateBreath(h, f, true);
+        const souffle = t / (2 * T);
+        updateBreath(Math.floor(souffle) % 2, souffle % 1, true);
         rafId.current = requestAnimationFrame(tick);
         return;
       }
