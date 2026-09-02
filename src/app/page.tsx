@@ -73,8 +73,8 @@ function gaussian(x: number, mu: number, sigma: number) {
 // ne font pas partie de la suite : elles vivent dans « Also practised here ».
 // Le coaching est la seule chose qui ne se passe pas dans la maison.
 const PRATIQUE = [
-  { n: "01", name: "NERVANA",  href: "/sessions#antara", meta: "From £180",
-    line: "The suite Kilian built. Every one of them begins with Antara." },
+  { n: "01", name: "NERVANA",  href: "/sessions#antara", meta: "Begins at £250",
+    line: "The suite Kilian built. It opens with ANTARA, always." },
   { n: "02", name: "ABHYANGA", href: "/sessions#also",   meta: "Ayurvedic · £160",
     line: "Warm oil, worked over the body in one unbroken rhythm." },
   { n: "03", name: "MARMA",    href: "/sessions#also",   meta: "Ayurvedic · £160",
@@ -83,8 +83,8 @@ const PRATIQUE = [
     line: "Hands resting on the body, or just above it, and held." },
   { n: "05", name: "SOUND",    href: "/sessions#also",   meta: "£140",
     line: "Bowls set on the body. The only work here you will hear." },
-  { n: "06", name: "COACHING", href: "/coaching",        meta: "By video · £150",
-    line: "Six conversations, or one. This one happens on a call." },
+  { n: "06", name: "COACHING", href: "/coaching",        meta: "On a call · from £150",
+    line: "One conversation, or six, wherever you are." },
 ];
 
 
@@ -197,7 +197,7 @@ export default function Home() {
             <div data-dir="up" style={{ position: "absolute", inset: 0, opacity: 0, transition: "opacity 900ms cubic-bezier(0.16, 1, 0.3, 1)" }}>
               <BreathReveal
                 as="p"
-                text="Whatever you set down here stays here. Nothing is asked of you on the way out."
+                text="Whatever you set down here stays here. You take back only yourself."
                 style={{ ...bodyStyle, textAlign: "center" }}
                 stagger={90}
               />
@@ -209,7 +209,7 @@ export default function Home() {
         <section className="mdc-station" style={stationStyle}>
           <BreathReveal
             as="p"
-            text="There is a kind of tiredness that rest doesn't reach…"
+            text="There is a kind of tiredness that rest doesn't reach."
             style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 52px)", maxWidth: 900, textAlign: "center", position: "relative", zIndex: 1 }}
             stagger={90}
           />
@@ -245,7 +245,7 @@ export default function Home() {
         <section className="mdc-station" style={{ ...stationStyle, flexDirection: "column" }}>
           <BreathReveal
             as="p"
-            text="Maison du Calme is a house, not an address. It asks nothing of you, and what it makes is calm."
+            text="Maison du Calme is a house. It asks nothing of you, and what it makes is calm."
             style={{ ...displayItalic, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: 860, textAlign: "center", lineHeight: 1.35 }}
             stagger={90}
           />
@@ -284,7 +284,7 @@ export default function Home() {
         <section className="mdc-wrap" style={{ position: "relative", zIndex: 5, paddingTop: 40, paddingBottom: 40 }}>
           <p style={eyebrow}>What is practised here</p>
           <h2 style={{ ...sectionHead, marginTop: 30, maxWidth: "20ch" }}>
-            Up to ninety minutes. Clothed, unless there is oil.
+            Six ways in. Five in the room, one on a call.
           </h2>
 
           <nav className="mdc-index" aria-label="The practice">
@@ -299,7 +299,9 @@ export default function Home() {
           </nav>
 
           <p style={{ ...micro, marginTop: 28 }}>
-            Battersea, South West London · In person, £130 to £250 · Coaching, £150
+            Up to ninety minutes. Clothed, unless there is oil.
+            <br />
+            Battersea, South West London · In the room, £130 to £250 · Coaching, from £150
           </p>
 
           {/* La transmission. Kilian : « tu n'insistes pas sur le fait que je
@@ -312,10 +314,7 @@ export default function Home() {
               Learned where it was never packaged.
             </h2>
             <p style={{ ...pageBody, marginTop: 36 }}>
-              Kilian still goes back to India, to teachers who do not run courses for
-              Westerners. You will not find them online and you cannot book a training
-              with them. You arrive, and word of mouth on the ground decides. What they
-              teach has not been shortened to fit a weekend.
+              Kilian still learns in India, from teachers who take students by word of mouth and no other way. You reach them by going. What they teach has never been shortened to fit a weekend.
             </p>
           </div>
         </section>
@@ -343,7 +342,7 @@ export default function Home() {
             </div>
             <BreathReveal
               as="p"
-              text="Entry is by conversation, not by calendar. Tell us what you carry."
+              text="Entry is by conversation, not by calendar. Tell Kilian what you carry."
               style={{ ...bodyStyle, marginTop: 40, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}
               stagger={90}
             />
@@ -351,7 +350,7 @@ export default function Home() {
               <QuietButton href="/begin">Begin</QuietButton>
             </div>
             <p style={{ ...bodyStyle, fontSize: 13, opacity: 0.68, marginTop: 28, marginLeft: "auto", marginRight: "auto", textAlign: "center" }}>
-              No forms you dread. One question, answered in your own time.
+              One question, answered in your own time.
             </p>
           </div>
         </section>

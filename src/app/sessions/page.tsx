@@ -32,7 +32,7 @@ import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
 
 export const metadata = {
   title: "Sessions · Maison du Calme",
-  description: "A sequence of private sessions at Maison du Calme, beginning with ANTARA. Silent, one-to-one, fully clothed. From the ninety-minute threshold session to work offered by application only. Fees from £130 to £250.",
+  description: "The sessions of Maison du Calme. Silent, one to one, fully clothed, in Battersea. NERVANA begins with ANTARA. From £130 to £250.",
 };
 
 // L'index. Une ligne par salle, ecrite pour etre lue en diagonale : ce que
@@ -203,9 +203,8 @@ export default function SessionsPage() {
                 at all.
               </p>
               <p style={body}>
-                It asks more of you and returns more. We say little about it in writing,
-                and that is deliberate. Those it is for tend to recognise it before it is
-                described.
+                It asks more of you and returns more. Those it is for tend to
+                recognise it before it is described.
               </p>
               <p style={body}>
                 If you feel it is yours, say so.

@@ -16,7 +16,7 @@ import BeginForm from "./BeginForm";
 
 export const metadata = {
   title: "Begin · Maison du Calme",
-  description: "Begin with Maison du Calme. Not a booking, a conversation. Tell us what you carry. Read by Kilian alone, held in confidence, never shared.",
+  description: "Begin with Maison du Calme. Not a booking, a conversation. Tell Kilian what you carry. Read by Kilian alone, held in confidence, never shared.",
 };
 
 const SUITE = [

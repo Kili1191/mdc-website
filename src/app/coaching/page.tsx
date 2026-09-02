@@ -63,8 +63,8 @@ export default function CoachingPage() {
           <SplitTextChars text="The other door." delay={22} duration={900} />
         </h1>
         <p style={{ ...lead, marginTop: 40 }}>
-          Some people arrive needing to speak. This is where that is the work, and not the
-          thing we get underneath.
+          Some people need to say it out loud. Here that is the work itself, not the
+          thing to get underneath.
         </p>
 
         <div className="mdc-measure" style={{ marginTop: 44, display: "flex", flexDirection: "column", gap: 22 }}>
@@ -86,11 +86,9 @@ export default function CoachingPage() {
           {/* COPY NOUVELLE — a valider.
               Dire la difference au lieu de la laisser se decouvrir. */}
           <p style={body}>
-            The silent work was not learned from a certificate. This was, and deliberately
-            so. Kilian holds the International Postgraduate Diploma in Coaching and
+            The silent work was not learned from a certificate. This was. Kilian holds the International Postgraduate Diploma in Coaching and
             Leadership Development (Level 7), awarded by OTHM, completed at the Jay Shetty
-            Certification School. Two different kinds of knowing, and it is worth being
-            clear about which is which.
+            Certification School.
           </p>
         </div>
 
@@ -114,7 +112,7 @@ export default function CoachingPage() {
             <p style={{ ...body, marginTop: 28 }}>
               It does not treat illness, it does not replace clinical care, and it does not
               go looking through your childhood for a cause. It works forward. If what you
-              need is therapy, you will be told so plainly and pointed somewhere better.
+              need is therapy, you will be told so and pointed somewhere better.
             </p>
           </div>
         </section>
@@ -122,7 +120,7 @@ export default function CoachingPage() {
         <section className="mdc-gap">
           <p style={eyebrow}>How it works</p>
           <h2 style={{ ...sectionHead, marginTop: 26 }}>
-            This one does not need the room.
+            On a call, wherever you are.
           </h2>
           {/* COPY NOUVELLE — a valider.
               Le coaching se fait UNIQUEMENT a distance. La page laissait croire
@@ -169,7 +167,7 @@ export default function CoachingPage() {
               <span style={{ ...micro, opacity: 0.7 }}>02</span>
               <span style={{ ...label, fontSize: 19 }}>SIX CONVERSATIONS</span>
               <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>
-                Taken over a few months. This is the shape the work actually takes.
+                Taken over a few months. This is the shape the work takes.
               </span>
               <span style={micro}>£780</span>
             </div>
