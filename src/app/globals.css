@@ -345,3 +345,33 @@ body {
 /* La souris ne merite pas d'anneau : :focus-visible ne se declenche qu'au
    clavier, mais Safari pose encore un contour au clic sur les boutons. */
 :focus:not(:focus-visible) { outline: none; }
+
+/* ─── La hauteur des stations ───────────────────────────────────────────
+   svh, et surtout PAS dvh.
+
+   `vh` vaut le viewport large, mesure barre d'URL retractee : sur iOS
+   barre visible, chaque station depassait la zone lisible et le rythme
+   une-station-un-ecran se decalait.
+
+   `dvh` corrige le cadrage mais introduit pire : sa valeur CHANGE quand la
+   barre se retracte. La hauteur du document varie donc PENDANT le scroll,
+   et Lenis comme la boucle des stations mesurent une cible qui bouge sous
+   elles. Un site pilote au scroll ne le supporte pas.
+
+   `svh` est le plus petit viewport possible : sa valeur ne bouge jamais.
+   La premiere declaration sert de repli aux navigateurs d'avant 2022. */
+.mdc-station {
+  height: 100vh;
+  height: 100svh;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* La station de la gravure est plus haute : le burin a besoin de descendre.
+   Meme unite, meme raison — surcharge apres .mdc-station. */
+.mdc-station--haute {
+  height: 130vh;
+  height: 130svh;
+  min-height: 130vh;
+  min-height: 130svh;
+}
