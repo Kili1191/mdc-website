@@ -221,7 +221,7 @@ export default function SessionsPage() {
             promet "not touched with oil" : Abhyanga est un soin a l'huile, il ne
             peut pas etre dans la meme promesse. Separer les deux protege la
             phrase et la verite. */}
-        <section className="mdc-gap">
+        <section id="also" className="mdc-gap">
           <p style={eyebrow}>Also practised here</p>
           <h2 style={{ ...sectionHead, marginTop: 30, maxWidth: "24ch" }}>
             Older than the house.
@@ -259,6 +259,13 @@ export default function SessionsPage() {
               <p style={{ ...body, marginTop: 18, fontSize: 17 }}>
                 Hands resting on the body, or just above it, and held. Nothing is
                 pressed and nothing is moved. Fully clothed, in silence.
+              </p>
+              {/* Kilian est maitre et peut enseigner tous les niveaux ; il
+                  n'enseigne que le premier. Ecrire l'un sans l'autre deforme,
+                  donc les deux tiennent dans la meme phrase. La page d'accueil
+                  ne porte plus ce fait : c'est ici qu'on parle d'enseignement. */}
+              <p style={{ ...micro, marginTop: 18, fontSize: 11.5 }}>
+                Kilian is a Reiki master. He teaches level one.
               </p>
             </div>
             <div>
