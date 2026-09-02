@@ -84,11 +84,29 @@ fonctionnel, et affaiblissait l'ensemble.
 
 ## Ce qui reste a faire
 
-- **Une seule loi de mouvement.** Tout sur 5500 ms ou un multiple propre, deux
-  courbes d'easing au total. Les durees sont encore dispersees.
-- **La navigation traverse la pierre.** Un changement de route n'est pas un
-  fondu : la camera se deplace sur une meme dalle et la marque de la
-  destination s'y grave a l'arrivee. La gravure devient la grammaire du site.
+Les deux chantiers qui figuraient ici sont clos. Ils y sont restes assez
+longtemps pour qu'une session les reprenne de confiance : ce paragraphe existe
+pour qu'aucune ne les recommence.
+
+**Une seule loi de mouvement — faite.** `src/lib/motion.ts` porte les durees,
+les staggers et les deux courbes, et tout descend de `BREATH_MS`. L'audit
+d'avant donnait trois durees pour le meme geste, cinq staggers, dix delais et
+six courbes.
+
+Il reste une exception, et elle est volontaire : la gravure de l'onglet actif
+(`globals.css`) tourne en 700 ms sur une TROISIEME courbe,
+`cubic-bezier(0.65, 0.05, 0.36, 1)`. Elle a ete reglee contre la mesure — la
+courbe de reveal etait si front-loaded que le geste etait fini a 110 ms, avant
+d'avoir ete percu. Un burin n'accelere pas comme un souffle. C'est le seul
+endroit du site ou la loi cede, et elle cede pour une raison ecrite.
+
+**La navigation qui traverse la pierre — abandonnee**, pas en attente. Elle a
+ete construite, mesuree et retiree ; la section suivante raconte pourquoi, et
+la regle qui en sort la disqualifie definitivement. Ne pas la relancer.
+
+Ce qui reste ouvert est ailleurs, et n'appartient pas a ce document : les
+briques 2 et 3 du marbre dans `VISION.md` (bords organiques, grain et
+vignette), et le portrait de Kilian.
 
 ## Ce qui a ete essaye pour la navigation, et retire
 

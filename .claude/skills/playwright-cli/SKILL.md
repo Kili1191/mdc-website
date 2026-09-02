@@ -77,9 +77,12 @@ await b.close();
 - **`?from=carry`** also bypasses the intro, as does `prefers-reduced-motion`.
 - **Wait ~3s.** `networkidle` fires before `SplitTextChars` and the marble
   reveal have run. Screenshots taken immediately look half-empty.
-- **Asset slots 404 by design.** `/photos/*.jpg` are not produced yet;
-  `AssetFrame` HEAD-probes them, so console 404s on those paths are expected,
-  not a regression.
+- **Asset slots now exist.** `/photos/*.jpg` are produced by
+  `scripts/generate_images.py` from the real onyx bas-relief and are committed.
+  This line used to say they were missing and that console 404s on those paths
+  were expected — so a genuine 404 there is now a regression, not the norm.
+  `AssetFrame` still HEAD-probes, so a missing file degrades quietly rather
+  than breaking the page: check the network log, not just the screenshot.
 - **Page height is a timing trap.** Measure `document.documentElement.scrollHeight`
   only after the wait. Measured too early the home page reads 900 instead of
   5400 and looks like the 6 stations vanished.
@@ -109,3 +112,53 @@ Playwright is deliberately **not** in `package.json`. Vercel installs
 devDependencies during the build, and this repo already carries `puppeteer`
 for `screenshot.mjs`. Install it with `--no-save` when you need it so
 production builds stay lean. `puppeteer` works too and needs the same GL flags.
+
+## Measuring an animation mid-flight
+
+Verifying that a *finished* animation looks right is easy. Verifying that it
+**progresses** — that a sweep actually sweeps — took a full session of wrong
+answers on this repo. Every trap below was hit for real while checking the nav
+engraving. They compound: each one alone produces a confident, wrong reading.
+
+**1. `getAnimations()` pause does not take.** Grabbing the animation and
+pausing it left every frame showing the finished state. The series looked
+identical at 120 / 300 / 620 ms because it *was* identical, and the tiny
+differences being measured were marble noise.
+
+**2. Freeze with a negative `animation-delay` instead.** It does not depend on
+`getAnimations()` resolving the pseudo-element, which is what failed above:
+
+```js
+el.style.animation = 'none';
+void el.offsetWidth;                       // force reflow
+el.style.animation = 'mdc-graver 700ms cubic-bezier(0.65,0.05,0.36,1) forwards';
+el.style.animationDelay = '-240ms';        // 240ms into the curve
+el.style.animationPlayState = 'paused';
+```
+
+**3. Set the freeze BEFORE restarting the animation.** Changing
+`animation-delay` on an animation that has already finished does not rewind it
+in Chrome. Order matters: kill, reflow, re-declare with the delay, then pause.
+
+**4. The marble pollutes every pixel diff.** `SiteMarble` veins move
+continuously behind everything, so a naive frame-to-frame diff reports change
+where nothing changed. **Measure the noise floor first** — two captures with
+nothing animating — and only trust a threshold above it.
+
+**5. Do not hide the canvas to remove that noise.** Hiding the marble layer
+gated the nav off entirely and produced a blank measurement. Clip to the
+element's own bounding box instead, and keep the ground where it is.
+
+**6. The first capture can be blank.** The canvas had not painted yet, so the
+0 ms reference frame was empty — which silently invalidated the whole series
+measured against it. Always look at the reference frame before trusting the
+deltas.
+
+**7. Anchor the clip on the element, not on coordinates.** A hand-placed crop
+drifted onto the wordmark twice. Take `boundingBox()` of the actual node.
+
+**8. Shoot at true size.** An 8× zoom flattered a lip that read as an outline,
+not a groove, at the size a visitor sees.
+
+And a plain one: **screenshots do not survive the container.** Re-shoot against
+the merged build rather than trusting a PNG from an earlier session.

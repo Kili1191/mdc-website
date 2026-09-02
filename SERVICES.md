@@ -10,26 +10,26 @@ personne ne l'avait ecrit.*
 |---|---|---|
 | **La suite silencieuse** (ANTARA, VAYU, SOMA, TRANSMISSION) | oui, page Sessions | le coeur. ANTARA est l'entree, tout le monde y passe |
 | **Retraites** | oui, page Retreats | sur candidature |
-| **Coaching** | oui, page Coaching | OTHM Level 7 (Ofqual) + Jay Shetty Certification School (Association for Coaching) |
-| **Enseignement Reiki** | **non, nulle part** | Maitre Reiki, habilite a enseigner tous les niveaux, **choisit de n'enseigner que le niveau 1** |
-| **Sound bath / sound healing** | **non, nulle part** | technique separee. Peter Hess non nomme, sur decision de Kilian |
+| **Coaching** | oui, page Coaching | OTHM Level 7 + Jay Shetty Certification School (Association for Coaching). **Ne jamais ecrire « Ofqual » ni « RQF »** tant qu'un numero n'est pas au dossier : deja publie par erreur, puis retire. Ce tableau portait la mention entre parentheses, ce qui suffisait a la faire recopier |
+| **Enseignement Reiki** | oui, pages Practitioner et Sessions | Maitre Reiki, habilite a enseigner tous les niveaux, **choisit de n'enseigner que le niveau 1**. Le refus est le sujet, pas le titre |
+| **Sound bath / sound healing** | oui, accueil et page Sessions, 60 min £140 | technique separee. Peter Hess non nomme, sur decision de Kilian |
 | **Abhyanga** (massage ayurvedique a l'huile) | oui, page Sessions, hors suite | seul soin a l'huile |
 | **Marma** (therapie des points) | oui, page Sessions, hors suite | |
 | **Reiki en seance** | oui, page Sessions, hors suite | distinct de l'enseignement, qui vit sur Practitioner |
 
-**Le site couvre deux offres sur cinq.** Ce n'est pas un detail de copy : trois
-lignes de metier sont absentes, sans page, sans mention, sans entree de nav.
+**Les cinq lignes de metier sont sur le site.** Ce document a ete ecrit quand
+il n'y en avait que deux, et l'ecart qu'il servait a nommer est comble. Il
+reste pour ce qu'il fait d'autre : tenir la liste des faits, et la liste de ce
+qui ne s'ecrit pas.
 
-## La question non tranchee : le sound healing
+## Le sound healing : tranche
 
-On ignore si le travail sonore Peter Hess est :
+La question posee ici etait de savoir si le travail sonore etait integre a la
+suite ou une offre distincte. Elle est reglee par les tarifs : SOUND a sa
+ligne, sa duree et son prix — 60 minutes, £140 — sur l'accueil et sur Sessions.
+C'est une offre distincte, hors suite, au meme titre qu'Abhyanga et Marma.
 
-- **integre a la suite**, auquel cas les salles le contiennent deja et il n'y a
-  rien a ajouter, ou
-- **une offre distincte**, auquel cas elle manque au meme titre que le coaching.
-
-Les descriptions actuelles des salles ne mentionnent aucun son. A trancher
-avant d'ecrire quoi que ce soit.
+L'ecole n'est toujours nommee nulle part, et ne le sera pas.
 
 ## La collision des certifications
 

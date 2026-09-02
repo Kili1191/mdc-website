@@ -228,15 +228,15 @@ Run mentally, silently, top to bottom. If any answer is "no" or "not sure," fix 
 11. No visible frame, border, shadow, or card on content? (A `backdrop-filter` box counts as a card.)
 12. Section vertical spacing ≥ 96px?
 13. Every text colour ≥ 4.5:1 against the marble — i.e. no text written in taupe?
-15. If a full-screen overlay is up, is scrolling stopped in JS as well as CSS, and is the page returned to the top when it lifts?
-16. Does anything change on screen without the user having done something? (A timer, an idle clock, a breath driving the background — all forbidden on the ground layer.)
-14. If the page presents more than one offer, is there an index at the top?
-13. Body font-size ≥ 18px, line-height ≥ 1.75?
-14. If this section is copy-only, is there also a non-textual moment (image slot, 3D, matter)?
-15. The 3D house is the logo (Rouille fill, ≤ 0.48 scale), not a custom architecture?
-16. On mobile (< 640px), does everything still fit without horizontal scroll and stay readable?
-17. Does it run at 60fps in the production build?
-18. If a user glances at this for 2 seconds, does it say "Sugimoto/Aman quiet" or "designer showing off"?
+14. If a full-screen overlay is up, is scrolling stopped in JS as well as CSS, and is the page returned to the top when it lifts?
+15. Does anything change on screen without the user having done something? (A timer, an idle clock, a breath driving the background — all forbidden on the ground layer.)
+16. If the page presents more than one offer, is there an index at the top?
+17. Body font-size ≥ 18px, line-height ≥ 1.75?
+18. If this section is copy-only, is there also a non-textual moment (image slot, 3D, matter)?
+19. The 3D house is the logo (Rouille fill, ≤ 0.48 scale), not a custom architecture?
+20. On mobile (< 640px), does everything still fit without horizontal scroll and stay readable?
+21. Does it run at 60fps in the production build?
+22. If a user glances at this for 2 seconds, does it say "Sugimoto/Aman quiet" or "designer showing off"?
 
 ## Anti-patterns — automatic fail
 
@@ -248,7 +248,10 @@ Any one of these means the change must be reworked:
 - Bright accent color introduced (blue, green, purple)
 - Sans-serif fallback rendering (means font not loaded — must fix)
 - Text over animated shader without contrast guarantee (voile card if unsure)
-- CTA without magnetic hover
+- A CTA that is not a `QuietButton` — above all a magnetic one. This line used
+  to read "CTA without magnetic hover", from before `MagneticButton` was
+  measured and removed (§9). It survived the removal and told every agent that
+  read the anti-patterns first to put the magnet back.
 - Any element that scales > 20% on hover
 - Any transition longer than 1.5s that isn't the intro or the home hero traversal
 - Adding a section named "About" or "Why us"

@@ -62,6 +62,19 @@ These docs live at repo root and win over anything in code when they conflict:
 - **ASSETS_NANOBANANA.md** — les 5 images d'états mentaux traversées au scroll (La Charge Vue → Le Premier Lâcher → La Chaleur Qui Revient → L'Espace Intérieur → La Présence à Soi), prompts Nano Banana verrouillés WEB09, workflow depth map (depth-anything.com), spec `DepthImageLayer.tsx` (HANDOFF_WEB07), fichiers attendus `public/states/state-N.jpg` + `state-N-depth.jpg`.
 - **COPY_V13.md** — copy des pages internes (Sessions, Practitioner, Retreats, The Work, Notes, Begin). Cadratins interdits.
 
+# L'agent copywriter, et la racine de session
+
+`.claude/agents/copywriter.md` porte les faits verifies, les six fautes deja
+commises et la voix. A convoquer des qu'un mot destine a un client est ecrit ou
+modifie.
+
+**Il ne se charge que si `mdc-website` est la RACINE de la session.** Claude
+Code lit `.claude/agents/` du dossier racine, pas des depots attaches. Une
+session ouverte sur un autre depot avec mdc-website en second ne le voit pas :
+`@copywriter` echoue, et on ecrit la copy sans filet sans s'en rendre compte.
+C'est arrive, et le depannage (copier le fichier dans `~/.claude/agents/`) ne
+survit pas au conteneur. Ouvrir la session depuis `Kili1191/mdc-website`.
+
 # Copy rule (absolute)
 
 **Zéro nouvelle copy user-facing écrite par l'agent.** Toute copie visible provient exclusivement du set validé ci-dessus + des fichiers Drive canoniques suivants (à ajouter au repo quand fournis) :
