@@ -46,7 +46,7 @@ export default function AssetFrame({
   const placeholderStyle: CSSProperties = {
     width: "100%", aspectRatio: aspect,
     ...(showSlotAffordance ? {
-      background: "repeating-linear-gradient(45deg, rgba(168,154,133,0.10) 0, rgba(168,154,133,0.10) 12px, rgba(168,154,133,0.04) 12px, rgba(168,154,133,0.04) 24px)",
+      background: "repeating-linear-gradient(45deg, rgba(144,128,103,0.10) 0, rgba(144,128,103,0.10) 12px, rgba(144,128,103,0.04) 12px, rgba(144,128,103,0.04) 24px)",
       border: `1px dashed ${COLORS.taupe}`,
       color: COLORS.taupe,
       fontFamily: FONTS.prata, fontSize: 11, letterSpacing: "0.24em",

@@ -160,7 +160,7 @@ export default function BeginForm() {
           </p>
         )}
         {!DESTINATION && (
-          <p style={{ ...noteStyle, marginTop: 22, color: COLORS.rouille }}>
+          <p style={{ ...noteStyle, marginTop: 22, color: COLORS.rouilleEncre }}>
             This form is not connected yet. Set NEXT_PUBLIC_CONTACT_EMAIL and it
             will send.
           </p>

@@ -5,7 +5,7 @@
   --color-brou: #4A3B2A;
   --color-ocre: #B89968;
   --color-sauge: #8C8B6A;
-  --color-rouille: #A55A3E;
+  --color-rouille: #B14E2D;
   --color-ink: #0A0806;
   --font-prata: var(--font-prata);
 }
@@ -50,7 +50,7 @@ body {
   font-size: 13px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  background-color: rgba(165, 90, 62, 0);
+  background-color: rgba(177, 78, 45, 0);
   transition:
     background-color 450ms cubic-bezier(0.4, 0, 0.6, 1),
     box-shadow 450ms cubic-bezier(0.4, 0, 0.6, 1);
@@ -58,16 +58,16 @@ body {
 
 .mdc-button:hover,
 .mdc-button:focus-visible {
-  background-color: rgba(165, 90, 62, 0.07);
+  background-color: rgba(177, 78, 45, 0.07);
   /* Une lueur tres basse, comme une braise sous la pierre. */
-  box-shadow: 0 0 0 1px rgba(165, 90, 62, 0.16);
+  box-shadow: 0 0 0 1px rgba(177, 78, 45, 0.16);
   transition:
     background-color 900ms cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 900ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .mdc-button:focus-visible {
-  outline: 2px solid rgba(165, 90, 62, 0.55);
+  outline: 2px solid rgba(177, 78, 45, 0.55);
   outline-offset: 3px;
 }
 
@@ -88,7 +88,7 @@ body {
 
 /* Un index : une ligne par offre, lisible en diagonale. Sans lui, il faut
    scroller toutes les sections pour savoir combien il y en a. */
-.mdc-index { margin-top: 72px; border-top: 1px solid rgba(168,154,133,0.35); }
+.mdc-index { margin-top: 72px; border-top: 1px solid rgba(144,128,103,0.35); }
 .mdc-index a,
 .mdc-index .mdc-index__row {
   display: grid;
@@ -97,7 +97,7 @@ body {
   grid-template-columns: 3.5rem 14rem 1fr auto;
   gap: 24px; align-items: baseline;
   padding: 26px 0; text-decoration: none;
-  border-bottom: 1px solid rgba(168,154,133,0.35);
+  border-bottom: 1px solid rgba(144,128,103,0.35);
 }
 /* Un sommaire d'essais : les titres sont des phrases, pas des noms de salles.
    Douze rem les cassaient en trois lignes. */
@@ -106,7 +106,7 @@ body {
 
 .mdc-index a { transition: background-color 900ms cubic-bezier(0.16,1,0.3,1); }
 .mdc-index a:hover, .mdc-index a:focus-visible {
-  background-color: rgba(165,90,62,0.05);
+  background-color: rgba(177,78,45,0.05);
   transition: background-color 450ms cubic-bezier(0.4,0,0.6,1);
 }
 
@@ -117,7 +117,7 @@ body {
 
 /* Un numero plutot qu'un filet : il dit ou l'on en est. */
 .mdc-num { font-family: var(--font-higuen), Georgia, serif;
-           font-size: 92px; line-height: 1; color: #A89A85; opacity: 0.30;
+           font-size: 92px; line-height: 1; color: #908067; opacity: 0.30;
            margin: 0 0 28px; }
 
 /* Deux colonnes de texte, sans image. */
@@ -316,12 +316,12 @@ body {
   scroll-snap-align: start;
   text-decoration: none;
   padding: 30px 28px 28px;
-  border-top: 1px solid rgba(168, 154, 133, 0.55);
+  border-top: 1px solid rgba(144, 128, 103, 0.55);
   transition: background-color 900ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .mdc-rail__card:hover,
 .mdc-rail__card:focus-visible {
-  background-color: rgba(165, 90, 62, 0.05);
+  background-color: rgba(177, 78, 45, 0.05);
   transition: background-color 450ms cubic-bezier(0.4, 0, 0.6, 1);
 }
 
