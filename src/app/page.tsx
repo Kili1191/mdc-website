@@ -287,13 +287,17 @@ export default function Home() {
             Six ways in. Five in the room, one on a call.
           </h2>
 
-          <nav className="mdc-index" aria-label="The practice">
+          {/* Le sommaire defile a l'horizontale. Demande de Kilian.
+              data-lenis-prevent : Lenis lisse le scroll de la page et
+              avalerait la molette au-dessus du rail. C'est l'echappatoire
+              documentee — sans elle, le rail ne bouge pas au trackpad. */}
+          <nav className="mdc-rail" aria-label="The practice" data-lenis-prevent>
             {PRATIQUE.map((r) => (
-              <a key={r.name} href={r.href}>
+              <a key={r.name} href={r.href} className="mdc-rail__card">
                 <span style={{ ...micro, opacity: 0.7 }}>{r.n}</span>
-                <span style={{ ...label, fontSize: 19 }}>{r.name}</span>
-                <span style={{ ...pageBody, fontSize: 17, maxWidth: "none" }}>{r.line}</span>
-                <span style={micro}>{r.meta}</span>
+                <span style={{ ...label, fontSize: 21, display: "block", marginTop: 18 }}>{r.name}</span>
+                <span style={{ ...pageBody, fontSize: 17, maxWidth: "none", display: "block", marginTop: 16 }}>{r.line}</span>
+                <span style={{ ...micro, display: "block", marginTop: "auto", paddingTop: 28 }}>{r.meta}</span>
               </a>
             ))}
           </nav>
