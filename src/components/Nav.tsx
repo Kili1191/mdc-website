@@ -122,7 +122,11 @@ export default function Nav() {
               style={{
               fontFamily: FONTS.prata, letterSpacing: "0.14em",
               textTransform: "uppercase", textDecoration: "none",
-              color: l.label === "Begin" ? COLORS.rouille : COLORS.brou, opacity: 0.82,
+              // BEGIN portait rouille A 0,82 d'opacite : 3,03:1 une fois compose
+              // sur la pierre. C'est l'appel principal du site, il ne peut pas
+              // etre le mot le moins lisible de la barre. Pleine opacite.
+              color: l.label === "Begin" ? COLORS.rouilleEncre : COLORS.brou,
+              opacity: l.label === "Begin" ? 1 : 0.82,
             }}>
               {l.label}
             </a>

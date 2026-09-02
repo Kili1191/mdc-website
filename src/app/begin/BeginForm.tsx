@@ -138,7 +138,7 @@ export default function BeginForm() {
           disabled={!DESTINATION}
           style={{
             fontFamily: FONTS.prata, fontSize: 14, letterSpacing: "0.32em",
-            textTransform: "uppercase", color: COLORS.rouille,
+            textTransform: "uppercase", color: COLORS.rouilleEncre,
             background: "transparent", border: `1px solid ${COLORS.rouille}`,
             padding: "18px 44px", borderRadius: 2,
             cursor: DESTINATION ? "pointer" : "not-allowed",
@@ -156,7 +156,7 @@ export default function BeginForm() {
             {envoye
               ? "Your message is opening in your mail application. If nothing opened, write to "
               : "This opens in your own mail application, and goes to Kilian. You can also write to "}
-            <a href={`mailto:${DESTINATION}`} style={{ color: COLORS.rouille }}>{DESTINATION}</a>.
+            <a href={`mailto:${DESTINATION}`} style={{ color: COLORS.rouilleEncre }}>{DESTINATION}</a>.
           </p>
         )}
         {!DESTINATION && (
