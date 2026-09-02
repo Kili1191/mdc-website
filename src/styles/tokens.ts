@@ -26,8 +26,27 @@
 // c'est le logo, et le seul accent du site. A 0,02 % de l'ecran, « rare » est
 // tenu.
 
-// Contrastes MESURES sur le parchemin #EDE4D0. Le seuil est 4,5:1 pour du
-// texte, 3,0:1 pour un trait ou une bordure.
+// ⚠ LES CONTRASTES CI-DESSOUS SONT MESURES CONTRE #EDE4D0 — UN FOND QUE LE
+// SITE N'AFFICHE JAMAIS. #EDE4D0 est le fond du <body>, visible seulement
+// avant le chargement du shader et dans le repli sans WebGL. Le fond reel est
+// la photographie de marbre, plus sombre.
+//
+// L'erreur est d'autant plus bete que la mesure existait deja dans le depot :
+// src/styles/page.ts ligne 48 note « le marbre du site (~rgb(221,205,185)) ».
+// Sur ce marbre-la, et il est encore optimiste :
+//
+//   brou           8,52 annonce  ->  6,93 reel
+//   rouilleEncre   4,51 annonce  ->  3,67 reel   <- sous le seuil
+//   taupe          3,04 annonce  ->  2,47 reel   <- sous le seuil
+//
+// Un audit colorimetrique a rejoue la chaine complete du shader (motif, voile,
+// reflet, irisation, grain, vignette non corrigee d'aspect) : au 1er centile
+// de la colonne de texte, le fond descend a Y 0,397 sur les pages internes et
+// Y 0,161 sur l'accueil sous le curseur. rouilleEncre y vaut 2,43 et 1,18.
+//
+// DONC : ne calibrez plus rien contre #EDE4D0. La grille ci-dessous est a
+// refaire contre le p1 mesure, et les valeurs sont a rediscuter avec elle.
+// Les seuils restent 4,5:1 pour du texte, 3,0:1 pour un trait.
 export const COLORS = {
   parchemin:  "#EDE4D0", // fond — 55%
   brou:       "#4A3B2A", // texte courant — 8,52:1

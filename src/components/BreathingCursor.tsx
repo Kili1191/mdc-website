@@ -152,7 +152,7 @@ export default function BreathingCursor() {
           style={{
             ...innerBase,
             background:
-              "radial-gradient(circle, rgba(165,90,62,0.22) 0%, rgba(165,90,62,0.06) 55%, rgba(165,90,62,0) 80%)",
+              "radial-gradient(circle, rgba(177,78,45,0.22) 0%, rgba(177,78,45,0.06) 55%, rgba(177,78,45,0) 80%)",
           }}
         />
       </div>
@@ -161,8 +161,8 @@ export default function BreathingCursor() {
           ref={dotInnerRef}
           style={{
             ...innerBase,
-            background: "#A55A3E",
-            boxShadow: "0 0 6px rgba(165,90,62,0.45)",
+            background: "#B14E2D",
+            boxShadow: "0 0 6px rgba(177,78,45,0.45)",
           }}
         />
       </div>

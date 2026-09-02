@@ -40,7 +40,7 @@ const displayCaps: React.CSSProperties = {
 };
 const linkStyle: React.CSSProperties = {
   fontFamily: FONTS.prata, fontSize: 12, letterSpacing: "0.28em",
-  textTransform: "uppercase", color: COLORS.rouille,
+  textTransform: "uppercase", color: COLORS.rouilleEncre,
   textDecoration: "none",
   borderBottom: `1px solid ${COLORS.rouille}`, paddingBottom: 4,
 };
