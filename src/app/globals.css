@@ -77,6 +77,12 @@ body {
    Elle est ici pour que toutes les pages en heritent, et pour qu'une
    correction ne se fasse qu'une fois. */
 
+:root {
+  /* Distance du bord de l'ecran a la colonne de texte de .mdc-wrap.
+     Sert au rail pour deborder puis se recaler — voir .mdc-rail. */
+  --mdc-inset: calc(max((100vw - 1180px) / 2, 0px) + 7vw);
+}
+
 .mdc-wrap { max-width: 1180px; margin: 0 auto; padding: 0 7vw; }
 .mdc-measure { max-width: 660px; }
 
@@ -255,4 +261,71 @@ body {
 @media (max-width: 900px) {
   .mdc-foot { grid-template-columns: 1fr 1fr; gap: 48px 32px; }
   .mdc-foot > :first-child { grid-column: 1 / -1; }
+}
+
+/* ─── Le rail : les offres, a l'horizontale ─────────────────────────────
+   Demande de Kilian. Six cartes qui defilent lateralement au lieu d'une
+   liste verticale.
+
+   Pas de detournement de la molette. Traduire un scroll vertical en
+   deplacement horizontal piege la page — on ne peut plus la quitter — et
+   c'est exactement le genre d'effet qui fait fuir. On s'appuie sur le
+   scroll natif : doigt sur mobile, trackpad lateral et Maj+molette sur
+   desktop. La carte suivante deborde volontairement du cadre : c'est elle
+   qui dit qu'il y a une suite.
+
+   Le focus clavier fonctionne sans rien ajouter — le navigateur amene dans
+   le champ le lien qui recoit le focus. */
+.mdc-rail {
+  display: flex;
+  gap: 28px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  /* Le snapport ignore le padding : sans ca, la premiere carte se cale sur
+     le bord de l'ecran et le rail s'ouvre decale de la valeur du debord
+     (231 px mesures a 1440). */
+  scroll-padding-left: var(--mdc-inset);
+  scroll-padding-right: var(--mdc-inset);
+  margin-top: 72px;
+  padding-bottom: 24px;
+
+  /* Le rail sort des marges de .mdc-wrap pour atteindre le bord de l'ecran.
+     Sans ca, trois cartes tenaient PILE dans la colonne de texte et la
+     quatrieme etait invisible : rien ne disait qu'il y avait une suite.
+     Le debord se fait en marge negative, et le meme creux est rendu en
+     padding — la premiere carte reste donc alignee sur le texte, et c'est
+     la derniere visible qui deborde. */
+  margin-left: calc(-1 * var(--mdc-inset));
+  margin-right: calc(-1 * var(--mdc-inset));
+  padding-left: var(--mdc-inset);
+  padding-right: var(--mdc-inset);
+
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.mdc-rail::-webkit-scrollbar { display: none; }
+
+.mdc-rail__card {
+  flex: 0 0 auto;
+  width: clamp(240px, 24vw, 300px);
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  text-decoration: none;
+  padding: 30px 28px 28px;
+  border-top: 1px solid rgba(168, 154, 133, 0.55);
+  transition: background-color 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mdc-rail__card:hover,
+.mdc-rail__card:focus-visible {
+  background-color: rgba(165, 90, 62, 0.05);
+  transition: background-color 450ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+@media (max-width: 720px) {
+  .mdc-rail { gap: 18px; margin-top: 56px; }
+  .mdc-rail__card { width: 74vw; min-height: 230px; padding: 26px 22px 24px; }
 }
