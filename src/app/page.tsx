@@ -13,7 +13,8 @@ import { houseFocus } from "@/lib/houseFocus";
 
 
 // Home = "la traversée de la maison" — 6 stations scroll-scrub.
-// Pas de pin. Le scroll est libre (Lenis). Chaque station est 100vh.
+// Pas de pin. Le scroll est libre (Lenis). Chaque station fait un ecran
+// stable (100svh, voir .mdc-station dans globals.css).
 // Sa visibilité est calculée en continu à partir du progrès de scroll
 // (0..1) via une courbe gaussienne centrée sur son propre pas. Aucun
 // re-render React par frame : on mute le DOM directement via refs.
@@ -54,9 +55,8 @@ const bodyStyle: React.CSSProperties = {
 };
 const stationStyle: React.CSSProperties = {
   position: "relative", zIndex: 5,
-  // dvh gère la barre d'adresse mobile Safari, fallback vh sur old browsers
-  height: "100dvh",
-  minHeight: "100vh",
+  // Hauteur : voir .mdc-station dans globals.css. Elle y est en svh (viewport
+  // stable) avec un repli vh, ce qu'un objet inline ne peut pas exprimer.
   width: "100%",
   display: "flex", alignItems: "center", justifyContent: "center",
   padding: "0 6vw",
@@ -262,11 +262,12 @@ export default function Home() {
              plus : depuis que chaque station se mesure elle-meme, un voisin
              est deja eteint des que la station depasse 0,22 hauteur d'ecran.
              Les 200dvh dataient du systeme precedent et rendaient la
-             traversee interminable. */}
+             traversee interminable. Sa hauteur vit dans .mdc-station--maison
+             (globals.css), en svh comme les autres. */}
         <section
-          className="mdc-station"
+          className="mdc-station mdc-station--maison"
           data-station="maison"
-          style={{ ...stationStyle, height: "130dvh", minHeight: "130vh" }}
+          style={stationStyle}
           aria-hidden
         />
 

@@ -73,7 +73,14 @@ Never:
 If a screen feels "tight," add whitespace before touching anything else.
 
 ### 5. Frames, cards, overlays — near-invisible
-- Content containers use `background: rgba(237, 228, 208, 0.28)` + `backdrop-filter: blur(3px)` — a *voile*, not a card
+- Content containers have **no container**. Text sits directly on the marble.
+  This line used to prescribe `rgba(237, 228, 208, 0.28)` + `backdrop-filter:
+  blur(3px)` — a *voile*, not a card — which §12 and checklist item 11 both
+  forbid outright. §12 is the later decision and it wins: a frosted box is an
+  admission that you do not trust your own ground. The marble is light
+  (luminance 205), brou reads on it directly, and no component uses
+  `backdrop-filter` any more. If text is ever unreadable over the shader, the
+  fix is the text colour and the shader's worst frame, never a panel behind it.
 - Never a visible border on content
 - Never a shadow on content (except cinematic vignette in shaders)
 - The marble (SiteMarble) is the persistent background — content floats over it, does not sit on cards
@@ -234,7 +241,7 @@ Run mentally, silently, top to bottom. If any answer is "no" or "not sure," fix 
 17. Body font-size ≥ 18px, line-height ≥ 1.75?
 18. If this section is copy-only, is there also a non-textual moment (image slot, 3D, matter)?
 19. The 3D house is the logo (Rouille fill, ≤ 0.48 scale), not a custom architecture?
-20. On mobile (< 640px), does everything still fit without horizontal scroll and stay readable?
+20. On mobile (< 640px), does everything still fit without horizontal scroll and stay readable, with every full-screen height in `svh` rather than `vh` or `dvh` (see Technical traps)?
 21. Does it run at 60fps in the production build?
 22. If a user glances at this for 2 seconds, does it say "Sugimoto/Aman quiet" or "designer showing off"?
 
@@ -266,6 +273,58 @@ Any one of these means the change must be reworked:
 - If uncertain about a type size, go smaller
 - If uncertain about a motion amplitude, go subtler
 - If uncertain about copy, use exactly what exists in the validated set, or TODO placeholder
+
+## Technical traps in this repo (they look like taste failures)
+
+Each of these produces something that reads as bad design but is caused by a
+mechanism, not a judgment call. Retuning values will never fix any of them.
+
+### Viewport units — `vh` is always wrong for a full-screen height
+`100vh` is the *large* viewport, measured with the iOS URL bar retracted. With
+the bar visible, every "full-screen" section overflows the readable area and the
+one-station-one-screen rhythm slips.
+
+- **`svh` for any full-screen height.** The small viewport is a **stable**
+  value, which matters here because Lenis and `src/lib/scrollStore.ts` measure a
+  document height that must stay true *during* the scroll.
+- **`dvh` only** when an element must track the visible area live AND nothing
+  scroll-linked depends on it: it changes as the bar retracts, so it reflows
+  mid-scroll. The home stations were on `dvh` for exactly this reason and it was
+  wrong.
+- `vh` remains fine for padding or decorative heights, where a few pixels of
+  drift are invisible.
+- The stations take their height from `.mdc-station` in `globals.css` — the only
+  place the pre-2022 `height: 100vh; height: 100svh;` fallback can be written.
+  An inline style object cannot carry the same property twice.
+
+### The WebGL layer steals the pointer on iOS
+A decorative canvas without `pointer-events: none` swallows taps and scroll on
+iOS specifically. The page looks frozen, not broken.
+
+### A 3D `transform` on a parent blurs the child text
+Text inside a 3D rendering context is resampled and goes soft. Move the text out
+of the 3D context — adjusting `translateZ` does not fix it.
+
+### Contrast is measured against the worst frame, not the average
+The marble moves, so a screenshot of one moment proves nothing. Measure text
+contrast against the **lightest frame the shader can produce**; minimum 4.5:1 in
+that worst case. The remedy is the text colour, never a panel behind it — §5 and
+§12 forbid the voile that older versions of this file recommended here.
+
+### Graven values, never retuned
+The marble is locked at `uSpread 1.00`, `uDecay 0.93`, `uRadius 0.29`,
+`lerp 0.65`, `uReflet 0.05`, `uIrisation 0.09`. Leva is for finding a value,
+never for shipping one: once validated by eye, a value is hard-coded
+immediately.
+
+### Next.js 16 is not the Next.js in your training data
+Read `node_modules/next/dist/docs/` before writing framework code (see
+`AGENTS.md`).
+
+### A full-screen layer rendered from a page is sized by the document
+`PageTransition` puts `transform` and `will-change` on the wrapper, which makes
+it the containing block for `position: fixed` descendants. Portal to `<body>`
+instead — see `CLAUDE.md`.
 
 ## Files that encode taste (read these before major changes)
 

@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Maison du Calme
 
-## Getting Started
+Le site de Maison du Calme. Next.js 16 (App Router, Turbopack), React 19,
+Three.js / React Three Fiber, GSAP, Lenis.
 
-First, run the development server:
+## Lire ceci avant d'ecrire une ligne
+
+Ce depot a des documents qui GAGNENT sur le code quand les deux se
+contredisent. Ils ne sont pas de la documentation d'accompagnement : ils sont
+la decision.
+
+| document | ce qu'il tranche |
+|---|---|
+| `VISION.md` | identite visuelle, palette Aube Encens, typo, regles absolues |
+| `COPY_V13.md` | la copy validee des pages internes. Aucune ligne visible ne s'ecrit ailleurs |
+| `DIRECTION.md` | ce que le site fait de different, et surtout ce qui a ete RETIRE pour y arriver |
+| `SERVICES.md` | les faits : ce que Kilian pratique reellement (interne, jamais publie) |
+| `ASSETS_NANOBANANA.md`, `ASSETS_PLAN.md` | les images et leurs emplacements |
+| `DEPLOY.md` | le standard de production |
+| `CLAUDE.md` / `AGENTS.md` | les regles pour un agent, et l'ordre d'autorite |
+
+Deux regles qui surprennent et qu'il vaut mieux connaitre tout de suite :
+
+- **Zero nouvelle copy destinee au client.** Tout texte visible vient du set
+  valide. Si une section semble manquer une phrase, on pose un TODO et on
+  demande — on n'ecrit pas un texte plausible.
+- **Un effet retire est retire.** `DIRECTION.md` liste ce qui a ete supprime et
+  pourquoi, mesures a l'appui. Ne pas le reintroduire en croyant bien faire.
+
+`.claude/skills/taste/SKILL.md` porte le jugement de design du projet, et
+`.claude/agents/copywriter.md` porte les faits et la voix. L'agent ne se charge
+que si ce depot est la RACINE de la session.
+
+## Developpement
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+npm run build        # doit passer avant tout commit
+npm start
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Le build vert avant chaque commit est la methode du projet, pas une politesse :
+un chantier a la fois, valide a l'oeil, puis on empile.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Verifier une page dans un vrai navigateur
 
-## Learn More
+Le fond est un canvas WebGL sur toutes les routes, ce qui piege un Chromium
+sans GPU. La recette complete, les drapeaux a passer et les pieges de mesure
+d'animation sont dans `.claude/skills/playwright-cli/SKILL.md`.
 
-To learn more about Next.js, take a look at the following resources:
+## Deploiement
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Vercel. Voir `DEPLOY.md`.

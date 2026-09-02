@@ -48,8 +48,10 @@ sont pas concernees.
 
 `SERVICES.md` — ce que Kilian propose reellement (suite silencieuse, retraites,
 coaching, enseignement Reiki niveau 1, sound healing) et ce que le site en
-montre. Interne, jamais publie. Le site ne couvre que deux offres sur cinq :
-lire avant de supposer que la pratique se resume aux Sessions.
+montre. Interne, jamais publie. Les cinq lignes de metier y sont desormais
+toutes presentes sur le site ; le document reste la source des faits et de ce
+qui ne s'ecrit pas — a lire avant de supposer que la pratique se resume aux
+Sessions.
 
 `DIRECTION.md` — l'immobilite comme interaction. Ce que le site fait de
 different, ce qui a ete retire pour y arriver, et ce qui reste. A lire avant

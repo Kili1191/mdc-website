@@ -19,7 +19,7 @@ import { COLORS, FONTS } from "@/styles/tokens";
 //   separation gratuite. L'espace et un numero disent la meme chose mieux.
 
 export const pageStyle: CSSProperties = {
-  position: "relative", zIndex: 5, minHeight: "100vh",
+  position: "relative", zIndex: 5, minHeight: "100svh",
   paddingTop: 160, paddingBottom: 200,
 };
 
