@@ -60,6 +60,10 @@ export const FONTS = {
   // Prata = corps + sous-titres · Higuen = gros titres uniquement · Great Vibes = exceptionnel
   prata:      "var(--font-prata), Georgia, serif",
   higuen:     "var(--font-higuen), Georgia, serif",
+  // Great Vibes n'est plus declaree dans le layout : elle ne sert qu'a la
+  // signature de /practitioner, et le layout la faisait telecharger sur les
+  // huit pages. Elle est chargee dans cette page-la. Ce jeton ne vaut donc
+  // que si la variable existe dans l'arbre — c'est-a-dire sur /practitioner.
   greatVibes: "var(--font-great-vibes), cursive",
 } as const;
 
