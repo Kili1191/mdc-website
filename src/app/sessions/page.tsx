@@ -35,13 +35,19 @@ export const metadata = {
   description: "The sessions of Maison du Calme. Silent, one to one, fully clothed, in Battersea. NERVANA begins with ANTARA. From £130 to £250.",
 };
 
-// L'index. Une ligne par salle, ecrite pour etre lue en diagonale : ce que
-// c'est, combien de temps, et pour quoi on vient. C'est la seule copy nouvelle
-// de la page.
+// L'index. Une ligne par salle, ecrite pour etre lue en diagonale.
+//
+// La meta porte le RANG, pas la duree. Avant, elle affichait « 60 minutes ·
+// £180 » a cote de « 90 minutes · £250 » : quatre salles, quatre prix, cote a
+// cote — un menu. Or la prose juste au-dessus dit « a suite, not a selection
+// […] never from a list », et Kilian : « nervana est une suite, ca peut pas
+// etre 180 ». Quelqu'un qui scanne lisait VAYU a £180 comme une porte
+// d'entree moins chere que l'entree obligatoire a £250.
+// Les durees n'ont pas disparu : chaque salle porte la sienne plus bas.
 const INDEX = [
-  { n: "01", name: "ANTARA", meta: "90 minutes · £250", line: "The weight you have carried longest." },
-  { n: "02", name: "VAYU", meta: "60 minutes · £180", line: "When you cannot get a full breath." },
-  { n: "03", name: "SOMA", meta: "60 minutes · £180", line: "The tension you have stopped noticing." },
+  { n: "01", name: "ANTARA", meta: "The entrance · £250", line: "The weight you have carried longest." },
+  { n: "02", name: "VAYU", meta: "After ANTARA · £180", line: "When you cannot get a full breath." },
+  { n: "03", name: "SOMA", meta: "After ANTARA · £180", line: "The tension you have stopped noticing." },
   { n: "04", name: "TRANSMISSION", meta: "By application", line: "The deepest room. Not for everyone." },
 ];
 
@@ -125,7 +131,7 @@ export default function SessionsPage() {
                 something they could not have named on the way in.
               </p>
             </div>
-            <p style={{ ...micro, marginTop: 36 }}>£250 · 90 minutes · By conversation</p>
+            <p style={{ ...micro, marginTop: 36 }}>£250 · 90 minutes · The entrance to the suite</p>
           </div>
         </section>
 
@@ -152,7 +158,7 @@ export default function SessionsPage() {
                 You leave with more room. Not a metaphor. More room.
               </p>
             </div>
-            <p style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · By conversation</p>
+            <p style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · Opens after ANTARA, in conversation</p>
           </div>
         </section>
 
@@ -179,7 +185,7 @@ export default function SessionsPage() {
                 You leave lower to the ground. Steadier. Returned to your own weight.
               </p>
             </div>
-            <p style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · By conversation</p>
+            <p style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · Opens after ANTARA, in conversation</p>
           </div>
         </section>
 

@@ -85,7 +85,10 @@ body {
 .mdc-index { margin-top: 72px; border-top: 1px solid rgba(168,154,133,0.35); }
 .mdc-index a,
 .mdc-index .mdc-index__row {
-  display: grid; grid-template-columns: 3.5rem 12rem 1fr auto;
+  display: grid;
+  /* 14rem et non 12 : a 12, TRANSMISSION — le plus long des noms, et
+     interlettre a 0,14em — debordait sur sa propre description. */
+  grid-template-columns: 3.5rem 14rem 1fr auto;
   gap: 24px; align-items: baseline;
   padding: 26px 0; text-decoration: none;
   border-bottom: 1px solid rgba(168,154,133,0.35);
