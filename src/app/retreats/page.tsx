@@ -18,7 +18,11 @@ import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
 
 export const metadata = {
   title: "Retreats · Maison du Calme",
-  description: "One private retreat from Maison du Calme. Small, rare, by application. The work given days instead of minutes. No fixed dates. Register interest.",
+  // La meta description est ce que Google affiche : c'est souvent la premiere
+  // phrase de vente qu'un visiteur lit, avant meme la page. Elle disait
+  // « No fixed dates. Register interest. » — soit l'absence, puis la langue des
+  // salons professionnels. Elle porte maintenant la rarete et l'urgence vraie.
+  description: "One retreat a year from Maison du Calme, very few places, by application. Somewhere far enough to stop being reachable. Places go to the list first.",
 };
 
 export default function RetreatsPage() {
@@ -164,13 +168,53 @@ export default function RetreatsPage() {
           </p>
         </section>
 
-        <section className="mdc-gap--sm">
-          <p style={{ ...body, color: COLORS.brouFonce }}>
-            If you would like to be told when it opens, tell us. Nothing more is asked
-            of you now.
-          </p>
-          <div style={{ marginTop: 40 }}>
-            <QuietButton href="/begin">Register interest</QuietButton>
+        {/* COPY NOUVELLE — a valider.
+            Rien n'est decide : ni les dates, ni le lieu, ni la duree, ni le
+            prix. On ne peut donc pas vendre la retraite. On peut construire la
+            liste — et c'est un meilleur travail, a condition de donner deux
+            vraies raisons d'y entrer maintenant plutot que plus tard.
+
+            1. LA PRIORITE. Peu de places, une fois par an, sur candidature :
+               qui attend l'annonce publique arrive apres. C'est vrai, donc on
+               peut le dire. Une rarete inventee se sent ; celle-la est reelle.
+
+            2. L'INFLUENCE. Puisque rien n'est fixe, ceux qui repondent
+               maintenant faconnent ce qui sera construit. C'est du bon
+               marketing — participer engage plus que recevoir — et c'est
+               surtout de la vraie recherche produit pour Kilian, qui n'a pas
+               encore tranche la duree.
+
+            Et la friction reelle qu'on leve : la peur de la liste de diffusion.
+            Ces gens-la n'entrent pas dans une liste sans savoir ce qui en sort.
+
+            L'ancien bouton disait « Register interest » — la langue des
+            salons professionnels. On demande une chose humaine. */}
+        <section className="mdc-gap">
+          <p style={eyebrow}>If you want to be there</p>
+          <h2 style={{ ...sectionHead, marginTop: 26, maxWidth: "22ch" }}>
+            The first people asked will be the people on this list.
+          </h2>
+          <div className="mdc-measure" style={{ marginTop: 30, display: "flex", flexDirection: "column", gap: 22 }}>
+            <p style={body}>
+              There will be very few places, once a year. They will be offered to the
+              people who asked first, before anything is announced anywhere. If you wait
+              for the announcement, there will be nothing left to announce.
+            </p>
+            <p style={body}>
+              Nothing is fixed yet — not the country, not the dates, not the length. That
+              is the honest position, and it is also the reason to write now rather than
+              later: the people on this list are the ones it gets built around. If ten
+              days is impossible and five is not, that is worth saying while it can still
+              change.
+            </p>
+            <p style={body}>
+              You will hear from us once, when it exists. Not before, not about anything
+              else, and never from anyone but Kilian.
+            </p>
+          </div>
+          <p style={{ ...micro, marginTop: 34 }}>One line is enough · No newsletter</p>
+          <div style={{ marginTop: 44 }}>
+            <QuietButton href="/begin">Put your name down</QuietButton>
           </div>
         </section>
       </div>
