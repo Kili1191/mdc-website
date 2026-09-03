@@ -53,6 +53,78 @@ La troisieme phrase annoncee ici — « ce champ est obligatoire » — n'est pl
 necessaire : `name` et `reach` portent `required`, et c'est le navigateur qui le
 dit, dans la langue du visiteur.
 
+### 1.1bis Les deux phrases du formulaire — ECRITES (3 sept. 2026)
+
+Kilian a passe la plume : « 1 mais copywrite ». Ecrites par l'agent copywriter,
+posees dans `BeginForm.tsx`, a valider par lui :
+
+- **confirmation** — `It has arrived. He has it from here.`
+- **echec** — `That did not send. What you wrote is still here: send it again.`
+
+La confirmation accuse reception et transfere la garde, sans rejouer « Read by
+Kilian alone » ni le delai, deja promis vingt lignes plus haut. L'echec dit le
+fait puis leve la seule peur reelle de quelqu'un qui vient d'ecrire une page :
+que son texte soit perdu. Il ne l'est pas, le formulaire n'est pas vide et le
+bouton est reactive. Aucun recours vers un contact de secours n'est propose,
+puisque le site n'en publie aucun.
+
+Corrige au passage : l'echec passait par `role="status"` / `aria-live="polite"`,
+qu'un lecteur d'ecran peut ne pas annoncer avant que la personne reparte. Il
+porte desormais `role="alert"`.
+
+### 1.1ter La sante, et pourquoi elle ne va PAS sur la page Begin
+
+Question posee par Kilian : « study what to ask in my field ». Verdict de
+l'agent copywriter, et c'est le point le plus important de sa reponse.
+
+Le trou clinique est reel : huile de sesame et allergies pour Abhyanga,
+grossesse, chirurgie recente, traitement en cours, tension, et les
+contre-indications propres au son. Kilian pose son intention de soin sans
+savoir tout cela.
+
+**Sa recommandation est de ne rien mettre sur la page Begin**, pour deux
+raisons.
+
+1. **La nature du document change.** Une donnee de sante est une donnee de
+   categorie particuliere au sens du UK GDPR (art. 9). Un champ medical
+   transforme un formulaire de contact en collecte de donnees de sante :
+   consentement explicite, base legale, duree de conservation, mention de
+   confidentialite, et une garantie sur le transit — or la route poste a une
+   URL tierce, et le service choisi (Formspree) STOCKE les messages sur ses
+   serveurs. **Ce n'est pas une decision de copy.** A trancher avec §6.3, qui
+   note deja qu'aucune mention de confidentialite n'existe sur le site.
+2. **Le registre.** Un champ « conditions medicales » sur la page qui promet
+   « this is not a form to be processed » casse exactement ce qu'elle vend.
+
+Le bon endroit est l'echange prive d'avant seance — la decision restee ouverte
+en §1.4. La sante s'y demande sans rien couter au site, et elle y est mieux
+protegee.
+
+**Attention, et ca vaut des maintenant :** le champ « What do you carry? »
+invite deja quelqu'un a ecrire ce qu'il porte. Une partie des reponses
+contiendra de la sante, qu'on l'ait demandee ou non. Le choix du service de
+reception n'est donc pas neutre.
+
+### 1.1quater Le formulaire lui-meme — propositions non appliquees
+
+- **Un seul champ neuf merite sa place** : « When you could come », facultatif,
+  placeholder `Weekdays, evenings, weekends. Roughly is enough.` La reponse de
+  Kilian devient une proposition de creneau au lieu d'une question, et
+  l'echange passe de trois allers-retours a un.
+- **Le menu n'a pas d'option coaching**, alors que la page Coaching y envoie.
+  Libelle propose : « Coaching, the first call », juste apres « A session ».
+- **L'option vide en tete** s'affiche blanche : « Choose one », `disabled`
+  conserve. Et le champ n'est pas `required`, donc il part vide une fois sur
+  deux et Kilian perd le triage.
+- **Prerempli depuis Coaching** via `/begin?brings=coaching`. Ingenierie, pas
+  copy, mais c'est le meilleur point de conversion du lot.
+- **« How to reach you »** pourrait dire `Email or telephone. Say if a call is
+  welcome.` — pour qu'il n'appelle jamais quelqu'un qui ne le voulait pas.
+
+Ce qu'il ne faut PAS toucher : « What do you carry? » en premier, avant le nom
+(c'est le H1 de la page, le deplacer en ferait un champ comme un autre), et
+« How this reached you », seule mesure d'acquisition du site.
+
 ### 1.2 Retreats — TRANCHE (2 sept. 2026)
 
 Kilian : **« on en a pas encore fait »**. Aucune retraite n'a eu lieu, donc

@@ -3,24 +3,20 @@
 import { useState } from "react";
 import { COLORS, FONTS } from "@/styles/tokens";
 
-// ─────────────────────────────────────────────────────────────────────────
-//  TROIS PHRASES MANQUENT, ET UN AGENT NE LES ECRIT PAS.
+// Ce que le formulaire dit une fois parti, et quand ca echoue.
 //
-//  Le formulaire sait maintenant envoyer (voir src/app/api/begin/route.ts).
-//  Il lui faut ce qu'il dit une fois parti, et ce qu'il dit quand ca echoue.
-//  Ces deux textes n'existent nulle part dans le set valide : ni dans
-//  COPY_V13.md, ni dans ce que Kilian a donne. La regle absolue du projet
-//  interdit de les inventer, donc ils sont poses en PLACEHOLDER, visibles
-//  comme tels, et listes dans COPY_OUVERT.md section 1.1.
+// Ecrites par l'agent copywriter, sur mandat de Kilian. Ce sont les DERNIERS
+// mots que lit quelqu'un qui vient d'ecrire ce qu'il porte : la page promet
+// deja « Read by Kilian alone » et « within two working days » vingt lignes
+// plus haut, donc la confirmation accuse reception et transfere la garde, elle
+// ne rejoue pas la promesse.
 //
-//  A REMPLACER AVANT TOUTE MISE EN LIGNE.
-//
-//  Le troisieme texte, « ce champ est obligatoire », n'est pas ici : les
-//  champs portent `required` et c'est le navigateur qui le dit, dans la
-//  langue du visiteur. Une phrase de moins a ecrire.
-// ─────────────────────────────────────────────────────────────────────────
-const TODO_ENVOYE = "TODO — texte de confirmation, a ecrire par Kilian";
-const TODO_ECHEC = "TODO — texte d'echec, a ecrire par Kilian";
+// L'echec dit le fait, puis leve la seule peur reelle de quelqu'un qui vient
+// d'ecrire une page : que son texte soit perdu. Il ne l'est pas — le formulaire
+// n'est pas vide et le bouton est reactive. La phrase est donc exacte, et elle
+// ne renvoie vers aucun contact de secours : le site n'en publie aucun.
+const ENVOYE = "It has arrived. He has it from here.";
+const ECHEC = "That did not send. What you wrote is still here: send it again."
 
 // Les libelles des champs etaient ecrits en taupe. Mesure sur le marbre du
 // site : 1,77:1, quand un petit texte en demande 4,5. « Your name », « How to
@@ -142,14 +138,14 @@ export default function BeginForm() {
         </button>
         {(etat === "envoye" || etat === "echec") && (
           <p
-            role="status"
-            aria-live="polite"
+            role={etat === "echec" ? "alert" : "status"}
+            aria-live={etat === "echec" ? "assertive" : "polite"}
             style={{
               ...labelStyle, marginTop: 24, marginBottom: 0,
               letterSpacing: "0.16em", textTransform: "none", opacity: 1,
             }}
           >
-            {etat === "envoye" ? TODO_ENVOYE : TODO_ECHEC}
+            {etat === "envoye" ? ENVOYE : ECHEC}
           </p>
         )}
       </div>
