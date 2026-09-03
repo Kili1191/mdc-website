@@ -84,6 +84,21 @@ session ouverte sur un autre depot avec mdc-website en second ne le voit pas :
 C'est arrive, et le depannage (copier le fichier dans `~/.claude/agents/`) ne
 survit pas au conteneur. Ouvrir la session depuis `Kili1191/mdc-website`.
 
+# L'agent seo
+
+`.claude/agents/seo.md` porte la strategie de visibilite : pourquoi ce site ne
+gagnera jamais « wellness London » et ne doit pas essayer, ou il gagne
+reellement (la marque, le local a intention forte, la longue traine du
+symptome), et l'etat technique mesure du referencement.
+
+**Il n'ecrit JAMAIS de copy destinee au client.** Il constate, il priorise, et
+il passe le brief a l'agent `copywriter` ou a Kilian. Un texte optimise ecrit
+par un agent SEO est la mort de ce site.
+
+Il connait aussi les bonnes pratiques SEO qui sont INTERDITES ici — la page FAQ
+en premier, que la regle « la maison ne se justifie jamais » disqualifie quel
+que soit son rendement.
+
 # Copy rule (absolute)
 
 **Zéro nouvelle copy user-facing écrite par l'agent.** Toute copie visible provient exclusivement du set validé ci-dessus + des fichiers Drive canoniques suivants (à ajouter au repo quand fournis) :
