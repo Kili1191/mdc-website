@@ -32,7 +32,7 @@ import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
 
 export const metadata = {
   title: "Sessions",
-  description: "The sessions of Maison du Calme. Silent, one to one, fully clothed, in Battersea. NERVANA begins with ANTARA. From £130 to £250.",
+  description: "Sessions at Maison du Calme, in Battersea. NERVANA is silent, fully clothed, and begins with ANTARA. Abhyanga, Marma, Reiki and sound as well. £130 to £250.",
 };
 
 // L'index. Une ligne par salle, ecrite pour etre lue en diagonale : ce que
@@ -56,8 +56,8 @@ export default function SessionsPage() {
           <SplitTextChars text="It begins with ANTARA." delay={22} duration={900} />
         </h1>
         <p style={{ ...lead, marginTop: 40 }}>
-          Each begins the same way, in silence, fully clothed, with nothing required of you.
-          Each leaves you somewhere different.
+          Every session in NERVANA begins the same way, in silence, fully clothed,
+          with nothing required of you.
         </p>
 
         <div className="mdc-measure" style={{ marginTop: 44 }}>
@@ -224,8 +224,7 @@ export default function SessionsPage() {
             Older than the house.
           </h2>
           <p style={{ ...body, marginTop: 30 }}>
-            Four practices are offered apart from the suite. They are not part of
-            NERVANA, and they are not silent in the same way. Abhyanga and Marma are
+            Four practices are offered apart from the suite. Abhyanga and Marma are
             Ayurvedic, learned in India and practised in their old form.
           </p>
 

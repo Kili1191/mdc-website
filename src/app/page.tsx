@@ -73,7 +73,7 @@ function gaussian(x: number, mu: number, sigma: number) {
 // ne font pas partie de la suite : elles vivent dans « Also practised here ».
 // Le coaching est la seule chose qui ne se passe pas dans la maison.
 const PRATIQUE = [
-  { n: "01", name: "NERVANA",  href: "/sessions#antara", meta: "Begins at £250",
+  { n: "01", name: "NERVANA",  href: "/sessions#antara", meta: "ANTARA · £250",
     line: "The suite Kilian built. It opens with ANTARA, always." },
   { n: "02", name: "ABHYANGA", href: "/sessions#also",   meta: "Ayurvedic · £160",
     line: "Warm oil, worked over the body in one unbroken rhythm." },
@@ -245,7 +245,7 @@ export default function Home() {
         <section className="mdc-station" style={{ ...stationStyle, flexDirection: "column" }}>
           <BreathReveal
             as="p"
-            text="Maison du Calme is a house. It asks nothing of you, and what it makes is calm."
+            text="Maison du Calme asks nothing of you, and what it makes is calm."
             style={{ ...displayItalic, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: 860, textAlign: "center", lineHeight: 1.35 }}
             stagger={90}
           />
@@ -285,7 +285,7 @@ export default function Home() {
         <section className="mdc-wrap" style={{ position: "relative", zIndex: 5, paddingTop: 40, paddingBottom: 40 }}>
           <p style={eyebrow}>What is practised here</p>
           <h2 style={{ ...sectionHead, marginTop: 30, maxWidth: "20ch" }}>
-            Six ways in. Five in the room, one on a call.
+            Five in the room. One on a call.
           </h2>
 
           <nav className="mdc-index" aria-label="The practice">

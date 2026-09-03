@@ -51,7 +51,7 @@ import Testimonies from "@/components/effects/Testimonies";
 
 export const metadata = {
   title: "Coaching",
-  description: "The other door at Maison du Calme. For people who arrive needing to speak. One to one, in conversation, arranged separately from the silent work.",
+  description: "Coaching with Kilian. One to one on a call, wherever you are, for people who need to say it out loud. The first call is free.",
 };
 
 export default function CoachingPage() {
@@ -59,11 +59,11 @@ export default function CoachingPage() {
     <main style={pageStyle}>
       <div className="mdc-wrap">
         <p style={eyebrow}>Coaching</p>
-        <h1 style={{ ...bigHead, marginTop: 36, maxWidth: "15ch" }}>
-          <SplitTextChars text="The other door." delay={22} duration={900} />
+        <h1 style={{ ...bigHead, marginTop: 36, maxWidth: "20ch" }}>
+          <SplitTextChars text="Some people need to say it out loud." delay={22} duration={900} />
         </h1>
         <p style={{ ...lead, marginTop: 40 }}>
-          Some people need to say it out loud. Here that is the work itself, not the
+          Here that is the work itself, not the
           thing to get underneath.
         </p>
 
@@ -137,12 +137,11 @@ export default function CoachingPage() {
             meetings.
           </p>
           <p style={{ ...body, marginTop: 22 }}>
-            It is not added on to the silent work, and the silent work is not turned into
-            a conversation. They are two different things, and you choose the one you came
-            for. Many people only ever use one.
+            It is not added on to the silent work. They are two different things, and you
+            choose the one you came for.
           </p>
           <p style={{ ...body, marginTop: 30 }}>
-            An hour is the usual shape. It runs shorter or longer when it needs to. The
+            An hour is usual. It runs shorter or longer when it needs to. The
             clock is not what you came for.
           </p>
           <p style={{ ...micro, marginTop: 34 }}>

@@ -105,7 +105,7 @@ export default function PractitionerPage() {
           maxWidth: "16ch",
           textAlign: "center",
         }}>
-          I don&apos;t fix anyone. Nothing is broken.
+          &ldquo;I don&apos;t fix anyone. Nothing is broken.&rdquo;
         </p>
 
         {/* Le refus et l'autre porte tiennent cote a cote : ce sont les deux
@@ -133,8 +133,8 @@ export default function PractitionerPage() {
               Some people arrive needing to speak.
             </h2>
             <p style={{ ...body, marginTop: 28 }}>
-              That work happens in conversation, and it is arranged separately. It
-              is not the silent work, and it does not happen in the room. Ask, and you will be told
+              That work happens on a call, wherever you are, and it is arranged separately. It
+              is not the silent work. Ask, and you will be told
               whether it is the right door.
             </p>
             <p style={{ ...micro, marginTop: 30 }}>

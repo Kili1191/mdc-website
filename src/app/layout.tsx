@@ -42,19 +42,19 @@ export const metadata: Metadata = {
     default: "Maison du Calme",
     template: "%s · Maison du Calme",
   },
-  description: "For those who carry everything inside.",
+  description: "For those who carry everything inside. One to one work in Battersea, South West London. Coaching on a call. Entry is by conversation, not by calendar.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     url: "https://maisonducalme.com",
     siteName: "Maison du Calme",
     title: "Maison du Calme",
-    description: "For those who carry everything inside.",
+    description: "For those who carry everything inside. One to one work in Battersea, South West London. Coaching on a call. Entry is by conversation, not by calendar.",
   },
   twitter: {
     card: "summary_large_image",
     title: "Maison du Calme",
-    description: "For those who carry everything inside.",
+    description: "For those who carry everything inside. One to one work in Battersea, South West London. Coaching on a call. Entry is by conversation, not by calendar.",
   },
 };
 

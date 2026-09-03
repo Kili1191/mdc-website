@@ -17,7 +17,7 @@ import AssetFrame from "@/components/effects/AssetFrame";
 
 export const metadata = {
   title: "The Work",
-  description: "What actually happens in a session at Maison du Calme. You arrive, you lie down dressed, the room stays quiet. An honest answer that gives away nothing.",
+  description: "What actually happens in a session at Maison du Calme. You arrive, you lie down dressed, the room stays quiet. Sixty to ninety minutes. You leave lighter.",
 };
 
 export default function TheWorkPage() {
@@ -41,8 +41,8 @@ export default function TheWorkPage() {
             Deux pages du meme site se contredisaient sur un fait.
             Nommer ce que la page decrit suffit a lever la contradiction. */}
         <p style={{ ...body, marginTop: 28, color: COLORS.brouFonce }}>
-          This describes NERVANA, the silent work. The oil work — Abhyanga, Marma — is
-          also practised here, and it is not this. It is described on Sessions.
+          This describes NERVANA, the silent work. The oil work, Abhyanga and Marma, is
+            practised here too.
         </p>
 
         <div className="mdc-measure" style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: 88 }}>

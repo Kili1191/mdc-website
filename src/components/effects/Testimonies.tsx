@@ -61,7 +61,7 @@ export default function Testimonies() {
         They asked to say this.
       </h2>
       <p style={{ ...body, marginTop: 28 }}>
-        Two people who did the coaching, and asked to say so. Nobody who comes to the house is shown here, or anywhere.
+        Two people who did the coaching, and asked to say so. Nobody who comes to the room is shown here, or anywhere.
       </p>
 
       <div style={{

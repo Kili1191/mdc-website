@@ -132,162 +132,70 @@ Deux choses a savoir quand il tranchera :
 
 ---
 
-## 2. La doctrine de la maison
+## 2 a 5 — RESOLUES (3 sept. 2026)
 
-Le test, tel qu'il est ecrit dans l'agent copywriter : la maison peut avoir un
-age et contenir des pratiques ; elle ne peut pas avoir un dedans et un dehors
-ou l'on se deplace.
+Kilian : **« trouve des solutions toi meme en expert »**. Mandat passe a l'agent
+copywriter, avec l'ordre des recours impose : supprimer, sinon restaurer une
+formulation validee, sinon corriger un fait par un fait etabli, et n'ecrire une
+phrase neuve qu'en dernier ressort.
 
-### 2.1 Trois phrases lui redonnent une porte
+**Resultat : treize corrections sans un mot neuf, trois phrases neuves, toutes
+en metadata.** Aucune phrase neuve sur une page.
 
-- `page.tsx:288` — `Six ways in. Five in the room, one on a call.` « ways in »
-  suppose un interieur ; et comme l'une des six n'est justement pas dans la
-  piece, le « in » ne peut designer que la maison. Le compte de portes rappelle
-  en plus les « Five doors » annules.
-- `components/effects/Testimonies.tsx:64` — `Nobody who comes to the house` :
-  on vient a la maison, donc elle a une porte. Ce devrait etre la piece.
-- `coaching/page.tsx:54` (meta) et `:63` (H1) — `The other door.` Excellent en corps de texte,
-  mais en titre de page ca installe le compteur de portes.
+### Ce qui a ete supprime
 
-**Ce que ces phrases doivent faire :** nommer le nombre et la forme de l'offre
-(c'est utile, ca vend) sans compter des portes ni faire franchir un seuil.
+- `Six ways in.` devient `Five in the room. One on a call.` — la porte part, le
+  compte de six est deja porte par l'index numerote juste dessous.
+- `Maison du Calme is a house.` part : la definition tournait en rond. Restent
+  les deux verbes que Kilian avait nommes, le refuge et la fabrication.
+- `Each begins the same way… Each leaves you somewhere different.` devient
+  `Every session in NERVANA begins the same way…` — l'antecedent arrive, et le
+  perimetre se borne a la suite. La seconde phrase suggerait un menu d'issues.
+- `they are not silent in the same way` part : chaque carte dit deja ses
+  propres conditions, et la contradiction avec REIKI disparait.
+- `The oil work — Abhyanga, Marma — is also practised here, and it is not this.
+  It is described on Sessions.` — les DEUX DERNIERS CADRATINS du site, plus une
+  note de redacteur qui nommait un onglet.
+- Le chiasme de Coaching, qui disait une fois ce qu'il disait deux fois, et
+  `Many people only ever use one`, un chiffre qui ne vient de nulle part.
+- `shape` en double a vingt-cinq lignes d'ecart : `An hour is usual.`
 
-### 2.2 La phrase qui nomme la maison tourne en rond
+### Ce qui a ete restaure ou corrige par un fait
 
-`page.tsx:248` — `Maison du Calme is a house. It asks nothing of you, and what
-it makes is calm.`
+- Le H1 de Coaching passe de `The other door.` a `Some people need to say it
+  out loud.` — la premiere phrase du chapo monte, sans un mot neuf. Le compteur
+  de portes quitte le titre ; l'expression reste en eyebrow sur Practitioner,
+  ou elle est bonne.
+- `Nobody who comes to the house` devient `to the room`. Un mot, et c'est plus
+  exact : le coaching ne se passe pas dans la piece.
+- Practitioner disait ou le coaching NE se passe PAS. Il dit maintenant
+  `on a call, wherever you are` — repris du titre de section de la page
+  Coaching. La soustraction devient l'argument.
+- `Begins at £250` devient `ANTARA · £250`. Se lisait « a partir de », faux
+  puisque la suite contient VAYU et SOMA a £180. On ne peut pas entrer a £180.
+- La phrase en Great Vibes prend des guillemets. Aucun mot touche : la page
+  s'intitule « Kilian. » et porte son portrait, les guillemets suffisent a dire
+  qui parle. La reformuler en « he » tuait la phrase.
+- La meta de The Work finissait sur `An honest answer that gives away nothing`,
+  qui dans Google se lit « on ne vous dira pas ». Remplacee par une queue tiree
+  mot pour mot de COPY_V13.
 
-La deuxieme moitie fait exactement le travail voulu : le refuge, puis la maison
-de couture qui fabrique. La premiere dit « Maison du Calme est une maison » — et
-une bonne partie d'une clientele londonienne aisee entend « House of Calm is a
-house ».
+### Les trois phrases neuves, a valider par Kilian
 
-**Ce que la phrase doit faire :** poser que c'est une maison au sens
-institution, sans que la definition tourne en rond.
+Toutes en metadata, aucune visible sur une page. Chacune est assemblee a partir
+de fragments deja en ligne ; c'est l'assemblage qui est neuf.
 
----
+1. **Accueil** (`layout.tsx`, les trois champs description) — `For those who
+   carry everything inside. One to one work in Battersea, South West London.
+   Coaching on a call. Entry is by conversation, not by calendar.`
+2. **Sessions** — `Sessions at Maison du Calme, in Battersea. NERVANA is
+   silent, fully clothed, and begins with ANTARA. Abhyanga, Marma, Reiki and
+   sound as well. £130 to £250.`
+3. **Coaching** — `Coaching with Kilian. One to one on a call, wherever you
+   are, for people who need to say it out loud. The first call is free.`
 
-## 3. Ce que le lecteur ne peut pas suivre
-
-### 3.1 « Each » n'a rien a quoi se rapporter
-
-`sessions/page.tsx:59` — `Each begins the same way… Each leaves you somewhere
-different.` C'est la deuxieme phrase de la page. Rien de pluriel n'a ete nomme :
-le titre dit « It begins with ANTARA », singulier. Et « leaves you somewhere
-different » suggere un menu d'issues au choix, ce que la doctrine de la suite
-refuse.
-
-**Ce que la phrase doit faire :** dire que c'est une suite de seances avant de
-dire ce qu'elles ont en commun.
-
-### 3.2 Un prix qui peut se lire comme faux
-
-`page.tsx:76` — `Begins at £250` sur la ligne NERVANA. Le jeu de mots avec « It
-opens with ANTARA, always » est bon, mais dans une colonne ou les cinq autres
-lignes affichent un tarif sec, ca se lit « a partir de 250 £ » — alors que la
-suite contient VAYU et SOMA a £180.
-
-**A trancher :** est-ce le prix d'ANTARA, et il faut le dire ; ou une
-fourchette, et il faut l'ecrire comme telle.
-
-### 3.3 Contradiction sur le silence
-
-`sessions/page.tsx:228` dit des quatre pratiques hors suite : `they are not
-silent in the same way`. Trente lignes plus bas, sous REIKI : `Fully clothed,
-in silence.`
-
-**Ce que la phrase d'intro doit faire :** dire ce que ces quatre pratiques
-partagent reellement (elles sortent de la suite), sans avancer sur le silence,
-qui varie de l'une a l'autre.
-
-### 3.4 On dit ou le coaching ne se passe pas, jamais ou il se passe
-
-`practitioner/page.tsx:141` — `It is not the silent work, and it does not
-happen in the room.` Le lecteur en conclut « donc une autre piece ». La page
-Coaching, elle, dit clairement « on a call ».
-
-**Ce que la phrase doit faire :** dire que ca se passe au telephone. C'est un
-avantage, pas une soustraction.
-
----
-
-## 4. La voix
-
-### 4.1 Le chapo de The Work fait du tort a sa propre page
-
-`the-work/page.tsx:32` — `A fair question. Here is an honest answer that gives
-away nothing, because the giving-away is not the point.`
-
-Trois fautes en une phrase : l'annonce d'honnetete (faute 2), le refus de dire
-affiche (faute 4), et une justification meta que `CLAUDE.md` interdit. Or la
-suite de la page est excellente et dit vraiment ce qui se passe.
-
-**Ce que la phrase doit faire :** promettre le recit qui suit, rien d'autre.
-Meme remarque pour la meta `:20`, qui finit sur `An honest answer that gives
-away nothing.` — dans Google, ca se lit « on ne vous dira pas ».
-
-### 4.2 Voix administrative, et les deux derniers cadratins
-
-`the-work/page.tsx:44` — `This describes NERVANA, the silent work. The oil work
-— Abhyanga, Marma — is also practised here, and it is not this. It is described
-on Sessions.`
-
-Le fait est necessaire, il resout la contradiction huile / pas d'huile entre
-deux pages. Mais « It is described on Sessions » est une note de redacteur, et
-« and it is not this » est bancal.
-
-**Ce que la phrase doit faire :** dire en une ligne que cette page raconte le
-travail silencieux, et renvoyer l'huile ailleurs sans nommer un onglet.
-
-### 4.3 Symetrie de machine sur Coaching
-
-`coaching/page.tsx:140` — `It is not added on to the silent work, and the silent
-work is not turned into a conversation.` Le chiasme dit une seule chose deux
-fois, en miroir. Suit `Many people only ever use one`, une statistique de
-confort qui ne vient de nulle part.
-
-**Ce que le passage doit faire :** dire une fois que les deux ne se melangent
-pas.
-
-### 4.4 « shape » deux fois en vingt-cinq lignes
-
-`coaching/page.tsx:145` — `An hour is the usual shape.` et `:170` — `This is
-the shape the work takes.` Bonnes separement ; ensemble, le tic s'entend.
-
-### 4.5 Un « I » isole au milieu d'une page en « he »
-
-`practitioner/page.tsx:112` — `I don't fix anyone. Nothing is broken.` La
-meilleure phrase de la page, en Great Vibes, sans guillemets ni attribution,
-dans une page entierement a la troisieme personne. Le lecteur ne sait pas qui
-parle.
-
-**A trancher :** citation attribuee a Kilian, ou reformulation en « he ».
-
----
-
-## 5. Les metadata, que personne ne relit
-
-### 5.1 L'accueil n'a pas de description propre
-
-`page.tsx` est un composant client, donc aucune `metadata` n'y est exportee :
-Google affiche la description racine, `layout.tsx:45` → `For those who carry
-everything inside.` C'est un titre, pas une description : ni ce qui est propose,
-ni a qui, ni ou. La version de `COPY_V13:72` n'est pas reutilisable telle
-quelle, elle contient « a private house in London », qui est une adresse.
-
-**Il faut une phrase neuve.**
-
-### 5.2 La meta Sessions decrit la moitie de la page
-
-`sessions/page.tsx:35` — `Silent, one to one, fully clothed, in Battersea.` Or
-la page vend aussi Abhyanga, qui est huile et n'est pas habille.
-
-### 5.3 La meta Coaching ne dit aucun des deux arguments de vente
-
-`coaching/page.tsx:54` — se termine sur `arranged separately from the silent
-work`, de la logique interne qui ne veut rien dire pour qui n'a jamais vu le
-site. Manquent les deux seuls faits qui font cliquer : **a distance, ou que vous
-soyez**, et **le premier appel est gratuit**.
+Verifie au navigateur, huit pages, 1440 et 390 px : **zero cadratin sur tout le
+site**, zero « we », zero debordement, aucune erreur.
 
 ---
 
