@@ -196,7 +196,14 @@ There is no team behind a curtain. The person you meet is the person who spent y
 
 Kilian did not arrive at this work through a weekend or a certificate. He went to the sources — to the places where these traditions are still passed from one person to the next, in person, over years, the way they have always been passed. He learned them where they are lived, not where they are marketed. Some of what he carries came from teachers who accepted very few students. Some of it took years before he was permitted to practise it at all.
 
-He does not talk about any of this while he works. ~~He does not talk at all.~~ That is the point of it.
+~~He does not talk about any of this while he works. He does not talk at all. That is the point of it.~~
+
+> **RETIRE EN ENTIER, 3 sept. 2026.** Kilian : « i want the choice to talk if
+> i want to, not being blocked because of 1 sentence in website ». Une phrase
+> sur un site ne decide pas de ce qu'il fait dans la piece. Le paragraphe
+> entier quitte la page Practitioner. Ce qu'il disait de la discretion sur la
+> lignee est deja porte plus bas : « Where he trained, and with whom, he will
+> tell you himself. In conversation. »
 
 What he brings to the room is not a method you could read about. It is the accumulation of a life spent learning to be present with what other people cannot hold — and the restraint to do less, more precisely, than someone with half the training would.
 

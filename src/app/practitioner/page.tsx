@@ -73,9 +73,6 @@ export default function PractitionerPage() {
               was taught is the old form, unchanged, because the people who taught it had
               no reason to change it and nothing to sell.
             </p>
-            <p style={body}>
-              He does not talk about any of this while he works. That is the point of it.
-            </p>
           </div>
         </section>
 
