@@ -50,7 +50,7 @@ body {
   gap:56px;
 }
 .maison { width:auto; height:296px; }
-.maison path { fill:#A55A3E; }            /* Rouille */
+.maison path { fill:#B14E2D; }            /* Rouille */
 .nom {
   /* La signature de l'intro, a l'identique. Elle existe deja : IntroOverlay
      pose « Maison du Calme » en Higuen, casse de titre, letter-spacing .14em,
