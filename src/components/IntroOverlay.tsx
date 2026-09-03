@@ -12,8 +12,27 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EVENT, shouldBypassIntro } from '@/lib/introReady';
+import { BREATH_MS } from '@/lib/stillness';
 
-const T = 3000;        // demi-souffle ms (rythme respiratoire ressenti)
+// Le demi-souffle, et pourquoi il n'est plus un nombre ecrit ici.
+//
+// Il a valu 3000 ms pendant des mois. Le commit qui l'avait pose disait
+// « Intro trop longue avant le zoom : demi-souffle 5500ms -> 3000ms », en
+// reponse a un signalement de Kilian. Le raccourcissement etait legitime,
+// l'endroit ne l'etait pas : 3 secondes par demi-souffle font DIX
+// respirations par minute, quand la coherence cardiaque en demande 5,5. On ne
+// peut pas respirer avec, et c'est tout le propos de cette ouverture.
+//
+// Le fichier se contredisait lui-meme : son en-tete annonce « Coherence
+// cardiaque 5.5s / 5.5s », `src/lib/stillness.ts` pose BREATH_MS a 5500, et
+// VISION.md l'exige. Seule cette constante disait autre chose.
+//
+// Elle vient donc maintenant de la meme source que le reste du site. Le
+// souffle ne peut plus deriver dans un coin sans que tout le reste suive.
+//
+// Ce qui reste raccourci l'est a bon droit : HOLD et EXIT sont des PAUSES et
+// un zoom, pas de la respiration. Les toucher ne change pas le rythme.
+const T = BREATH_MS;   // demi-souffle, 5500 ms
 const HOLD = 1200;     // pause après yeux + titre
 const EXIT = 1600;     // durée du zoom d'entrée
 
