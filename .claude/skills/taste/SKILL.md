@@ -48,18 +48,15 @@ Illegal:
 - Bold, italic used for emphasis in body
 
 ### 3. Motion — cohérence cardiaque 5.5s, subtle, never showy
-- Half-breath: **5500ms**, from `BREATH_MS` in `src/lib/stillness.ts`. One value,
-  one source, imported — never retyped as a literal.
+- Half-breath: **5500ms**, from `BREATH_MS` in `src/lib/stillness.ts`. That is
+  cardiac coherence, and it is the site's rhythm everywhere.
 
-  This file used to allow "3000ms (post-shortening) or 5500ms", and that
-  permission is what let the intro drift. Its half-breath sat at 3000ms for
-  months: **ten breaths a minute, when cardiac coherence is 5.5**. Nobody can
-  breathe with that, and breathing with it is the entire point of the opening.
-  The file even contradicted itself, its own header announcing 5.5s/5.5s three
-  lines above the constant.
+  **One deliberate exception: the intro, at 3000ms.** It is Kilian's decision,
+  not drift. Five beats at 5500 make a 30.7s opening, measured, against 17.8s
+  at 3000; he chose the duration. A session "fixed" that constant believing it
+  had been forgotten, and had to put it back. **Do not correct it again.**
 
-  Shortening a sequence is legitimate. Shortening the BREATH to do it is not:
-  cut the number of beats, the hold or the exit, never the rhythm.
+  Everywhere else, import `BREATH_MS` rather than retyping a literal.
 - Any oscillating element must synchronise to this rhythm or a coherent multiple
 - Ease: `cubic-bezier(0.16, 1, 0.3, 1)` for reveals (out-quart-like), `cubic-bezier(0.4, 0, 0.6, 1)` for exits
 - No `bounce`, no `elastic`, no cartoon ease
