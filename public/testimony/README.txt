@@ -17,3 +17,7 @@ requetes HEAD qui repondent 404. C'est la sonde qui decide d'afficher ou non la
 section — le meme procede qu'AssetFrame utilise pour les images. Ces 404
 disparaissent des que les videos sont deposees. On a prefere ca a un fichier
 manifeste a tenir a jour a la main : deposer une video doit suffire.
+
+Pour publier un temoignage : deposer le fichier ici (par ex. 01.mp4) puis
+ecrire son nom dans index.json — ["01.mp4"]. Tant que index.json est vide,
+la section ne s'affiche pas et aucune requete n'echoue.

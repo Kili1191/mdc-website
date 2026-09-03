@@ -49,7 +49,7 @@ export default function Footer() {
       className="mdc-wrap"
       style={{ position: "relative", zIndex: 5, paddingTop: 40, paddingBottom: 72 }}
     >
-      <div style={{ borderTop: "1px solid rgba(168,154,133,0.35)", paddingTop: 56 }}>
+      <div style={{ borderTop: `1px solid ${COLORS.taupeTrait}`, paddingTop: 56 }}>
         <div className="mdc-foot">
           <div>
             <p style={{

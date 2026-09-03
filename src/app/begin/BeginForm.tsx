@@ -31,13 +31,13 @@ const ECHEC = "That did not send. What you wrote is still here: send it again."
 // Le taupe reste juste au-dessous, en bordure de champ : c'est son emploi.
 const labelStyle: React.CSSProperties = {
   fontFamily: FONTS.prata, fontSize: 12, letterSpacing: "0.24em",
-  textTransform: "uppercase", color: COLORS.brou, opacity: 0.82, margin: 0,
+  textTransform: "uppercase", color: COLORS.brou, margin: 0,
   display: "block", marginBottom: 12,
 };
 const inputStyle: React.CSSProperties = {
   fontFamily: FONTS.prata, fontSize: 16, color: COLORS.brou,
   background: "transparent",
-  border: 0, borderBottom: `1px solid ${COLORS.taupe}`,
+  border: 0, borderBottom: `1px solid ${COLORS.taupeTrait}`,
   padding: "12px 0", width: "100%", outline: "none",
 };
 const textareaStyle: React.CSSProperties = {
@@ -49,6 +49,17 @@ const selectStyle: React.CSSProperties = {
   ...inputStyle,
   appearance: "none",
   cursor: "pointer",
+};
+const noteStyle: React.CSSProperties = {
+  fontFamily: FONTS.prata, fontSize: 13.5, lineHeight: 1.7,
+  color: COLORS.brou, margin: 0, maxWidth: "52ch",
+};
+
+const CHOIX: Record<string, string> = {
+  session: "A session",
+  deepest: "The deepest room, by application",
+  retreat: "The retreat",
+  unsure: "Not sure yet",
 };
 
 type Etat = "attente" | "envoi" | "envoye" | "echec";
@@ -83,6 +94,7 @@ export default function BeginForm() {
         <textarea
           id="carry"
           name="carry"
+          required
           placeholder="In your own words. As much or as little as you like."
           style={textareaStyle}
         />
@@ -127,10 +139,17 @@ export default function BeginForm() {
           type="submit"
           style={{
             fontFamily: FONTS.prata, fontSize: 14, letterSpacing: "0.32em",
-            textTransform: "uppercase", color: COLORS.rouille,
+            // Le brou et non le rouille : c'est leur correction de contraste,
+            // et elle est juste. Le filet reste en rouille.
+            textTransform: "uppercase", color: COLORS.brou,
             background: "transparent", border: `1px solid ${COLORS.rouille}`,
-            padding: "18px 44px", borderRadius: 2, cursor: "pointer",
+            padding: "18px 44px", borderRadius: 2,
+            cursor: etat === "envoi" ? "wait" : "pointer",
+            opacity: etat === "envoye" ? 0.45 : 1,
           }}
+          // Le bouton n'est plus grise selon une adresse connue du navigateur :
+          // la destination vit cote SERVEUR (MDC_BEGIN_FORWARD_URL), le client
+          // ne la voit pas. Il se desactive pendant l'envoi et une fois parti.
           disabled={etat === "envoi" || etat === "envoye"}
           aria-busy={etat === "envoi"}
         >

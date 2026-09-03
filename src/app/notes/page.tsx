@@ -59,7 +59,7 @@ export default function NotesPage() {
 
         <section id="essay-01" className="mdc-gap mdc-two">
           <div>
-            <p className="mdc-num">01</p>
+            <p className="mdc-num" aria-hidden="true">01</p>
             <h2 style={{ ...bigHead, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: "14ch" }}>
               On carrying.
             </h2>
@@ -76,7 +76,7 @@ export default function NotesPage() {
 
         <section id="essay-02" className="mdc-gap--sm mdc-two">
           <div>
-            <p className="mdc-num">02</p>
+            <p className="mdc-num" aria-hidden="true">02</p>
             <h2 style={{ ...bigHead, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: "14ch" }}>
               The difference between quiet and silence.
             </h2>
@@ -93,7 +93,7 @@ export default function NotesPage() {
 
         <section id="essay-03" className="mdc-gap--sm mdc-two">
           <div>
-            <p className="mdc-num">03</p>
+            <p className="mdc-num" aria-hidden="true">03</p>
             <h2 style={{ ...bigHead, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: "14ch" }}>
               What the body keeps.
             </h2>

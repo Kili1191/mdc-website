@@ -37,13 +37,19 @@ export const metadata = {
   description: "Sessions at Maison du Calme, in Battersea. NERVANA is silent, fully clothed, and begins with ANTARA. Abhyanga, Marma, Reiki and sound as well. £130 to £250.",
 };
 
-// L'index. Une ligne par salle, ecrite pour etre lue en diagonale : ce que
-// c'est, combien de temps, et pour quoi on vient. C'est la seule copy nouvelle
-// de la page.
+// L'index. Une ligne par salle, ecrite pour etre lue en diagonale.
+//
+// La meta porte le RANG, pas la duree. Avant, elle affichait « 60 minutes ·
+// £180 » a cote de « 90 minutes · £250 » : quatre salles, quatre prix, cote a
+// cote — un menu. Or la prose juste au-dessus dit « a suite, not a selection
+// […] never from a list », et Kilian : « nervana est une suite, ca peut pas
+// etre 180 ». Quelqu'un qui scanne lisait VAYU a £180 comme une porte
+// d'entree moins chere que l'entree obligatoire a £250.
+// Les durees n'ont pas disparu : chaque salle porte la sienne plus bas.
 const INDEX = [
-  { n: "01", name: "ANTARA", meta: "90 minutes · £250", line: "The weight you have carried longest." },
-  { n: "02", name: "VAYU", meta: "60 minutes · £180", line: "When you cannot get a full breath." },
-  { n: "03", name: "SOMA", meta: "60 minutes · £180", line: "The tension you have stopped noticing." },
+  { n: "01", name: "ANTARA", meta: "The entrance · £250", line: "The weight you have carried longest." },
+  { n: "02", name: "VAYU", meta: "After ANTARA · £180", line: "When you cannot get a full breath." },
+  { n: "03", name: "SOMA", meta: "After ANTARA · £180", line: "The tension you have stopped noticing." },
   { n: "04", name: "TRANSMISSION", meta: "By application", line: "The deepest room. Not for everyone." },
 ];
 
@@ -107,7 +113,7 @@ export default function SessionsPage() {
               prompt="Carved onyx, the widest frame of the house stone." />
           </div>
           <div>
-            <p className="mdc-num">01</p>
+            <p className="mdc-num" aria-hidden="true">01</p>
             <p style={label}>ANTARA</p>
             <p style={{ ...micro, marginTop: 14 }}>90 minutes · The threshold session</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
@@ -127,7 +133,7 @@ export default function SessionsPage() {
                 something they could not have named on the way in.
               </p>
             </div>
-            <p style={{ ...micro, marginTop: 36 }}>£250 · 90 minutes · By conversation</p>
+            <p style={{ ...micro, marginTop: 36 }}>£250 · 90 minutes · The entrance to the suite</p>
           </div>
         </section>
 
@@ -138,7 +144,7 @@ export default function SessionsPage() {
               prompt="Alabaster, air and a single pass of light." />
           </div>
           <div>
-            <p className="mdc-num">02</p>
+            <p className="mdc-num" aria-hidden="true">02</p>
             <p style={label}>VAYU</p>
             <p style={{ ...micro, marginTop: 14 }}>60 minutes · For the tightness that lives high</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
@@ -154,7 +160,7 @@ export default function SessionsPage() {
                 You leave with more room. Not a metaphor. More room.
               </p>
             </div>
-            <p style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · By conversation</p>
+            <p style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · Opens after ANTARA, in conversation</p>
           </div>
         </section>
 
@@ -165,7 +171,7 @@ export default function SessionsPage() {
               prompt="Carved onyx, the closest and deepest frame." />
           </div>
           <div>
-            <p className="mdc-num">03</p>
+            <p className="mdc-num" aria-hidden="true">03</p>
             <p style={label}>SOMA</p>
             <p style={{ ...micro, marginTop: 14 }}>60 minutes · For what the body has stored</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
@@ -181,7 +187,7 @@ export default function SessionsPage() {
                 You leave lower to the ground. Steadier. Returned to your own weight.
               </p>
             </div>
-            <p style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · By conversation</p>
+            <p style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · Opens after ANTARA, in conversation</p>
           </div>
         </section>
 
@@ -192,15 +198,15 @@ export default function SessionsPage() {
               prompt="Carved onyx held back in shadow, one band of light." />
           </div>
           <div>
-            <p className="mdc-num">04</p>
+            <p className="mdc-num" aria-hidden="true">04</p>
             <p style={label}>TRANSMISSION</p>
-            <p style={{ ...micro, marginTop: 14 }}>By application</p>
+            <p style={{ ...micro, marginTop: 14 }}>By application · Rarely, and to few</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
               The deepest room. Not for everyone, and not often.
             </h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: 34 }}>
               <p style={body}>
-                TRANSMISSION is not booked. It is applied for, and it is granted rarely,
+                TRANSMISSION is not booked. It is applied for, and it is granted rarely, and
                 to very few people at all.
               </p>
               <p style={body}>

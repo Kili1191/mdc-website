@@ -35,8 +35,8 @@ seul appareil, d'une seule seance.
 import numpy as np
 from PIL import Image, ImageFilter
 
-SRC_STONE = "public/motif-compo-full.jpg"      # bas-relief sculpte, 5504x3072
-SRC_SMOOTH = "public/albatre-lisse-full.jpg"   # albatre lisse, sans motif
+SRC_STONE = "assets-source/motif-compo-full.jpg"      # bas-relief sculpte, 5504x3072
+SRC_SMOOTH = "assets-source/albatre-lisse-full.jpg"   # albatre lisse, sans motif
 OUT = "public/photos"
 
 # Aube Encens

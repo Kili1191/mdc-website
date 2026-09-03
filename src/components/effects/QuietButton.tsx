@@ -32,7 +32,7 @@ export default function QuietButton({
       href={href ?? "#"}
       style={{
         fontFamily: FONTS.prata,
-        color: COLORS.rouille,
+        color: COLORS.brou,
         borderColor: COLORS.rouille,
       }}
     >

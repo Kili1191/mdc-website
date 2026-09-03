@@ -193,7 +193,7 @@ export default function RetreatsPage() {
           </h2>
           <div className="mdc-measure" style={{ marginTop: 30, display: "flex", flexDirection: "column", gap: 22 }}>
             <p style={body}>
-              You will hear once, when it opens. Not before, not about anything
+              You will hear from Kilian once, when it opens. Not before, not about anything
               else, and never from anyone but Kilian.
             </p>
           </div>

@@ -76,7 +76,7 @@ export default function SoundToggle() {
           display: "flex", alignItems: "center", justifyContent: "center",
           background: "transparent", border: 0, cursor: "pointer",
           fontFamily: FONTS.prata, fontSize: 10, letterSpacing: "0.24em",
-          textTransform: "lowercase", color: COLORS.rouille,
+          textTransform: "lowercase", color: COLORS.brou,
           opacity: 0.55, transition: `opacity ${DURATION.exit}ms ${EASE.exit}`,
           padding: 0,
         }}

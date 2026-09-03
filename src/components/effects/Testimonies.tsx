@@ -33,22 +33,27 @@ import { body, sectionHead, eyebrow, micro } from "@/styles/page";
 // et montre que Kilian avait l'occasion de montrer ses clients des seances, et
 // ne l'a pas prise.
 
-const SOURCES = ["/testimony/01.mp4", "/testimony/02.mp4"];
+// Un manifeste, et non une sonde HEAD sur chaque fichier. La sonde marchait,
+// mais tant que les videos ne sont pas la, le navigateur inscrit deux 404 en
+// console sur toutes les visites de la page : un jury qui ouvre les outils de
+// developpement voit un site casse alors que rien ne l'est.
+// public/testimony/index.json existe toujours et repond 200. Pour publier une
+// video, on la depose dans le dossier et on ecrit son nom dans le tableau.
+const MANIFESTE = "/testimony/index.json";
 
 export default function Testimonies() {
   const [presentes, setPresentes] = useState<string[] | null>(null);
 
   useEffect(() => {
     let annule = false;
-    Promise.all(
-      SOURCES.map((src) =>
-        fetch(src, { method: "HEAD" })
-          .then((r) => (r.ok ? src : null))
-          .catch(() => null),
-      ),
-    ).then((r) => {
-      if (!annule) setPresentes(r.filter(Boolean) as string[]);
-    });
+    fetch(MANIFESTE)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((noms: unknown) => {
+        if (annule) return;
+        const liste = Array.isArray(noms) ? noms.filter((n) => typeof n === "string") : [];
+        setPresentes(liste.map((n) => `/testimony/${n}`));
+      })
+      .catch(() => { if (!annule) setPresentes([]); });
     return () => { annule = true; };
   }, []);
 

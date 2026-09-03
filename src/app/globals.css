@@ -5,13 +5,14 @@
   --color-brou: #4A3B2A;
   --color-ocre: #B89968;
   --color-sauge: #8C8B6A;
-  --color-rouille: #A55A3E;
+  /* Rouille #B14E2D, valide par Kilian (VISION.md) : il a remplace #A55A3E.
+     Toute reference a l'ancienne valeur est a corriger, pas a conserver. */
+  --color-rouille: #B14E2D;
   /* Pas de token d'encre noire ici, et ce n'est pas un oubli. `--color-ink:
      #0A0806` y a vecu sans qu'aucune regle ne l'utilise : un quasi-noir hors
      palette Aube Encens, sur un site ou le theme sombre est interdit. Un token
      `--color-*` n'est pas une valeur morte, Tailwind en tire des utilitaires
-     (`text-ink`, `bg-ink`) : le noir etait donc a une classe de distance. Le
-     texte s'ecrit en Brou #4A3B2A, les titres forts en Brou fonce #2F2519. */
+     (`text-ink`, `bg-ink`) : le noir etait donc a une classe de distance. */
   --font-prata: var(--font-prata);
 }
 
@@ -84,7 +85,7 @@ body {
   font-size: 13px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  background-color: rgba(165, 90, 62, 0);
+  background-color: rgba(177, 78, 45, 0);
   transition:
     background-color 450ms cubic-bezier(0.4, 0, 0.6, 1),
     box-shadow 450ms cubic-bezier(0.4, 0, 0.6, 1);
@@ -92,16 +93,16 @@ body {
 
 .mdc-button:hover,
 .mdc-button:focus-visible {
-  background-color: rgba(165, 90, 62, 0.07);
+  background-color: rgba(177, 78, 45, 0.07);
   /* Une lueur tres basse, comme une braise sous la pierre. */
-  box-shadow: 0 0 0 1px rgba(165, 90, 62, 0.16);
+  box-shadow: 0 0 0 1px rgba(177, 78, 45, 0.16);
   transition:
     background-color 900ms cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 900ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .mdc-button:focus-visible {
-  outline: 2px solid rgba(165, 90, 62, 0.55);
+  outline: 2px solid rgba(177, 78, 45, 0.55);
   outline-offset: 3px;
 }
 
@@ -111,18 +112,30 @@ body {
    Elle est ici pour que toutes les pages en heritent, et pour qu'une
    correction ne se fasse qu'une fois. */
 
+:root {
+  /* Distance du bord de l'ecran a la colonne de texte de .mdc-wrap.
+     Sert au rail pour deborder puis se recaler — voir .mdc-rail. */
+  --mdc-inset: calc(max((100vw - 1180px) / 2, 0px) + 7vw);
+}
+
 .mdc-wrap { max-width: 1180px; margin: 0 auto; padding: 0 7vw; }
 .mdc-measure { max-width: 660px; }
 
 /* Un index : une ligne par offre, lisible en diagonale. Sans lui, il faut
    scroller toutes les sections pour savoir combien il y en a. */
-.mdc-index { margin-top: 72px; border-top: 1px solid rgba(168,154,133,0.35); }
+/* Filet PLEIN, pas dilue. Un taupeTrait a 0,55 d'opacite se compose a
+   1,84:1 sur le fond le plus sombre — plus faible que la couleur qu'il
+   remplace. Choisir un jeton puis le diluer annule la correction. */
+.mdc-index { margin-top: 72px; border-top: 1px solid #74654F; }
 .mdc-index a,
 .mdc-index .mdc-index__row {
-  display: grid; grid-template-columns: 3.5rem 12rem 1fr auto;
+  display: grid;
+  /* 14rem et non 12 : a 12, TRANSMISSION — le plus long des noms, et
+     interlettre a 0,14em — debordait sur sa propre description. */
+  grid-template-columns: 3.5rem 14rem 1fr auto;
   gap: 24px; align-items: baseline;
   padding: 26px 0; text-decoration: none;
-  border-bottom: 1px solid rgba(168,154,133,0.35);
+  border-bottom: 1px solid #74654F;
 }
 /* Un sommaire d'essais : les titres sont des phrases, pas des noms de salles.
    Douze rem les cassaient en trois lignes. */
@@ -131,7 +144,7 @@ body {
 
 .mdc-index a { transition: background-color 900ms cubic-bezier(0.16,1,0.3,1); }
 .mdc-index a:hover, .mdc-index a:focus-visible {
-  background-color: rgba(165,90,62,0.05);
+  background-color: rgba(177,78,45,0.05);
   transition: background-color 450ms cubic-bezier(0.4,0,0.6,1);
 }
 
@@ -140,9 +153,14 @@ body {
             align-items: center; margin-top: 168px; }
 .mdc-room--flip .mdc-room__art { order: 2; }
 
-/* Un numero plutot qu'un filet : il dit ou l'on en est. */
+/* Un numero plutot qu'un filet. ORNEMENT, et rien d'autre : #908067 a 30 %
+   d'opacite donne 1,36:1 sur le marbre median et 1,25:1 au 1er centile de
+   l'accueil. Meme a pleine opacite le taupe plafonne a 2,28:1 dans le pire
+   fond — aucun reglage ne le rend lisible. Il ne peut donc PAS porter la
+   position dans la page : c'est le titre de section qui la porte, et le
+   numero est aria-hidden pour ne pas etre annonce non plus. */
 .mdc-num { font-family: var(--font-higuen), Georgia, serif;
-           font-size: 92px; line-height: 1; color: #A89A85; opacity: 0.30;
+           font-size: 92px; line-height: 1; color: #908067; opacity: 0.30;
            margin: 0 0 28px; }
 
 /* Deux colonnes de texte, sans image. */
@@ -298,4 +316,146 @@ body {
 @media (max-width: 900px) {
   .mdc-foot { grid-template-columns: 1fr 1fr; gap: 48px 32px; }
   .mdc-foot > :first-child { grid-column: 1 / -1; }
+}
+
+/* ─── Le rail : les offres, a l'horizontale ─────────────────────────────
+   Demande de Kilian. Six cartes qui defilent lateralement au lieu d'une
+   liste verticale.
+
+   Pas de detournement de la molette. Traduire un scroll vertical en
+   deplacement horizontal piege la page — on ne peut plus la quitter — et
+   c'est exactement le genre d'effet qui fait fuir. On s'appuie sur le
+   scroll natif : doigt sur mobile, trackpad lateral et Maj+molette sur
+   desktop. La carte suivante deborde volontairement du cadre : c'est elle
+   qui dit qu'il y a une suite.
+
+   Le focus clavier fonctionne sans rien ajouter — le navigateur amene dans
+   le champ le lien qui recoit le focus. */
+.mdc-rail {
+  display: flex;
+  gap: 28px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  /* Le snapport ignore le padding : sans ca, la premiere carte se cale sur
+     le bord de l'ecran et le rail s'ouvre decale de la valeur du debord
+     (231 px mesures a 1440). */
+  scroll-padding-left: var(--mdc-inset);
+  scroll-padding-right: var(--mdc-inset);
+  margin-top: 72px;
+  padding-bottom: 24px;
+
+  /* Le rail sort des marges de .mdc-wrap pour atteindre le bord de l'ecran.
+     Sans ca, trois cartes tenaient PILE dans la colonne de texte et la
+     quatrieme etait invisible : rien ne disait qu'il y avait une suite.
+     Le debord se fait en marge negative, et le meme creux est rendu en
+     padding — la premiere carte reste donc alignee sur le texte, et c'est
+     la derniere visible qui deborde. */
+  margin-left: calc(-1 * var(--mdc-inset));
+  margin-right: calc(-1 * var(--mdc-inset));
+  padding-left: var(--mdc-inset);
+  padding-right: var(--mdc-inset);
+
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+.mdc-rail::-webkit-scrollbar { display: none; }
+
+.mdc-rail__card {
+  flex: 0 0 auto;
+  width: clamp(240px, 24vw, 300px);
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  text-decoration: none;
+  padding: 30px 28px 28px;
+  border-top: 1px solid #74654F;
+  transition: background-color 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mdc-rail__card:hover,
+.mdc-rail__card:focus-visible {
+  background-color: rgba(177, 78, 45, 0.05);
+  transition: background-color 450ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+@media (max-width: 720px) {
+  .mdc-rail { gap: 18px; margin-top: 56px; }
+  .mdc-rail__card { width: 74vw; min-height: 230px; padding: 26px 22px 24px; }
+}
+
+/* ─── L'anneau de focus ─────────────────────────────────────────────────
+   Le navigateur en pose un par defaut : 1 px noir, dessine pour du blanc.
+   Sur une pierre ivoire il est a la fois dur et peu lisible, et c'est le
+   seul endroit du site ou l'on voyait un reglage d'usine.
+   Celui-ci est du brou, decolle de deux pixels, avec un halo clair qui le
+   detache des veines du marbre — la meme lumiere que le sillon des onglets. */
+:focus-visible {
+  outline: 2px solid rgba(74, 59, 42, 0.85);
+  outline-offset: 3px;
+  border-radius: 2px;
+  box-shadow: 0 0 0 5px rgba(255, 251, 243, 0.55);
+}
+/* La souris ne merite pas d'anneau : :focus-visible ne se declenche qu'au
+   clavier, mais Safari pose encore un contour au clic sur les boutons. */
+:focus:not(:focus-visible) { outline: none; }
+
+/* ─── La hauteur des stations ───────────────────────────────────────────
+   svh, et surtout PAS dvh.
+
+   `vh` vaut le viewport large, mesure barre d'URL retractee : sur iOS
+   barre visible, chaque station depassait la zone lisible et le rythme
+   une-station-un-ecran se decalait.
+
+   `dvh` corrige le cadrage mais introduit pire : sa valeur CHANGE quand la
+   barre se retracte. La hauteur du document varie donc PENDANT le scroll,
+   et Lenis comme la boucle des stations mesurent une cible qui bouge sous
+   elles. Un site pilote au scroll ne le supporte pas.
+
+   `svh` est le plus petit viewport possible : sa valeur ne bouge jamais.
+   La premiere declaration sert de repli aux navigateurs d'avant 2022. */
+/* LA VOIE DE LA REGLE. La descente gravee occupe la marge gauche : le
+   sillon a 30px, le cran jusqu'a 72px, et le nom de la station courante
+   jusqu'a ~175px. Une station calee a gauche demarrait a 6vw — 86px a
+   1440 — donc sous le nom. Cette variable reserve la voie une seule fois,
+   pour que la regle et le texte ne puissent plus se marcher dessus. */
+:root { --mdc-voie: 210px; }
+
+.mdc-station {
+  height: 100vh;
+  height: 100svh;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 0 6vw;
+}
+
+/* La station de la gravure est plus haute : le burin a besoin de descendre.
+   Meme unite, meme raison — surcharge apres .mdc-station. */
+.mdc-station--haute {
+  height: 130vh;
+  height: 130svh;
+  min-height: 130vh;
+  min-height: 130svh;
+}
+
+/* La voie reservee doit passer APRES .mdc-station : a specificite egale,
+   c'est la derniere regle qui gagne, et le raccourci `padding` de
+   .mdc-station effacerait un padding-left declare plus haut. Meme raison
+   que .mdc-station--haute juste au-dessus. */
+@media (min-width: 1081px) {
+  .mdc-station--gauche { padding-left: var(--mdc-voie); }
+}
+
+
+/* ─── La cible des liens du pied de page ────────────────────────────────
+   15 px de haut mesures a 393 px de large : trop petit pour un pouce. Meme
+   remede que la nav — un calque invisible, aucun deplacement de la mise en
+   page. Les entrees sont espacees de 12 px, on deborde donc de 8 : la cible
+   passe a 31 px et deux voisines ne se chevauchent pas. */
+.mdc-foot a { position: relative; display: inline-block; }
+.mdc-foot a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: -8px; bottom: -8px;
 }
