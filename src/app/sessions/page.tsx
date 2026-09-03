@@ -110,7 +110,7 @@ export default function SessionsPage() {
               prompt="Carved onyx, the widest frame of the house stone." />
           </div>
           <div>
-            <p className="mdc-num">01</p>
+            <p className="mdc-num" aria-hidden="true">01</p>
             <p style={label}>ANTARA</p>
             <p style={{ ...micro, marginTop: 14 }}>90 minutes · The threshold session</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
@@ -142,7 +142,7 @@ export default function SessionsPage() {
               prompt="Alabaster, air and a single pass of light." />
           </div>
           <div>
-            <p className="mdc-num">02</p>
+            <p className="mdc-num" aria-hidden="true">02</p>
             <p style={label}>VAYU</p>
             <p style={{ ...micro, marginTop: 14 }}>60 minutes · For the tightness that lives high</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
@@ -169,7 +169,7 @@ export default function SessionsPage() {
               prompt="Carved onyx, the closest and deepest frame." />
           </div>
           <div>
-            <p className="mdc-num">03</p>
+            <p className="mdc-num" aria-hidden="true">03</p>
             <p style={label}>SOMA</p>
             <p style={{ ...micro, marginTop: 14 }}>60 minutes · For what the body has stored</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
@@ -196,7 +196,7 @@ export default function SessionsPage() {
               prompt="Carved onyx held back in shadow, one band of light." />
           </div>
           <div>
-            <p className="mdc-num">04</p>
+            <p className="mdc-num" aria-hidden="true">04</p>
             <p style={label}>TRANSMISSION</p>
             <p style={{ ...micro, marginTop: 14 }}>By application · Rarely, and to few</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>

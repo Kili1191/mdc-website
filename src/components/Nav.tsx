@@ -122,11 +122,15 @@ export default function Nav() {
               style={{
               fontFamily: FONTS.prata, letterSpacing: "0.14em",
               textTransform: "uppercase", textDecoration: "none",
-              // BEGIN portait rouille A 0,82 d'opacite : 3,03:1 une fois compose
-              // sur la pierre. C'est l'appel principal du site, il ne peut pas
-              // etre le mot le moins lisible de la barre. Pleine opacite.
-              color: l.label === "Begin" ? COLORS.rouilleEncre : COLORS.brou,
+              // BEGIN n'est plus rouge. Aucun rouge a la teinte du logo
+              // n'atteint 4,5:1 sur ce fond — il faudrait #7B1A00, a ΔE00 = 16
+              // du logo, c'est-a-dire un autre rouge. Le mot passe donc en
+              // brou, et c'est le FILET sous lui qui porte la marque : le
+              // rouille devient un signe, jamais un mot.
+              color: COLORS.brou,
               opacity: l.label === "Begin" ? 1 : 0.82,
+              borderBottom: l.label === "Begin" ? `1px solid ${COLORS.rouille}` : undefined,
+              paddingBottom: l.label === "Begin" ? 3 : undefined,
             }}>
               {l.label}
             </a>

@@ -366,7 +366,7 @@ export default function IntroOverlay() {
           transform:translateZ(0);}
         .mdc-intro::after{content:"";position:absolute;inset:0;pointer-events:none;
           background:radial-gradient(110% 110% at 50% 48%,
-            rgba(237,228,208,0) 48%, rgba(144,128,103,.14) 100%);}
+            rgba(237,228,208,0) 48%, rgba(116,101,79,.22) 100%);}
         .mdc-wrap{display:flex;flex-direction:column;align-items:center;
           will-change:transform,filter;transform:translateZ(0);
           backface-visibility:hidden;}

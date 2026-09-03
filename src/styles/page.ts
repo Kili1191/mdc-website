@@ -62,7 +62,7 @@ export const micro: CSSProperties = {
 
 export const label: CSSProperties = {
   fontFamily: FONTS.higuen, fontSize: 24, letterSpacing: "0.36em",
-  color: COLORS.rouilleEncre, margin: 0,
+  color: COLORS.brou, margin: 0,
 };
 
 export const quote: CSSProperties = {
