@@ -9,6 +9,7 @@ import ScrollProvider from "@/components/ScrollProvider";
 import SeoNav from "@/components/SeoNav";
 import Footer from "@/components/Footer";
 import BreathButton from "@/components/BreathButton";
+import Descente from "@/components/Descente";
 import SiteMarble from "@/components/SiteMarble";
 import SoundToggle from "@/components/SoundToggle";
 
@@ -74,6 +75,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <BreathingCursor />
         <SoundToggle />
         <BreathButton />
+        {/* Se retire d'elle-meme sur les pages qui ne declarent pas de
+            stations : elle cherche [data-station] et rend null en dessous
+            de deux. */}
+        <Descente />
         <PageTransition>
           {children}
           <Footer />

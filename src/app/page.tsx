@@ -58,9 +58,41 @@ const stationStyle: React.CSSProperties = {
   // ne peut pas porter le repli `height:100vh; height:100svh;`.
   width: "100%",
   display: "flex", alignItems: "center", justifyContent: "center",
-  padding: "0 6vw",
+  // La marge laterale vit dans .mdc-station (globals.css), pas ici. Inline,
+  // elle battait la voie reservee a la regle gravee — une regle de feuille de
+  // style ne peut pas gagner contre un style en ligne, et le texte cale a
+  // gauche repassait sous les noms de stations.
   willChange: "opacity, transform",
 };
+
+// LE RYTHME DE LA DESCENTE.
+//
+// Les six stations etaient composees a l'identique : tout centre, tout
+// symetrique. Six ecrans qui se ressemblent donnent l'impression de ne pas
+// avancer — c'est ce qui fait qu'une page tres soignee peut quand meme
+// paraitre plate. Le centre n'est pas neutre, il est simplement le reglage
+// par defaut, et l'utiliser six fois de suite est un choix par omission.
+//
+// L'alternance suit le SENS, pas un motif decoratif :
+//   centre  — le seuil : on entre par le milieu.
+//   gauche  — le poids. La phrase arrive de cote, en desequilibre, comme
+//             ce qu'elle decrit.
+//   centre  — la maison. C'est la these, elle se tient droite.
+//   [gravure] — pas de texte. Le souffle entre les deux moities.
+//   droite  — Kilian. Le second diagnostic, en miroir du premier.
+//   centre  — Begin. On ressort par ou l'on est entre.
+//
+// La page est donc symetrique autour de la gravure, et les deux seules
+// phrases qui nomment la fatigue sont les deux seules poussees aux marges.
+type Cote = "centre" | "gauche" | "droite";
+const RANGEE: Record<Cote, React.CSSProperties["justifyContent"]> = {
+  centre: "center", gauche: "flex-start", droite: "flex-end",
+};
+const station = (cote: Cote, extra?: React.CSSProperties): React.CSSProperties => ({
+  ...stationStyle, justifyContent: RANGEE[cote], ...extra,
+});
+const texteDe = (cote: Cote): React.CSSProperties["textAlign"] =>
+  cote === "centre" ? "center" : cote === "gauche" ? "left" : "right";
 
 function gaussian(x: number, mu: number, sigma: number) {
   const d = (x - mu) / sigma;
@@ -172,7 +204,8 @@ export default function Home() {
       <div ref={rootRef}>
         {/* 1. SEUIL — pas de rectangle média, le marbre ambient (SiteMarble)
             suffit. Le titre au centre. */}
-        <section className="mdc-station" style={{ ...stationStyle, flexDirection: "column" }}>
+        <section id="seuil" data-station="Threshold" className="mdc-station"
+                 style={station("centre", { flexDirection: "column" })}>
           {/* C'est le <h1> du site. L'accueil n'en avait aucun — les sept
               autres pages en ont un — et cette phrase est deja le titre :
               elle etait simplement dans un div. */}
@@ -207,12 +240,14 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 2. PIERRE — PH-01 image derrière + titre */}
-        <section className="mdc-station" style={stationStyle}>
+        {/* 2. PIERRE — PH-01 image derrière + titre. Poussee a GAUCHE : la
+             phrase parle d'un desequilibre, elle se tient en desequilibre.
+             Voir RANGEE plus haut. */}
+        <section id="poids" data-station="The weight" className="mdc-station mdc-station--gauche" style={station("gauche")}>
           <BreathReveal
             as="p"
             text="There is a kind of tiredness that rest doesn't reach."
-            style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 52px)", maxWidth: 900, textAlign: "center", position: "relative", zIndex: 1 }}
+            style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 52px)", maxWidth: "17ch", textAlign: texteDe("gauche"), position: "relative", zIndex: 1 }}
             stagger={90}
           />
         </section>
@@ -244,7 +279,8 @@ export default function Home() {
              D'ou ce qu'elle ne dit jamais : ni cabinet, ni pratique, ni une
              heure. Chacun de ces mots enfermerait la marque dans son premier
              produit. */}
-        <section className="mdc-station" style={{ ...stationStyle, flexDirection: "column" }}>
+        <section id="maison" data-station="The house" className="mdc-station"
+                 style={station("centre", { flexDirection: "column" })}>
           <BreathReveal
             as="p"
             text="Maison du Calme is a house. It asks nothing of you, and what it makes is calm."
@@ -267,7 +303,6 @@ export default function Home() {
              traversee interminable. */}
         <section
           className="mdc-station mdc-station--haute"
-          data-station="maison"
           style={stationStyle}
           aria-hidden
         />
@@ -283,7 +318,8 @@ export default function Home() {
              qu'elles quittent le centre de l'ecran — parfait pour une phrase,
              illisible pour un sommaire. Il defile normalement, dans la
              grammaire editoriale des autres pages (.mdc-wrap, .mdc-index). */}
-        <section className="mdc-wrap" style={{ position: "relative", zIndex: 5, paddingTop: 40, paddingBottom: 40 }}>
+        <section id="pratique" data-station="The practice" className="mdc-wrap"
+                 style={{ position: "relative", zIndex: 5, paddingTop: 40, paddingBottom: 40 }}>
           <p style={eyebrow}>What is practised here</p>
           <h2 style={{ ...sectionHead, marginTop: 30, maxWidth: "20ch" }}>
             Six ways in. Five in the room, one on a call.
@@ -325,9 +361,16 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 5. KILIAN */}
-        <section className="mdc-station" style={stationStyle}>
-          <div style={{ textAlign: "center", maxWidth: 900 }}>
+        {/* 5. KILIAN — a DROITE, en miroir exact de la station « poids ». Les
+             deux seules phrases qui nomment la fatigue sont les deux seules
+             poussees aux marges, de part et d'autre de la gravure. */}
+        <section id="kilian" data-station="Kilian" className="mdc-station" style={station("droite")}>
+          <div style={{
+            // 22ch donnait huit lignes en drapeau : une colonne etroite et
+            // hachee, pas un bloc. 30ch la ramene a quatre — la meme densite
+            // que la station « poids » en miroir de l'autre cote.
+            textAlign: texteDe("droite"), maxWidth: "30ch",
+          }}>
             <div style={{ ...displayItalic, fontSize: "clamp(24px, 3.8vw, 40px)" }}>
               <SplitTextChars
                 text="Chronic stress rarely looks like falling apart. It looks like being very good at your life."
@@ -340,8 +383,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 6. BEGIN */}
-        <section className="mdc-station" style={stationStyle}>
+        {/* 6. BEGIN — retour au centre : on ressort par ou l'on est entre. */}
+        <section id="begin" data-station="Begin" className="mdc-station" style={station("centre")}>
           <div style={{ textAlign: "center" }}>
             <div style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 56px)" }}>
               <SplitTextChars text="Something in you already knows." delay={60} duration={900} />
