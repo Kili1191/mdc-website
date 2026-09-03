@@ -368,11 +368,19 @@ body {
 
    `svh` est le plus petit viewport possible : sa valeur ne bouge jamais.
    La premiere declaration sert de repli aux navigateurs d'avant 2022. */
+/* LA VOIE DE LA REGLE. La descente gravee occupe la marge gauche : le
+   sillon a 30px, le cran jusqu'a 72px, et le nom de la station courante
+   jusqu'a ~175px. Une station calee a gauche demarrait a 6vw — 86px a
+   1440 — donc sous le nom. Cette variable reserve la voie une seule fois,
+   pour que la regle et le texte ne puissent plus se marcher dessus. */
+:root { --mdc-voie: 210px; }
+
 .mdc-station {
   height: 100vh;
   height: 100svh;
   min-height: 100vh;
   min-height: 100svh;
+  padding: 0 6vw;
 }
 
 /* La station de la gravure est plus haute : le burin a besoin de descendre.
@@ -382,6 +390,14 @@ body {
   height: 130svh;
   min-height: 130vh;
   min-height: 130svh;
+}
+
+/* La voie reservee doit passer APRES .mdc-station : a specificite egale,
+   c'est la derniere regle qui gagne, et le raccourci `padding` de
+   .mdc-station effacerait un padding-left declare plus haut. Meme raison
+   que .mdc-station--haute juste au-dessus. */
+@media (min-width: 1081px) {
+  .mdc-station--gauche { padding-left: var(--mdc-voie); }
 }
 
 
