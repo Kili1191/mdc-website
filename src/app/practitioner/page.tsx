@@ -74,8 +74,7 @@ export default function PractitionerPage() {
               no reason to change it and nothing to sell.
             </p>
             <p style={body}>
-              He does not talk about any of this while he works. He does not talk at all.
-              That is the point of it.
+              He does not talk about any of this while he works. That is the point of it.
             </p>
           </div>
         </section>

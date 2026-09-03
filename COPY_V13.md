@@ -196,7 +196,7 @@ There is no team behind a curtain. The person you meet is the person who spent y
 
 Kilian did not arrive at this work through a weekend or a certificate. He went to the sources — to the places where these traditions are still passed from one person to the next, in person, over years, the way they have always been passed. He learned them where they are lived, not where they are marketed. Some of what he carries came from teachers who accepted very few students. Some of it took years before he was permitted to practise it at all.
 
-He does not talk about any of this while he works. He does not talk at all. That is the point of it.
+He does not talk about any of this while he works. ~~He does not talk at all.~~ That is the point of it.
 
 What he brings to the room is not a method you could read about. It is the accumulation of a life spent learning to be present with what other people cannot hold — and the restraint to do less, more precisely, than someone with half the training would.
 

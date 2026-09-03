@@ -95,6 +95,41 @@ entre une fois par page, a la premiere occurrence. C'est la seule matiere
 ajoutee par cette passe — un nom deja present partout ailleurs, jamais une
 phrase.
 
+### 1.4 Ce qui se passe AVANT la seance — non decide, donc absent du site
+
+Trouve par Kilian lui-meme, en lisant sa propre page : « faut bien que je sache
+sur quoi je travaille ».
+
+La page Practitioner disait **« He does not talk about any of this while he
+works. He does not talk at all. »** La seconde phrase est retiree (2 sept.
+2026, suppression pure). Elle etait fausse deux fois :
+
+- **contre sa pratique** — il doit savoir ce que quelqu'un porte pour poser son
+  intention de soin ;
+- **contre la page elle-meme** — quinze lignes plus bas, elle dit « Where he
+  trained, and with whom, he will tell you himself. In conversation. »
+
+La premiere phrase reste, et elle est juste : il ne parle pas de sa formation
+pendant qu'il travaille. Le silence de la seance est celui du CLIENT — « not
+asked to speak » — pas le sien.
+
+**Ce qui reste ouvert.** Kilian : « je vais envoyer peut-etre un questionnaire
+avant session ou talk avant session ». **Peut-etre.** Donc rien n'entre sur le
+site, meme regle que Retreats : on n'ecrit pas ce qui n'est pas arrete.
+
+Deux choses a savoir quand il tranchera :
+
+1. **Le formulaire Begin EST deja une prise d'information ecrite.** « What do
+   you carry? » recueille exactement ce qu'un questionnaire d'avant-seance
+   demanderait. S'il en ajoute un seceond, les deux se recouvriront et le client
+   ecrira deux fois la meme chose. Le plus probable est qu'il n'a rien a
+   construire, seulement a decider s'il rappelle avant.
+2. **C'est un argument de vente, pas un detail d'organisation.** Le site ne dit
+   nulle part que la seance est PREPAREE. Un lecteur qui voit « in silence »
+   peut se demander comment le praticien sait quoi faire de lui. Dire qu'il y a
+   un echange avant montre que rien n'est improvise — mais la phrase devra
+   venir de Kilian, et seulement une fois le processus reel arrete.
+
 ---
 
 ## 2. La doctrine de la maison
