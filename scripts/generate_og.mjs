@@ -52,10 +52,15 @@ body {
 .maison { width:auto; height:296px; }
 .maison path { fill:#A55A3E; }            /* Rouille */
 .nom {
+  /* La signature de l'intro, a l'identique. Elle existe deja : IntroOverlay
+     pose « Maison du Calme » en Higuen, casse de titre, letter-spacing .14em,
+     brou fonce. Une premiere version de cette carte l'avait reecrite en
+     CAPITALES espacees a .26em — c'est-a-dire une SECONDE signature pour la
+     meme maison. On ne fabrique pas deux logotypes. */
   font-family:"Higuen", serif;
-  font-size:58px; letter-spacing:0.26em; text-indent:0.26em;
+  font-size:46px; letter-spacing:0.14em; text-indent:0.14em;
   color:#2F2519;                          /* Brou fonce */
-  text-transform:uppercase; line-height:1;
+  line-height:1;
 }
 </style></head><body>${logo}<p class="nom">Maison du Calme</p></body></html>`;
 
