@@ -26,27 +26,49 @@
 // c'est le logo, et le seul accent du site. A 0,02 % de l'ecran, « rare » est
 // tenu.
 
-// ⚠ LES CONTRASTES CI-DESSOUS SONT MESURES CONTRE #EDE4D0 — UN FOND QUE LE
-// SITE N'AFFICHE JAMAIS. #EDE4D0 est le fond du <body>, visible seulement
-// avant le chargement du shader et dans le repli sans WebGL. Le fond reel est
-// la photographie de marbre, plus sombre.
+// CONTRASTES — MESURES SUR LE FOND REEL, pas sur le jeton parchemin.
 //
-// L'erreur est d'autant plus bete que la mesure existait deja dans le depot :
-// src/styles/page.ts ligne 48 note « le marbre du site (~rgb(221,205,185)) ».
-// Sur ce marbre-la, et il est encore optimiste :
+// Methode (scripts/contraste-matiere.mjs) : on repere les rectangles de texte
+// rendus, PUIS on passe toute l'encre en `color: transparent` et on
+// rephotographie exactement les memes rectangles, curseur maintenu sur le mot
+// — le shader reagit a sa position. Ce qui reste dans l'image est le fond, et
+// rien d'autre. Aucun pixel de glyphe n'entre dans la mesure.
 //
-//   brou           8,52 annonce  ->  6,93 reel
-//   rouilleEncre   4,51 annonce  ->  3,67 reel   <- sous le seuil
-//   taupe          3,04 annonce  ->  2,47 reel   <- sous le seuil
+// 1440x900, apres le plancher de luminance du shader
+// (MarbleBackground : mix(vec3(0.62,0.58,0.52), blanc, col) en fin de passe) :
 //
-// Un audit colorimetrique a rejoue la chaine complete du shader (motif, voile,
-// reflet, irisation, grain, vignette non corrigee d'aspect) : au 1er centile
-// de la colonne de texte, le fond descend a Y 0,397 sur les pages internes et
-// Y 0,161 sur l'accueil sous le curseur. rouilleEncre y vaut 2,43 et 1,18.
+//                  Y au 1er centile   Y median
+//   accueil              0,572          0,836     <- le pire fond du site
+//   /sessions            0,657          0,845
+//   /begin               0,652          0,847
 //
-// DONC : ne calibrez plus rien contre #EDE4D0. La grille ci-dessous est a
-// refaire contre le p1 mesure, et les valeurs sont a rediscuter avec elle.
-// Les seuils restent 4,5:1 pour du texte, 3,0:1 pour un trait.
+// L'accueil est le plus sombre : vignette plus le creux du curseur. C'est LUI
+// qui fixe les seuils, pas la mediane.
+//
+//   contre le pire fond (Y 0,572)     pire      typique     verdict
+//   brou       #4A3B2A                6,38:1    9,09:1      texte, partout
+//   brouFonce  #2F2519                8,89:1   12,66:1      titres
+//   taupeTrait #74654F                3,35:1    4,82:1      filets et bordures
+//   rouille    #B14E2D                3,11:1    4,43:1      marque et traits SEULEMENT
+//   taupe      #908067                2,28:1    3,24:1      MATIERE, jamais a l'ecran
+//
+// CE QUE CA TRANCHE :
+// — Le brou tient tout le texte du site sans exception, y compris sur
+//   l'accueil sous le curseur. C'est la seule encre.
+// — Le rouille passe 3,0 (trait, bordure, signe) et ne passe pas 4,5 : il
+//   n'ecrit nulle part. La regle plus bas n'est pas une preference de gout,
+//   elle est mesuree.
+// — Le taupe echoue meme le seuil des traits dans le pire fond. Il ne peut
+//   etre qu'une couleur de matiere : la pierre le contient deja.
+//
+// Historique de l'erreur, garde parce qu'elle etait couteuse : cette grille a
+// longtemps ete calibree contre #EDE4D0, un fond que le site n'affiche JAMAIS
+// (c'est le fond du <body>, visible seulement avant le shader et dans le repli
+// sans WebGL). La mesure du vrai marbre existait pourtant deja dans le depot,
+// a src/styles/page.ts ligne 48. Ne calibrez rien contre un jeton : mesurez
+// les pixels que le visiteur recoit.
+//
+// Seuils : 4,5:1 pour du texte, 3,0:1 pour un trait ou une bordure.
 export const COLORS = {
   parchemin:  "#EDE4D0", // fond — 55%
   brou:       "#4A3B2A", // texte courant — 8,52:1
@@ -60,19 +82,56 @@ export const COLORS = {
   // donne 4,16:1 — assez pour une marque ou un trait, pas pour du texte.
   // Or `rouille` servait de couleur de texte sur TOUS les boutons, le lien
   // BEGIN et le mailto de /begin.
-  rouille:      "#B14E2D", // LA MARQUE — la maison dessinee, le logo. 4,16:1
-  rouilleEncre: "#A84A2B", // LE TEXTE — meme teinte, 5 % plus sombre. 4,51:1
+  // UN SEUL ROUGE, et il n'ecrit jamais.
+  //
+  // J'avais dedouble le rouge — rouille pour la marque, rouilleEncre #A84A2B
+  // pour le texte — en calibrant contre #EDE4D0. Sur le fond REEL, ce second
+  // rouge vaut 2,43:1 sur les pages internes et 1,18:1 sur l'accueil sous le
+  // curseur. Il n'atteignait son but nulle part.
+  //
+  // Et il n'existe aucun point qui garde la teinte du logo ET passe 4,5:1 :
+  // il faudrait #7B1A00, a ΔE00 = 16 du logo, c'est-a-dire un autre rouge.
+  //
+  // Donc le rouille est la MARQUE et rien d'autre — un trait, une bordure,
+  // un signe, une pastille. L'encre est le brou. Sous le lien BEGIN, c'est le
+  // filet qui porte le rouge, pas le mot.
+  rouille:    "#B14E2D", // valeur exacte du logo, mesuree sur ses pixels
 
-  // Traits et bordures uniquement. #A89A85 donne 2,18:1 : invisible en
-  // bordure de champ, ou l'on a besoin de 3,0. Assombri de 18 %.
-  taupe:      "#908067", // 3,04:1
+  // Traits et bordures. #A89A85 donnait 2,18:1 ; #908067 donne 3,04:1 sur le
+  // parchemin — mais 2,28 au 1er centile de l'accueil. Il reste MATIERE.
+  taupe:      "#908067",
 
-  // DECLARES ET JAMAIS UTILISES — zero occurrence dans src/. Conserves parce
-  // qu'ils appartiennent a la marque, pas au code. Ni l'un ni l'autre ne
-  // passe le contraste du texte : sauge 2,76:1, ocre 2,13:1. S'ils servent
-  // un jour, ce sera dans la matiere, jamais pour un mot.
-  sauge:      "#8C8B6A",
+  // Le trait qui se voit sur la PIERRE, pas sur le parchemin. C'est lui qui
+  // porte les filets, les bordures et les soulignements de champ.
+  //
+  // #7E6E56 tenait 3,33:1 sur les pages internes mais tombait a 2,93:1 au 1er
+  // centile de l'accueil — sous le seuil la ou le fond est le plus sombre.
+  // Assombri de 8 % en sRGB : l'ecart est dans la clarte (L* 47,3 -> 43,6),
+  // la teinte ne bouge pas (h 81,4 -> 81,0). ΔE00 = 3,6 — visible cote a cote,
+  // invisible dans l'usage, et c'est ce qui le fait passer partout.
+  taupeTrait: "#74654F", // 3,35:1 au pire fond · 4,82:1 typique
+
+  // Les deux barreaux qui manquaient a l'echelle. Mesure en OKLCH, les ecarts
+  // de clarte etaient : 0,092 — 0,244 — 0,021 — 0,071 — 0,221. Deux trous.
+  terre:      "#6C5A43", // okL 0,480 — comble le trou bas. MATIERE, jamais encre.
+  craie:      "#CBBFAC", // okL 0,810 — comble le trou haut. Voile, bordure claire, ecru.
+
+  // sauge est la seule couleur du cote VERT du jaune : okH 106,2 quand toute
+  // la famille est entre 69,9 et 86,6. C'est aussi la seule qui peut lire
+  // FROID en aplat, ce que la doctrine de ce fichier interdit. Ramenee a 96,0.
+  // Ecart avec l'ancienne : ΔE00 = 1,9 — invisible seule, decisif en aplat.
+  sauge:      "#918969",
+
   ocre:       "#B89968",
+
+  // ETATS. Aucun n'est froid, aucun n'est achromatique — la palette n'a pas
+  // de gris et c'est sa force. AUCUN NE PORTE SEUL UNE INFORMATION : sur un
+  // fond qui varie de Y 0,16 a 0,88, la couleur ne peut rien signaler toute
+  // seule. Toujours doubler d'un mot, d'un filet ou d'une graisse.
+  alerte:     "#922716", // rouille pousse vers le rouge et assombri
+  olive:      "#4F502B", // descendant assombri de sauge — une olive, pas un vert de succes
+  eteint:     "#908067", // = taupe : il ne passe aucun seuil de texte, c'est exactement
+                         // ce qu'on veut d'un etat desactive. Doubler d'aria-disabled.
 } as const;
 
 export const FONTS = {

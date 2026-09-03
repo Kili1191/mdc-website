@@ -309,6 +309,25 @@ export default function MarbleBackground({
           vec2 uv = vUv - 0.5;
           float vig = smoothstep(0.90, 0.30, length(uv));
           col.rgb *= mix(1.0 - uVignette, 1.0, vig);
+
+          // PLANCHER DE LUMINANCE — la derniere operation, apres la vignette.
+          //
+          // Un audit colorimetrique a rejoue toute cette chaine : au 1er
+          // centile de la colonne de texte, le fond descendait a Y 0,397 sur
+          // les pages internes et Y 0,161 sur l'accueil SOUS LE CURSEUR —
+          // parce que la revelation amene la matiere sombre exactement la ou
+          // le lecteur pointe. Le brou perdait 19,6 % de sa surface de texte
+          // sous 4,5:1.
+          //
+          // On REMAPPE au lieu d'ecreter. Un max() aplatirait les veines
+          // sombres en un aplat et ferait des marches ; ce mix comprime la
+          // plage — 0 devient le plancher, 1 reste 1 — donc tout le detail du
+          // marbre survit, simplement plus haut.
+          //
+          // Place ici et pas avant : la vignette multiplie, elle ramenerait
+          // le plancher vers le bas.
+          col.rgb = mix(vec3(0.62, 0.58, 0.52), vec3(1.0), col.rgb);
+
           gl_FragColor = col;
         }
       `,

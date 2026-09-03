@@ -88,7 +88,10 @@ body {
 
 /* Un index : une ligne par offre, lisible en diagonale. Sans lui, il faut
    scroller toutes les sections pour savoir combien il y en a. */
-.mdc-index { margin-top: 72px; border-top: 1px solid rgba(144,128,103,0.35); }
+/* Filet PLEIN, pas dilue. Un taupeTrait a 0,55 d'opacite se compose a
+   1,84:1 sur le fond le plus sombre — plus faible que la couleur qu'il
+   remplace. Choisir un jeton puis le diluer annule la correction. */
+.mdc-index { margin-top: 72px; border-top: 1px solid #74654F; }
 .mdc-index a,
 .mdc-index .mdc-index__row {
   display: grid;
@@ -97,7 +100,7 @@ body {
   grid-template-columns: 3.5rem 14rem 1fr auto;
   gap: 24px; align-items: baseline;
   padding: 26px 0; text-decoration: none;
-  border-bottom: 1px solid rgba(144,128,103,0.35);
+  border-bottom: 1px solid #74654F;
 }
 /* Un sommaire d'essais : les titres sont des phrases, pas des noms de salles.
    Douze rem les cassaient en trois lignes. */
@@ -115,7 +118,12 @@ body {
             align-items: center; margin-top: 168px; }
 .mdc-room--flip .mdc-room__art { order: 2; }
 
-/* Un numero plutot qu'un filet : il dit ou l'on en est. */
+/* Un numero plutot qu'un filet. ORNEMENT, et rien d'autre : #908067 a 30 %
+   d'opacite donne 1,36:1 sur le marbre median et 1,25:1 au 1er centile de
+   l'accueil. Meme a pleine opacite le taupe plafonne a 2,28:1 dans le pire
+   fond — aucun reglage ne le rend lisible. Il ne peut donc PAS porter la
+   position dans la page : c'est le titre de section qui la porte, et le
+   numero est aria-hidden pour ne pas etre annonce non plus. */
 .mdc-num { font-family: var(--font-higuen), Georgia, serif;
            font-size: 92px; line-height: 1; color: #908067; opacity: 0.30;
            margin: 0 0 28px; }
@@ -316,7 +324,7 @@ body {
   scroll-snap-align: start;
   text-decoration: none;
   padding: 30px 28px 28px;
-  border-top: 1px solid rgba(144, 128, 103, 0.55);
+  border-top: 1px solid #74654F;
   transition: background-color 900ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .mdc-rail__card:hover,

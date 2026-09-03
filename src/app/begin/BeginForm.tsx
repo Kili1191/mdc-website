@@ -32,7 +32,7 @@ const labelStyle: React.CSSProperties = {
 const inputStyle: React.CSSProperties = {
   fontFamily: FONTS.prata, fontSize: 16, color: COLORS.brou,
   background: "transparent",
-  border: 0, borderBottom: `1px solid ${COLORS.taupe}`,
+  border: 0, borderBottom: `1px solid ${COLORS.taupeTrait}`,
   padding: "12px 0", width: "100%", outline: "none",
 };
 const textareaStyle: React.CSSProperties = {
@@ -138,7 +138,7 @@ export default function BeginForm() {
           disabled={!DESTINATION}
           style={{
             fontFamily: FONTS.prata, fontSize: 14, letterSpacing: "0.32em",
-            textTransform: "uppercase", color: COLORS.rouilleEncre,
+            textTransform: "uppercase", color: COLORS.brou,
             background: "transparent", border: `1px solid ${COLORS.rouille}`,
             padding: "18px 44px", borderRadius: 2,
             cursor: DESTINATION ? "pointer" : "not-allowed",
@@ -156,11 +156,11 @@ export default function BeginForm() {
             {envoye
               ? "Your message is opening in your mail application. If nothing opened, write to "
               : "This opens in your own mail application, and goes to Kilian. You can also write to "}
-            <a href={`mailto:${DESTINATION}`} style={{ color: COLORS.rouilleEncre }}>{DESTINATION}</a>.
+            <a href={`mailto:${DESTINATION}`} style={{ color: COLORS.brou }}>{DESTINATION}</a>.
           </p>
         )}
         {!DESTINATION && (
-          <p style={{ ...noteStyle, marginTop: 22, color: COLORS.rouilleEncre }}>
+          <p style={{ ...noteStyle, marginTop: 22, color: COLORS.alerte }}>
             This form is not connected yet. Set NEXT_PUBLIC_CONTACT_EMAIL and it
             will send.
           </p>
