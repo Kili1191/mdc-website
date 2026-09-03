@@ -3,6 +3,8 @@ import { pageStyle, body, lead, bigHead, sectionHead, eyebrow, micro } from "@/s
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
 import AssetFrame from "@/components/effects/AssetFrame";
+import JsonLd from "@/components/JsonLd";
+import { graphe, praticien } from "@/lib/jsonld";
 
 // Practitioner — la page ou l'on decide de faire confiance a quelqu'un.
 //
@@ -28,6 +30,7 @@ export const metadata = {
 export default function PractitionerPage() {
   return (
     <main style={pageStyle}>
+      <JsonLd data={graphe(praticien)} />
       <div className="mdc-wrap">
         <p style={eyebrow}>Practitioner</p>
         <h1 style={{ ...bigHead, marginTop: 36 }}>
@@ -40,7 +43,7 @@ export default function PractitionerPage() {
         <section className="mdc-room">
           <div className="mdc-room__art">
             <AssetFrame slot="PT-01" kind="image" src="/photos/pt-01.jpg" aspect="4/5" effect="reveal"
-              prompt="The house engraved in the stone — the practitioner's mark." />
+              prompt="The house engraved in the stone , the practitioner's mark." />
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             <p style={body}>

@@ -13,6 +13,18 @@ import { atmosphereFor } from "@/lib/assetSrc";
 
 type Kind = "image" | "video";
 
+// Le `prompt` sert aussi d'`alt`.
+//
+// Les images etaient toutes en `alt=""`. Le vide est correct pour une image
+// decorative — le logo de la nav le garde, parce que le wordmark « MAISON DU
+// CALME » est juste a cote et qu'un lecteur d'ecran le dirait deux fois. Mais
+// les photographies de la pierre PORTENT quelque chose : elles illustrent une
+// salle, et un moteur comme un lecteur d'ecran doivent pouvoir les lire.
+//
+// Le `prompt` decrit deja l'image exactement (« Carved onyx, the widest frame
+// of the house stone »). Il devient l'alt : aucun texte nouveau a ecrire, et
+// la description ne peut pas deriver de l'image puisqu'elle l'a produite.
+
 type Props = {
   slot: string;             // ex "PH-01"
   kind: Kind;
@@ -64,7 +76,7 @@ export default function AssetFrame({
     if (effect === "fluid") return <FluidImage src={atmosphere} aspect={aspect} />;
     if (effect === "reveal") return <ImageReveal src={atmosphere} aspect={aspect} />;
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={atmosphere} alt="" data-slot={slot} data-atmosphere=""
+    return <img src={atmosphere} alt={prompt ?? ""} data-slot={slot} data-atmosphere=""
       style={{ width: "100%", aspectRatio: aspect, objectFit: "cover", display: "block", ...style }} />;
   }
 
@@ -95,7 +107,7 @@ export default function AssetFrame({
     );
   }
   if (effect === "fluid") return <FluidImage src={src} aspect={aspect} />;
-  if (effect === "reveal") return <ImageReveal src={src} aspect={aspect} />;
+  if (effect === "reveal") return <ImageReveal src={src} alt={prompt ?? ""} aspect={aspect} />;
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt="" data-slot={slot} style={{ width: "100%", aspectRatio: aspect, objectFit: "cover", display: "block", ...style }} />;
+  return <img src={src} alt={prompt ?? ""} data-slot={slot} style={{ width: "100%", aspectRatio: aspect, objectFit: "cover", display: "block", ...style }} />;
 }

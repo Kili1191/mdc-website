@@ -2,6 +2,8 @@ import { pageStyle, body, lead, bigHead, sectionHead, eyebrow, micro, label } fr
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
 import Testimonies from "@/components/effects/Testimonies";
+import JsonLd from "@/components/JsonLd";
+import { graphe, serviceCoaching } from "@/lib/jsonld";
 
 // Coaching — l'autre porte.
 //
@@ -57,6 +59,7 @@ export const metadata = {
 export default function CoachingPage() {
   return (
     <main style={pageStyle}>
+      <JsonLd data={graphe(serviceCoaching)} />
       <div className="mdc-wrap">
         <p style={eyebrow}>Coaching</p>
         <h1 style={{ ...bigHead, marginTop: 36, maxWidth: "20ch" }}>

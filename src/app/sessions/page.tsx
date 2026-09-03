@@ -3,6 +3,8 @@ import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
 import AssetFrame from "@/components/effects/AssetFrame";
 import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
+import JsonLd from "@/components/JsonLd";
+import { graphe, servicesEnCabinet } from "@/lib/jsonld";
 
 // Sessions — la page qui vend.
 //
@@ -48,6 +50,7 @@ const INDEX = [
 export default function SessionsPage() {
   return (
     <main style={pageStyle}>
+      <JsonLd data={graphe(...servicesEnCabinet)} />
 
 
       <div className="mdc-wrap">
