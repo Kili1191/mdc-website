@@ -55,13 +55,6 @@ const noteStyle: React.CSSProperties = {
   color: COLORS.brou, margin: 0, maxWidth: "52ch",
 };
 
-const CHOIX: Record<string, string> = {
-  session: "A session",
-  deepest: "The deepest room, by application",
-  retreat: "The retreat",
-  unsure: "Not sure yet",
-};
-
 type Etat = "attente" | "envoi" | "envoye" | "echec";
 
 export default function BeginForm() {
@@ -126,10 +119,31 @@ export default function BeginForm() {
       </div>
       <div>
         <label style={labelStyle} htmlFor="brings">What brings you</label>
+        {/* Deux libelles structurels, ajoutes a une liste par ailleurs validee
+            en COPY_V13.md:366. Les quatre autres ne bougent pas.
+
+            L'OPTION COACHING existe parce que la page Coaching envoie ici avec
+            « Ask for the first call » et que le menu n'avait rien pour ces
+            gens-la : une ligne de metier entiere obligeait a mentir sur son
+            propre motif, en cochant « A session » ou « I'm not sure yet ». Les
+            mots sont ceux de la page d'ou ils viennent — « The first call is
+            free », « Ask for the first call ».
+            Elle est placee TROISIEME, pas juste apres « A session ». La session
+            et la deepest room sont le meme travail silencieux, dans la meme
+            piece ; le coaching est l'exception, sur un appel. On ne coupe pas
+            le travail silencieux en deux pour glisser son contraire au milieu.
+
+            L'OPTION D'INVITE remplace un <option> sans libelle : le select
+            s'affichait vide et rien ne disait qu'il s'ouvrait. « Whichever is
+            closest » reprend le « whichever you prefer » du champ juste
+            au-dessus. Ce n'est pas « Choose one » : la maison ne donne pas
+            d'ordre de formulaire, et quelqu'un qui hesite entre deux portes a
+            besoin qu'on lui dise qu'approcher suffit. */}
         <select id="brings" name="brings" defaultValue="" style={selectStyle}>
-          <option value="" disabled></option>
+          <option value="" disabled>Whichever is closest</option>
           <option value="session">A session</option>
           <option value="deepest">The deepest room, by application</option>
+          <option value="coaching">Coaching, the first call</option>
           <option value="retreat">The retreat</option>
           <option value="unsure">I&apos;m not sure yet</option>
         </select>

@@ -282,7 +282,7 @@ veut lire ne peut pas, et ne sait pas si le premier est paru.
 **A trancher avant toute copy :** les essais existent-ils, et sinon, la page
 doit-elle etre en ligne.
 
-### 6.2 Le menu de Begin n'a pas d'option pour le coaching
+### 6.2 ~~Le menu de Begin n'a pas d'option pour le coaching~~ **REGLE**
 
 `begin/BeginForm.tsx:81-84` — les options sont `A session`, `The deepest room, by
 application`, `The retreat`, `I'm not sure yet`. Or `coaching/page.tsx:186`
@@ -291,6 +291,18 @@ et ne trouve rien qui lui corresponde.
 
 Accessoirement, l'`<option value="" disabled>` de la ligne 80 est **vide** :
 le select s'affiche blanc, sans invite. Deux libelles a ecrire.
+
+**Tranche par l'agent copywriter, applique, reporte dans `COPY_V13.md`.**
+L'option est `Coaching, the first call`, en TROISIEME position : la session et la
+deepest room sont le meme travail dans la meme piece, le coaching est l'exception
+sur un appel, et on ne coupe pas la paire pour glisser son contraire au milieu.
+L'invite est `Whichever is closest` — pas `Choose one` : la maison ne donne pas
+d'ordre de formulaire sur la page qui promet « This is not a form to be processed ».
+Les mots des deux libelles viennent de pages deja validees.
+
+Reste ouvert et non tranche : le champ n'est toujours pas `required`, donc il part
+vide une fois sur deux et Kilian perd le triage (voir 6.4 ci-dessous si elle existe,
+sinon c'est ici). L'invite reduit le probleme, elle ne le regle pas.
 
 ### 6.3 Aucune mention de confidentialite
 
@@ -318,16 +330,33 @@ plus abstraites du site, et le client decrit en section 4 de l'agent copywriter
 
 ---
 
-## 8. Le conflit de palette, qui n'est pas de la copy mais qui attend aussi
+## 8. Le conflit de palette — REGLE, et ce qui reste n'est pas ce qu'on croyait
 
-Mesure sur le fond marbre du site : le **rouille #A55A3E donne 3,27:1**, quand
-un texte en demande 4,5. Sauge 2,25, taupe 1,77, ocre 1,73. Seuls le brou (6,93)
-et le brou fonce (9,65) peuvent porter du texte.
+**Cette section annoncait 93 textes en rouille sous le seuil. C'est faux
+aujourd'hui, et il faut le dire clairement parce que le chiffre a ete repete.**
 
-Consequence : **93 textes du site sont sous le seuil**, tous en rouille — chaque
-`QuietButton`, chaque nom de salle, et le « Begin » de la nav a 2,59.
+Re-mesure avec `scripts/contraste-matiere.mjs` contre le vrai fond de marbre,
+sur `/`, `/sessions` et `/begin` : **aucun texte du site n'est ecrit en
+rouille.** Tout le rouille restant dans `src/` est une bordure, un filet ou le
+point du curseur. Le rouille vaut desormais `#B14E2D` (valeur validee par
+Kilian, `VISION.md`), mesure 3,49:1 au pire — au-dessus des 3,0 que demande un
+trait, et il n'a plus besoin d'atteindre 4,5 puisqu'il n'ecrit plus.
 
-Assombrir le rouille sortirait de la palette Aube Encens, ce que `VISION.md`
-interdit, et `VISION.md` prime sur le skill de design. C'est donc un arbitrage
-entre deux regles canoniques, et il appartient a Kilian. Detail complet dans
-`.claude/skills/taste/SKILL.md`, §11b.
+Le conflit entre `VISION.md` et la checklist de gout est donc **eteint**, et il
+l'a ete par le travail de l'autre session : les mots sont passes au brou, le
+filet est reste rouille. Il n'y a rien a arbitrer ici.
+
+**Ce qui reste sous le seuil est une affaire d'opacite, pas de couleur.** Brou
+compose en espace sRGB sur le fond reel : 1,00 → 8,22:1 ; 0,82 → 5,18:1 ; 0,62
+→ 3,20:1 ; 0,25 → 1,51:1. Le plancher de 0,82 tient largement. Deux commandes
+vivantes passent dessous :
+
+- `BreathButton` — brou a 0,62, soit **3,20:1**.
+- `.mdc-skip` dans `IntroOverlay` — taupe `#A89A85` a 0,25, soit **1,19:1**.
+  C'est aussi la seule couleur dont le §11 dit qu'elle n'ecrit jamais, et c'est
+  la seule sortie d'une intro de 18 secondes. Qui veut passer ne voit pas le
+  bouton.
+
+**A trancher par Kilian**, parce que les rendre lisibles se paie en discretion,
+et que la discretion est voulue. Ce n'est plus une question de palette.
+Detail dans `.claude/skills/taste/SKILL.md`, §11b.

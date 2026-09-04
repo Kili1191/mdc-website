@@ -227,7 +227,7 @@ written down:
 |---|---|---|
 | Brou `#4A3B2A` | 6.93 | yes |
 | Brou foncé `#2F2519` | 9.65 | yes |
-| **Rouille `#A55A3E`** | **3.27** | **no** |
+| **Rouille `#B14E2D`** | **3.49** | **no — but it clears 3.0, so it rules** |
 | Sauge `#8C8B6A` | 2.25 | no |
 | Taupe `#A89A85` | 1.77 | no |
 | Ocre `#B89968` | 1.73 | no |
@@ -235,18 +235,44 @@ written down:
 Only two of the seven Aube Encens colours can carry text. Brou and brou foncé
 write; the other five are for matter, rules, borders and fills.
 
-**This puts two canonical rules in conflict, and the conflict is not resolved.**
-`VISION.md` assigns Rouille to CTAs and highlights; checklist item 13 demands
-4.5:1 for every text colour. Rouille reaches 3.27. So today every
-`QuietButton` label, every room name (ANTARA, VAYU, SOMA…) and the nav's
-`Begin` are below the bar — `Begin` in the nav worst of all at 2.59, because
-it also carries opacity.
+**This once put two canonical rules in conflict. It no longer does, and the
+resolution is the last paragraph below — applied, not pending.**
 
-Do not silently darken Rouille to fix this: that leaves the palette, which
-`VISION.md` forbids, and `VISION.md` outranks this file. Do not silently
-accept it either. It is Kilian's arbitration, and until he makes it, a new
-element should not add more Rouille text — use brou for the words and Rouille
-for the rule, the underline or the mark beside them.
+For months this file said 93 texts were below the bar, all in Rouille: every
+`QuietButton` label, every room name, the nav's `Begin`. That was true when it
+was written and it is **no longer true**. Re-measured with
+`scripts/contraste-matiere.mjs` against the real marble ground, on `/`,
+`/sessions` and `/begin`: **no text on this site is written in Rouille.** Every
+remaining Rouille in `src/` is a border, an underline or the cursor mark. The
+words moved to brou; the rule stayed Rouille. Grep it before you doubt it —
+`rouille|B14E2D` in `src/` returns borders and one background, nothing else.
+
+So the standing instruction below was not a stopgap awaiting arbitration. It
+is what the site does:
+
+> use brou for the words and Rouille for the rule, the underline or the mark
+> beside them.
+
+Do not darken Rouille. It has no reason to write, so its 3.49 never has to
+reach 4.5 — a rule needs 3.0 and it clears it on the darkest ground measured.
+
+**What IS still below the bar** — and it is opacity, not colour. Measured
+compositing in sRGB (the space the browser blends in; blending in luminance
+space gives falsely pessimistic numbers), brou over the real ground:
+
+| opacity | 1.00 | 0.82 | 0.70 | 0.62 | 0.30 | 0.25 |
+|---|---|---|---|---|---|---|
+| worst | 8.22 | **5.18** | 3.85 | 3.20 | 1.67 | 1.51 |
+
+The 0.82 floor holds, with room to spare. Two live controls sit under it:
+
+- `BreathButton` — brou at **0.62 → 3.20:1**.
+- `.mdc-skip` in `IntroOverlay` — taupe `#A89A85` at **0.25 → 1.19:1**. It is
+  also the one colour §11 says never writes, and it is the only way out of an
+  18-second intro. A visitor who wants to skip cannot see the control.
+
+Both are Kilian's call, because raising them trades against a discretion that
+is deliberate. Neither is a taste question about the palette.
 
 ### 12. A page is not a column
 

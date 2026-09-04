@@ -363,7 +363,12 @@ Answer in a sentence or in a page — however it comes. There is no right way to
 - **Field:** Your name
 - **Field:** How to reach you *(placeholder: Email or telephone — whichever you prefer)*
 - **Field:** How this reached you *(placeholder: Optional — a name, a club, a recommendation)*
-- **Selector:** What brings you *(options: A session · The deepest room, by application · The retreat · I'm not sure yet)*
+- **Selector:** What brings you *(invite : Whichever is closest · options : A session · The deepest room, by application · Coaching, the first call · The retreat · I'm not sure yet)*
+  <!-- Deux libelles ajoutes, le reste inchange. « Coaching, the first call » comble un
+       cul-de-sac : la page Coaching envoyait ici avec « Ask for the first call » et le menu
+       n'avait rien pour ces gens-la. Les mots viennent de cette page. « Whichever is closest »
+       remplace une option sans libelle, et reprend le « whichever you prefer » du champ
+       juste au-dessus. Voir COPY_OUVERT.md 6.2. -->
 
 **Submit button:** `Send this`
 
