@@ -305,7 +305,7 @@ export default function Home() {
              plus : depuis que chaque station se mesure elle-meme, un voisin
              est deja eteint des que la station depasse 0,22 hauteur d'ecran.
              Les 200dvh dataient du systeme precedent et rendaient la
-             traversee interminable. Sa hauteur vit dans .mdc-station--maison
+             traversee interminable. Sa hauteur vit dans .mdc-station--haute
              (globals.css), en svh comme les autres. */}
         <section
           className="mdc-station mdc-station--haute"

@@ -42,35 +42,6 @@ body {
   html { font-size: 14px; }
 }
 
-/* Les stations de l'accueil — hauteur d'ecran STABLE.
-
-   `svh` est le viewport PETIT : sa valeur ne bouge pas quand la barre d'URL
-   d'iOS se retracte. C'est ce qu'il faut ici, parce que Lenis et le calcul de
-   progres de `src/lib/scrollStore.ts` mesurent une hauteur de document qui
-   doit rester vraie PENDANT le scroll.
-
-   `dvh` — ce qui etait ecrit avant — suit la zone visible en direct : la barre
-   se retracte, chaque station change de hauteur, le document se reflow et les
-   positions se decalent au milieu du geste. `vh` seul est le viewport GRAND,
-   mesure barre retractee : avec la barre visible, chaque station deborde et le
-   rythme une station / un ecran se perd.
-
-   Le premier `height` est le repli pour les navigateurs d'avant 2022. C'est la
-   raison d'etre de cette regle : un objet de style inline ne peut pas porter
-   deux fois la meme propriete. */
-.mdc-station {
-  height: 100vh;
-  height: 100svh;
-}
-/* La station MAISON est volontairement plus haute : elle donne sa course au
-   burin. Chaque station se mesurant elle-meme dans page.tsx, une hauteur
-   differente ne casse pas la choregraphie. Meme raison qu'au-dessus pour la
-   classe plutot que l'inline : le repli demande deux fois la propriete. */
-.mdc-station--maison {
-  height: 130vh;
-  height: 130svh;
-}
-
 /* Le bouton de la maison — voir src/components/effects/QuietButton.tsx.
    Aucune transformation : la pierre se rechauffe sous la main, elle ne se
    deplace pas. Les durees et les courbes viennent de src/lib/motion.ts
