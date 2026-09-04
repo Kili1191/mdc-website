@@ -93,11 +93,15 @@ export default function Descente() {
       <span className="mdc-descente__sillon" aria-hidden />
       <ol className="mdc-descente__crans">
         {crans.map((c, i) => (
-          // Les crans se repartissent sur toute la hauteur du sillon plutot
-          // que de s'empiler a 22px : une regle se lit sur sa longueur. Empiles,
-          // ils formaient un petit paquet timide au milieu de l'ecran ; etires,
+          // Les crans se repartissent sur la hauteur du sillon plutot que de
+          // s'empiler a 22px : une regle se lit sur sa longueur. Empiles, ils
+          // formaient un petit paquet timide au milieu de l'ecran ; etires,
           // ils donnent l'echelle de la descente.
-          <li key={c.id} style={{ top: `${(i / (crans.length - 1)) * 100}%` }}>
+          //
+          // De 6 % a 94 %, et non de 0 a 100 : le sillon s'eteint a ses deux
+          // bouts (voir le mask plus bas), et un cran pose dans le fondu
+          // flotterait a nouveau tout seul.
+          <li key={c.id} style={{ top: `${6 + (i / (crans.length - 1)) * 88}%` }}>
             <a
               href={`#${c.id}`}
               className={`mdc-descente__cran${i === actif ? " est-ici" : ""}`}
@@ -119,16 +123,25 @@ export default function Descente() {
       <style>{`
         .mdc-descente{
           position:fixed; left:30px; top:50%; transform:translateY(-50%);
-          z-index:60; display:flex; align-items:stretch; gap:14px;
-          height:min(62vh, 520px); pointer-events:auto;
+          z-index:60; display:flex; align-items:stretch;
+          height:min(58vh, 460px); pointer-events:auto;
         }
         /* Le sillon : un trait sombre et sa levre claire, comme une gravure
-           eclairee d'en haut a gauche — la meme lumiere que le marbre. */
+           eclairee d'en haut a gauche - la meme lumiere que le marbre.
+
+           IL S'ETEINT A SES DEUX BOUTS. Coupe net, il ne se lisait pas comme
+           une gravure : il se lisait comme un border-left qu'on avait oublie
+           d'enlever. Une entaille dans la pierre n'a pas de bord franc, elle
+           s'efface la ou l'outil est entre et sorti. */
         .mdc-descente__sillon{
           width:2px; border-radius:1px; flex:none;
           background:linear-gradient(to right,
             rgba(47,37,25,0.42) 0px, rgba(47,37,25,0.42) 1px,
             rgba(255,251,241,0.66) 1px, rgba(255,251,241,0.66) 2px);
+          -webkit-mask-image:linear-gradient(to bottom,
+            transparent 0%, #000 5%, #000 95%, transparent 100%);
+          mask-image:linear-gradient(to bottom,
+            transparent 0%, #000 5%, #000 95%, transparent 100%);
         }
         .mdc-descente__crans{
           list-style:none; margin:0; padding:0;
@@ -143,23 +156,41 @@ export default function Descente() {
           position:relative; display:flex; align-items:center;
           text-decoration:none; padding:6px 4px; margin:-6px -4px;
         }
+        /* LE CRAN TOUCHE LE SILLON, et c'etait tout le defaut.
+
+           Il y avait un gap de 14px entre le sillon et la colonne des crans : la
+           regle affichait donc un trait vertical, quatorze pixels de vide, puis
+           de petites barres de 9px suspendues a cote. Ce n'est pas une regle
+           graduee, c'est une ligne avec des miettes autour - et de loin ca ne
+           ressemble a rien de voulu. Un cran se CREUSE dans la regle. Le gap
+           part, les crans partent du bord droit du sillon.
+
+           La largeur est FIXE a 26px et c'est scaleX qui joue : width est une
+           propriete de mise en page, et le 10 du skill taste interdit de
+           l'animer. 0,346 x 26 = 9px au repos, 0,77 au survol, pleine au cran
+           courant. */
         .mdc-descente__trait{
-          display:block; width:9px; height:1px; background:${COLORS.taupeTrait};
-          transition:width ${DURATION.reveal}ms ${EASE.reveal},
+          display:block; width:26px; height:1px; background:${COLORS.taupeTrait};
+          transform-origin:left center; transform:scaleX(0.346);
+          transition:transform ${DURATION.reveal}ms ${EASE.reveal},
                      background-color ${DURATION.reveal}ms ${EASE.reveal};
         }
         .mdc-descente__cran:hover .mdc-descente__trait,
         .mdc-descente__cran:focus-visible .mdc-descente__trait{
-          width:20px; transition-duration:${DURATION.exit}ms;
+          transform:scaleX(0.77); transition-duration:${DURATION.exit}ms;
         }
         .mdc-descente__cran.est-ici .mdc-descente__trait{
-          width:26px; background:${COLORS.brou};
+          transform:none; background:${COLORS.brou};
         }
         /* Hors du flux, et insensible au pointeur : il se lit, il ne se
            clique pas. Le cran seul porte la cible — 26px, plus la marge de
            confort de son padding. */
+        /* Cale sur la graduation PLEINE (26px), pas sur le trait dessine :
+           accroche a left:100%, le nom avancait et reculait de 17px selon
+           que le cran etait courant ou non. Un nom qui bouge quand on passe
+           a cote se remarque, et rien ici ne doit se faire remarquer. */
         .mdc-descente__nom{
-          position:absolute; left:100%; margin-left:10px; pointer-events:none;
+          position:absolute; left:26px; margin-left:12px; pointer-events:none;
           font-family:${FONTS.prata}; font-size:10px; letter-spacing:0.22em;
           text-transform:uppercase; color:${COLORS.brou};
           white-space:nowrap; opacity:0;
@@ -177,7 +208,9 @@ export default function Descente() {
           font-family:${FONTS.prata}; font-size:11px; letter-spacing:0.18em;
           color:${COLORS.brou};
         }
-        .mdc-descente__fond i{ font-style:normal; opacity:0.45; }
+        /* 0,82 et non 0,45 : le denominateur donnait 2,4:1, sous le
+           plancher mesure au 11b du skill taste. */
+        .mdc-descente__fond i{ font-style:normal; opacity:0.82; }
 
         /* Sous 1080px les marges ne peuvent plus la porter sans mordre le
            texte. Elle sort — la page reste entiere, on ne perd qu'un repere. */
