@@ -75,7 +75,17 @@ export default function Footer() {
               <ul style={{ listStyle: "none", padding: 0, margin: "22px 0 0" }}>
                 {m.liens.map((x) => (
                   <li key={x.l} style={{ marginTop: 12 }}>
-                    <a href={x.h} style={{ ...label, fontSize: 15, textDecoration: "none" }}>
+                    {/* inline-flex + minHeight : la cible atteint les 24px
+                        demandes par WCAG 2.2. La ligne en faisait 23, un
+                        pixel sous la barre, et sur un pouce ce pixel compte
+                        autant que les vingt-trois autres. */}
+                    <a
+                      href={x.h}
+                      style={{
+                        ...label, fontSize: 15, textDecoration: "none",
+                        display: "inline-flex", alignItems: "center", minHeight: 24,
+                      }}
+                    >
                       {x.l}
                     </a>
                   </li>

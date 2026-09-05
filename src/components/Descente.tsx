@@ -152,9 +152,14 @@ export default function Descente() {
            bas) : sinon chaque cran mesurait 133px de large — la largeur du
            nom invisible — et la regle posait sur la page une colonne de
            liens transparents qui attrapait les clics dans le vide. */
+        /* La cible fait 24px de haut minimum (WCAG 2.2, Target Size). Le
+           trait n'en fait qu'un : c'est le padding qui porte la cible, et la
+           marge negative l'empeche de deplacer quoi que ce soit. Rien ne
+           bouge a l'ecran. Les crans sont espaces de 81px, aucune cible n'en
+           recouvre une autre. */
         .mdc-descente__cran{
           position:relative; display:flex; align-items:center;
-          text-decoration:none; padding:6px 4px; margin:-6px -4px;
+          text-decoration:none; padding:12px 4px; margin:-12px -4px;
         }
         /* LE CRAN TOUCHE LE SILLON, et c'etait tout le defaut.
 

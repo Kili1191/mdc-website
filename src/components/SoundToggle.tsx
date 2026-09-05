@@ -14,13 +14,24 @@ const FADE_MS = 900;
 
 export default function SoundToggle() {
   const [on, setOn] = useState(false);
+  // Pointeur fin ou non. Faux jusqu'a la mesure : le composant ne rend rien
+  // tant qu'on ne sait pas, et une frame de retard sur un bouton d'angle ne
+  // se voit pas.
+  const [fin, setFin] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const fadeRafRef = useRef<number | null>(null);
 
   useEffect(() => {
     // pointer:fine — on n'affiche pas sur touch pour l'instant (autoplay
     // policies iOS/Android trop capricieuses pour un binaural silencieux).
+    //
+    // CE COMMENTAIRE DISAIT VRAI ET LE CODE NE LE FAISAIT PAS. Le `return`
+    // ci-dessous ne sautait que la lecture de la preference : le bouton, lui,
+    // etait rendu quand meme. Sur un iPhone 13 (pointer: coarse) il etait bien
+    // la, en bas a droite, pose sur le corps du texte — mesure. Le garde
+    // commande maintenant le rendu, ce qu'il a toujours pretendu faire.
     if (!window.matchMedia("(pointer: fine)").matches) return;
+    setFin(true);
     const stored = localStorage.getItem(STORAGE_KEY) === "1";
     setOn(stored);
   }, []);
@@ -60,6 +71,10 @@ export default function SoundToggle() {
     }
     return cancelFade;
   }, [on]);
+
+  // Rien sur touch : ni le bouton, ni la balise audio. Charger un <audio>
+  // qu'aucune commande ne peut declencher ne sert personne.
+  if (!fin) return null;
 
   return (
     <>
