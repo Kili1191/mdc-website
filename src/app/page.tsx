@@ -29,9 +29,24 @@ const displayItalic: React.CSSProperties = {
   lineHeight: 1.2,
   letterSpacing: "-0.005em",
 };
+// LES PLAFONDS DE CES CLAMP ETAIENT TOUS ATTEINTS VERS 1180px DE LARGE.
+//
+// 3,8vw plafonne a 40px des 1053px ; 5,5vw a 62px des 1127. Au-dela, plus
+// rien ne grandit : un portable de 1200 et un moniteur de 3000 recevaient
+// exactement la meme typographie. Sur un grand ecran la phrase devenait un
+// ilot de 310px dans un champ vide, et c'est ce que Kilian a vu — « the
+// website is already empty ».
+//
+// Les coefficients vw, eux, avaient ete choisis. Ce sont les plafonds qui
+// etaient arbitraires. Ils laissent maintenant courir le meme rapport
+// jusqu'a environ 1700px de large, puis s'arretent — au-dela, une ligne
+// d'affichage cesse de se lire d'un seul regard.
+//
+// Le corps de texte ne bouge pas : 20px est une mesure de lecture, pas une
+// mesure d'echelle, et le grossir se paierait en lisibilite.
 const displayCaps: React.CSSProperties = {
   fontFamily: FONTS.higuen,
-  fontSize: "clamp(26px, 3.6vw, 40px)",
+  fontSize: "clamp(26px, 3.6vw, 60px)",
   lineHeight: 1.55,
   color: COLORS.brouFonce,
   margin: 0,
@@ -215,7 +230,7 @@ export default function Home() {
               autres pages en ont un — et cette phrase est deja le titre :
               elle etait simplement dans un div. */}
           <h1 style={{
-            ...displayItalic, fontSize: "clamp(34px, 5.5vw, 62px)",
+            ...displayItalic, fontSize: "clamp(34px, 5.5vw, 92px)",
             maxWidth: 900, textAlign: "center", margin: 0, fontWeight: 400,
           }}>
             <SplitTextChars text="For those who carry everything inside." delay={22} duration={900} />
@@ -252,7 +267,7 @@ export default function Home() {
           <BreathReveal
             as="p"
             text="There is a kind of tiredness that rest doesn't reach."
-            style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 52px)", maxWidth: "17ch", textAlign: texteDe("gauche"), position: "relative", zIndex: 1 }}
+            style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 78px)", maxWidth: "17ch", textAlign: texteDe("gauche"), position: "relative", zIndex: 1 }}
             stagger={90}
           />
         </section>
@@ -289,7 +304,7 @@ export default function Home() {
           <BreathReveal
             as="p"
             text="Maison du Calme asks nothing of you, and what it makes is calm."
-            style={{ ...displayItalic, fontSize: "clamp(26px, 3.4vw, 40px)", maxWidth: 860, textAlign: "center", lineHeight: 1.35 }}
+            style={{ ...displayItalic, fontSize: "clamp(26px, 3.4vw, 58px)", maxWidth: 860, textAlign: "center", lineHeight: 1.35 }}
             stagger={90}
           />
           <BreathReveal
@@ -371,13 +386,21 @@ export default function Home() {
              deux seules phrases qui nomment la fatigue sont les deux seules
              poussees aux marges, de part et d'autre de la gravure. */}
         <section id="kilian" data-station="Kilian" className="mdc-station" style={station("droite")}>
-          <div style={{
-            // 22ch donnait huit lignes en drapeau : une colonne etroite et
-            // hachee, pas un bloc. 30ch la ramene a quatre — la meme densite
-            // que la station « poids » en miroir de l'autre cote.
-            textAlign: texteDe("droite"), maxWidth: "30ch",
-          }}>
-            <div style={{ ...displayItalic, fontSize: "clamp(24px, 3.8vw, 40px)" }}>
+          {/* LA MESURE ETAIT POSEE SUR LE MAUVAIS ELEMENT.
+
+              `30ch` vivait sur CE div, dont la taille de police est celle,
+              heritee, de 16px — pas celle du titre qui est dedans. `ch` se
+              resout donc contre 16px et donnait 334px, quelle que soit la
+              taille reelle du titre et quelle que soit la largeur de l'ecran.
+              Un titre de 64px enferme dans une colonne de 334 : c'est l'ilot
+              que Kilian a vu au milieu du vide.
+
+              La mesure descend sur le titre lui-meme, ou `ch` veut enfin dire
+              trente caracteres de la fonte affichee. Le commentaire d'origine
+              parlait de quatre lignes ; il les compte a nouveau, cette fois
+              pour de vrai. */}
+          <div style={{ textAlign: texteDe("droite") }}>
+            <div style={{ ...displayItalic, fontSize: "clamp(24px, 3.8vw, 64px)", maxWidth: "24ch" }}>
               <SplitTextChars
                 text="Chronic stress rarely looks like falling apart. It looks like being very good at your life."
                 delay={22} duration={900}
@@ -392,7 +415,7 @@ export default function Home() {
         {/* 6. BEGIN — retour au centre : on ressort par ou l'on est entre. */}
         <section id="begin" data-station="Begin" className="mdc-station" style={station("centre")}>
           <div style={{ textAlign: "center" }}>
-            <div style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 56px)" }}>
+            <div style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 84px)" }}>
               <SplitTextChars text="Something in you already knows." delay={60} duration={900} />
             </div>
             <BreathReveal

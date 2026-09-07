@@ -393,12 +393,29 @@ body {
    pour que la regle et le texte ne puissent plus se marcher dessus. */
 :root { --mdc-voie: 210px; }
 
+/* LA COMPOSITION EST BORNEE A 1280px, ET CENTREE AU-DELA.
+
+   Une station fait `width:100%` et son contenu est pose par `justify-content`
+   — center, flex-start ou flex-end selon la station. Tant que l'ecran fait
+   1440 ca tient. Sur un 1990, `flex-end` colle la phrase contre le bord droit
+   et laisse douze cents pixels de vide a cote : la page ne se lit plus comme
+   une composition, elle se lit comme un texte tombe dans un coin. Kilian, sur
+   une capture de son ecran : « why the text not centered ? the website is
+   already empty ». Le vide etait reel, et il grandissait avec l'ecran.
+
+   `max(6vw, (100vw - 1280px) / 2)` donne les deux comportements avec une
+   seule valeur : sous 1360 environ, c'est le 6vw d'avant, rien ne change ;
+   au-dela, la marge grandit juste assez pour que le contenu reste a 1280 et
+   se centre. L'alternance gauche / centre / droite survit intacte — elle se
+   joue maintenant DANS une mesure, pas contre les bords de l'ecran.
+
+   Mesure a 1440 : 86px de marge avant, 86 apres. Rien n'a bouge. */
 .mdc-station {
   height: 100vh;
   height: 100svh;
   min-height: 100vh;
   min-height: 100svh;
-  padding: 0 6vw;
+  padding: 0 max(6vw, (100vw - 1280px) / 2);
 }
 
 /* La station de la gravure est plus haute : le burin a besoin de descendre.
@@ -415,7 +432,12 @@ body {
    .mdc-station effacerait un padding-left declare plus haut. Meme raison
    que .mdc-station--haute juste au-dessus. */
 @media (min-width: 1081px) {
-  .mdc-station--gauche { padding-left: var(--mdc-voie); }
+  /* Meme borne que .mdc-station : sans le max(), la station calee a gauche
+     resterait a 210px du bord sur un grand ecran pendant que ses voisines se
+     centreraient, et l'alternance deviendrait un decalage. */
+  .mdc-station--gauche {
+    padding-left: max(var(--mdc-voie), (100vw - 1280px) / 2);
+  }
 }
 
 
