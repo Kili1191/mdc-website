@@ -289,13 +289,24 @@ export default function IntroOverlay() {
             rgba(237,228,208,.7) 35%,
             rgba(237,228,208,0) 72%);
           opacity:0;pointer-events:none;will-change:opacity,transform;}
+        /* LA SORTIE D'UNE INTRO DE 18,4 SECONDES, ET ELLE ETAIT INVISIBLE.
+
+           Taupe #A89A85 a 0,25 d'opacite : 1,19:1 sur le fond, mesure. Le 11
+           du skill taste dit que le taupe n'ecrit jamais, et ce mot-la etait
+           ecrit en taupe, sous un quart d'opacite, par-dessus le marbre.
+
+           Ce n'est pas un arbitrage de discretion. Un contenu qui bouge plus
+           de cinq secondes doit offrir un moyen de le passer (WCAG 2.2.2), et
+           un moyen que personne ne voit n'est pas un moyen. Brou au plancher
+           de 0,82 du meme skill : 5,18:1. La discretion tient a la taille,
+           10px, et au coin ou il se pose, pas a l'effacement. */
         .mdc-skip{position:fixed;bottom:18px;right:22px;
           background:none;border:none;
           font-family:var(--font-prata),Georgia,serif;
-          font-size:10px;letter-spacing:.24em;color:#A89A85;
-          opacity:.25;text-transform:lowercase;cursor:pointer;
+          font-size:10px;letter-spacing:.24em;color:#4A3B2A;
+          opacity:.82;text-transform:lowercase;cursor:pointer;
           padding:8px 4px;transition:opacity .4s;z-index:10001;}
-        .mdc-skip:hover{opacity:.65;}
+        .mdc-skip:hover{opacity:1;}
       `}</style>
 
       <div className="mdc-threshold" ref={thresholdRef} />

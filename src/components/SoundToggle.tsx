@@ -92,11 +92,15 @@ export default function SoundToggle() {
           background: "transparent", border: 0, cursor: "pointer",
           fontFamily: FONTS.prata, fontSize: 10, letterSpacing: "0.24em",
           textTransform: "lowercase", color: COLORS.brou,
-          opacity: 0.55, transition: `opacity ${DURATION.exit}ms ${EASE.exit}`,
+          // 0,62 et non 0,55 : une icone n'est pas du texte, sa barre est a
+          // 3:1 et non 4,5. 0,55 donnait 2,9 ; 0,62 donne 3,20. Elle reste
+          // donc plus discrete que les deux commandes qui portent un mot, et
+          // c'est juste ainsi.
+          opacity: 0.62, transition: `opacity ${DURATION.exit}ms ${EASE.exit}`,
           padding: 0,
         }}
         onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.55"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.62"; }}
       >
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden>
           {/* trois barres verticales qui pulsent quand actif */}

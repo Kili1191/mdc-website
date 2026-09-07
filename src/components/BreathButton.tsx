@@ -35,11 +35,14 @@ export default function BreathButton() {
         fontFamily: FONTS.prata, fontSize: 11.5, letterSpacing: "0.22em",
         textTransform: "lowercase", color: COLORS.brou,
         padding: "6px 2px", cursor: "pointer",
-        opacity: visible ? 0.62 : 0,
+        // 0,82 et non 0,62 : « breathe » est un mot, pas une icone, donc la
+        // barre est a 4,5:1. A 0,62 il donnait 3,20. Le plancher mesure du
+        // skill taste, 0,82, donne 5,18.
+        opacity: visible ? 0.82 : 0,
         transition: "opacity 900ms cubic-bezier(0.16,1,0.3,1)",
       }}
       onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; }}
-      onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.62"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.82"; }}
     >
       breathe
     </button>
