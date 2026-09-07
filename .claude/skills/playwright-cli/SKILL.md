@@ -92,6 +92,34 @@ await b.close();
   only after the wait. Measured too early the home page reads 900 instead of
   5400 and looks like the 6 stations vanished.
 
+## Ce navigateur ne peut PAS mesurer une frequence d'images
+
+Le conteneur n'a pas de GPU. `--use-angle=swiftshader` fait tourner tout le
+WebGL sur le processeur, et `UNMASKED_RENDERER_WEBGL` le dit en toutes
+lettres : `ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero)), SwiftShader driver)`.
+
+Mesure faite ici, scroll continu de l'accueil sur le build de production :
+
+| | temps median par trame | images/s |
+|---|---|---|
+| avec le marbre | 218 ms | **5** |
+| canvas masque | 35 ms | 28 |
+
+Cinq images par seconde. Le chiffre est vrai et il ne veut **rien dire** sur
+le site : masquer le canvas divise le temps par six, donc le cout est
+entierement le shader rasterise sur le CPU. Sur une vraie carte graphique ce
+meme shader est gratuit.
+
+**Ne jamais rapporter une mesure de fps prise ici comme un defaut du site.**
+La regle « 60fps ou ca ne part pas » du skill `taste` ne peut pas se verifier
+depuis ce conteneur : elle demande une machine avec GPU. Ce qui se verifie
+ici, en revanche, et qui reste utile : les proprietes animees (transform et
+opacity seulement), l'absence d'animation sur `width`, `height`, `top` ou
+`left`, et le fait qu'aucune boucle rAF ne tourne quand rien ne bouge.
+
+Le meme piege vaut pour toute mesure de temps de chargement ou de « Largest
+Contentful Paint » : le rendu logiciel les gonfle tous.
+
 ## Testing the no-WebGL path
 
 The site must stay readable when a browser refuses WebGL (see
