@@ -410,7 +410,59 @@ export default function MarbleBackground({
       // La gravure suit le scroll dans la station MAISON : plus on descend,
       // plus le burin est descendu.
       finalMat.uniforms.uCarve.value = houseFocus.progress();
-      finalMat.uniforms.uPresence.value = houseFocus.presence();
+
+      // LA TRAVERSEE DE LA MAISON.
+      //
+      // La demi-hauteur de la gravure passe de 0,17 — la maison posee au fond
+      // de la piece — a 2,2, soit plus de quatre hauteurs d'ecran. Bien avant
+      // d'y arriver la porte a depasse les bords : on la traverse.
+      //
+      // La course est en t^4 et non lineaire. Une progression lineaire donne
+      // un zoom d'ascenseur, regulier et mort ; l'exposant retient le debut,
+      // donc la maison reste posee, puis se precipite quand on est dedans.
+      // C'est ce que fait une porte qu'on approche puis qu'on franchit.
+      //
+      // L'exposant a d'abord ete a 2,4, et c'etait trop tot : mesure a la
+      // pellicule, la porte etait franchie des 45 % de la course et il restait
+      // deux ecrans de marbre nu apres. La traversee doit s'achever quand on
+      // SORT de la station, pas au milieu — sinon on a paye une station
+      // entiere pour un moment qui finit avant elle.
+      //
+      // Aucune valeur du marbre n'est touchee — uSpread, uDecay, uRadius, le
+      // lerp, uReflet, uIrisation restent gravees comme le veut DIRECTION.md.
+      // Seule bouge la taille du trace.
+      const trav = houseFocus.traversee();
+      finalMat.uniforms.uHouseHalfH.value = 0.17 + Math.pow(trav, 4.0) * 2.6;
+
+      // LA PRESENCE DOIT TENIR PENDANT LE FRANCHISSEMENT.
+      //
+      // `uPresence` est la visibilite de la gravure, et elle valait la seule
+      // presence de la station MAISON. Or la traversee se joue sur la station
+      // SUIVANTE : au moment ou la porte grandit, la maison est deja partie,
+      // sa presence est retombee a zero, et le `if (uPresence > 0.004)` du
+      // shader eteignait toute la gravure. La maison disparaissait juste avant
+      // de s'ouvrir — mesure a la pellicule, deux ecrans de marbre nu la ou
+      // devait se jouer le seul moment fort de la page.
+      //
+      // La presence est donc le MAXIMUM des deux : celle de la station, et
+      // celle de la traversee.
+      //
+      // La SORTIE se joue de 56 a 72 % de la course, et pas plus tard. La
+      // section suivante — le rail epingle et son titre « Five in the room » —
+      // arrive a l'ecran bien avant la fin de la station de la gravure.
+      // Mesuree deux fois : a 93 % puis a 88 %, les poutres et les yeux
+      // de la maison geante passaient DERRIERE le titre et les cartes. Deux
+      // choses fortes au meme endroit, et un fond qui s'agite sous du texte a
+      // lire — exactement ce qu'on ne fait pas.
+      //
+      // La gravure est donc eteinte avant que le premier mot du rail entre
+      // dans le champ. On sort de la maison, ensuite seulement on lit.
+      const monte = Math.min(1, trav / 0.08);
+      const sort = 1 - Math.min(1, Math.max(0, (trav - 0.56) / 0.16));
+      finalMat.uniforms.uPresence.value = Math.max(
+        houseFocus.presence(),
+        monte * sort,
+      );
       finalMat.uniforms.uStill.value = stillness.get();
       const mode = marbleMode.step();
       finalMat.uniforms.uEffectScale.value = mode.scale;

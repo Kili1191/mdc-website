@@ -318,6 +318,20 @@ export default function Home() {
           const cut = Math.max(0, Math.min(1, (vh / 2 - r.top) / (r.height / 2)));
           houseFocus.set(focus, cut);
         }
+
+        // LA TRAVERSEE. La station sans texte qui suit la maison fait grandir
+        // la gravure jusqu'a ce qu'elle depasse l'ecran : on entre par la
+        // porte. 0 quand son haut touche le bas de l'ecran, 1 quand son bas
+        // atteint le haut — donc toute sa hauteur sert de course.
+        if (st.id === "gravure") {
+          // Mouvement reduit : on ne traverse pas. Une gravure qui enfle sur
+          // plus de quatre hauteurs d'ecran est precisement ce que cette
+          // preference existe pour eviter — la maison reste posee au fond de
+          // la piece, et la station garde sa fonction d'origine, donner sa
+          // course au burin.
+          const t = sobre.matches ? 0 : (vh - r.top) / (r.height + vh);
+          houseFocus.setTraversee(Math.max(0, Math.min(1, t)));
+        }
       });
       raf = requestAnimationFrame(tick);
     };
@@ -436,6 +450,7 @@ export default function Home() {
              traversee interminable. Sa hauteur vit dans .mdc-station--haute
              (globals.css), en svh comme les autres. */}
         <section
+          id="gravure"
           className="mdc-station mdc-station--haute"
           style={stationStyle}
           aria-hidden
