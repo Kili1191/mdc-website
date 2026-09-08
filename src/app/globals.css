@@ -468,6 +468,57 @@ body {
    joue maintenant DANS une mesure, pas contre les bords de l'ecran.
 
    Mesure a 1440 : 86px de marge avant, 86 apres. Rien n'a bouge. */
+/* ─── LE BURIN ──────────────────────────────────────────────────────────
+   Voir src/components/effects/SplitTextChars.tsx.
+
+   La lettre monte, l'outil la creuse, la lumiere se pose. Les deux valeurs
+   sont celles du sillon de la marge, a l'identique : rgba(47,37,25,.42) pour
+   le creux et rgba(255,251,241,.66) pour la levre. Toutes les distances sont
+   en `em` — la taille suit le corps du texte, donc un titre de 92px est
+   creuse plus profond qu'un de 40, ce qui est exactement ce que fait un vrai
+   burin.
+
+   La couleur de l'encre n'est JAMAIS touchee : le relief se pose autour de la
+   lettre. Le brou reste a 6,93:1. */
+@keyframes mdc-burin {
+  0% {
+    opacity: 0;
+    transform: translateY(0.34em);
+    text-shadow: none;
+  }
+  38% {
+    opacity: 1;
+    /* L'INSTANT DE LA TAILLE. La pierre vient de s'ouvrir : l'arete accroche
+       la lumiere en bas a droite, et le creux est encore franc en haut a
+       gauche. C'est la seule image ou l'effet se voit vraiment, et elle ne
+       dure que le temps que l'outil passe sur la lettre suivante. */
+    text-shadow:
+       0.085em 0.10em 0.004em rgba(255, 251, 241, 0.98),
+      -0.045em -0.055em 0.030em rgba(47, 37, 25, 0.60);
+  }
+  62% {
+    opacity: 1;
+    text-shadow:
+       0.045em 0.054em 0.002em rgba(255, 251, 241, 0.78),
+      -0.022em -0.027em 0.020em rgba(47, 37, 25, 0.38);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    /* la taille reste, la lumiere se calme */
+    text-shadow:
+       0.017em 0.021em 0 rgba(255, 251, 241, 0.52),
+      -0.008em -0.010em 0.012em rgba(47, 37, 25, 0.20);
+  }
+}
+
+/* Etat final sans le geste, pour le mouvement reduit. */
+.mdc-char--grave {
+  text-shadow:
+     0.017em 0.021em 0 rgba(255, 251, 241, 0.52),
+    -0.008em -0.010em 0.012em rgba(47, 37, 25, 0.20);
+}
+
 .mdc-station {
   height: 100vh;
   height: 100svh;
