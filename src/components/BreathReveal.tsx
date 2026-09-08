@@ -22,6 +22,20 @@ type Props = {
   duration?: number;     // ms d'apparition d'un mot (default 900)
   delay?: number;        // ms avant démarrage (default 100)
   lineBreaks?: string;   // séparateur pour retour à la ligne (default "/")
+  /**
+   * Le burin, au MOT plutot qu'a la lettre.
+   *
+   * Reservé aux titres d'affichage, et c'est un choix explicite et non un
+   * automatisme : ce composant sert aussi au corps de texte, et une taille
+   * dans de la pierre a 18px ne serait pas une gravure, ce serait de la
+   * bouillie. Le relief est en `em`, donc il ne peut pas etre juste "plus
+   * petit" — il devient illisible.
+   *
+   * Sur un titre, l'outil avance mot par mot au lieu de lettre par lettre.
+   * C'est la meme main avec un geste plus large, ce qui est juste : une phrase
+   * de six mots taillee lettre par lettre durerait trop longtemps.
+   */
+  grave?: boolean;
 };
 
 // Espace ménagé autour de chaque mot pour les débords de glyphes
@@ -60,6 +74,7 @@ export default function BreathReveal({
   duration = 900,
   delay = 100,
   lineBreaks = "/",
+  grave = false,
 }: Props) {
   const ref = useRef<HTMLElement>(null);
 
@@ -69,8 +84,10 @@ export default function BreathReveal({
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       el.querySelectorAll<HTMLElement>(".mdc-breath-word").forEach((w) => {
+        w.style.animation = "none";
         w.style.opacity = "1";
         w.style.transform = "none";
+        if (grave) w.classList.add("mdc-char--grave");
       });
       return;
     }
@@ -78,6 +95,13 @@ export default function BreathReveal({
     const reveal = () => {
       const words = Array.from(el.querySelectorAll<HTMLElement>(".mdc-breath-word"));
       words.forEach((w, i) => {
+        if (grave) {
+          // Meme animation que SplitTextChars, meme courbe, meme lumiere.
+          // L'outil est le meme, il taille juste plus large.
+          w.style.animation =
+            `mdc-burin ${duration}ms cubic-bezier(0.16, 1, 0.3, 1) ${delay + i * stagger}ms both`;
+          return;
+        }
         w.style.transition = `opacity ${duration}ms cubic-bezier(0.16, 1, 0.3, 1), transform ${duration}ms cubic-bezier(0.16, 1, 0.3, 1)`;
         w.style.transitionDelay = `${delay + i * stagger}ms`;
         requestAnimationFrame(() => {
@@ -100,7 +124,7 @@ export default function BreathReveal({
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [text, stagger, duration, delay]);
+  }, [text, stagger, duration, delay, grave]);
 
   const lines = text.split(lineBreaks).map((l) => l.trim());
 

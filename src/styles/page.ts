@@ -32,15 +32,30 @@ export const lead: CSSProperties = {
   ...body, fontSize: 21, color: COLORS.brouFonce,
 };
 
+// Le relief grave, pose sur TOUS les grands titres du site.
+//
+// L'accueil a le geste — l'outil passe, voir SplitTextChars et l'option
+// `grave` de BreathReveal. Les pages internes ont l'etat : la pierre est deja
+// taillee quand on entre. C'est ce qui fait que c'est une identite et pas un
+// effet d'accueil, et c'est la meme lumiere partout, celle du sillon de la
+// marge.
+//
+// Valeurs identiques a l'image finale de @keyframes mdc-burin. Si l'une bouge,
+// l'autre bouge le meme jour, sinon la maison a deux gravures.
+const RELIEF =
+  "0.017em 0.021em 0 rgba(255, 251, 241, 0.52), -0.008em -0.010em 0.012em rgba(47, 37, 25, 0.20)";
+
 export const bigHead: CSSProperties = {
   fontFamily: FONTS.higuen, fontSize: "clamp(34px, 5.4vw, 62px)",
   lineHeight: 1.14, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
+  textShadow: RELIEF,
 };
 
 export const sectionHead: CSSProperties = {
   fontFamily: FONTS.higuen, fontSize: "clamp(26px, 3.6vw, 40px)",
   lineHeight: 1.22, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
   maxWidth: "18ch",
+  textShadow: RELIEF,
 };
 
 // Le taupe ne sert plus a ecrire.

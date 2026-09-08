@@ -376,6 +376,7 @@ export default function Home() {
              Voir RANGEE plus haut. */}
         <section id="poids" data-station="The weight" className="mdc-station mdc-station--gauche" style={station("gauche")}>
           <BreathReveal
+            grave
             as="p"
             text="There is a kind of tiredness that rest doesn't reach."
             style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 78px)", maxWidth: "17ch", textAlign: texteDe("gauche"), position: "relative", zIndex: 1 }}
@@ -413,6 +414,7 @@ export default function Home() {
         <section id="maison" data-station="The house" className="mdc-station"
                  style={station("centre", { flexDirection: "column" })}>
           <BreathReveal
+            grave
             as="p"
             text="Maison du Calme asks nothing of you, and what it makes is calm."
             style={{ ...displayItalic, fontSize: "clamp(26px, 3.4vw, 58px)", maxWidth: 860, textAlign: "center", lineHeight: 1.35 }}
