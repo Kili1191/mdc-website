@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import BreathReveal from "@/components/BreathReveal";
+import RailEpingle from "@/components/RailEpingle";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
 import AssetFrame from "@/components/effects/AssetFrame";
@@ -341,16 +342,25 @@ export default function Home() {
              grammaire editoriale des autres pages (.mdc-wrap, .mdc-index). */}
         <section id="pratique" data-station="The practice" className="mdc-wrap"
                  style={{ position: "relative", zIndex: 5, paddingTop: 40, paddingBottom: 40 }}>
-          <p style={eyebrow}>What is practised here</p>
-          <h2 style={{ ...sectionHead, marginTop: 30, maxWidth: "20ch" }}>
-            Five in the room. One on a call.
-          </h2>
 
-          {/* Le sommaire defile a l'horizontale. Demande de Kilian.
-              data-lenis-prevent : Lenis lisse le scroll de la page et
-              avalerait la molette au-dessus du rail. C'est l'echappatoire
-              documentee — sans elle, le rail ne bouge pas au trackpad. */}
-          <nav className="mdc-rail" aria-label="The practice" data-lenis-prevent>
+          {/* Le sommaire defile a l'horizontale, et il est EPINGLE : la
+              section se cale a l'ecran et le scroll vertical fait courir les
+              cartes jusqu'a la derniere avant que la page reparte vers le bas.
+              Demande de Kilian, « the horizontal scroll must done till the end
+              to be able to scroll down again ».
+              Tout le raisonnement, les trois sorties de secours et la raison
+              pour laquelle rien n'est intercepte sont dans RailEpingle.tsx. */}
+          <RailEpingle
+            label="The practice"
+            entete={
+              <>
+                <p style={eyebrow}>What is practised here</p>
+                <h2 style={{ ...sectionHead, marginTop: 30, maxWidth: "20ch" }}>
+                  Five in the room. One on a call.
+                </h2>
+              </>
+            }
+          >
             {PRATIQUE.map((r) => (
               <a key={r.name} href={r.href} className="mdc-rail__card">
                 <span style={{ ...micro, opacity: 0.7 }}>{r.n}</span>
@@ -359,7 +369,7 @@ export default function Home() {
                 <span style={{ ...micro, display: "block", marginTop: "auto", paddingTop: 28 }}>{r.meta}</span>
               </a>
             ))}
-          </nav>
+          </RailEpingle>
 
           <p style={{ ...micro, marginTop: 28 }}>
             Up to ninety minutes. Clothed, unless there is oil.

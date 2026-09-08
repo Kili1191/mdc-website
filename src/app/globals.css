@@ -22,8 +22,16 @@ body {
   color: #4A3B2A;
 }
 
+/* `clip` et non `hidden`, et ce n'est pas un detail de style.
+   `overflow-x: hidden` fait de html et body des CONTENEURS DE DEFILEMENT.
+   Consequence : tout `position: sticky` a l'interieur cesse de coller — il
+   se cale sur un conteneur qui ne defile pas vraiment, et l'element suit le
+   scroll au lieu de s'arreter. Mesure sur le rail epingle : le bloc cale
+   descendait de 0 a -962px au lieu de rester a 0.
+   `overflow-x: clip` rogne exactement pareil et ne cree AUCUN conteneur de
+   defilement. C'est la seule des deux valeurs compatible avec sticky. */
 html {
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -31,7 +39,7 @@ body {
   font-family: var(--font-prata), Georgia, "Times New Roman", serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  overflow-x: clip; /* meme raison qu'au-dessus : `hidden` casse tout sticky */
 }
 
 /* Mobile — ajustements responsives globaux */
@@ -332,6 +340,56 @@ body {
   overscroll-behavior-x: contain;
 }
 .mdc-rail::-webkit-scrollbar { display: none; }
+
+/* ─── LE RAIL EPINGLE ───────────────────────────────────────────────────
+   Voir src/components/RailEpingle.tsx pour le raisonnement complet.
+
+   La hauteur du bloc exterieur est posee en JS (un ecran + la course
+   horizontale) : elle depend d'une mesure, elle ne peut pas s'ecrire ici.
+   Ce fichier ne porte que ce qui est statique. */
+.mdc-epingle__cale {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Le contenu cale deborde des marges de .mdc-wrap pour que la piste
+     atteigne les deux bords de l'ecran, comme le rail libre le faisait. */
+  overflow: hidden;
+}
+
+/* L'entete n'a AUCUN padding a reprendre, et j'ai perdu une passe dessus.
+   La zone calee est toujours DANS .mdc-wrap : elle en garde les marges. Seule
+   la piste s'en echappe, par marge negative. Rajouter --mdc-inset ici revenait
+   donc a compter la marge deux fois : le titre s'affichait a 460px quand la
+   premiere carte demarrait a 231. */
+.mdc-epingle__entete {
+  margin-bottom: 8px;
+}
+
+/* Epinglee, la piste ne defile plus elle-meme : c'est un transform qui la
+   deplace. Tout ce qui servait au defilement natif doit donc partir, sinon
+   le navigateur garde une zone scrollable fantome qui avale la molette. */
+.mdc-rail--epingle {
+  overflow: visible;
+  scroll-snap-type: none;
+  margin-top: 0;
+  padding-bottom: 0;
+  width: max-content;
+  will-change: transform;
+}
+
+/* Rien ne s'epingle sous 1081px ni en mouvement reduit — le composant ne pose
+   pas les classes dans ces cas la. Ces deux regles sont une ceinture : si une
+   classe restait posee par accident, la page redeviendrait normale plutot que
+   de se figer sur un ecran. */
+@media (max-width: 1080px), (prefers-reduced-motion: reduce) {
+  .mdc-epingle { height: auto !important; }
+  .mdc-epingle__cale { position: static; height: auto; overflow: visible; }
+  .mdc-epingle__entete { margin-bottom: 0; }
+  .mdc-rail--epingle { overflow-x: auto; width: auto; will-change: auto; }
+}
 
 .mdc-rail__card {
   flex: 0 0 auto;
