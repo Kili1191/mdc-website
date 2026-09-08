@@ -111,9 +111,15 @@ const station = (cote: Cote, extra?: React.CSSProperties): React.CSSProperties =
 const texteDe = (cote: Cote): React.CSSProperties["textAlign"] =>
   cote === "centre" ? "center" : cote === "gauche" ? "left" : "right";
 
-function gaussian(x: number, mu: number, sigma: number) {
-  const d = (x - mu) / sigma;
-  return Math.exp(-0.5 * d * d);
+// Courbe de presence d'une station. `t` va de 0 (absente) a 1 (posee).
+//
+// smoothstep plutot que gaussienne : une gaussienne n'atteint jamais zero, il
+// fallait donc la couper a 0,35 et remettre a l'echelle — et ce seuil coupait
+// la presence net, ce qui creait les trous. Celle-ci vaut exactement 0 au bout
+// de sa portee et exactement 1 au centre, avec des depart et arrivee plats.
+function douceur(t: number) {
+  const x = Math.max(0, Math.min(1, t));
+  return x * x * (3 - 2 * x);
 }
 
 // Le sommaire de la pratique. NERVANA est une SUITE et commence toujours par
@@ -170,8 +176,74 @@ export default function Home() {
     //
     // transform et opacity uniquement — rien qui declenche une mise en page,
     // tout sur le GPU. C'est la seule contrainte du 10 qui ne bouge pas.
-    const MONTEE = 96;      // px, course d'entree et de sortie
+    // LE CHEVAUCHEMENT — ET POURQUOI C'EST UNE TRAINE, PAS UNE COURSE.
+    //
+    // Kilian : « chevauchement ok mais l'autre doit disparaitre en meme temps
+    // par magic ca peut pas etre brouillon ».
+    //
+    // Le trou est STRUCTUREL, et c'est la mesure qui l'a montre : les centres
+    // de deux stations consecutives sont a 1200px l'un de l'autre pour un
+    // ecran de 900. A mi-chemin, l'une est a 600px au-dessus du centre et
+    // l'autre a 600 en dessous — la demi-hauteur d'ecran vaut 450, donc LES
+    // DEUX SONT DEHORS. Aucun reglage d'opacite ne peut remplir ca : il n'y a
+    // rien a l'ecran a montrer.
+    //
+    // Ma premiere version poussait chaque station de 300px dans le sens de sa
+    // sortie. Elle aggravait exactement le probleme : elle eloignait encore les
+    // deux textes du centre et elargissait le trou de 600px.
+    //
+    // Donc l'inverse. Le bloc TRAINE : il se deplace a 70 % de la vitesse du
+    // scroll, retenu vers le centre. A mi-chemin, la sortante est retenue de
+    // 180px et se tient a -420 — dans l'ecran, en haut, fantome. L'entrante
+    // est a +420 — dans l'ecran, en bas, fantome. Elles sont separees de 840px
+    // pour des blocs de 240 : elles ne se touchent jamais.
+    //
+    // C'est ca, la magie demandee : au moment ou l'une s'efface l'autre est
+    // deja la, a l'autre bout de l'ecran, et a aucun instant deux textes ne se
+    // superposent.
+    const TRAINE = 0.30;    // fraction du scroll que le bloc ne suit pas
+    const PLAFOND = 460;    // px, au-dela l'opacite est nulle de toute facon
     const ECHELLE_MIN = 0.94; // jamais > 1 : agrandir deborderait l'ecran
+    // Portee, en ESPACEMENTS ENTRE STATIONS — pas en hauteurs d'ecran, et la
+    // distinction m'a coute une passe.
+    //
+    // J'avais suppose que deux stations consecutives etaient espacees d'un
+    // ecran, puisqu'elles font chacune 100svh. Mesure : leurs centres sont a
+    // 1200px l'un de l'autre pour un ecran de 900. Il y a 327px de vide entre
+    // le bas de « seuil » et le haut de « poids », et les hauteurs elles-memes
+    // varient (900 pour la premiere, 846 pour les suivantes). Normaliser par
+    // la hauteur de l'ecran donnait donc une distance 1,33 fois trop grande au
+    // croisement, et les deux stations y tombaient a 0,12 d'opacite : le noir
+    // que je cherchais justement a supprimer.
+    //
+    // L'espacement est donc MESURE, et la portee s'exprime par rapport a lui.
+    // 0,85 veut dire : une station s'eteint aux 85 % du chemin vers sa
+    // voisine. Elles se recouvrent, sans jamais etre trois.
+    const PORTEE = 0.85;
+
+    // Mediane des ecarts entre centres consecutifs. Mediane et non moyenne :
+    // l'ecart entre la gravure et « Kilian » vaut 3486px parce que le rail
+    // epingle vit entre les deux, et une moyenne se ferait emporter par lui.
+    // Dernier decalage applique a chaque station. Il sert a RETRANCHER le
+    // transform de la mesure : `getBoundingClientRect()` renvoie la boite
+    // APRES transformation, donc le deplacement qu'on applique se reinjecte
+    // dans le calcul de la distance qui l'a produit. Une boucle de
+    // retroaction. A 14px elle etait invisible ; a 300 elle ecrase la courbe —
+    // mesure : une station encore a un tiers de son espacement du centre
+    // tombait a 0,03 d'opacite au lieu de 0,57, et rouvrait le trou que tout
+    // ce chantier cherche a fermer.
+    const decalages = new Array<number>(stations.length).fill(0);
+
+    const espacement = (() => {
+      // Mesure prise AVANT que la boucle ne pose le moindre transform, donc
+      // sur la mise en page nue.
+      const centres = stations.map((st) => {
+        const r = st.getBoundingClientRect();
+        return r.top + window.scrollY + r.height / 2;
+      });
+      const ecarts = centres.slice(1).map((c, i) => c - centres[i]).sort((a, b) => a - b);
+      return ecarts.length ? ecarts[Math.floor(ecarts.length / 2)] : window.innerHeight;
+    })();
 
     // Mouvement reduit : l'opacite seule. La station arrive et repart, elle
     // ne voyage plus. Ce n'est pas de la retenue, c'est une preference
@@ -198,22 +270,28 @@ export default function Home() {
       const last = stations.length - 1;
       stations.forEach((st, i) => {
         const r = st.getBoundingClientRect();
-        const stCenter = r.top + r.height / 2;
-        // distance normalisee : 0 au centre de l'ecran, 1 a une hauteur d'ecran
-        const d = (stCenter - vh / 2) / vh;
-        let vis = gaussian(d, 0, 0.42);
+        // Position REELLE, transform retranche. L'echelle, elle, n'entre pas
+        // dans le compte : elle se joue autour du centre, qui ne bouge donc
+        // pas.
+        const stCenter = r.top + r.height / 2 - decalages[i];
+        // Distance normalisee : 0 quand la station est au centre de l'ecran,
+        // 1 quand elle est a un espacement de station de ce centre.
+        const d = (stCenter - vh / 2) / espacement;
+        let focus = douceur(1 - Math.abs(d) / PORTEE);
         // Premiere station nette a l'arrivee, derniere nette en sortie.
-        if (i === 0 && d >= 0) vis = 1;
-        else if (i === last && d <= 0) vis = 1;
-        const focus = Math.max(0, (vis - 0.35) / 0.65);
+        if (i === 0 && d >= 0) focus = 1;
+        else if (i === last && d <= 0) focus = 1;
         st.style.opacity = String(focus);
         if (sobre.matches) {
+          decalages[i] = 0;
           st.style.transform = "";
         } else {
-          // `d > 0` : la station est encore SOUS le centre de l'ecran, donc
-          // elle arrive — elle monte. Passe le centre, elle s'enfonce.
-          const y = (1 - focus) * (d > 0 ? MONTEE : -MONTEE);
+          // Ecart au centre, en pixels. Positif : la station est sous le
+          // centre, elle arrive. La traine s'y oppose, d'ou le signe moins.
+          const ecart = stCenter - vh / 2;
+          const y = Math.max(-PLAFOND, Math.min(PLAFOND, -ecart * TRAINE));
           const e = ECHELLE_MIN + (1 - ECHELLE_MIN) * focus;
+          decalages[i] = y;
           st.style.transform = `translate3d(0, ${y}px, 0) scale(${e})`;
         }
         st.style.pointerEvents = focus > 0.15 ? "auto" : "none";
