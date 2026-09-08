@@ -6,7 +6,35 @@ type: judgment
 
 # taste — MDC design judgment
 
-The MDC design language is **Aman × The Row × Aesop** filtered through **Sugimoto / Turrell / Kiefer / Bill Viola** in the Aube Encens palette. Everything on the site defers to that. If a decision reads as "clever," "modern for its own sake," "generic Awwwards," or "designer showing off," it is wrong. Restraint is the highest value.
+> ## ⚠️ LIS CECI AVANT LE RESTE — virage du 8 septembre 2026
+>
+> **« Restraint is the highest value » n'est plus vrai.** Décision de Kilian en
+> conversation, donc rang 1 : il veut un site **plus spectaculaire, assumé**.
+> Voir `VISION.md`, section « VIRAGE DE DIRECTION », qui fait foi.
+>
+> Ce qui change dans CE fichier : le départage par défaut. Partout où il est
+> écrit « quiet wins », « go subtler », « go smaller », « one effect per
+> section » — **c'est renversé**. Entre une option sobre et une option qui
+> accroche, prendre celle qui accroche. La barre n'est plus « est-ce discret »
+> mais « est-ce que ça tient face à un site primé ».
+>
+> Ce qui NE change PAS : la palette, les trois fontes, jamais de dark theme, la
+> règle de copy, NERVANA Guard, les planchers d'accessibilité, et **tout ce qui
+> a été retiré pour une raison mesurée** (§9 `MagneticButton`, §10b la
+> récompense d'immobilité, §5 le voile). Refaire l'effet autrement, oui ;
+> refabriquer le défaut mesuré, non — un chiffre reproductible reste au-dessus
+> de ce virage.
+>
+> Le mot « Awwwards » apparaît cinq fois dans ce dépôt. **Une seule est une
+> interdiction, celle du paragraphe ci-dessous, et elle porte sur « generic ».**
+> Les quatre autres sont des cibles : `page.tsx:21` (« Modèle Awwwards
+> 2024–2026, Studio Freight, Igloo Inc, Active Theory »),
+> `ASSETS_NANOBANANA.md:17` (« Awwwards-worthy » comme critère d'acceptation),
+> `FluidImage.tsx` (« Style Studio Freight »). Une session a cité la seule
+> interdiction pour refuser d'améliorer un élément que Kilian trouvait faible.
+> Ne pas recommencer.
+
+The MDC design language is **Aman × The Row × Aesop** filtered through **Sugimoto / Turrell / Kiefer / Bill Viola** in the Aube Encens palette. That vocabulary — palette, type, materials — still holds. What no longer holds is using it as an argument for doing less: a decision that reads as "generic Awwwards" (the copy-paste agency look: stacked gradients, a magnetic button, an effect with no reason) is still wrong, but a decision that is merely *bold* is no longer wrong. Ambition is not the same thing as generic.
 
 ## When to invoke
 
@@ -128,7 +156,10 @@ Effects available (`src/components/effects/`): `SplitTextChars`, `ImageReveal`, 
 That list is short on purpose. `TextScramble`, `Marquee`, `ImageMarquee`, `ParallaxStack`, `DepthImageLayer` and `HorizontalScroll` were deleted — see DIRECTION.md. Do not reintroduce them, and do not assume a component exists because this file once named it.
 
 Rules:
-- **One primary effect per section** — never stack SplitTextChars + Marquee + Parallax + Fluid on the same block
+- ~~**One primary effect per section**~~ — **renversé le 8 septembre.** Empiler
+  est autorisé quand chaque couche a une raison. Ce qui reste interdit, c'est
+  l'effet sans raison, et le cumul qui rend le texte illisible ou casse la
+  mesure de contraste.
 - Big titles: SplitTextChars OR BreathReveal, not both
 - CTAs: `QuietButton`, always. **Never a magnetic / cursor-attracted button.** `MagneticButton` was removed: it pulled the button toward the pointer at 0.35 of a 90px radius, so a centred CTA could sit 31px off its axis just because the cursor passed nearby — visible on the home stations, and the thing Kilian noticed. It also kept a permanent `requestAnimationFrame` loop and a window `mousemove` listener per instance (four on the home page, on top of the marble's WebGL loop), and it did nothing at all on touch. In a silent house, nothing chases anyone.
 - Body text: no effect (readability wins)
@@ -342,11 +373,21 @@ Any one of these means the change must be reworked:
 
 ## Judgement calls the agent should make
 
-- Between two acceptable options, pick the one closer to *Aman restraint*
-- Between one striking option and one quiet option, quiet wins by default (only override with explicit user approval)
-- If uncertain about a color, use Taupe (safe neutral)
-- If uncertain about a type size, go smaller
-- If uncertain about a motion amplitude, go subtler
+**Ces cinq lignes sont RENVERSEES par le virage du 8 septembre. Elles restent
+écrites parce que savoir ce qu'on a cru est utile, et parce que trois d'entre
+elles ont servi à refuser du travail que Kilian demandait.**
+
+- ~~Between two acceptable options, pick the one closer to *Aman restraint*~~
+- ~~Between one striking option and one quiet option, quiet wins by default~~
+- ~~If uncertain about a type size, go smaller~~
+- ~~If uncertain about a motion amplitude, go subtler~~
+- Si tu hésites sur une couleur, elle est dans la palette ou elle n'existe pas.
+  Cette ligne-là tient : le taupe reste un repos, pas une encre (§11).
+
+À la place : entre une option sobre et une option qui accroche, **prendre celle
+qui accroche**, et ne pas demander la permission d'ajouter de la présence. La
+question n'est plus « est-ce trop ? » mais « est-ce que ça tient face à un site
+primé, et est-ce que ça a une raison ? »
 - If uncertain about copy, use exactly what exists in the validated set, or TODO placeholder
 
 ## Technical traps in this repo (they look like taste failures)

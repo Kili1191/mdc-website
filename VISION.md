@@ -32,6 +32,66 @@ c'est une dérive, et le §8 les liste au lieu de les laisser passer pour faites
 
 ---
 
+## ⚠️ VIRAGE DE DIRECTION — 8 septembre 2026
+
+**Décision de Kilian, en conversation, donc rang 1 de la hiérarchie ci-dessus.**
+
+Question posée : « la regle cest pas awwwards ? which is our focus ». Réponse
+choisie parmi trois : **un site plus spectaculaire, assumé** — mouvement,
+transitions, moments qui accrochent, quitte à contredire les règles de retenue.
+
+### Ce qui est renversé
+
+**« La retenue est la valeur la plus haute » ne l'est plus.** C'était la
+première ligne de `.claude/skills/taste/SKILL.md` et l'arbitre par défaut de
+tous ses jugements (« quiet wins by default », « if uncertain, go subtler »).
+Ce départage tombe. En cas d'hésitation entre une option sobre et une option
+qui accroche, **c'est désormais celle qui accroche**, et l'agent n'a plus à
+demander la permission d'ajouter de la présence.
+
+La règle « un seul effet par section » (§9 du skill) tombe avec elle.
+
+Contexte, parce que l'ambiguïté était réelle et a coûté du travail : le mot
+« Awwwards » apparaît cinq fois dans ce dépôt et une seule est une
+interdiction — « generic Awwwards », dans le skill. Les quatre autres sont des
+CIBLES : `page.tsx:21` dit « Modèle Awwwards 2024–2026 (Studio Freight, Igloo
+Inc, Active Theory) », `ASSETS_NANOBANANA.md:17` pose « Awwwards-worthy » comme
+critère d'acceptation d'un visuel, `FluidImage.tsx` dit « Style Studio
+Freight ». Une session a cité la seule interdiction pour refuser d'améliorer un
+élément que Kilian trouvait faible. Ne pas recommencer.
+
+### Ce qui NE bouge PAS, et pourquoi
+
+Le virage porte sur la RETENUE, pas sur l'identité ni sur les faits.
+
+- **La palette Aube Encens, les trois fontes, jamais de dark theme.** Kilian
+  n'a rien dit contre, et ce sont des règles d'identité, pas de sobriété.
+- **La copy.** Zéro texte user-facing inventé par l'agent. Inchangé.
+- **NERVANA Guard, jamais l'adresse, jamais Ofqual sans numéro.** Faits.
+- **Les planchers d'accessibilité** — contraste, cibles de 24px, sortie visible
+  d'une intro qui dure. Un site primé les tient ; ils ne sont pas de la retenue.
+- **Ce qui a été retiré pour une raison MESURÉE reste retiré.** C'est la
+  distinction qui compte, et elle est facile à rater : `MagneticButton` n'est
+  pas parti parce qu'il était voyant, il est parti parce qu'il décentrait le
+  bouton de 21,4 px hors de son axe et tenait une boucle rAF à vie par
+  instance. La récompense d'immobilité n'est pas partie par sobriété, elle
+  faisait dériver le fond sans geste de l'utilisateur. Le voile
+  `backdrop-filter` non plus. Un chiffre reproductible reste au rang 2, donc
+  au-dessus de ce virage. **Refaire l'effet autrement, oui. Rendre le défaut
+  mesuré, non.**
+- `HorizontalScroll` et `SmoothScroll`, eux, avaient été supprimés comme
+  simples DOUBLONS de `ScrollProvider` — aucune mesure ne les condamne, et
+  rien ne s'oppose à construire un scroll horizontal épinglé.
+
+### Ce que ça autorise concrètement
+
+Effets empilés sur une même section, sections épinglées, scroll horizontal
+piloté au scroll vertical, transitions plus longues et plus visibles,
+moments de bascule. La barre n'est plus « est-ce que c'est discret » mais
+**« est-ce que ça tient face à un site primé »**.
+
+---
+
 ## 0. RÈGLES ABSOLUES (non négociables)
 
 - **Jamais de dark theme.** Tient, sans exception.
