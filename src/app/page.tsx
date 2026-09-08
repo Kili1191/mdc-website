@@ -154,6 +154,30 @@ export default function Home() {
     // entre son centre et celui du viewport, pas d'un progres global decoupe
     // en parts egales. Une station peut donc etre plus haute qu'une autre
     // sans casser la choregraphie, et aucune constante n'est a re-caler.
+    // AMPLITUDE DE LA TRAVERSEE — virage du 8 septembre.
+    //
+    // La choregraphie d'avant tenait en une opacite et QUATORZE pixels de
+    // deplacement. A l'echelle d'une station plein ecran, quatorze pixels ne
+    // se percoivent pas : les six ecrans se succedaient en fondu, sans poids,
+    // et c'est une des raisons pour lesquelles la page paraissait plate.
+    // L'ancienne regle §3 du skill plafonnait le reveal a 0,6em — elle est
+    // renversee, voir VISION.md.
+    //
+    // Une station arrive maintenant de 96px plus bas et legerement plus
+    // petite, puis se pose. Celle qui part fait l'inverse. Le mouvement suit
+    // le sens de lecture : on DESCEND dans la maison, donc ce qui vient monte
+    // vers vous et ce qui s'en va s'enfonce.
+    //
+    // transform et opacity uniquement — rien qui declenche une mise en page,
+    // tout sur le GPU. C'est la seule contrainte du 10 qui ne bouge pas.
+    const MONTEE = 96;      // px, course d'entree et de sortie
+    const ECHELLE_MIN = 0.94; // jamais > 1 : agrandir deborderait l'ecran
+
+    // Mouvement reduit : l'opacite seule. La station arrive et repart, elle
+    // ne voyage plus. Ce n'est pas de la retenue, c'est une preference
+    // systeme, et elle passe avant le virage.
+    const sobre = window.matchMedia("(prefers-reduced-motion: reduce)");
+
     let lastY = window.scrollY;
     let goingUp = false;
     const downEls = root.querySelectorAll<HTMLElement>('[data-dir="down"]');
@@ -183,7 +207,15 @@ export default function Home() {
         else if (i === last && d <= 0) vis = 1;
         const focus = Math.max(0, (vis - 0.35) / 0.65);
         st.style.opacity = String(focus);
-        st.style.transform = `translateY(${(1 - focus) * (d > 0 ? 14 : -14)}px)`;
+        if (sobre.matches) {
+          st.style.transform = "";
+        } else {
+          // `d > 0` : la station est encore SOUS le centre de l'ecran, donc
+          // elle arrive — elle monte. Passe le centre, elle s'enfonce.
+          const y = (1 - focus) * (d > 0 ? MONTEE : -MONTEE);
+          const e = ECHELLE_MIN + (1 - ECHELLE_MIN) * focus;
+          st.style.transform = `translate3d(0, ${y}px, 0) scale(${e})`;
+        }
         st.style.pointerEvents = focus > 0.15 ? "auto" : "none";
 
         // La station MAISON publie son etat pour le shader du marbre. La
