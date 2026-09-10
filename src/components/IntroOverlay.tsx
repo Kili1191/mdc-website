@@ -2,7 +2,8 @@
 
 /**
  * MDC IntroOverlay — breath-driven logo reveal
- * - Joue une fois (localStorage mdc_intro_seen) ; bypass via ?from=carry
+ * - Joue a chaque arrivee ; jamais entre deux pages du site.
+ * - ?intro=1 force, ?from=carry saute.
  * - Skippable ; respecte prefers-reduced-motion
  * - Sortie : zoom immersif à travers la maison → révèle le site derrière
  * Séquence : mur gauche (inhale) → fond (exhale) → mur droit (inhale)
@@ -224,7 +225,9 @@ export default function IntroOverlay() {
       if (exiting.current) return;
       exiting.current = true;
       const e0 = startTs ?? performance.now();
-      localStorage.setItem('mdc_intro_seen', '1');
+      // `mdc_intro_seen` n'est plus ecrit : l'intro joue a chaque arrivee,
+      // plus une seule fois par navigateur. C'est shouldBypassIntro() qui
+      // decide, en regardant d'ou l'on vient.
       window.dispatchEvent(new CustomEvent(INTRO_EXIT_EVENT));
 
       function exitTick(ts: number) {
@@ -444,18 +447,39 @@ export default function IntroOverlay() {
             rgba(237,228,208,.7) 35%,
             rgba(237,228,208,0) 72%);
           opacity:0;pointer-events:none;will-change:opacity,transform;}
-        .mdc-skip{position:fixed;bottom:22px;right:26px;
-          background:none;border:none;border-bottom:1px solid rgba(74,59,42,.45);
+        /* LA SORTIE DOIT SE VOIR — ET RESTER DE LA MAISON.
+
+           Deux demandes de Kilian, dans cet ordre : « le bouton skip
+           obvious », puis « mais le bouton elegant et luxury toujours ».
+           Les deux sont justes, et le premier essai a rate le second : un
+           cadre plein avec un fond translucide, pose au milieu d'un dessin
+           a la main sur du parchemin. C'etait un bouton de site web, pas un
+           element de cette maison.
+
+           L'evidence ne vient pas d'un cadre. Elle vient de la TAILLE, des
+           CAPITALES, du CONTRASTE et d'un FILET DE COULEUR — exactement ce
+           que fait deja BEGIN dans la barre du site. Le rouille y est un
+           signe qui souligne, jamais une encre qui ecrit ; c'est sa place
+           ici aussi.
+
+           Mesure : brou sur parchemin a pleine opacite, 8,52:1 — largement
+           au-dessus du plancher de 4,5 pour du texte. Le filet rouille
+           donne 4,16:1, au-dessus du 3,0 exige d'un trait.
+
+           La cible fait 44 px de haut, le confort AAA de WCAG 2.5.5, portee
+           par le padding : rien ne se voit, tout se clique. Et le coin reste
+           le coin — une sortie se cherche en bas a droite. */
+        .mdc-skip{position:fixed;bottom:30px;right:34px;
+          display:inline-flex;align-items:center;
+          min-height:44px;padding:0 2px;
+          background:none;border:none;
+          border-bottom:1px solid #B14E2D;
           font-family:var(--font-prata),Georgia,serif;
-          font-size:11.5px;letter-spacing:.22em;color:#4A3B2A;
-          /* 0,82 et pas 0,72 : c'est la SORTIE d'une intro qui dure plus de
-             cinq secondes, donc du texte soumis au plancher de 4,5:1. Sur le
-             parchemin, 0,72 donne 4,14:1 et 0,82 donne 5,33:1. C'est la seule
-             chose gardee des trois commits qui ont suivi cette intro — elle
-             est mesuree, et elle ne touche pas au souffle. */
-          opacity:.82;text-transform:lowercase;cursor:pointer;
-          padding:6px 2px;transition:opacity .4s;z-index:10001;}
-        .mdc-skip:hover,.mdc-skip:focus-visible{opacity:1;}
+          font-size:13px;letter-spacing:.26em;text-transform:uppercase;
+          color:#4A3B2A;cursor:pointer;
+          transition:color .4s,border-bottom-width .4s;z-index:10001;}
+        .mdc-skip:hover,.mdc-skip:focus-visible{
+          color:#2F2519;border-bottom-width:2px;}
       `}</style>
 
       <div className="mdc-threshold" ref={thresholdRef} />

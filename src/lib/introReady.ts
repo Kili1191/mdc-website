@@ -33,26 +33,50 @@ export function prefersReducedMotion(): boolean {
 // les yeux ouverts, le nom en place, et rien qui bouge. C'est ce que fait
 // IntroOverlay via prefersReducedMotion().
 //
-// Ne restent ici que les deux raisons de vraiment sauter l'intro : l'avoir
-// deja vue, ou arriver par un lien interne.
+// L'INTRO JOUE A CHAQUE ARRIVEE. Demande de Kilian : « mets a chaque fois
+// l'intro ». Le drapeau localStorage `mdc_intro_seen` qui la limitait a une
+// fois par navigateur n'existe plus.
+//
+// MAIS « a chaque arrivee » n'est pas « a chaque chargement de page », et la
+// nuance n'est pas un detail : toute la navigation du site passe par des
+// <a href> classiques, jamais par next/link. Chaque clic sur Sessions, sur
+// Coaching, sur Begin est donc un rechargement COMPLET. Sans distinction, on
+// se prendrait treize secondes de souffle entre chaque page — ce que le
+// localStorage empechait, et personne ne demande ca.
+//
+// On regarde donc D'OU l'on vient, avec deux sources qui se completent :
+//
+//   performance navigation type — 'reload' quand on rafraichit. On rejoue :
+//     rafraichir est un geste volontaire, et c'est exactement ce qu'on fait
+//     quand on veut revoir l'ouverture.
+//
+//   document.referrer — s'il pointe vers le site lui-meme, on arrive d'une
+//     autre page de la maison : on est deja entre, on ne refait pas le seuil.
+//
+// Tout le reste — lien externe, signet, adresse tapee, onglet neuf — est une
+// arrivee, et l'intro joue.
 export function shouldBypassIntro(): boolean {
   if (typeof window === 'undefined') return false;
   const params = new URLSearchParams(window.location.search);
 
-  // ?intro=1 FORCE l'intro, meme deja vue.
-  //
-  // Elle ne joue qu'une fois par navigateur — c'est voulu, personne ne veut
-  // quinze secondes de souffle a chaque visite. Mais l'effet de bord etait
-  // qu'on ne pouvait plus la RELIRE apres l'avoir modifiee : on deployait un
-  // changement et on voyait le site s'ouvrir directement, sans rien remarquer.
-  // Vider le localStorage marchait, mais il faut y penser et savoir ou.
-  //
-  // Ce parametre est la reponse, et il est le miroir exact de ?from=carry :
-  // l'un saute l'intro, l'autre l'impose.
-  if (params.get('intro') === '1') return false;
+  // Les deux commandes explicites priment sur tout le reste.
+  if (params.get('intro') === '1') return false;      // force
+  if (params.get('from') === 'carry') return true;    // saute
 
-  const seen = localStorage.getItem('mdc_intro_seen');
-  return Boolean(seen) || params.get('from') === 'carry';
+  const nav = performance.getEntriesByType('navigation')[0] as
+    PerformanceNavigationTiming | undefined;
+  if (nav?.type === 'reload') return false;           // il a rafraichi : on rejoue
+
+  // Arrive-t-on d'une autre page du meme site ?
+  try {
+    if (document.referrer && new URL(document.referrer).origin === location.origin) {
+      return true;
+    }
+  } catch {
+    // referrer illisible : on considere que c'est une arrivee, et on joue.
+  }
+
+  return false;
 }
 
 export function useIntroReady(): boolean {
