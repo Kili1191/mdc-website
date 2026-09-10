@@ -6,6 +6,7 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { hasWebGL } from "@/lib/webgl";
+import { BREATH_OPEN_EVENT, INTRO_EXIT_EVENT, shouldBypassIntro } from "@/lib/introReady";
 import { houseFocus } from "@/lib/houseFocus";
 import { stillness, breath } from "@/lib/stillness";
 import { marbleMode } from "@/lib/marbleMode";
@@ -404,7 +405,33 @@ export default function MarbleBackground({
     }
 
     const clock = new THREE.Clock(); let raf = 0;
+
+    // LE MARBRE NE REND RIEN TANT QUE L'INTRO LE RECOUVRE.
+    //
+    // Mesure au navigateur pendant le trace : 10,4 images par seconde,
+    // intervalle median de 124 ms, 57 images perdues sur 94. Kilian voyait
+    // donc un seul trait avancer par sauts — « si tu prend un trait
+    // seulement il se deroule en accoup ». Ce n'etait pas la courbe du
+    // dessin, c'etait le nombre d'images.
+    //
+    // La cause etait dans la meme mesure : un canvas WebGL 1440x900 rendait
+    // a plein regime DERRIERE un voile opaque qui le cache entierement.
+    // Deux passes de rendu, un ping-pong de render targets et un
+    // post-traitement par image, pour des pixels que personne ne voit — et
+    // le trace SVG se partageait ce qui restait.
+    //
+    // On garde la boucle vivante (le temps continue de couler, rien ne se
+    // reinitialise) et on saute le travail de rendu. La reprise se fait a
+    // INTRO_EXIT_EVENT, quand le zoom commence : le marbre a tout le zoom
+    // pour se remettre a l'image avant d'etre vu.
+    let couvert = !shouldBypassIntro();
+    const recouvrir = () => { couvert = true; };
+    const decouvrir = () => { couvert = false; };
+    window.addEventListener(INTRO_EXIT_EVENT, decouvrir);
+    window.addEventListener(BREATH_OPEN_EVENT, recouvrir);
+
     const animate = () => {
+      if (couvert) { raf = requestAnimationFrame(animate); return; }
       const t = clock.getElapsedTime();
       finalMat.uniforms.uTime.value = t;
       // La gravure suit le scroll dans la station MAISON : plus on descend,
@@ -526,6 +553,8 @@ export default function MarbleBackground({
       window.removeEventListener("pointercancel", onRelease);
       document.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("deviceorientation", onOrient);
+      window.removeEventListener(INTRO_EXIT_EVENT, decouvrir);
+      window.removeEventListener(BREATH_OPEN_EVENT, recouvrir);
       rtA.dispose(); rtB.dispose(); texMotif.dispose(); texVeil.dispose(); renderer.dispose();
       if (renderer.domElement.parentNode) mount.removeChild(renderer.domElement);
     };

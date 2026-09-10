@@ -152,6 +152,9 @@ export default function IntroOverlay() {
     pratiqueRef.current = false;
     setPratique(false);
     setDone(true);
+    // Le marbre se met en pause quand le souffle s'ouvre : il faut lui
+    // rendre la main en sortant, sinon le fond reste fige apres l'exercice.
+    window.dispatchEvent(new CustomEvent(INTRO_EXIT_EVENT));
   };
 
   // LE DOCUMENT NE DOIT PAS DEFILER SOUS L'INTRO.
@@ -197,6 +200,30 @@ export default function IntroOverlay() {
     const reduit = prefersReducedMotion();
 
     const easeIO = (x: number) => -(Math.cos(Math.PI * x) - 1) / 2;
+
+    // LE GESTE DU BURIN — vitesse constante, amorce et sortie douces.
+    //
+    // Pourquoi il en fallait un. Le trace appliquait easeIO A CHAQUE TRAIT,
+    // sur sa propre fraction : chaque trait partait de zero, accelerait,
+    // puis s'arretait net avant le suivant. Quatre departs, quatre arrets,
+    // bout a bout. C'est ca que Kilian a vu — « c'est saccade, tres moche »
+    // — et c'est aussi ce qui le faisait paraitre plus rapide qu'il n'est :
+    // un mouvement qui s'arrete quatre fois se lit comme quatre a-coups
+    // brefs, jamais comme un trait continu.
+    //
+    // Une main qui dessine ne fait pas ca. Elle pose, elle avance a vitesse
+    // a peu pres constante, elle leve. D'ou ce profil trapezoidal : on
+    // accelere sur les 12 premiers pour cent, on tient, on ralentit sur les
+    // 12 derniers. La vitesse ne retombe a zero qu'aux deux extremites du
+    // dessin entier — plus jamais entre deux traits.
+    const geste = (x: number, r = 0.12) => {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      const aire = 1 - r;                       // normalise le trapeze a 1
+      if (x < r) return (x * x) / (2 * r) / aire;
+      if (x > 1 - r) { const u = 1 - x; return 1 - (u * u) / (2 * r) / aire; }
+      return (x - r / 2) / aire;
+    };
     const easeExpoIn = (x: number) => (x === 0 ? 0 : Math.pow(2, 10 * x - 10));
 
     let wipePhase = -1;
@@ -329,8 +356,12 @@ export default function IntroOverlay() {
             // repassait a zero au lieu de rester plein.
             wipe(4, 1);
           } else {
-            const trait = Math.floor(pTrace * 4);
-            wipe(trait, easeIO((pTrace * 4) % 1));
+            // Une seule courbe, sur le dessin entier. La fraction a
+            // l'interieur d'un trait est ensuite LINEAIRE : c'est le meme
+            // geste qui continue d'un trait au suivant, sans reprise.
+            const q = geste(pTrace) * 4;
+            const trait = Math.min(3, Math.floor(q));
+            wipe(trait, q - trait);
           }
         }
 
