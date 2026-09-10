@@ -58,35 +58,28 @@ const CYCLE   = INSPIRE + EXPIRE;             // 10 s
 // 1,5 s par trait. La maison se termine donc 2 s apres le debut de
 // l'expiration — le dernier trait se pose au moment ou l'on lache.
 // Si c'est encore trop rapide, c'est ce nombre-la, et lui seul, qui bouge.
-// LA MAISON SE TERMINE QUAND LE SOUFFLE SE TERMINE.
+// LA DUREE DU TRACE, ET LE MUR QUI VA AVEC.
 //
-// Trois valeurs essayees, et les deux premieres etaient des erreurs de
-// lecture. 6000 : Kilian a dit « les traits se dessinent hyper vite ».
-// J'ai alors compris « 3 fois trop vite » comme une consigne chiffree et
-// mis 18000 — quatre traits de 4,5 s, une intro de 23,6 s. C'etait une
-// EXPRESSION, pas un facteur. Prendre une exageration au pied de la lettre
-// donne un resultat absurde, et c'est exactement ce que j'ai livre.
+// Un trait dure TRACE / 4. Le trace ne peut pas depasser l'intro. Dans une
+// seule respiration de 10 s, 2,5 s par trait est donc le PLAFOND — pas un
+// reglage, une limite. Kilian a redemande plus lent quatre fois ; la seule
+// facon de la franchir est de respirer deux fois.
 //
-// TRACE = CYCLE. Le burin travaille pendant tout le souffle et pose son
-// dernier trait au moment ou l'expiration s'acheve : une respiration, une
-// maison. 2,5 s par trait — deux tiers plus lent que ce qu'il trouvait
-// precipite, sans allonger l'intro d'une seconde.
+// 16000 : quatre traits de 4 s. La maison se termine a 16 s, en pleine
+// seconde expiration, et la revelation part la — pas a la fin du second
+// cycle. C'est ce qui evite les 23,6 s de l'essai precedent : on respire le
+// temps qu'il faut pour finir la maison, pas un cycle entier de plus.
 //
-// Et comme SOUFFLES vaut ceil(TRACE / CYCLE), il retombe a 1 tout seul :
-// la machinerie des deux respirations disparait sans qu'on y touche.
-const TRACE   = CYCLE;
+// LE PRIX : l'intro passe de 13,6 a environ 19,5 s. Si c'est trop, ce nombre
+// est le seul a bouger — 10000 rend une intro de 13,6 s et des traits de
+// 2,5 s, et tout le reste suit.
+const TRACE   = 16000;
 
-// COMBIEN DE SOUFFLES AVANT LA REVELATION. Il n'est pas ecrit, il se DEDUIT :
-// la maison doit avoir fini de se tracer, et un souffle ne doit jamais etre
-// coupe en son milieu. 18 s de trace dans des cycles de 10 s font donc deux
-// respirations, et la maison se termine a 18 s, deux secondes avant la fin de
-// la seconde expiration.
-//
-// C'est ce lien qui manquait : le trace etait borne par UN cycle, donc le
-// ralentir au-dela de 10 s etait impossible sans que la fin soit coupee.
-// Desormais on change TRACE, et le nombre de souffles suit tout seul.
-const SOUFFLES = Math.max(1, Math.ceil(TRACE / (INSPIRE + EXPIRE)));
-const TOTAL    = (INSPIRE + EXPIRE) * SOUFFLES;
+// Le souffle continue jusqu'a ce que la maison soit finie. Quand TRACE tient
+// dans un cycle, TOTAL vaut le cycle et rien ne change : l'ancien
+// comportement est le cas particulier de celui-ci.
+const TOTAL   = Math.max(TRACE, CYCLE);
+
 const REVEILLE = 1300;                        // les yeux s'ouvrent APRES le souffle
 const HOLD = 800;      // pause apres yeux + titre
 const EXIT = 1200;     // duree du zoom d'entree
