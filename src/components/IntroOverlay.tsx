@@ -65,7 +65,7 @@ const CYCLE   = INSPIRE + EXPIRE;             // 10 s
 // reglage, une limite. Kilian a redemande plus lent quatre fois ; la seule
 // facon de la franchir est de respirer deux fois.
 //
-// 16000 : quatre traits de 4 s. La maison se termine a 16 s, en pleine
+// 20000 : le burin avance a 88 unites par seconde. La maison se termine a 16 s, en pleine
 // seconde expiration, et la revelation part la — pas a la fin du second
 // cycle. C'est ce qui evite les 23,6 s de l'essai precedent : on respire le
 // temps qu'il faut pour finir la maison, pas un cycle entier de plus.
@@ -73,7 +73,28 @@ const CYCLE   = INSPIRE + EXPIRE;             // 10 s
 // LE PRIX : l'intro passe de 13,6 a environ 19,5 s. Si c'est trop, ce nombre
 // est le seul a bouger — 10000 rend une intro de 13,6 s et des traits de
 // 2,5 s, et tout le reste suit.
-const TRACE   = 16000;
+const TRACE   = 20000;
+
+// LA VITESSE DU BURIN EST LA MEME SUR LES QUATRE TRAITS.
+//
+// C'etait le defaut de fond, et il a survecu a six corrections de duree.
+// Les traits ne font pas la meme longueur — mur 310, sol 574, mur 310,
+// toit 574 — et chacun recevait exactement UN QUART du temps. Le sol et le
+// toit etaient donc traces a 143 unites par seconde quand les murs
+// avancaient a 78 : presque le double. Les deux traits les plus longs, ceux
+// qui traversent tout l'ecran et qu'on regarde, etaient aussi les plus
+// rapides. Allonger TRACE ne changeait rien a ce rapport : ca ralentissait
+// tout en gardant le sol deux fois plus vif que le mur.
+//
+// Le temps se repartit desormais a la LONGUEUR. Une main qui dessine ne
+// change pas de vitesse parce que le trait est plus long — elle met plus de
+// temps. A 20 s pour 1768 unites, le burin tient 88 unites par seconde d'un
+// bout a l'autre : mur 3,5 s, sol 6,5 s, mur 3,5 s, toit 6,5 s.
+const LONGUEURS = [310, 574, 310, 574];
+const BORNES = LONGUEURS.reduce<number[]>(
+  (acc, l) => [...acc, acc[acc.length - 1] + l],
+  [0],
+).map((c, _, t) => c / t[t.length - 1]);
 
 // Le souffle continue jusqu'a ce que la maison soit finie. Quand TRACE tient
 // dans un cycle, TOTAL vaut le cycle et rien ne change : l'ancien
@@ -352,9 +373,13 @@ export default function IntroOverlay() {
             // Une seule courbe, sur le dessin entier. La fraction a
             // l'interieur d'un trait est ensuite LINEAIRE : c'est le meme
             // geste qui continue d'un trait au suivant, sans reprise.
-            const q = geste(pTrace) * 4;
-            const trait = Math.min(3, Math.floor(q));
-            wipe(trait, q - trait);
+            // u avance a vitesse constante le long du dessin ENTIER ; les
+            // bornes disent dans quel trait on est et ou l'on en est dedans.
+            const u = geste(pTrace);
+            let trait = 0;
+            while (trait < 3 && u >= BORNES[trait + 1]) trait++;
+            const f = (u - BORNES[trait]) / (BORNES[trait + 1] - BORNES[trait]);
+            wipe(trait, f);
           }
         }
 
