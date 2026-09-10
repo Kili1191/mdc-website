@@ -58,7 +58,23 @@ const CYCLE   = INSPIRE + EXPIRE;             // 10 s
 // 1,5 s par trait. La maison se termine donc 2 s apres le debut de
 // l'expiration — le dernier trait se pose au moment ou l'on lache.
 // Si c'est encore trop rapide, c'est ce nombre-la, et lui seul, qui bouge.
-const TRACE   = 6000;
+// TROIS FOIS PLUS LENT. Kilian, deux fois : « les traits se dessinent hyper
+// vite », puis « ca va encore 3 fois trop vite ». La premiere fois j'ai remis
+// la vitesse d'une version qu'il avait validee ; il ne demandait pas ca, il
+// demandait plus lent. 6000 -> 18000, soit 4,5 s par trait au lieu de 1,5.
+const TRACE   = 18000;
+
+// COMBIEN DE SOUFFLES AVANT LA REVELATION. Il n'est pas ecrit, il se DEDUIT :
+// la maison doit avoir fini de se tracer, et un souffle ne doit jamais etre
+// coupe en son milieu. 18 s de trace dans des cycles de 10 s font donc deux
+// respirations, et la maison se termine a 18 s, deux secondes avant la fin de
+// la seconde expiration.
+//
+// C'est ce lien qui manquait : le trace etait borne par UN cycle, donc le
+// ralentir au-dela de 10 s etait impossible sans que la fin soit coupee.
+// Desormais on change TRACE, et le nombre de souffles suit tout seul.
+const SOUFFLES = Math.max(1, Math.ceil(TRACE / (INSPIRE + EXPIRE)));
+const TOTAL    = (INSPIRE + EXPIRE) * SOUFFLES;
 const REVEILLE = 1300;                        // les yeux s'ouvrent APRES le souffle
 const HOLD = 800;      // pause apres yeux + titre
 const EXIT = 1200;     // duree du zoom d'entree
@@ -274,7 +290,18 @@ export default function IntroOverlay() {
       if (t0 === null) t0 = ts;
       const t = ts - t0;
 
-      if (t < CYCLE) {
+      // Le mode exercice boucle a chaque cycle, pas au bout des deux : on le
+      // teste donc AVANT le bloc du souffle, sinon il ne rebouclerait qu'une
+      // fois sur deux.
+      if (pratiqueRef.current && t >= CYCLE) {
+        t0 = ts;
+        cyclesRef.current += 1;
+        setCycles(cyclesRef.current);
+        rafId.current = requestAnimationFrame(tick);
+        return;
+      }
+
+      if (t < TOTAL) {
         // Le trace : quatre traits repartis sur l'inspiration et la retention.
         // En mode exercice a partir du deuxieme tour, la maison est deja la —
         // la redessiner ferait clignoter la scene a chaque respiration.
@@ -303,13 +330,18 @@ export default function IntroOverlay() {
         setEyes(0);
         brandRef.current?.classList.remove('mdc-brand-in');
 
-        if (t < INSPIRE) {
-          const f = t / INSPIRE;
+        // Le souffle se lit dans le cycle COURANT — t modulo un cycle — quand
+        // le trace, lui, court en absolu sur les deux. C'est ce qui permet a
+        // la maison de traverser plusieurs respirations sans que le rythme
+        // soit touche.
+        const tc = t % CYCLE;
+        if (tc < INSPIRE) {
+          const f = tc / INSPIRE;
           updateBreath(LABELS.inspire, easeIO(f), Math.sin(Math.PI * f), true);
         } else {
           // L'expiration enchaine sans palier. easeIO finit a 1 et repart de
           // 1 : le repere ne saute pas au raccord, il change juste de sens.
-          const f = (t - INSPIRE) / EXPIRE;
+          const f = (tc - INSPIRE) / EXPIRE;
           // PAS de wipe(4, 1) ici. Il y etait, et c'est lui qui rendait le
           // dessin instantane : des la premiere image de l'expiration — 4 s —
           // il claquait la maison a l'etat complet et ecrasait le trace
@@ -322,22 +354,9 @@ export default function IntroOverlay() {
         return;
       }
 
-      if (pratiqueRef.current) {
-        // MODE EXERCICE. Le cycle recommence a l'instant meme ou il finit :
-        // on ne rejoue pas le trace, la maison reste dessinee et les yeux
-        // ouverts. Il ne reste que le souffle, qui repart. Aucune couture,
-        // parce qu'il n'y a rien a raccorder — c'est le meme mouvement qui
-        // continue.
-        t0 = ts;
-        cyclesRef.current += 1;
-        setCycles(cyclesRef.current);
-        rafId.current = requestAnimationFrame(tick);
-        return;
-      }
-
       // La revelation. Le souffle est fini, le mot a disparu : c'est
       // seulement maintenant que la maison ouvre les yeux et donne son nom.
-      const apres = t - CYCLE;
+      const apres = t - TOTAL;
       if (apres < REVEILLE) {
         const f = easeIO(apres / REVEILLE);
         wipe(4, 1);
