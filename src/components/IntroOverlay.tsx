@@ -407,30 +407,41 @@ export default function IntroOverlay() {
         .mdc-wrap{display:flex;flex-direction:column;align-items:center;
           will-change:transform,filter;transform:translateZ(0);
           backface-visibility:hidden;}
-        /* LA TAILLE DE LA MAISON.
+        /* LA TAILLE DE LA MAISON — DEUX VERSIONS, PAS UNE ETIREE.
            
-           Kilian : « je veux celle d'avant, elle etait plus grande ». J'ai
-           verifie tous les commits du fichier et toutes les branches du
-           depot : le dessin a TOUJOURS valu min(68vw,340px), sans exception.
-           Il n'existe nulle part de version plus grande — il n'y avait donc
-           rien a restaurer, et lui dire le contraire aurait ete inventer une
-           reparation.
+           Jusqu'ici l'intro n'avait AUCUNE media query : une seule mise en
+           page, etiree au vw, du telephone au 27 pouces. C'est ce que Kilian
+           demande de corriger, et les deux formats n'ont effectivement pas le
+           meme probleme.
            
-           Mais son reproche est juste, et le plafond de 340px en est la
-           cause : sur un ecran de 1440, la maison occupait 23 % de la
-           largeur. Un petit pictogramme flottant dans un grand vide — alors
-           que c'est LE moment de marque du site, celui qu'on regarde pendant
-           dix secondes en respirant avec.
+           DESKTOP — la contrainte est le PLAFOND. Un ecran de 1440 est large ;
+           sans borne haute la maison deviendrait absurde, avec l'ancienne
+           borne de 340px elle occupait 23 % de la largeur et flottait comme
+           un pictogramme. 620px, soit 43 %, la fait tenir l'ecran. Le 74vh
+           protege les fenetres basses : au rapport 574/480, 620px de large
+           font 519px de haut, et sans lui une fenetre de 600px la couperait.
            
-           620px de plafond, soit 43 % d'un 1440 : la maison tient l'ecran au
-           lieu d'y flotter. Le 74vh borne la hauteur pour les fenetres
-           basses — a ce rapport de 574/480, une maison de 620px fait 519px
-           de haut, et sans cette borne elle deborderait sur un portable
-           pose a l'horizontale. Sur telephone, 76vw remplace 68vw : a peine
-           plus large, parce que la contrainte y etait la largeur, pas le
-           plafond. */
-        .mdc-stage{position:relative;width:min(76vw,74vh,620px);aspect-ratio:574/480;
+           MOBILE — la contrainte est la LARGEUR, jamais le plafond. Un
+           telephone est etroit et tres haut : 620px n'y arrivera jamais, le
+           plafond ne sert a rien, et c'est le vw qui decide seul. 88vw au
+           lieu de 76 : sur un portrait, la maison doit occuper sa largeur,
+           c'est la seule dimension ou elle peut exister.
+           
+           ET SURTOUT, svh ET NON vh. Sur iOS, vh mesure l'ecran barre
+           d'adresse CACHEE — la plus grande hauteur possible. Une maison
+           calee sur 74vh depasse donc des que la barre est visible, c'est-a-
+           dire au chargement, c'est-a-dire pendant l'intro. svh mesure la
+           hauteur reellement disponible. Le reste du site utilise deja svh
+           (.mdc-station) ; l'intro etait le seul endroit qui ne le faisait
+           pas, parce qu'elle n'avait pas de version mobile du tout.
+           Le 62svh ne mord qu'en paysage, ou un telephone couche rendrait
+           une maison de 88vw plus haute que l'ecran. */
+        .mdc-stage{position:relative;aspect-ratio:574/480;
+          width:min(76vw,74vh,620px);
           transform:translateZ(0);}
+        @media (max-width: 720px){
+          .mdc-stage{width:min(88vw,62svh);}
+        }
         .mdc-stage svg{width:100%;height:100%;overflow:visible;display:block;
           pointer-events:none;transform:translateZ(0);}
         /* Au milieu de la maison, comme a l'origine. Il n'y croise rien :
@@ -491,7 +502,9 @@ export default function IntroOverlay() {
            La cible fait 44 px de haut, le confort AAA de WCAG 2.5.5, portee
            par le padding : rien ne se voit, tout se clique. Et le coin reste
            le coin — une sortie se cherche en bas a droite. */
-        .mdc-skip{position:fixed;bottom:30px;right:34px;
+        .mdc-skip{position:fixed;
+          bottom:calc(30px + env(safe-area-inset-bottom));
+          right:calc(34px + env(safe-area-inset-right));
           display:inline-flex;align-items:center;
           min-height:44px;padding:0 2px;
           background:none;border:none;
@@ -502,6 +515,14 @@ export default function IntroOverlay() {
           transition:color .4s,border-bottom-width .4s;z-index:10001;}
         .mdc-skip:hover,.mdc-skip:focus-visible{
           color:#2F2519;border-bottom-width:2px;}
+        /* Sur telephone la sortie se rapproche du bord — le pouce y va tout
+           seul — et gagne deux pixels de corps : a bout de bras, 13px de
+           capitales espacees se lisent moins bien qu'a 60cm d'un ecran. */
+        @media (max-width: 720px){
+          .mdc-skip{font-size:15px;letter-spacing:.22em;
+            bottom:calc(22px + env(safe-area-inset-bottom));
+            right:calc(20px + env(safe-area-inset-right));}
+        }
       `}</style>
 
       <div className="mdc-threshold" ref={thresholdRef} />
