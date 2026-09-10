@@ -38,6 +38,19 @@ export function prefersReducedMotion(): boolean {
 export function shouldBypassIntro(): boolean {
   if (typeof window === 'undefined') return false;
   const params = new URLSearchParams(window.location.search);
+
+  // ?intro=1 FORCE l'intro, meme deja vue.
+  //
+  // Elle ne joue qu'une fois par navigateur — c'est voulu, personne ne veut
+  // quinze secondes de souffle a chaque visite. Mais l'effet de bord etait
+  // qu'on ne pouvait plus la RELIRE apres l'avoir modifiee : on deployait un
+  // changement et on voyait le site s'ouvrir directement, sans rien remarquer.
+  // Vider le localStorage marchait, mais il faut y penser et savoir ou.
+  //
+  // Ce parametre est la reponse, et il est le miroir exact de ?from=carry :
+  // l'un saute l'intro, l'autre l'impose.
+  if (params.get('intro') === '1') return false;
+
   const seen = localStorage.getItem('mdc_intro_seen');
   return Boolean(seen) || params.get('from') === 'carry';
 }
