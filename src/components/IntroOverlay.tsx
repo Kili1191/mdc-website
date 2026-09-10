@@ -407,7 +407,29 @@ export default function IntroOverlay() {
         .mdc-wrap{display:flex;flex-direction:column;align-items:center;
           will-change:transform,filter;transform:translateZ(0);
           backface-visibility:hidden;}
-        .mdc-stage{position:relative;width:min(68vw,340px);aspect-ratio:574/480;
+        /* LA TAILLE DE LA MAISON.
+           
+           Kilian : « je veux celle d'avant, elle etait plus grande ». J'ai
+           verifie tous les commits du fichier et toutes les branches du
+           depot : le dessin a TOUJOURS valu min(68vw,340px), sans exception.
+           Il n'existe nulle part de version plus grande — il n'y avait donc
+           rien a restaurer, et lui dire le contraire aurait ete inventer une
+           reparation.
+           
+           Mais son reproche est juste, et le plafond de 340px en est la
+           cause : sur un ecran de 1440, la maison occupait 23 % de la
+           largeur. Un petit pictogramme flottant dans un grand vide — alors
+           que c'est LE moment de marque du site, celui qu'on regarde pendant
+           dix secondes en respirant avec.
+           
+           620px de plafond, soit 43 % d'un 1440 : la maison tient l'ecran au
+           lieu d'y flotter. Le 74vh borne la hauteur pour les fenetres
+           basses — a ce rapport de 574/480, une maison de 620px fait 519px
+           de haut, et sans cette borne elle deborderait sur un portable
+           pose a l'horizontale. Sur telephone, 76vw remplace 68vw : a peine
+           plus large, parce que la contrainte y etait la largeur, pas le
+           plafond. */
+        .mdc-stage{position:relative;width:min(76vw,74vh,620px);aspect-ratio:574/480;
           transform:translateZ(0);}
         .mdc-stage svg{width:100%;height:100%;overflow:visible;display:block;
           pointer-events:none;transform:translateZ(0);}
