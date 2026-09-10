@@ -45,7 +45,19 @@ import { BREATH_OPEN_EVENT, INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EV
 const INSPIRE = 4000;
 const EXPIRE  = 6000;
 const CYCLE   = INSPIRE + EXPIRE;             // 10 s
-const TRACE   = INSPIRE;                      // les 4 traits tiennent dans l'inspiration
+// LA DUREE DU TRACE EST INDEPENDANTE DU SOUFFLE, et elle doit l'etre.
+//
+// TRACE servait deux choses a la fois : la duree du dessin ET la frontiere
+// entre l'inspiration et l'expiration. Impossible de ralentir le burin sans
+// deplacer le souffle — donc, en retirant la retention, j'ai fait passer les
+// quatre traits de 6 s a 4 s sans m'en apercevoir. Kilian, immediatement :
+// « les traits se dessinent hyper vite ». 1,0 s par trait au lieu de 1,5.
+//
+// 6000 remet exactement la vitesse de la version qu'il avait validee :
+// 1,5 s par trait. La maison se termine donc 2 s apres le debut de
+// l'expiration — le dernier trait se pose au moment ou l'on lache.
+// Si c'est encore trop rapide, c'est ce nombre-la, et lui seul, qui bouge.
+const TRACE   = 6000;
 const REVEILLE = 1300;                        // les yeux s'ouvrent APRES le souffle
 const HOLD = 800;      // pause apres yeux + titre
 const EXIT = 1200;     // duree du zoom d'entree
@@ -266,9 +278,18 @@ export default function IntroOverlay() {
         if (pratiqueRef.current && cyclesRef.current > 0) {
           wipe(4, 1);
         } else {
-          const pTrace = Math.min(1, t / TRACE);
-          const trait = Math.min(3, Math.floor(pTrace * 4));
-          wipe(trait, easeIO((pTrace * 4) % 1));
+          const pTrace = t / TRACE;
+          if (pTrace >= 1) {
+            // Trace fini : la maison entiere, et on n'y touche plus.
+            //
+            // Ce cas manquait, et il tombait dans le calcul general : a
+            // pTrace = 1, `(1 * 4) % 1` vaut 0, donc le quatrieme trait
+            // repassait a zero au lieu de rester plein.
+            wipe(4, 1);
+          } else {
+            const trait = Math.floor(pTrace * 4);
+            wipe(trait, easeIO((pTrace * 4) % 1));
+          }
         }
 
         // LES YEUX RESTENT FERMES PENDANT TOUT LE SOUFFLE, et le nom
@@ -285,8 +306,13 @@ export default function IntroOverlay() {
         } else {
           // L'expiration enchaine sans palier. easeIO finit a 1 et repart de
           // 1 : le repere ne saute pas au raccord, il change juste de sens.
-          const f = (t - TRACE) / EXPIRE;
-          wipe(4, 1);
+          const f = (t - INSPIRE) / EXPIRE;
+          // PAS de wipe(4, 1) ici. Il y etait, et c'est lui qui rendait le
+          // dessin instantane : des la premiere image de l'expiration — 4 s —
+          // il claquait la maison a l'etat complet et ecrasait le trace
+          // progressif calcule juste au-dessus. TRACE avait beau valoir 6000,
+          // rien ne se dessinait apres 4000. Le trace est desormais calcule a
+          // un seul endroit, et aucune phase du souffle ne le contredit.
           updateBreath(LABELS.expire, 1 - easeIO(f), Math.sin(Math.PI * f), true);
         }
         rafId.current = requestAnimationFrame(tick);
