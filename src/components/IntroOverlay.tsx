@@ -28,19 +28,30 @@ import { BREATH_OPEN_EVENT, INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EV
 // cycle complet, fait une seule fois.
 //
 // Le dessin suit le souffle au lieu de le contraindre : les quatre traits de
-// la maison se tracent PENDANT l'inspiration et la retention, et les yeux
-// s'ouvrent PENDANT l'expiration — la maison se detend quand on lache.
+// la maison se tracent PENDANT l'inspiration, et l'expiration ne fait plus
+// que relacher — la maison se detend quand on lache.
+//
+// PAS DE RETENTION, ET C'EST UN CHOIX. Le cycle a porte 4-2-6 : une pause de
+// deux secondes poumons pleins. C'est l'expiration longue qui fait redescendre
+// — c'est pendant elle que le tonus vagal monte et que le coeur ralentit —, et
+// elle est intacte. La retention, elle, est la seule partie qui DEMANDE quelque
+// chose : chez quelqu'un de tendu elle peut donner une sensation de manque
+// d'air. Or ce site s'adresse exactement a ces gens-la — « for those who carry
+// everything inside » — et personne n'est a cote pour ajuster.
+//
+// Reste donc le rapport qui compte : expiration = 1,5 x inspiration.
+// 10 s par cycle, soit 6 respirations par minute, ce qui tient dans la bande
+// de resonance (~4,5 a 6,5 chez l'adulte). Et l'intro raccourcit de 2 s.
 const INSPIRE = 4000;
-const RETIENT = 2000;
 const EXPIRE  = 6000;
-const CYCLE   = INSPIRE + RETIENT + EXPIRE;   // 12 s
-const TRACE   = INSPIRE + RETIENT;            // les 4 traits tiennent la-dedans
+const CYCLE   = INSPIRE + EXPIRE;             // 10 s
+const TRACE   = INSPIRE;                      // les 4 traits tiennent dans l'inspiration
 const REVEILLE = 1300;                        // les yeux s'ouvrent APRES le souffle
 const HOLD = 800;      // pause apres yeux + titre
 const EXIT = 1200;     // duree du zoom d'entree
 const FIXE = 1600;     // temps de lecture de l'intro sans mouvement
 
-const LABELS = { inspire: 'inhale', retient: 'hold', expire: 'exhale' };
+const LABELS = { inspire: 'inhale', expire: 'exhale' };
 
 export default function IntroOverlay() {
   const [mounted, setMounted] = useState(false);
@@ -271,12 +282,9 @@ export default function IntroOverlay() {
         if (t < INSPIRE) {
           const f = t / INSPIRE;
           updateBreath(LABELS.inspire, easeIO(f), Math.sin(Math.PI * f), true);
-        } else if (t < TRACE) {
-          const f = (t - INSPIRE) / RETIENT;
-          // Poumons pleins, rien ne bouge. Le seul moment ou le repere reste
-          // immobile et lisible d'un bout a l'autre : c'est ce qu'on tient.
-          updateBreath(LABELS.retient, 1, Math.min(1, Math.sin(Math.PI * f) * 1.9), true);
         } else {
+          // L'expiration enchaine sans palier. easeIO finit a 1 et repart de
+          // 1 : le repere ne saute pas au raccord, il change juste de sens.
           const f = (t - TRACE) / EXPIRE;
           wipe(4, 1);
           updateBreath(LABELS.expire, 1 - easeIO(f), Math.sin(Math.PI * f), true);
