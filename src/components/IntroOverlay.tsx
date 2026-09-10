@@ -58,11 +58,23 @@ const CYCLE   = INSPIRE + EXPIRE;             // 10 s
 // 1,5 s par trait. La maison se termine donc 2 s apres le debut de
 // l'expiration — le dernier trait se pose au moment ou l'on lache.
 // Si c'est encore trop rapide, c'est ce nombre-la, et lui seul, qui bouge.
-// TROIS FOIS PLUS LENT. Kilian, deux fois : « les traits se dessinent hyper
-// vite », puis « ca va encore 3 fois trop vite ». La premiere fois j'ai remis
-// la vitesse d'une version qu'il avait validee ; il ne demandait pas ca, il
-// demandait plus lent. 6000 -> 18000, soit 4,5 s par trait au lieu de 1,5.
-const TRACE   = 18000;
+// LA MAISON SE TERMINE QUAND LE SOUFFLE SE TERMINE.
+//
+// Trois valeurs essayees, et les deux premieres etaient des erreurs de
+// lecture. 6000 : Kilian a dit « les traits se dessinent hyper vite ».
+// J'ai alors compris « 3 fois trop vite » comme une consigne chiffree et
+// mis 18000 — quatre traits de 4,5 s, une intro de 23,6 s. C'etait une
+// EXPRESSION, pas un facteur. Prendre une exageration au pied de la lettre
+// donne un resultat absurde, et c'est exactement ce que j'ai livre.
+//
+// TRACE = CYCLE. Le burin travaille pendant tout le souffle et pose son
+// dernier trait au moment ou l'expiration s'acheve : une respiration, une
+// maison. 2,5 s par trait — deux tiers plus lent que ce qu'il trouvait
+// precipite, sans allonger l'intro d'une seconde.
+//
+// Et comme SOUFFLES vaut ceil(TRACE / CYCLE), il retombe a 1 tout seul :
+// la machinerie des deux respirations disparait sans qu'on y touche.
+const TRACE   = CYCLE;
 
 // COMBIEN DE SOUFFLES AVANT LA REVELATION. Il n'est pas ecrit, il se DEDUIT :
 // la maison doit avoir fini de se tracer, et un souffle ne doit jamais etre
