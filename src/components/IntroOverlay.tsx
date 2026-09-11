@@ -503,7 +503,7 @@ export default function IntroOverlay() {
       enterHouse(ts);
     }
 
-    const skipHandler = () => {
+    const skipHandler = (presse = false) => {
       // Passer l'intro avance la traversee : on declenche l'installation
       // immediatement, sinon elle tomberait pendant le zoom — le seul
       // moment ou un blocage du fil principal se verrait vraiment.
@@ -515,15 +515,83 @@ export default function IntroOverlay() {
       updateBreath('', 0, 0, false);
       // Meme raison que plus haut : on attend que le marbre ait rendu, sinon
       // la traversee se joue pendant le blocage et personne ne la voit.
-      const partir = () => setTimeout(() => enterHouse(), 350);
+      // L'ATTENTE DEPEND DE QUI SORT.
+      //
+      // Le repli de 4 s existe pour que le zoom ne se joue pas pendant un fil
+      // principal bloque. Il a du sens pour une sortie NATURELLE, ou la
+      // qualite du geste compte.
+      //
+      // Il n'en a aucun pour quelqu'un qui vient de faire un geste pour
+      // sortir. Celui-la a deja renonce a la ceremonie : lui faire attendre
+      // quatre secondes de plus pour que le zoom soit lisse, c'est lui
+      // facturer un soin auquel il a dit non. Mesure avant : molette a 2,5 s,
+      // page lisible a 8,6 s — dont quatre d'attente pure.
+      //
+      // Presse, on plafonne a 500 ms et on supprime le delai de confort.
+      const attente = presse ? 500 : 4000;
+      const partir = () => setTimeout(() => enterHouse(), presse ? 0 : 350);
       if (installe.current) partir();
       else {
         window.addEventListener(MARBLE_READY_EVENT, partir, { once: true });
-        window.setTimeout(partir, 4000);
+        window.setTimeout(partir, attente);
       }
     };
     const skipBtn = document.getElementById('mdc-skip');
-    skipBtn?.addEventListener('click', skipHandler);
+    // Le bouton aussi est un geste de sortie : meme urgence. Et on l'enveloppe,
+    // sinon l'evenement de clic arriverait comme argument `presse`.
+    const surBouton = () => skipHandler(true);
+    skipBtn?.addEventListener('click', surBouton);
+
+    // N'IMPORTE QUEL GESTE LEVE LE VOILE.
+    //
+    // Kilian : « pour la respiration trouve une solution pour le client google
+    // search quil puisse avoir l'intro sans avoir de problem ».
+    //
+    // Le probleme, mesure : quelqu'un qui clique un resultat Google vers
+    // /sessions attend 25,9 s avant de voir la page qu'il est venu lire. Il
+    // n'a pas demande le seuil, il a demande une page.
+    //
+    // Trois fausses pistes ecartees par la mesure :
+    //
+    //   Detecter Google au referrer. Il arrive bien (« https://www.google.com/ »)
+    //   MAIS une politique de referrer stricte le vide, et un referrer vide est
+    //   indistinguable d'un signet ou d'une URL tapee. Deux personnes venant du
+    //   meme lien verraient deux intros differentes.
+    //
+    //   Supprimer l'intro sur les pages internes. Kilian l'a demandee a chaque
+    //   arrivee, et sa demande ici est « qu'il PUISSE avoir l'intro », pas
+    //   qu'on la lui retire.
+    //
+    //   Raccourcir le souffle. Il a valide le rythme ce matin. On n'y touche pas.
+    //
+    // LE FAIT QUI TRANCHE : sur une page interne, le contenu est deja
+    // entierement rendu DERRIERE le voile — mesure sur /sessions pendant
+    // l'intro, le h1 est dans le DOM, positionne a y=213, avec 714 mots en
+    // place. Il n'y a rien a charger, rien a attendre. Le voile ne fait que
+    // couvrir une page qui est prete.
+    //
+    // Donc on ne retire rien : on rend la sortie GESTUELLE. Qui veut le seuil
+    // ne fait rien et l'a en entier. Qui est venu lire touche sa molette, son
+    // ecran ou une touche, et il y est.
+    //
+    // Ca ne contredit pas la regle 10c (« rien ne defile sous un voile plein
+    // ecran ») : le geste ne fait toujours pas defiler la page sous le voile,
+    // il leve le voile. C'est la meme sortie que le bouton, atteinte par le
+    // geste que la personne faisait de toute facon.
+    let leve = false;
+    const lever = (e: Event) => {
+      if (leve) return;
+      // Le bouton a son propre gestionnaire, on ne le double pas.
+      if (e.target instanceof Element && e.target.closest('#mdc-skip')) return;
+      leve = true;
+      // Un geste est une intention de sortir : on est presse.
+      skipHandler(true);
+    };
+    // passifs : on ne bloque rien, on ecoute une intention.
+    window.addEventListener('wheel', lever, { passive: true });
+    window.addEventListener('touchmove', lever, { passive: true });
+    window.addEventListener('keydown', lever);
+    window.addEventListener('pointerdown', lever);
 
     // Mouvement reduit : on POSE l'etat final — maison tracee, yeux ouverts,
     // nom en place — on laisse le temps de le lire, puis on entre. Aucune
@@ -544,7 +612,11 @@ export default function IntroOverlay() {
       window.clearTimeout(repli);
       window.removeEventListener(MARBLE_READY_EVENT, pret);
       cancelAnimationFrame(rafId.current);
-      skipBtn?.removeEventListener('click', skipHandler);
+      skipBtn?.removeEventListener('click', surBouton);
+      window.removeEventListener('wheel', lever);
+      window.removeEventListener('touchmove', lever);
+      window.removeEventListener('keydown', lever);
+      window.removeEventListener('pointerdown', lever);
     };
   }, [mounted, session]);
 
