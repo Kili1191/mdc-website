@@ -17,7 +17,7 @@ import AssetFrame from "@/components/effects/AssetFrame";
 
 export const metadata = {
   title: "What Happens in a Session",
-  description: "What actually happens in a bodywork session in Battersea, London. You arrive, you lie down dressed, the room stays quiet. Sixty to ninety minutes. You leave lighter.",
+  description: "What actually happens in a bodywork session in Battersea, London — breath, touch and the nervous system. You arrive, you lie down dressed, the room stays quiet. Sixty to ninety minutes. You leave lighter.",
 };
 
 export default function TheWorkPage() {
