@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "verifie": "node scripts/verifie-litteraux.mjs",
+    "prebuild": "node scripts/verifie-litteraux.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",

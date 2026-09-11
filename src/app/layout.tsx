@@ -11,7 +11,7 @@ import JsonLd from "@/components/JsonLd";
 import { graphe, organisation, praticien } from "@/lib/jsonld";
 import Footer from "@/components/Footer";
 import BreathButton from "@/components/BreathButton";
-import Descente from "@/components/Descente";
+import Inscription from "@/components/Inscription";
 import SiteMarble from "@/components/SiteMarble";
 import SoundToggle from "@/components/SoundToggle";
 
@@ -104,8 +104,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <BreathButton />
         {/* Se retire d'elle-meme sur les pages qui ne declarent pas de
             stations : elle cherche [data-station] et rend null en dessous
-            de deux. */}
-        <Descente />
+            de deux. Remplace la regle gravee de la marge, voir le fichier. */}
+        <Inscription />
         <PageTransition>
           {children}
           <Footer />

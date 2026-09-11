@@ -9,8 +9,9 @@ import { useEffect, useRef } from "react";
 //
 // Ce n'est pas un effet choisi dans un catalogue. C'est la langue que ce depot
 // parlait deja partout sans jamais l'appliquer au texte : le sillon de la
-// marge est decrit dans Descente.tsx comme « une gravure eclairee d'en haut a
-// gauche, la meme lumiere que le marbre », la station MAISON pilote un burin
+// marge etait decrit dans Descente.tsx comme « une gravure eclairee d'en haut a
+// gauche, la meme lumiere que le marbre » — ce composant a ete remplace par
+// Inscription.tsx, qui reprend la meme lumiere, la station MAISON pilote un burin
 // dans le shader, et DIRECTION.md appelle la page une descente gravee. Le
 // texte, lui, etait simplement POSE sur la pierre. Il y est maintenant entre.
 //
