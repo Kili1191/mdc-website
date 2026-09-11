@@ -181,14 +181,34 @@ export default function IntroOverlay() {
   useEffect(() => {
     if (!mounted) return;
 
-    // Preload site content early (during breath) so Three.js is warm
-    // before the exit zoom — prevents main-thread block that would
-    // freeze the zoom animation.
+    const reduit = prefersReducedMotion();
+
+    // QUAND LE SITE S'INSTALLE DERRIERE LE VOILE. C'ETAIT LA CAUSE DU LAG.
+    //
+    // Kilian : « on my laptop all the intro is lagging ». Ce declenchement
+    // etait a 600 ms — c'est-a-dire au debut de la premiere inspiration,
+    // pendant que le premier trait se trace. Il fait monter tout le site
+    // derriere le voile : creation du contexte WebGL, compilation des
+    // shaders, construction de l'EffectComposer, decodage de trois textures
+    // JPEG. Sur un portable, ces operations bloquent le fil principal
+    // plusieurs centaines de millisecondes, et elles tombaient pile sur le
+    // dessin.
+    //
+    // L'intention d'origine etait bonne — « so Three.js is warm before the
+    // exit zoom » — mais 600 ms, c'est vingt-trois secondes avant ce zoom.
+    // Chauffer si tot ne sert a rien et coute exactement la ou ca se voit.
+    //
+    // La mise en pause du rendu du marbre (voir MarbleBackground) arretait
+    // la BOUCLE, jamais l'INSTALLATION. Elle etait donc necessaire et pas
+    // suffisante.
+    //
+    // On installe maintenant quand le trace est fini, pendant la revelation :
+    // plus aucun trait ne bouge, et il reste REVEILLE + HOLD, soit 2,1 s,
+    // avant que la traversee commence. En mouvement reduit il n'y a pas de
+    // trace a proteger, donc on chauffe tout de suite.
     const preloadTimer = window.setTimeout(() => {
       window.dispatchEvent(new CustomEvent(INTRO_PRELOAD_EVENT));
-    }, 600);
-
-    const reduit = prefersReducedMotion();
+    }, reduit ? 200 : TOTAL);
 
     const easeIO = (x: number) => -(Math.cos(Math.PI * x) - 1) / 2;
 
@@ -416,6 +436,11 @@ export default function IntroOverlay() {
     }
 
     const skipHandler = () => {
+      // Passer l'intro avance la traversee : on declenche l'installation
+      // immediatement, sinon elle tomberait pendant le zoom — le seul
+      // moment ou un blocage du fil principal se verrait vraiment.
+      window.clearTimeout(preloadTimer);
+      window.dispatchEvent(new CustomEvent(INTRO_PRELOAD_EVENT));
       cancelAnimationFrame(rafId.current);
       wipe(4, 1); setEyes(1);
       brandRef.current?.classList.add('mdc-brand-in');
