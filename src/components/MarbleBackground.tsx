@@ -6,7 +6,7 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { hasWebGL } from "@/lib/webgl";
-import { BREATH_OPEN_EVENT, INTRO_EXIT_EVENT, shouldBypassIntro } from "@/lib/introReady";
+import { BREATH_OPEN_EVENT, INTRO_DONE_EVENT, INTRO_PRELOAD_EVENT, MARBLE_READY_EVENT, shouldBypassIntro } from "@/lib/introReady";
 import { houseFocus } from "@/lib/houseFocus";
 import { stillness, breath } from "@/lib/stillness";
 import { marbleMode } from "@/lib/marbleMode";
@@ -425,13 +425,33 @@ export default function MarbleBackground({
     // INTRO_EXIT_EVENT, quand le zoom commence : le marbre a tout le zoom
     // pour se remettre a l'image avant d'etre vu.
     let couvert = !shouldBypassIntro();
+    let annonce = false;
+    let unePasse = false;                       // rendre une image, puis se rendormir
     const recouvrir = () => { couvert = true; };
     const decouvrir = () => { couvert = false; };
-    window.addEventListener(INTRO_EXIT_EVENT, decouvrir);
+    const chauffer = () => { unePasse = true; };
+    // UNE IMAGE POUR ETRE PRET, PUIS PLUS RIEN JUSQU'A L'ENTREE.
+    //
+    // Trois versions de ce reglage, et les deux premieres etaient fausses.
+    // Reprise a la traversee : le premier rendu — compilation des shaders,
+    // televersement des textures — tombait pile sur le zoom, que personne ne
+    // voyait donc. Reprise au preload : le cout etait bien paye au bon
+    // moment, mais le marbre se mettait ensuite a rendre A PLEIN COUT pendant
+    // la revelation et la traversee. Mesure, processeur bride x6 : le zoom ne
+    // rendait plus qu'UNE SEULE image, a 23,9x. Le marbre lui volait les
+    // autres.
+    //
+    // Un marbre cache n'a aucune raison de s'animer. Il lui faut une image,
+    // une seule, pour compiler et se peindre — c'est `chauffer`, au preload,
+    // dans la fenetre ou la maison est terminee et immobile. Ensuite il se
+    // rendort, et ne repart qu'a INTRO_DONE : quand le visiteur est
+    // reellement arrive.
+    window.addEventListener(INTRO_PRELOAD_EVENT, chauffer);
+    window.addEventListener(INTRO_DONE_EVENT, decouvrir);
     window.addEventListener(BREATH_OPEN_EVENT, recouvrir);
 
     const animate = () => {
-      if (couvert) { raf = requestAnimationFrame(animate); return; }
+      if (couvert && !unePasse) { raf = requestAnimationFrame(animate); return; }
       const t = clock.getElapsedTime();
       finalMat.uniforms.uTime.value = t;
       // La gravure suit le scroll dans la station MAISON : plus on descend,
@@ -526,6 +546,17 @@ export default function MarbleBackground({
       const tmp = rtA; rtA = rtB; rtB = tmp;
       finalMat.uniforms.uTrail.value = rtA.texture;
       composer.render();
+      // La premiere image rendue est le signal que tout est compile et
+      // televerse. L'intro l'attend pour lancer sa revelation.
+      if (unePasse) {
+        // L'image de chauffe est rendue : tout est compile, televerse, peint.
+        // On l'annonce et on se rendort — la suite appartient a l'intro.
+        unePasse = false;
+        if (!annonce) {
+          annonce = true;
+          window.dispatchEvent(new CustomEvent(MARBLE_READY_EVENT));
+        }
+      }
       raf = requestAnimationFrame(animate);
     };
     animate();
@@ -553,7 +584,8 @@ export default function MarbleBackground({
       window.removeEventListener("pointercancel", onRelease);
       document.removeEventListener("pointerleave", onLeave);
       window.removeEventListener("deviceorientation", onOrient);
-      window.removeEventListener(INTRO_EXIT_EVENT, decouvrir);
+      window.removeEventListener(INTRO_PRELOAD_EVENT, chauffer);
+      window.removeEventListener(INTRO_DONE_EVENT, decouvrir);
       window.removeEventListener(BREATH_OPEN_EVENT, recouvrir);
       rtA.dispose(); rtB.dispose(); texMotif.dispose(); texVeil.dispose(); renderer.dispose();
       if (renderer.domElement.parentNode) mount.removeChild(renderer.domElement);

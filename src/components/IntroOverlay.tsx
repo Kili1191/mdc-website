@@ -12,7 +12,7 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { BREATH_OPEN_EVENT, INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EVENT, prefersReducedMotion, shouldBypassIntro } from '@/lib/introReady';
+import { BREATH_OPEN_EVENT, INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EVENT, MARBLE_READY_EVENT, prefersReducedMotion, shouldBypassIntro } from '@/lib/introReady';
 
 // UN VRAI CYCLE DE BREATHWORK, pas un aller-retour.
 //
@@ -110,6 +110,8 @@ export default function IntroOverlay() {
   const rRF = useRef<SVGRectElement>(null);
   const eyesG = useRef<SVGGElement>(null);
   const exiting = useRef(false);
+  // Le site est-il installe derriere le voile ? La revelation l'attend.
+  const installe = useRef(false);
   const rafId = useRef<number>(0);
 
   useEffect(() => {
@@ -143,9 +145,11 @@ export default function IntroOverlay() {
     pratiqueRef.current = false;
     setPratique(false);
     setDone(true);
-    // Le marbre se met en pause quand le souffle s'ouvre : il faut lui
-    // rendre la main en sortant, sinon le fond reste fige apres l'exercice.
-    window.dispatchEvent(new CustomEvent(INTRO_EXIT_EVENT));
+    // Le marbre se met en pause quand le souffle s'ouvre : il faut lui rendre
+    // la main en sortant, sinon le fond reste fige apres l'exercice. C'est
+    // INTRO_DONE qu'il ecoute pour repartir — INTRO_EXIT ne fait plus que
+    // signaler le debut de la traversee.
+    window.dispatchEvent(new CustomEvent(INTRO_DONE_EVENT));
   };
 
   // LE DOCUMENT NE DOIT PAS DEFILER SOUS L'INTRO.
@@ -202,10 +206,40 @@ export default function IntroOverlay() {
     // la BOUCLE, jamais l'INSTALLATION. Elle etait donc necessaire et pas
     // suffisante.
     //
-    // On installe maintenant quand le trace est fini, pendant la revelation :
-    // plus aucun trait ne bouge, et il reste REVEILLE + HOLD, soit 2,1 s,
-    // avant que la traversee commence. En mouvement reduit il n'y a pas de
-    // trace a proteger, donc on chauffe tout de suite.
+    // On installe quand le trace est fini : plus aucun trait ne bouge. En
+    // mouvement reduit il n'y a pas de trace a proteger, donc on chauffe
+    // tout de suite.
+    //
+    // ET ON ATTEND QU'ELLE SOIT FINIE AVANT DE REPRENDRE. Premiere version de
+    // ce correctif : j'avais deplace l'installation du debut du trace vers la
+    // fin, et Kilian a repondu « the lines appeared perfectly. but then no
+    // eyes no name and no zoom ». Je n'avais pas supprime le blocage, je
+    // l'avais deplace SUR LA REVELATION. Le fil principal se figeait pendant
+    // que les yeux, le nom et le zoom etaient censes jouer ; quand il se
+    // liberait, la traversee etait deja finie et le site apparaissait d'un
+    // coup.
+    //
+    // Un delai fixe ne peut pas marcher : la duree du blocage depend de la
+    // machine, et c'est precisement ce qu'on ne connait pas. On ne devine
+    // donc plus — on ATTEND le signal. La maison reste complete et immobile
+    // a l'ecran, ce qui est un temps juste et non un gel : elle vient d'etre
+    // terminee, on la regarde. Deux images apres l'installation, le fil est
+    // rendu et la revelation part.
+    // ON ATTEND LE MARBRE, ON NE DEVINE PLUS SA DUREE. Premiere version de ce
+    // correctif : deux images apres l'evenement. Insuffisant, et la mesure
+    // l'a montre — processeur bride x6, la traversee n'etait JAMAIS visible,
+    // zero image au-dessus de 1,2x. Le montage React est bien synchrone,
+    // mais le vrai cout vient APRES : decodage des textures, compilation des
+    // shaders, televersement au GPU. Tout cela se paie au PREMIER RENDU du
+    // marbre — que ma propre mise en pause avait programme au debut du zoom.
+    //
+    // Le marbre annonce donc lui-meme sa premiere image, et la revelation
+    // part la. Un repli a 4 s protege le cas ou WebGL echoue : l'intro ne
+    // doit jamais rester bloquee sur un signal qui ne viendra pas.
+    const pret = () => { installe.current = true; };
+    window.addEventListener(MARBLE_READY_EVENT, pret, { once: true });
+    const repli = window.setTimeout(pret, (reduit ? 200 : TOTAL) + 4000);
+
     const preloadTimer = window.setTimeout(() => {
       window.dispatchEvent(new CustomEvent(INTRO_PRELOAD_EVENT));
     }, reduit ? 200 : TOTAL);
@@ -341,6 +375,7 @@ export default function IntroOverlay() {
     }
 
     let t0: number | null = null;
+    let reveilT0: number | null = null;
     function tick(ts: number) {
       if (t0 === null) t0 = ts;
       const t = ts - t0;
@@ -413,9 +448,20 @@ export default function IntroOverlay() {
         return;
       }
 
+      // On tient la maison terminee tant que le site s'installe. Sans cette
+      // attente, la revelation se jouerait pendant un fil principal bloque —
+      // c'est-a-dire pour personne.
+      if (!installe.current) {
+        wipe(4, 1);
+        updateBreath('', 0, 0, false);
+        rafId.current = requestAnimationFrame(tick);
+        return;
+      }
+      if (reveilT0 === null) reveilT0 = ts;
+
       // La revelation. Le souffle est fini, le mot a disparu : c'est
       // seulement maintenant que la maison ouvre les yeux et donne son nom.
-      const apres = t - TOTAL;
+      const apres = ts - reveilT0;
       if (apres < REVEILLE) {
         const f = easeIO(apres / REVEILLE);
         wipe(4, 1);
@@ -445,7 +491,14 @@ export default function IntroOverlay() {
       wipe(4, 1); setEyes(1);
       brandRef.current?.classList.add('mdc-brand-in');
       updateBreath('', 0, 0, false);
-      setTimeout(() => enterHouse(), 350);
+      // Meme raison que plus haut : on attend que le marbre ait rendu, sinon
+      // la traversee se joue pendant le blocage et personne ne la voit.
+      const partir = () => setTimeout(() => enterHouse(), 350);
+      if (installe.current) partir();
+      else {
+        window.addEventListener(MARBLE_READY_EVENT, partir, { once: true });
+        window.setTimeout(partir, 4000);
+      }
     };
     const skipBtn = document.getElementById('mdc-skip');
     skipBtn?.addEventListener('click', skipHandler);
@@ -466,6 +519,8 @@ export default function IntroOverlay() {
     return () => {
       window.clearTimeout(minuteurFixe);
       window.clearTimeout(preloadTimer);
+      window.clearTimeout(repli);
+      window.removeEventListener(MARBLE_READY_EVENT, pret);
       cancelAnimationFrame(rafId.current);
       skipBtn?.removeEventListener('click', skipHandler);
     };
