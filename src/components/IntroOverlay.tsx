@@ -80,7 +80,7 @@ const TOTAL    = CYCLE * SOUFFLES;
 
 const REVEILLE = 1300;                        // les yeux s'ouvrent APRES le souffle
 const HOLD = 800;      // pause apres yeux + titre
-const EXIT = 1200;     // duree du zoom d'entree
+const EXIT = 1600;     // duree du zoom d'entree
 const FIXE = 1600;     // temps de lecture de l'intro sans mouvement
 
 const LABELS = { inspire: 'inhale', expire: 'exhale' };
@@ -192,7 +192,6 @@ export default function IntroOverlay() {
 
     const easeIO = (x: number) => -(Math.cos(Math.PI * x) - 1) / 2;
 
-    const easeExpoIn = (x: number) => (x === 0 ? 0 : Math.pow(2, 10 * x - 10));
 
     let wipePhase = -1;
     function wipe(h: number, f: number) {
@@ -255,7 +254,36 @@ export default function IntroOverlay() {
 
       function exitTick(ts: number) {
         const p = Math.min(1, (ts - e0) / (reduit ? 700 : EXIT));
-        const z = easeExpoIn(p);
+
+        // LA TRAVERSEE SE JOUAIT APRES QUE LA MAISON AVAIT DISPARU.
+        //
+        // Kilian : « je crois t'as supprime le zoom morph ». Il n'etait pas
+        // supprime — il etait invisible, et c'est pire, parce que le code
+        // avait l'air juste. easeExpoIn vaut 2^(10p-10) : une courbe si
+        // tardive que la maison n'atteignait 2,1x qu'a mi-parcours. Or le
+        // voile, lui, commencait a s'effacer des 28 %. Mesure de l'ancien
+        // reglage :
+        //
+        //   p      echelle   voile
+        //   0,28     1,2x    100 %
+        //   0,55     2,1x     69 %   la maison n'a presque pas bouge
+        //   0,80     7,5x     18 %   elle grossit enfin, on ne la voit plus
+        //   0,90    14,0x      5 %
+        //
+        // On voyait donc un FONDU, et le zoom se jouait derriere, sur une
+        // maison deja transparente. Deux corrections, et aucune n'invente de
+        // nouvel effet : la courbe devient cubique, donc la croissance se
+        // voit des le debut ; et le voile tient jusqu'a 60 % au lieu de 28,
+        // donc la maison est GRANDE quand elle est encore opaque.
+        //
+        //   p      echelle   voile
+        //   0,60     6,6x    100 %   on s'approche de la porte
+        //   0,80    14,3x     50 %   on la passe
+        //   1,00    27,0x      0 %   on est dedans
+        //
+        // EXIT passe de 1200 a 1600 ms : une traversee qu'on ne voyait pas
+        // n'avait pas besoin de temps, celle-ci si.
+        const z = p * p * p;
 
         // En mouvement reduit, la maison ne se rapproche pas et rien ne
         // floute : il ne reste que le fondu, qui n'est pas un deplacement.
@@ -270,7 +298,7 @@ export default function IntroOverlay() {
           thresholdRef.current.style.transform = `translateZ(0) scale(${(1 + z * 3).toFixed(3)})`;
         }
         if (introRef.current) {
-          const fade = p < 0.28 ? 1 : 1 - easeIO((p - 0.28) / 0.72);
+          const fade = p < 0.60 ? 1 : 1 - easeIO((p - 0.60) / 0.40);
           introRef.current.style.opacity = fade.toFixed(4);
         }
         if (p < 1) requestAnimationFrame(exitTick);
