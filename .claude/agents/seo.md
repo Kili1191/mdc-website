@@ -150,6 +150,35 @@ d'une décision de design prise ailleurs, par quelqu'un d'autre, sans rapport
 avec le référencement. Il changera encore. **Remesure-le après toute
 modification de l'intro**, et ne recopie jamais la valeur écrite ici.
 
+### Et le plus cher n'est pas l'indexation
+
+L'audit du 11 septembre a trouvé pire que la racine muette, et c'est un sujet
+de conversion, pas de référencement.
+
+`IntroOverlay` vit dans `layout.tsx`, donc sur TOUTES les pages, et
+`shouldBypassIntro()` ne saute l'intro que si le `referrer` est de même
+origine. **Un clic depuis un résultat Google a un referrer externe : l'intro
+joue.** Mesure sur `/sessions`, arrivée froide : le `h1` est réellement visible
+à **28,8 s**, contre 469 ms avec un referrer interne. Le plancher structurel,
+indépendant de la machine, vaut 23,7 s — 20 000 de souffle, 1 300 de réveil,
+800 de pause, 1 600 de sortie.
+
+Les pages internes sont donc parfaitement indexées et parfaitement
+inatteignables au premier contact. **Chaque visiteur organique arrive sur ~24
+secondes d'animation avant de voir la page qu'il a cliquée**, et c'est le
+trafic le plus qualifié et le moins patient du site.
+
+**Ce n'est pas à toi de trancher.** L'intro à chaque arrivée est une demande
+explicite de Kilian. Ton travail est qu'il décide en connaissance de cause :
+`shouldBypassIntro()` lit déjà `document.referrer` pour distinguer les arrivées
+internes, donc distinguer aussi un moteur de recherche est un changement d'une
+ligne. La question n'est pas technique — fait-on passer le seuil avant la page
+qu'on est venu lire ? Trois options honnêtes, de la plus douce à la plus
+tranchante : ne rien changer, raccourcir à un souffle, sauter l'intro pour les
+seules arrivées moteur.
+
+---
+
 **La direction de correction, et elle ne demande pas un mot de copy** : rendre
 le corps de l'accueil côté serveur et laisser l'intro le RECOUVRIR, au lieu de
 le remplacer. Le voile est déjà une couche par-dessus ; le `return null` en
@@ -171,8 +200,12 @@ shader, burin sur les titres. Un agent SEO réflexe crierait au désastre. Mesur
 - **Le burin ne touche pas le texte.** Il pose une ombre autour des lettres ;
   le texte reste du texte, indexable, dans le HTML.
 - **Le rail épinglé allonge la page** d'environ 1900px sans ajouter de contenu.
-  Sans conséquence pour l'indexation : ses six cartes sont de vrais liens
-  d'ancrage, présents dans le HTML.
+  Sans conséquence pour l'indexation, mais pas pour la raison que cette section
+  donnait : elle affirmait que ses six cartes étaient « présentes dans le
+  HTML ». **C'est faux dans le brut** — elles n'existent que dans le DOM rendu.
+  La perte est nulle quand même, parce que ce sont des ancres de même page.
+  La phrase était juste par accident, et une raison fausse finit toujours par
+  servir à conclure autre chose.
 - **Ce qui n'est PAS mesurable ici** : la vitesse. Le conteneur de développement
   n'a pas de GPU et rend le WebGL sur le processeur — toute mesure de fps ou de
   LCP prise ici est fausse de plusieurs ordres de grandeur. Voir
@@ -310,3 +343,12 @@ l'accueil » — les stations entrent dans le DOM à 1,9 s, pas à 18.
 de GPU, le WebGL tourne sur le processeur, et tout chiffre de fps, de LCP ou de
 Core Web Vital pris depuis cette machine est faux de plusieurs ordres de
 grandeur. PageSpeed Insights sur l'URL de production, ou rien.
+
+**Mais sache distinguer une vitesse d'un MINUTEUR.** Le délai de 20 s de
+l'accueil n'est pas une mesure de performance : c'est un `setTimeout` en
+horloge murale, indépendant du processeur comme de la carte graphique. Le
+piège 2 ne s'y applique pas, et refuser de le rapporter au nom de « on ne
+mesure pas la vitesse ici » serait une erreur symétrique de celle qu'il
+prévient. Contrôle : compare le chiffre au même parcours avec `?from=carry`
+(qui saute l'intro). Si l'écart vaut exactement la durée programmée, tu lis un
+minuteur, pas une lenteur.
