@@ -130,6 +130,11 @@ export default function MarbleBackground({
         uScreenRes: { value: new THREE.Vector2(W(), H()) },
         uRes: { value: new THREE.Vector2(2752, 1536) }, uZoom: { value: 1.0 },
         uReflet: { value: 0.05 }, uIrisation: { value: 0.09 },
+        // LA COLONNE DE LECTURE, en fractions d'ecran. Mesuree en JS sur
+        // `.mdc-wrap` et poussee a chaque frame : le shader ne connait pas le
+        // DOM, il faut la lui dire.
+        uTexteCentre: { value: 0.5 },
+        uTexteDemi: { value: 0.34 },
         uHouseCenter: { value: new THREE.Vector2(0.5, 0.80) },
         uHouseInner: { value: 0.11 },
         uHouseOuter: { value: 0.24 },
@@ -149,6 +154,7 @@ export default function MarbleBackground({
         uniform sampler2D uMotif,uVeil,uTrail;
         uniform float uZoom,uTime,uReflet,uIrisation,uEffectScale;
         uniform vec2 uScreenRes,uRes;
+        uniform float uTexteCentre, uTexteDemi;
         uniform vec2 uHouseCenter;
         uniform float uHouseInner,uHouseOuter;
         uniform sampler2D uHouseTex;
@@ -222,7 +228,37 @@ export default function MarbleBackground({
 
           vec3 veil  = texture2D(uVeil,  uv).rgb;
           vec3 motifCol = texture2D(uMotif, uvMotif).rgb;
-          vec3 col = mix(veil, motifCol, r);
+
+          // LE VOILE NE COUVRE PLUS QUE LE TEXTE.
+          //
+          // Demande de Kilian : « enleve le voile entre le marbre et l'image
+          // dessous garde juste sous le texte ».
+          //
+          // Ce qu'il y avait : mix(veil, motifCol, r). L'albatre uni
+          // par-dessus, le motif dessous, et le motif ne se decouvrait QUE
+          // sous la trainee du curseur. Le relief de lotus — l'image la plus
+          // travaillee du site — etait donc invisible pour qui ne promene pas
+          // sa souris, c'est-a-dire pour tout le monde sur telephone.
+          //
+          // Ce qu'il y a maintenant : le motif partout, et le voile en BANDE
+          // VERTICALE sous la colonne de lecture. La bande est mesuree en JS
+          // sur .mdc-wrap et poussee en uniforme, donc elle suit la vraie
+          // largeur du texte a toutes les tailles d'ecran sans constante a
+          // recaler.
+          //
+          // Ses bords sont fondus sur un quart de sa demi-largeur : une arete
+          // nette se lirait comme un bandeau pose sur l'image, ce qui est
+          // exactement ce que le 5 et le 12 du skill taste interdisent. Fondu,
+          // on ne voit pas une boite, on voit la pierre qui se calme la ou il
+          // y a a lire.
+          float dx = abs(vUv.x - uTexteCentre);
+          float bord = uTexteDemi * 0.25;
+          float bandeTexte = 1.0 - smoothstep(uTexteDemi - bord, uTexteDemi + bord, dx);
+
+          // Le curseur ouvre toujours la pierre, y compris dans la bande :
+          // c'est le seul geste qui commande le fond, et le 10b tient.
+          float voileIci = bandeTexte * (1.0 - r);
+          vec3 col = mix(motifCol, veil, voileIci);
 
           vec3 warmLight = vec3(0.98, 0.92, 0.78);
           col += warmLight * r * uReflet;
@@ -456,6 +492,28 @@ export default function MarbleBackground({
       finalMat.uniforms.uTime.value = t;
       // La gravure suit le scroll dans la station MAISON : plus on descend,
       // plus le burin est descendu.
+      // LA BANDE SUIT LA VRAIE COLONNE DE TEXTE.
+      //
+      // Mesuree sur `.mdc-wrap`, qui porte tout le texte des pages internes,
+      // et sur `.mdc-station` pour l'accueil, dont les phrases sont larges et
+      // se deplacent. On lit la boite reelle plutot que de la deviner : la
+      // colonne change avec la largeur de l'ecran (max 1180, padding 7vw), et
+      // une constante serait fausse partout sauf a une taille.
+      //
+      // Repli genereux quand aucun des deux n'existe : mieux vaut trop de
+      // voile qu'un texte pose sur un lotus.
+      const colonne =
+        document.querySelector(".mdc-station") ?? document.querySelector(".mdc-wrap");
+      if (colonne) {
+        const r = colonne.getBoundingClientRect();
+        const w = window.innerWidth || 1;
+        // Un peu plus large que le texte : les glyphes debordent, et la bande
+        // doit finir avant eux, pas sur eux.
+        const demi = Math.min(0.5, (r.width / w) * 0.5 * 1.12);
+        finalMat.uniforms.uTexteCentre.value = (r.left + r.width / 2) / w;
+        finalMat.uniforms.uTexteDemi.value = Math.max(0.18, demi);
+      }
+
       finalMat.uniforms.uCarve.value = houseFocus.progress();
 
       // LA TRAVERSEE DE LA MAISON.
