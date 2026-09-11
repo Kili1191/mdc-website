@@ -52,8 +52,8 @@ import { graphe, serviceCoaching } from "@/lib/jsonld";
 // formation est un praticien qu'on croit sur les deux.
 
 export const metadata = {
-  title: "Coaching",
-  description: "Coaching with Kilian. One to one on a call, wherever you are, for people who need to say it out loud. The first call is free.",
+  title: "Coaching on a Call",
+  description: "Coaching with Kilian, one to one on a call, anywhere in the UK. For burnout, for people carrying too much who need to say it out loud. The first call is free.",
 };
 
 export default function CoachingPage() {

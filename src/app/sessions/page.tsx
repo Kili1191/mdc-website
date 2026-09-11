@@ -33,8 +33,8 @@ import { graphe, servicesEnCabinet } from "@/lib/jsonld";
 // lignes de l'index sont nouvelles, dans la meme voix.
 
 export const metadata = {
-  title: "Sessions",
-  description: "Sessions at Maison du Calme, in Battersea. NERVANA is silent, fully clothed, and begins with ANTARA. Abhyanga, Marma, Reiki and sound as well. £130 to £250.",
+  title: "Sessions — Bodywork, Breathwork & Reiki in Battersea",
+  description: "Bodywork, breathwork and Reiki in Battersea, South West London, for stress and burnout. NERVANA is silent, fully clothed, and begins with ANTARA. Abhyanga oil massage, Marma and sound as well. £130 to £250.",
 };
 
 // L'index. Une ligne par salle, ecrite pour etre lue en diagonale.
