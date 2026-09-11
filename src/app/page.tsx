@@ -126,18 +126,39 @@ function douceur(t: number) {
 // ANTARA — d'ou le lien direct vers cette salle. Les quatre autres pratiques
 // ne font pas partie de la suite : elles vivent dans « Also practised here ».
 // Le coaching est la seule chose qui ne se passe pas dans la maison.
+//
+// LES PRIX ONT QUITTE L'ACCUEIL — demande de Kilian, 11 septembre : « met pas
+// les prix dans la 1ere page d'acceuil juste ce qu'est le soin pour donner
+// envie ». Six chiffres alignes sur un rail, c'est une carte de tarifs : on
+// compare avant d'avoir compris ce qu'on compare, et le moins cher gagne.
+// Les prix restent sur /sessions, ou ils sont affiches ET balises en Offer,
+// et sur /questions. Chaque carte pointe deja vers /sessions : personne ne
+// reste sans reponse, il faut juste un clic pour l'avoir.
+//
+// Ce que le `meta` porte a la place : la meme fonction — ce qu'on engage —
+// mais en temps plutot qu'en argent. La duree est un fait deja public
+// (jsonld.ts, page Sessions), elle ne promet rien, et elle dit a cet homme la
+// seule chose qu'il veut savoir avant le prix : combien de temps il est hors
+// d'atteinte. La grammaire est celle de l'index de /sessions — nature de
+// l'offre, puis mesure.
+//
+// Deux ecarts assumes. NERVANA porte « The entrance » et non « ANTARA » : le
+// mot est deja dans la ligne au-dessus, et c'est le mot de l'index Sessions.
+// Le coaching porte l'appel gratuit, qui est un fait verifie (page Coaching,
+// « The first call is free ») et, pour une ligne qui n'a plus de prix, la
+// seule chose qui donne vraiment envie d'ouvrir la page.
 const PRATIQUE = [
-  { n: "01", name: "NERVANA",  href: "/sessions#antara", meta: "ANTARA · £250",
+  { n: "01", name: "NERVANA",  href: "/sessions#antara", meta: "The entrance · 90 minutes",
     line: "The suite Kilian built. It opens with ANTARA, always." },
-  { n: "02", name: "ABHYANGA", href: "/sessions#also",   meta: "Ayurvedic · £160",
+  { n: "02", name: "ABHYANGA", href: "/sessions#also",   meta: "Ayurvedic · 60 minutes",
     line: "Warm oil, worked over the body in one unbroken rhythm." },
-  { n: "03", name: "MARMA",    href: "/sessions#also",   meta: "Ayurvedic · £160",
-    line: "The junctions where the body gathers what it holds." },
-  { n: "04", name: "REIKI",    href: "/sessions#also",   meta: "£130",
+  { n: "03", name: "MARMA",    href: "/sessions#also",   meta: "Ayurvedic · 60 minutes",
+    line: "Pressure and stillness at the junctions where the body gathers what it holds." },
+  { n: "04", name: "REIKI",    href: "/sessions#also",   meta: "60 minutes",
     line: "Hands resting on the body, or just above it, and held." },
-  { n: "05", name: "SOUND",    href: "/sessions#also",   meta: "£140",
+  { n: "05", name: "SOUND",    href: "/sessions#also",   meta: "60 minutes",
     line: "Bowls set on the body. The only work here you will hear." },
-  { n: "06", name: "COACHING", href: "/coaching",        meta: "On a call · from £150",
+  { n: "06", name: "COACHING", href: "/coaching",        meta: "On a call · The first is free",
     line: "One conversation, or six, wherever you are." },
 ];
 
@@ -498,10 +519,16 @@ export default function Home() {
             ))}
           </RailEpingle>
 
+          {/* Meme decision que le tableau ci-dessus : les deux fourchettes de
+              prix s'en vont. Ce qui reste est ce que cette ligne faisait
+              vraiment — dire ou l'on est (le quartier porte la recherche
+              locale, et c'est le seul endroit de l'accueil qui le dit) et
+              distinguer les cinq en personne du sixieme sur un appel. Cette
+              distinction etait portee par les prix ; elle se dit mieux sans. */}
           <p style={{ ...micro, marginTop: 28 }}>
             Up to ninety minutes. Clothed, unless there is oil.
             <br />
-            Battersea, South West London · In the room, £130 to £250 · Coaching, from £150
+            Battersea, South West London · One to one, in person · Coaching on a call
           </p>
 
           {/* La transmission. Kilian : « tu n'insistes pas sur le fait que je
