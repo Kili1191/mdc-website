@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     default: "Maison du Calme — Bodywork & Breathwork in Battersea, London",
     template: "%s · Maison du Calme",
   },
-  description: "A house for the people who hold everything and never say so. Silent one-to-one bodywork, breathwork and Reiki in Battersea, South West London, for stress and burnout. Coaching on a call. From £130.",
+  description: "Silent one-to-one bodywork and breathwork in Battersea, South West London. Slow work with the breath and the nervous system, for stress and burnout. Reiki, Abhyanga, Marma. Coaching on a call. From £130.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -62,13 +62,13 @@ export const metadata: Metadata = {
     siteName: "Maison du Calme",
     title: "Maison du Calme",
     images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Maison du Calme" }],
-    description: "A house for the people who hold everything and never say so. Silent one-to-one bodywork, breathwork and Reiki in Battersea, South West London, for stress and burnout. Coaching on a call. From £130.",
+    description: "Silent one-to-one bodywork and breathwork in Battersea, South West London. Slow work with the breath and the nervous system, for stress and burnout. Reiki, Abhyanga, Marma. Coaching on a call. From £130.",
   },
   twitter: {
     card: "summary_large_image",
     images: ["/og.jpg"],
     title: "Maison du Calme",
-    description: "A house for the people who hold everything and never say so. Silent one-to-one bodywork, breathwork and Reiki in Battersea, South West London, for stress and burnout. Coaching on a call. From £130.",
+    description: "Silent one-to-one bodywork and breathwork in Battersea, South West London. Slow work with the breath and the nervous system, for stress and burnout. Reiki, Abhyanga, Marma. Coaching on a call. From £130.",
   },
 };
 

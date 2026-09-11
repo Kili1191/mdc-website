@@ -34,7 +34,7 @@ import { graphe, servicesEnCabinet } from "@/lib/jsonld";
 
 export const metadata = {
   title: "Sessions — Bodywork, Breathwork & Reiki in Battersea",
-  description: "Bodywork, breathwork and Reiki in Battersea, South West London, for stress and burnout. NERVANA is silent, fully clothed, and begins with ANTARA. Abhyanga oil massage, Marma and sound as well. £130 to £250.",
+  description: "Bodywork, breathwork and Reiki in Battersea, South West London. Slow work with the breath and the nervous system, for stress and burnout. NERVANA is silent, fully clothed, and begins with ANTARA. Abhyanga oil massage, Marma and sound. £130 to £250.",
 };
 
 // L'index. Une ligne par salle, ecrite pour etre lue en diagonale.
