@@ -448,15 +448,6 @@ export default function IntroOverlay() {
         return;
       }
 
-      // On tient la maison terminee tant que le site s'installe. Sans cette
-      // attente, la revelation se jouerait pendant un fil principal bloque —
-      // c'est-a-dire pour personne.
-      if (!installe.current) {
-        wipe(4, 1);
-        updateBreath('', 0, 0, false);
-        rafId.current = requestAnimationFrame(tick);
-        return;
-      }
       if (reveilT0 === null) reveilT0 = ts;
 
       // La revelation. Le souffle est fini, le mot a disparu : c'est
@@ -472,6 +463,37 @@ export default function IntroOverlay() {
         return;
       }
       if (apres - REVEILLE < HOLD) {
+        wipe(4, 1); setEyes(1);
+        brandRef.current?.classList.add('mdc-brand-in');
+        updateBreath('', 0, 0, false);
+        rafId.current = requestAnimationFrame(tick);
+        return;
+      }
+
+      // L'ATTENTE DU SITE EST ICI, ET PAS AVANT LES YEUX.
+      //
+      // Kilian : « entre l'apparition des yeux il y a beaucoup de temps
+      // d'attente ». Mesure, chronologie complete de l'intro : le souffle
+      // finit a 20,4 s et les yeux ne commencaient qu'a 24,5. Quatre secondes
+      // de maison figee, sans un mot a l'ecran.
+      //
+      // La cause etait ce garde, pose AVANT la revelation : le site ne se
+      // monte qu'a la fin du souffle, et l'intro attendait qu'il soit installe
+      // — repli a 4 s — avant d'ouvrir les yeux. Sur une machine lente, le
+      // repli tombe a chaque fois.
+      //
+      // Le garde protege quelque chose de reel et il reste : que le geste ne
+      // se joue pas pendant un fil principal bloque, c'est-a-dire pour
+      // personne. Mais il etait au mauvais endroit. OUVRIR LES YEUX NE COUTE
+      // RIEN — une opacite sur un SVG deja monte. C'est le ZOOM qui traverse
+      // la maison et decouvre le site derriere, et c'est lui seul qui a besoin
+      // que le site soit la.
+      //
+      // Donc : les yeux et le nom arrivent des la fin du souffle, et
+      // l'attente, si elle a lieu, se passe desormais sur une image ou il y a
+      // quelque chose a regarder. Le souffle n'est pas touche d'une
+      // milliseconde.
+      if (!installe.current) {
         wipe(4, 1); setEyes(1);
         brandRef.current?.classList.add('mdc-brand-in');
         updateBreath('', 0, 0, false);
