@@ -43,6 +43,23 @@ export const viewport = {
   viewportFit: "cover" as const,
 };
 
+// LA DESCRIPTION DE LA RACINE, ECRITE UNE FOIS.
+//
+// Elle etait recopiee a l'identique trois fois — description, openGraph,
+// twitter. Trois copies d'une meme phrase finissent toujours par diverger :
+// on en corrige une, on oublie les deux autres, et Google, WhatsApp et
+// LinkedIn se mettent a raconter trois choses differentes du meme site.
+//
+// AUCUN PRIX. Demande de Kilian : « pas de prix sur la page d'accueil ».
+// Elle finissait par « From £130. » — ce n'est pas sur la page, mais c'est ce
+// qu'on lit dans Google AVANT de cliquer, donc c'est bien la premiere chose
+// que quelqu'un voit de la maison. Les prix vivent sur /sessions et
+// /questions, qui les affichent et les balisent.
+const DESCRIPTION_RACINE =
+  "Silent one-to-one bodywork and breathwork in Battersea, South West London. " +
+  "Slow work with the breath and the nervous system, for stress and burnout. " +
+  "Reiki, Abhyanga, Marma. Coaching on a call.";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://maisonducalme.com"),
   title: {
@@ -53,7 +70,7 @@ export const metadata: Metadata = {
     default: "Maison du Calme: Bodywork & Breathwork in Battersea, London",
     template: "%s · Maison du Calme",
   },
-  description: "Silent one-to-one bodywork and breathwork in Battersea, South West London. Slow work with the breath and the nervous system, for stress and burnout. Reiki, Abhyanga, Marma. Coaching on a call. From £130.",
+  description: DESCRIPTION_RACINE,
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -62,13 +79,13 @@ export const metadata: Metadata = {
     siteName: "Maison du Calme",
     title: "Maison du Calme",
     images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Maison du Calme" }],
-    description: "Silent one-to-one bodywork and breathwork in Battersea, South West London. Slow work with the breath and the nervous system, for stress and burnout. Reiki, Abhyanga, Marma. Coaching on a call. From £130.",
+    description: DESCRIPTION_RACINE,
   },
   twitter: {
     card: "summary_large_image",
     images: ["/og.jpg"],
     title: "Maison du Calme",
-    description: "Silent one-to-one bodywork and breathwork in Battersea, South West London. Slow work with the breath and the nervous system, for stress and burnout. Reiki, Abhyanga, Marma. Coaching on a call. From £130.",
+    description: DESCRIPTION_RACINE,
   },
 };
 
