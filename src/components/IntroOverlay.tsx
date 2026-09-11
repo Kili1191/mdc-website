@@ -46,60 +46,37 @@ import { BREATH_OPEN_EVENT, INTRO_DONE_EVENT, INTRO_EXIT_EVENT, INTRO_PRELOAD_EV
 const INSPIRE = 4000;
 const EXPIRE  = 6000;
 const CYCLE   = INSPIRE + EXPIRE;             // 10 s
-// LA DUREE DU TRACE EST INDEPENDANTE DU SOUFFLE, et elle doit l'etre.
+// UN TRAIT PAR TEMPS DE SOUFFLE. C'EST TOUT, ET C'EST LA REGLE.
 //
-// TRACE servait deux choses a la fois : la duree du dessin ET la frontiere
-// entre l'inspiration et l'expiration. Impossible de ralentir le burin sans
-// deplacer le souffle — donc, en retirant la retention, j'ai fait passer les
-// quatre traits de 6 s a 4 s sans m'en apercevoir. Kilian, immediatement :
-// « les traits se dessinent hyper vite ». 1,0 s par trait au lieu de 1,5.
+// Kilian, apres six reglages de duree : « mais tes secondes etablies c'est
+// pas du breathwork ». Il a raison, et cette objection aurait du arriver en
+// premier. Je fixais des durees — 6000, 18000, 16000, 20000, puis une
+// repartition a la longueur des traits — et AUCUNE n'avait de rapport avec
+// la respiration. C'etaient mes chiffres, pas le souffle.
 //
-// 6000 remet exactement la vitesse de la version qu'il avait validee :
-// 1,5 s par trait. La maison se termine donc 2 s apres le debut de
-// l'expiration — le dernier trait se pose au moment ou l'on lache.
-// Si c'est encore trop rapide, c'est ce nombre-la, et lui seul, qui bouge.
-// LA DUREE DU TRACE, ET LE MUR QUI VA AVEC.
+// Un dessin qui accompagne une respiration n'a pas de duree propre. Il a des
+// TEMPS, et ce sont ceux du souffle :
 //
-// Un trait dure TRACE / 4. Le trace ne peut pas depasser l'intro. Dans une
-// seule respiration de 10 s, 2,5 s par trait est donc le PLAFOND — pas un
-// reglage, une limite. Kilian a redemande plus lent quatre fois ; la seule
-// facon de la franchir est de respirer deux fois.
+//   mur gauche   pendant la 1re inspiration    4 s
+//   sol          pendant la 1re expiration     6 s
+//   mur droit    pendant la 2e inspiration     4 s
+//   toit         pendant la 2e expiration      6 s
 //
-// 20000 : le burin avance a 88 unites par seconde. La maison se termine a 16 s, en pleine
-// seconde expiration, et la revelation part la — pas a la fin du second
-// cycle. C'est ce qui evite les 23,6 s de l'essai precedent : on respire le
-// temps qu'il faut pour finir la maison, pas un cycle entier de plus.
+// La maison se termine exactement quand la seconde expiration se termine. On
+// inspire, un trait monte ; on expire, un trait traverse. Le burin marque le
+// retournement du souffle parce que le souffle se retourne la.
 //
-// LE PRIX : l'intro passe de 13,6 a environ 19,5 s. Si c'est trop, ce nombre
-// est le seul a bouger — 10000 rend une intro de 13,6 s et des traits de
-// 2,5 s, et tout le reste suit.
-const TRACE   = 20000;
-
-// LA VITESSE DU BURIN EST LA MEME SUR LES QUATRE TRAITS.
+// CE QUE CA SUPPRIME : TRACE, LONGUEURS, BORNES, et le profil de vitesse
+// trapezoidal. Quatre reglages qu'il fallait accorder entre eux, remplaces
+// par une regle sans aucun parametre. Si le rythme change un jour, le dessin
+// suit sans qu'on touche a rien — c'est la definition de « suivre le
+// souffle » plutot que de le contraindre.
 //
-// C'etait le defaut de fond, et il a survecu a six corrections de duree.
-// Les traits ne font pas la meme longueur — mur 310, sol 574, mur 310,
-// toit 574 — et chacun recevait exactement UN QUART du temps. Le sol et le
-// toit etaient donc traces a 143 unites par seconde quand les murs
-// avancaient a 78 : presque le double. Les deux traits les plus longs, ceux
-// qui traversent tout l'ecran et qu'on regarde, etaient aussi les plus
-// rapides. Allonger TRACE ne changeait rien a ce rapport : ca ralentissait
-// tout en gardant le sol deux fois plus vif que le mur.
-//
-// Le temps se repartit desormais a la LONGUEUR. Une main qui dessine ne
-// change pas de vitesse parce que le trait est plus long — elle met plus de
-// temps. A 20 s pour 1768 unites, le burin tient 88 unites par seconde d'un
-// bout a l'autre : mur 3,5 s, sol 6,5 s, mur 3,5 s, toit 6,5 s.
-const LONGUEURS = [310, 574, 310, 574];
-const BORNES = LONGUEURS.reduce<number[]>(
-  (acc, l) => [...acc, acc[acc.length - 1] + l],
-  [0],
-).map((c, _, t) => c / t[t.length - 1]);
-
-// Le souffle continue jusqu'a ce que la maison soit finie. Quand TRACE tient
-// dans un cycle, TOTAL vaut le cycle et rien ne change : l'ancien
-// comportement est le cas particulier de celui-ci.
-const TOTAL   = Math.max(TRACE, CYCLE);
+// Et les deux traits qui traversaient l'ecran trop vite — le sol et le toit —
+// tombent desormais sur les expirations, les temps longs. Ce n'est pas un
+// hasard : c'est ce qu'on relache qui s'etale.
+const SOUFFLES = 2;
+const TOTAL    = CYCLE * SOUFFLES;
 
 const REVEILLE = 1300;                        // les yeux s'ouvrent APRES le souffle
 const HOLD = 800;      // pause apres yeux + titre
@@ -215,29 +192,6 @@ export default function IntroOverlay() {
 
     const easeIO = (x: number) => -(Math.cos(Math.PI * x) - 1) / 2;
 
-    // LE GESTE DU BURIN — vitesse constante, amorce et sortie douces.
-    //
-    // Pourquoi il en fallait un. Le trace appliquait easeIO A CHAQUE TRAIT,
-    // sur sa propre fraction : chaque trait partait de zero, accelerait,
-    // puis s'arretait net avant le suivant. Quatre departs, quatre arrets,
-    // bout a bout. C'est ca que Kilian a vu — « c'est saccade, tres moche »
-    // — et c'est aussi ce qui le faisait paraitre plus rapide qu'il n'est :
-    // un mouvement qui s'arrete quatre fois se lit comme quatre a-coups
-    // brefs, jamais comme un trait continu.
-    //
-    // Une main qui dessine ne fait pas ca. Elle pose, elle avance a vitesse
-    // a peu pres constante, elle leve. D'ou ce profil trapezoidal : on
-    // accelere sur les 12 premiers pour cent, on tient, on ralentit sur les
-    // 12 derniers. La vitesse ne retombe a zero qu'aux deux extremites du
-    // dessin entier — plus jamais entre deux traits.
-    const geste = (x: number, r = 0.12) => {
-      if (x <= 0) return 0;
-      if (x >= 1) return 1;
-      const aire = 1 - r;                       // normalise le trapeze a 1
-      if (x < r) return (x * x) / (2 * r) / aire;
-      if (x > 1 - r) { const u = 1 - x; return 1 - (u * u) / (2 * r) / aire; }
-      return (x - r / 2) / aire;
-    };
     const easeExpoIn = (x: number) => (x === 0 ? 0 : Math.pow(2, 10 * x - 10));
 
     let wipePhase = -1;
@@ -361,25 +315,21 @@ export default function IntroOverlay() {
         if (pratiqueRef.current && cyclesRef.current > 0) {
           wipe(4, 1);
         } else {
-          const pTrace = t / TRACE;
+          const pTrace = t / TOTAL;
           if (pTrace >= 1) {
             // Trace fini : la maison entiere, et on n'y touche plus.
             //
-            // Ce cas manquait, et il tombait dans le calcul general : a
-            // pTrace = 1, `(1 * 4) % 1` vaut 0, donc le quatrieme trait
-            // repassait a zero au lieu de rester plein.
+            // Le cas doit etre ecrit : au tout dernier instant du dernier
+            // temps, la fraction retombe a 0 et le quatrieme trait
+            // disparaitrait au lieu de rester plein.
             wipe(4, 1);
           } else {
-            // Une seule courbe, sur le dessin entier. La fraction a
-            // l'interieur d'un trait est ensuite LINEAIRE : c'est le meme
-            // geste qui continue d'un trait au suivant, sans reprise.
-            // u avance a vitesse constante le long du dessin ENTIER ; les
-            // bornes disent dans quel trait on est et ou l'on en est dedans.
-            const u = geste(pTrace);
-            let trait = 0;
-            while (trait < 3 && u >= BORNES[trait + 1]) trait++;
-            const f = (u - BORNES[trait]) / (BORNES[trait + 1] - BORNES[trait]);
-            wipe(trait, f);
+            // Le trait, c'est le temps de souffle ou l'on est. Rien a
+            // calculer : deux temps par cycle, un trait par temps.
+            const tc = t % CYCLE;
+            const monte = tc < INSPIRE;
+            wipe(Math.floor(t / CYCLE) * 2 + (monte ? 0 : 1),
+                 monte ? tc / INSPIRE : (tc - INSPIRE) / EXPIRE);
           }
         }
 
@@ -406,9 +356,9 @@ export default function IntroOverlay() {
           // PAS de wipe(4, 1) ici. Il y etait, et c'est lui qui rendait le
           // dessin instantane : des la premiere image de l'expiration — 4 s —
           // il claquait la maison a l'etat complet et ecrasait le trace
-          // progressif calcule juste au-dessus. TRACE avait beau valoir 6000,
-          // rien ne se dessinait apres 4000. Le trace est desormais calcule a
-          // un seul endroit, et aucune phase du souffle ne le contredit.
+          // progressif calcule juste au-dessus : plus rien ne se dessinait
+          // passe la premiere inspiration. Le trace est calcule a un seul
+          // endroit, et aucune phase du souffle ne le contredit.
           updateBreath(LABELS.expire, 1 - easeIO(f), Math.sin(Math.PI * f), true);
         }
         rafId.current = requestAnimationFrame(tick);
