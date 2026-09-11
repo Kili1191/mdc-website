@@ -27,7 +27,7 @@ export default function BreathButton() {
   return (
     <button
       onClick={ouvrirLeSouffle}
-      aria-label="Breathe — a guided cycle you can repeat"
+      aria-label="Breathe, a guided cycle you can repeat"
       style={{
         position: "fixed", right: 74, bottom: 22, zIndex: 90,
         background: "transparent", border: 0,

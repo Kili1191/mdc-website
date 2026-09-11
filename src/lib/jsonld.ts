@@ -116,6 +116,30 @@ export const serviceCoaching = {
   ],
 };
 
+/** La page des questions pratiques.
+ *
+ * `QAPage` et NON `FAQPage`, et ce n'est pas une preference de style.
+ * Google a restreint les resultats enrichis FAQ aux sites gouvernementaux et
+ * de sante en aout 2023, puis les a SUPPRIMES POUR TOUS LES SITES le 7 mai
+ * 2026. Baliser `FAQPage` aujourd'hui n'affiche plus rien, pour personne :
+ * ce serait du culte du cargo.
+ *
+ * Ce qui est balise ici est seulement ce que la page EST — une page de
+ * questions et de reponses — sans promettre un affichage qui n'existe plus.
+ * Les questions elles-memes ne sont pas recopiees dans le graphe : elles sont
+ * dans le HTML, lisibles, et la regle de ce fichier est de ne jamais dupliquer
+ * ce que la page affiche deja sans gain mesurable.
+ */
+export const questions = {
+  "@type": "QAPage",
+  "@id": `${SITE}/questions#page`,
+  url: `${SITE}/questions`,
+  name: "What to expect, and what it costs",
+  isPartOf: { "@id": ORG_ID },
+  about: { "@id": ORG_ID },
+  inLanguage: "en-GB",
+};
+
 /** Emballe un ou plusieurs noeuds dans un graphe unique. */
 export function graphe(...noeuds: object[]) {
   return { "@context": "https://schema.org", "@graph": noeuds };

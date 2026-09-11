@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     // et rien d'autre : c'est l'element le plus lourd en referencement, et
     // il ne nommait ni ce qu'on fait ni ou. Personne ne cherche « maison du
     // calme » — on cherche un metier dans un quartier.
-    default: "Maison du Calme — Bodywork & Breathwork in Battersea, London",
+    default: "Maison du Calme: Bodywork & Breathwork in Battersea, London",
     template: "%s · Maison du Calme",
   },
   description: "Silent one-to-one bodywork and breathwork in Battersea, South West London. Slow work with the breath and the nervous system, for stress and burnout. Reiki, Abhyanga, Marma. Coaching on a call. From £130.",

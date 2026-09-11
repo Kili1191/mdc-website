@@ -10,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/retreats",
     "/coaching",
     "/the-work",
+    "/questions",
     "/notes",
     "/begin",
   ];

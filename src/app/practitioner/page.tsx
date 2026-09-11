@@ -33,7 +33,7 @@ const greatVibes = localFont({
 // seul portrait ne vaut pas un second GPU sur telephone.
 
 export const metadata = {
-  title: "Kilian — Practitioner",
+  title: "Kilian, Practitioner",
   description: "Kilian, the sole practitioner of Maison du Calme. Reiki Master, trained in Ayurvedic massage and Marma in India, teacher to student. Every session is his. No client is ever named.",
 };
 
