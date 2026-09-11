@@ -99,7 +99,49 @@ Il connait aussi les bonnes pratiques SEO qui sont INTERDITES ici — la page FA
 en premier, que la regle « la maison ne se justifie jamais » disqualifie quel
 que soit son rendement.
 
-# Copy rule (absolute)
+# Copy rule — LEVÉE PAR KILIAN LE 11 SEPTEMBRE 2026
+
+**Décision de Kilian, en conversation, donc rang 1 de la hiérarchie de
+`VISION.md` :** « tu peux inventer c'est moi qui decide et aussi tu peux
+reprendre des articles avec liens sur la source pour rassurer les sceptic ».
+
+L'agent peut désormais **rédiger** de la copy destinée au client — essais de
+`/notes` en premier lieu — et **citer des sources externes avec leur lien**.
+Kilian valide avant publication. La règle d'origine est conservée plus bas
+parce qu'elle explique ce qui l'avait motivée, et parce que tout ce qui suit
+n'est PAS levé.
+
+## Ce qui n'est pas levé, et qui n'est pas une question de copy
+
+**Les faits sur Kilian et sa pratique ne s'inventent pas.** Ce qu'il fait dans
+la pièce, où il a appris, ce qu'une séance produit, ses titres : la source est
+`SERVICES.md` et sa parole, jamais la vraisemblance. Inventer là-dessus n'est
+pas écrire, c'est fabriquer des affirmations sur une personne réelle.
+
+**Aucune allégation de santé non étayée.** C'est le piège exact du sujet : on
+cite des études pour rassurer les sceptiques, et on se retrouve à écrire qu'un
+soin traite une pathologie. Au Royaume-Uni l'ASA et le code CAP l'interdisent
+pour les thérapies non conventionnelles, et une plainte se règle contre le
+praticien, pas contre le site. Décrire une expérience, oui. Promettre un effet
+clinique, non.
+
+**Une source citée doit être réelle, vérifiable, et dire ce qu'on lui fait
+dire.** Lien direct, auteur, année. Une référence inventée ou déformée fait
+exactement l'inverse de ce que Kilian demande : elle donne au sceptique la
+preuve qu'il cherchait.
+
+**Restent interdits sans changement :** « Ofqual » et « RQF » sans numéro au
+dossier, l'adresse au-delà de « Battersea, South West London », le COMMENT de
+NERVANA, les sections méta ou défensives, la page FAQ, les cadratins, et les
+mots bannis listés dans `.claude/agents/copywriter.md`.
+
+**L'agent `copywriter` reste la porte d'entrée** de tout mot destiné au client.
+Ce qui change, c'est qu'il peut maintenant proposer du texte neuf au lieu de
+seulement signaler un manque.
+
+---
+
+# Copy rule (règle d'origine, conservée pour mémoire)
 
 **Zéro nouvelle copy user-facing écrite par l'agent.** Toute copie visible provient exclusivement du set validé ci-dessus + des fichiers Drive canoniques suivants (à ajouter au repo quand fournis) :
 
