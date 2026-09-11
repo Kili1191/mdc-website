@@ -46,10 +46,14 @@ export const viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://maisonducalme.com"),
   title: {
-    default: "Maison du Calme",
+    // LE TITRE PORTE LE METIER ET LE LIEU. Il disait « Maison du Calme »
+    // et rien d'autre : c'est l'element le plus lourd en referencement, et
+    // il ne nommait ni ce qu'on fait ni ou. Personne ne cherche « maison du
+    // calme » — on cherche un metier dans un quartier.
+    default: "Maison du Calme — Bodywork & Breathwork in Battersea, London",
     template: "%s · Maison du Calme",
   },
-  description: "Maison du Calme is a house for the people who hold everything and never say so. Silent one-to-one work in Battersea, South West London, and coaching on a call. From £130.",
+  description: "A house for the people who hold everything and never say so. Silent one-to-one bodywork, breathwork and Reiki in Battersea, South West London, for stress and burnout. Coaching on a call. From £130.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -58,13 +62,13 @@ export const metadata: Metadata = {
     siteName: "Maison du Calme",
     title: "Maison du Calme",
     images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Maison du Calme" }],
-    description: "Maison du Calme is a house for the people who hold everything and never say so. Silent one-to-one work in Battersea, South West London, and coaching on a call. From £130.",
+    description: "A house for the people who hold everything and never say so. Silent one-to-one bodywork, breathwork and Reiki in Battersea, South West London, for stress and burnout. Coaching on a call. From £130.",
   },
   twitter: {
     card: "summary_large_image",
     images: ["/og.jpg"],
     title: "Maison du Calme",
-    description: "Maison du Calme is a house for the people who hold everything and never say so. Silent one-to-one work in Battersea, South West London, and coaching on a call. From £130.",
+    description: "A house for the people who hold everything and never say so. Silent one-to-one bodywork, breathwork and Reiki in Battersea, South West London, for stress and burnout. Coaching on a call. From £130.",
   },
 };
 

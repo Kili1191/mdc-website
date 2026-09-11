@@ -16,8 +16,8 @@ import AssetFrame from "@/components/effects/AssetFrame";
 // image en face. Aucun mot n'est ajoute ni retire ; c'est le rythme qui change.
 
 export const metadata = {
-  title: "The Work",
-  description: "What actually happens in a session at Maison du Calme. You arrive, you lie down dressed, the room stays quiet. Sixty to ninety minutes. You leave lighter.",
+  title: "What Happens in a Session",
+  description: "What actually happens in a bodywork session in Battersea, London. You arrive, you lie down dressed, the room stays quiet. Sixty to ninety minutes. You leave lighter.",
 };
 
 export default function TheWorkPage() {
