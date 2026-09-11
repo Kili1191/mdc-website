@@ -4,6 +4,10 @@ import { useEffect, useState } from 'react';
 
 export const INTRO_PRELOAD_EVENT = 'mdc:intro-preload';
 export const INTRO_EXIT_EVENT = 'mdc:intro-exit-start';
+// Le marbre a compile ses shaders, envoye ses textures et rendu sa premiere
+// image. C'est le seul moment ou l'on sait que son cout est PAYE — une duree
+// devinee ne le dira jamais, elle depend de la machine.
+export const MARBLE_READY_EVENT = 'mdc:marbre-pret';
 export const INTRO_DONE_EVENT = 'mdc:intro-done';
 
 // Rouvrir le souffle a la demande, depuis n'importe quelle page. L'intro
