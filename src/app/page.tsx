@@ -147,16 +147,22 @@ function douceur(t: number) {
 // Le coaching porte l'appel gratuit, qui est un fait verifie (page Coaching,
 // « The first call is free ») et, pour une ligne qui n'a plus de prix, la
 // seule chose qui donne vraiment envie d'ouvrir la page.
+// La duree s'ecrit « min » dans les sous-titres du rail, et « minutes » en
+// toutes lettres dans la prose. Demande de Kilian. Ce n'est pas une
+// incoherence : un sous-titre en capitales espacees se SCANNE — l'abreviation
+// y est plus rapide a lire et tient sur une ligne. Une phrase se LIT, et
+// « Up to ninety min » y sonnerait comme une fiche technique. La ligne sous le
+// rail garde donc ses lettres.
 const PRATIQUE = [
-  { n: "01", name: "NERVANA",  href: "/sessions#antara", meta: "The entrance · 90 minutes",
+  { n: "01", name: "NERVANA",  href: "/sessions#antara", meta: "The entrance · 90 min",
     line: "The suite Kilian built. It opens with ANTARA, always." },
-  { n: "02", name: "ABHYANGA", href: "/sessions#also",   meta: "Ayurvedic · 60 minutes",
+  { n: "02", name: "ABHYANGA", href: "/sessions#also",   meta: "Ayurvedic · 60 min",
     line: "Warm oil, worked over the body in one unbroken rhythm." },
-  { n: "03", name: "MARMA",    href: "/sessions#also",   meta: "Ayurvedic · 60 minutes",
+  { n: "03", name: "MARMA",    href: "/sessions#also",   meta: "Ayurvedic · 60 min",
     line: "Pressure and stillness at the junctions where the body gathers what it holds." },
-  { n: "04", name: "REIKI",    href: "/sessions#also",   meta: "60 minutes",
+  { n: "04", name: "REIKI",    href: "/sessions#also",   meta: "60 min",
     line: "Hands resting on the body, or just above it, and held." },
-  { n: "05", name: "SOUND",    href: "/sessions#also",   meta: "60 minutes",
+  { n: "05", name: "SOUND",    href: "/sessions#also",   meta: "60 min",
     line: "Bowls set on the body. The only work here you will hear." },
   { n: "06", name: "COACHING", href: "/coaching",        meta: "On a call · The first is free",
     line: "One conversation, or six, wherever you are." },
