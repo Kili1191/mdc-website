@@ -147,7 +147,7 @@ export default function CoachingPage() {
             An hour is usual. It runs shorter or longer when it needs to. The
             clock is not what you came for.
           </p>
-          <p style={{ ...micro, marginTop: 34 }}>
+          <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 34 }}>
             One to one · By call · Around an hour
           </p>
 

@@ -18,9 +18,19 @@ import { COLORS, FONTS } from "@/styles/tokens";
 //   dividerStyle — le filet <hr> entre les sections. Un trait est une
 //   separation gratuite. L'espace et un numero disent la meme chose mieux.
 
+// Le rythme vertical etait fixe : 160 en haut, 200 en bas, quel que soit
+// l'ecran. Sur un iPhone 13 (844px de haut) ca fait 43% d'un ecran de vide
+// avant le premier mot, et la meme page demandait quinze ecrans et demi de
+// defilement sur Sessions. Sur un 27 pouces, a l'inverse, 160px est etroit.
+// La meme valeur ne peut pas dire « genereux » aux deux endroits.
+//
+// Les bornes hautes sont exactement les anciennes valeurs, 160 et 200 : au
+// dela de 940px de large rien ne change d'un pixel. Ce reglage ne descend que
+// sur les petits ecrans, la ou il etait faux.
 export const pageStyle: CSSProperties = {
   position: "relative", zIndex: 5, minHeight: "100svh",
-  paddingTop: 160, paddingBottom: 200,
+  paddingTop: "clamp(104px, 17vw, 160px)",
+  paddingBottom: "clamp(112px, 20vw, 200px)",
 };
 
 export const body: CSSProperties = {
@@ -45,14 +55,20 @@ export const lead: CSSProperties = {
 const RELIEF =
   "0.017em 0.021em 0 rgba(255, 251, 241, 0.52), -0.008em -0.010em 0.012em rgba(47, 37, 25, 0.20)";
 
+// Les planchers montent, de 34 a 40 et de 26 a 29. Un clamp dont le plancher
+// a ete regle pour ne rien casser finit par donner une page de telephone plus
+// timide que la meme page sur ecran — or c'est sur telephone qu'un titre doit
+// porter seul, sans colonne voisine ni marge pour le mettre en valeur. 40px
+// sur 390 de large tient en deux ou trois lignes courtes, mesure sur les huit
+// titres du site.
 export const bigHead: CSSProperties = {
-  fontFamily: FONTS.higuen, fontSize: "clamp(34px, 5.4vw, 62px)",
+  fontFamily: FONTS.higuen, fontSize: "clamp(40px, 5.4vw, 62px)",
   lineHeight: 1.14, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
   textShadow: RELIEF,
 };
 
 export const sectionHead: CSSProperties = {
-  fontFamily: FONTS.higuen, fontSize: "clamp(26px, 3.6vw, 40px)",
+  fontFamily: FONTS.higuen, fontSize: "clamp(29px, 3.6vw, 40px)",
   lineHeight: 1.22, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
   maxWidth: "18ch",
   textShadow: RELIEF,

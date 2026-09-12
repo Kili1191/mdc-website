@@ -156,7 +156,7 @@ export default function RetreatsPage() {
           <p style={{ ...body, marginTop: 28 }}>
             Accommodation and every meal are included, and so is the work itself. Flights are not. You book your own, and you come from wherever you are.
           </p>
-          <p style={{ ...micro, marginTop: 30 }}>
+          <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 30 }}>
             Accommodation and meals included · Flights not included
           </p>
         </section>
@@ -197,7 +197,7 @@ export default function RetreatsPage() {
               else, and never from anyone but Kilian.
             </p>
           </div>
-          <p style={{ ...micro, marginTop: 34 }}>One line is enough · No newsletter</p>
+          <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 34 }}>One line is enough · No newsletter</p>
           <div style={{ marginTop: 44 }}>
             <QuietButton href="/begin">Put your name down</QuietButton>
           </div>

@@ -230,6 +230,36 @@ export default function Nav() {
           background:none; border:0; cursor:pointer; padding:8px;
         }
 
+        /* LES CIBLES DU HAUT, SUR UN POUCE.
+
+           Mesure par sondage sur iPhone 13 — on part du centre du lien et on
+           descend jusqu'a ce qu'il cesse de repondre : la marque fait 29px de
+           haut, Index 33, Begin 29. Le pied de page, lui, atteint deja 49 a
+           60px grace a son calque ::after ; le haut n'avait jamais recu le
+           meme traitement, et c'est pourtant la que vit la navigation.
+
+           44px, la barre d'Apple, obtenue en padding avec une marge negative
+           egale : la cible grandit, la mise en page ne bouge pas d'un pixel.
+           Sous (pointer: coarse) seulement — une souris vise au pixel et n'a
+           rien a gagner a des boutons plus hauts. */
+        @media (pointer: coarse){
+          .mdc-seuil__index{ padding:13px 8px; margin:-13px -8px; }
+          .mdc-seuil__marque{ min-height:44px; padding-right:8px; margin-right:-8px; }
+          .mdc-porte__fermer{ padding:14px; margin:-6px; }
+
+          /* BEGIN ne peut PAS s'agrandir en padding : son filet rouille est
+             dessine au bord de la boite, donc un padding-bottom de 13px
+             descendrait le trait de dix pixels sous le mot et casserait le
+             seul signal qui dit lequel des deux liens est l'appel. On lui
+             pose donc un calque invisible, la technique deja employee au
+             pied de page. Le trait ne bouge pas, la cible fait 44. */
+          .mdc-seuil__begin{ position:relative; }
+          .mdc-seuil__begin::after{
+            content:""; position:absolute; left:-8px; right:-8px;
+            top:50%; height:44px; transform:translateY(-50%);
+          }
+        }
+
         @media (max-width: 720px){
           .mdc-seuil{ padding:16px 20px; }
           .mdc-seuil__mot{ display:none; }

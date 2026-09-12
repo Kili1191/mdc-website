@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { scrollStore } from "@/lib/scrollStore";
 import FluidImage from "./FluidImage";
 import { useResolvedAsset } from "@/lib/assetSrc";
@@ -32,7 +32,19 @@ export default function ScrollDriftGallery({
     const inner = innerRef.current;
     if (!outer || !inner) return;
     let raf = 0;
+    let visible = false;
     const sign = direction === "left" ? -1 : 1;
+
+    // LA BOUCLE NE S'ARRETAIT JAMAIS. `tick` se replanifiait a chaque frame,
+    // que le bandeau soit a l'ecran ou a six ecrans plus bas, et chaque frame
+    // lit un getBoundingClientRect — une mesure qui force le navigateur a
+    // recalculer la mise en page. Sur telephone, ou le marbre WebGL tourne
+    // deja en permanence, c'est une boucle de trop pour un element que
+    // personne ne regarde.
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      if (visible && !raf) raf = requestAnimationFrame(tick);
+    }, { rootMargin: "20% 0px" });
     // La derive se mesurait sur la traversee complete du viewport par le
     // bandeau : il fallait que son centre atteigne le haut de l'ecran pour que
     // la course s'acheve. Or ce bandeau est le DERNIER element de la page. La
@@ -55,12 +67,13 @@ export default function ScrollDriftGallery({
       const end = Math.min(docMax, elTop + rect.height);
       const p = Math.max(0, Math.min(1, (y - start) / Math.max(1, end - start)));
       inner.style.transform = `translate3d(${sign * (p - 0.5) * amplitude * 2}vw, 0, 0)`;
-      raf = requestAnimationFrame(tick);
+      raf = visible ? requestAnimationFrame(tick) : 0;
     };
     const unsubscribe = scrollStore.subscribe(() => {});
-    raf = requestAnimationFrame(tick);
+    io.observe(outer);
     return () => {
-      cancelAnimationFrame(raf);
+      io.disconnect();
+      if (raf) cancelAnimationFrame(raf);
       unsubscribe();
     };
   }, [direction, amplitude]);
@@ -91,9 +104,28 @@ function DriftCell({
 }: { item: DriftItem; height: number; fluid: boolean }) {
   const w = item.width ?? 260;
   const src = useResolvedAsset(item.src);
+
+  // PAS DE WEBGL SUR UN DOIGT.
+  //
+  // FluidImage distord l'image sous LE CURSEUR. Sur un ecran tactile il n'y a
+  // pas de curseur : l'effet ne se declenche jamais, et on paie quand meme un
+  // contexte WebGL par image. Mesure sur iPhone 13 : Sessions ouvrait cinq
+  // canvas (quatre images plus le marbre) contre un sur une page sans
+  // bandeau, et la meme mesure de frames dans le meme harnais tombait a peu
+  // pres de moitie. On payait donc le prix fort pour un effet invisible.
+  //
+  // La page Practitioner avait deja fait ce choix — « FluidImage ouvre son
+  // propre contexte » — mais seulement pour elle. La regle descend ici, ou
+  // vivent les bandeaux, donc Sessions et Retreats en heritent.
+  //
+  // `null` tant qu'on n'a pas mesure : monter le canvas puis le demonter
+  // coute plus cher que d'attendre une frame.
+  const [fin, setFin] = useState<boolean | null>(null);
+  useEffect(() => { setFin(window.matchMedia("(pointer: fine)").matches); }, []);
+
   return (
     <div style={{ height: "100%", width: w, flex: "none", overflow: "hidden" }}>
-      {!src ? null : fluid ? (
+      {!src || fin === null ? null : fluid && fin ? (
         <FluidImage src={src} aspect={`${w}/${height}`} />
       ) : (
         // eslint-disable-next-line @next/next/no-img-element

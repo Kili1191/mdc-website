@@ -135,7 +135,7 @@ export default function QuestionsPage() {
         ))}
 
         <div className="mdc-gap">
-          <p style={{ ...micro, marginBottom: 28 }}>
+          <p className="mdc-micro--phrase" style={{ ...micro, marginBottom: 28 }}>
             Anything not answered here is answered by Kilian, not by a page.
           </p>
           <QuietButton href="/begin">Begin</QuietButton>

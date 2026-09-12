@@ -120,7 +120,7 @@ export default function TheWorkPage() {
               illness, and it makes no medical claim. It is not for everyone, and he will
               tell you if it is not for you.
             </p>
-            <p style={{ ...micro, marginTop: 32 }}>Fully clothed · In silence · No oil · One to one</p>
+            <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 32 }}>Fully clothed · In silence · No oil · One to one</p>
             <div style={{ marginTop: 44 }}>
               <QuietButton href="/begin">Begin</QuietButton>
             </div>

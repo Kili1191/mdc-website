@@ -367,12 +367,19 @@ export default function Inscription() {
           to  { opacity:0.10; transform:none; }
         }
 
-        /* Sous 1080px il n'y a pas de mur (voir murDe) : seul le compteur
-           reste, en bas a gauche, discret. */
+        /* Sous 1080px il n'y a pas de mur (voir murDe), et le compteur part
+           avec le mot.
+
+           Il restait, seul, en bas a gauche. Mesure sur iPhone 13 : « 04/06 »
+           se posait sur la ligne de meta d'une carte du rail — deux textes
+           l'un sur l'autre, le reproche deja formule. Un telephone n'a pas de
+           marge basse : tout ce qui s'y fixe finit sur la copie.
+
+           Ce qui reste sur telephone est le nav invisible juste au-dessus,
+           avec ses six ancres. L'information ne se perd pas, seule
+           l'ornementation s'en va — et c'est le bon ordre. */
         @media (max-width: 1080px){
-          .mdc-inscription{ top:auto; bottom:18px; left:0; right:auto; transform:none;
-                            align-items:flex-start; }
-          .mdc-inscription__compte{ margin-left:22px; margin-right:0; }
+          .mdc-inscription{ display:none; }
         }
 
         @media (prefers-reduced-motion: reduce){

@@ -68,7 +68,7 @@ export default function BeginPage() {
               What you write here is read by Kilian alone and held privately. It is never
               shared, never shown, and no client is ever named. What you carry stays yours.
             </p>
-            <p style={{ ...micro, marginTop: 32 }}>Answered personally · Within two working days</p>
+            <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 32 }}>Answered personally · Within two working days</p>
           </div>
         </section>
 

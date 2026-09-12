@@ -1,5 +1,6 @@
 import { body, micro, label, eyebrow } from "@/styles/page";
 import { COLORS, FONTS } from "@/styles/tokens";
+import BreathButton from "@/components/BreathButton";
 
 // Le site n'avait pas de pied de page : il s'arretait sur un bouton et ne se
 // signait jamais. Or une maison se signe — c'est meme le seul endroit d'un
@@ -67,6 +68,11 @@ export default function Footer() {
               they need it.
             </p>
             <p style={{ ...micro, marginTop: 28 }}>Battersea, South West London</p>
+            {/* Le souffle, sur telephone. Il ne peut pas rester fixe en bas
+                d'ecran la ou il n'y a pas de marge : voir BreathButton. Il ne
+                se rend ici que sur pointeur grossier, et nulle part ailleurs
+                en meme temps. */}
+            <div style={{ marginTop: 22 }}><BreathButton variante="range" /></div>
           </div>
 
           {METIERS.map((m) => (

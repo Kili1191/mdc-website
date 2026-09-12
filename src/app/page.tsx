@@ -61,9 +61,21 @@ const linkStyle: React.CSSProperties = {
   textDecoration: "none",
   borderBottom: `1px solid ${COLORS.rouille}`, paddingBottom: 4,
 };
+// LES PLANCHERS DES CLAMPS, RELEVES POUR LE TELEPHONE.
+//
+// Chaque clamp a un maximum ambitieux — 92px pour le seuil — et un plancher
+// qui avait ete regle pour « ne rien casser » : 34px. A 390px de large, la
+// borne haute ne sert jamais et c'est le plancher, lui seul, qui compose la
+// page. L'accueil sur telephone etait donc la version la plus timide du site,
+// alors que c'est la seule ou le titre porte seul, sans marge ni colonne
+// voisine pour le mettre en valeur.
+//
+// Les six planchers montent d'environ 20%, verifies sur capture a 390px : le
+// seuil passe de deux a trois lignes courtes, aucune station ne deborde, et
+// rien ne change au-dela de 760px de large ou c'est le vw qui gouverne.
 const bodyStyle: React.CSSProperties = {
   fontFamily: FONTS.prata,
-  fontSize: "clamp(17px, 1.5vw, 20px)",
+  fontSize: "clamp(18px, 1.5vw, 20px)",
   lineHeight: 1.75,
   color: COLORS.brou,
   margin: 0,
@@ -382,7 +394,7 @@ export default function Home() {
               autres pages en ont un — et cette phrase est deja le titre :
               elle etait simplement dans un div. */}
           <h1 style={{
-            ...displayItalic, fontSize: "clamp(34px, 5.5vw, 92px)",
+            ...displayItalic, fontSize: "clamp(41px, 5.5vw, 92px)",
             maxWidth: 900, textAlign: "center", margin: 0, fontWeight: 400,
           }}>
             <SplitTextChars text="For those who carry everything inside." delay={22} duration={900} />
@@ -420,7 +432,7 @@ export default function Home() {
             grave
             as="p"
             text="There is a kind of tiredness that rest doesn't reach."
-            style={{ ...displayItalic, fontSize: "clamp(30px, 4.6vw, 78px)", maxWidth: "17ch", textAlign: texteDe("gauche"), position: "relative", zIndex: 1 }}
+            style={{ ...displayItalic, fontSize: "clamp(36px, 4.6vw, 78px)", maxWidth: "17ch", textAlign: texteDe("gauche"), position: "relative", zIndex: 1 }}
             stagger={90}
           />
         </section>
@@ -458,7 +470,7 @@ export default function Home() {
             grave
             as="p"
             text="Maison du Calme asks nothing of you, and what it makes is calm."
-            style={{ ...displayItalic, fontSize: "clamp(26px, 3.4vw, 58px)", maxWidth: 860, textAlign: "center", lineHeight: 1.35 }}
+            style={{ ...displayItalic, fontSize: "clamp(30px, 3.4vw, 58px)", maxWidth: 860, textAlign: "center", lineHeight: 1.35 }}
             stagger={90}
           />
           <BreathReveal
@@ -531,7 +543,7 @@ export default function Home() {
               locale, et c'est le seul endroit de l'accueil qui le dit) et
               distinguer les cinq en personne du sixieme sur un appel. Cette
               distinction etait portee par les prix ; elle se dit mieux sans. */}
-          <p style={{ ...micro, marginTop: 28 }}>
+          <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 28 }}>
             Up to ninety minutes. Clothed, unless there is oil.
             <br />
             Battersea, South West London · One to one, in person · Coaching on a call
@@ -570,7 +582,7 @@ export default function Home() {
               parlait de quatre lignes ; il les compte a nouveau, cette fois
               pour de vrai. */}
           <div style={{ textAlign: texteDe("droite") }}>
-            <div style={{ ...displayItalic, fontSize: "clamp(24px, 3.8vw, 64px)", maxWidth: "24ch" }}>
+            <div style={{ ...displayItalic, fontSize: "clamp(29px, 3.8vw, 64px)", maxWidth: "24ch" }}>
               <SplitTextChars
                 text="Chronic stress rarely looks like falling apart. It looks like being very good at your life."
                 delay={22} duration={900}
@@ -585,7 +597,7 @@ export default function Home() {
         {/* 6. BEGIN — retour au centre : on ressort par ou l'on est entre. */}
         <section id="begin" data-station="Begin" className="mdc-station" style={station("centre")}>
           <div style={{ textAlign: "center" }}>
-            <div style={{ ...displayItalic, fontSize: "clamp(32px, 5vw, 84px)" }}>
+            <div style={{ ...displayItalic, fontSize: "clamp(38px, 5vw, 84px)" }}>
               <SplitTextChars text="Something in you already knows." delay={60} duration={900} />
             </div>
             <BreathReveal

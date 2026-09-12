@@ -42,12 +42,41 @@ body {
   overflow-x: clip; /* meme raison qu'au-dessus : `hidden` casse tout sticky */
 }
 
-/* Mobile — ajustements responsives globaux */
-@media (max-width: 640px) {
-  html { font-size: 15px; }
-}
-@media (max-width: 420px) {
-  html { font-size: 14px; }
+/* Mobile — ajustements responsives globaux.
+
+   CE QUI ETAIT ICI ET N'Y EST PLUS : html{font-size:15px} sous 640px et 14px
+   sous 420px. Reduire la racine sur telephone va dans le mauvais sens — c'est
+   la ou l'ecran est petit qu'on a besoin de plus de corps, pas de moins — et
+   surtout ca ecrase la taille de police que le visiteur a choisie dans son
+   navigateur, qui est pour beaucoup de gens la seule facon de lire un site.
+
+   L'effet mesure etait faible parce que presque tout ce depot est en px : la
+   regle ne rapetissait en pratique que les colonnes en rem de .mdc-index. Elle
+   ne rapportait donc rien et coutait une preference d'accessibilite. */
+
+/* Une meta qui est une PHRASE, pas une etiquette.
+
+   Mesure sur iPhone 13 : « Up to ninety minutes. Clothed, unless there is
+   oil. » et « Battersea, South West London · One to one, in person · Coaching
+   on a call » sont composes en capitales a 12,5px avec 0,20em d'interlettre.
+   Sur 390px de large ils tombent sur CINQ LIGNES de capitales espacees. Sur
+   desktop la meme ligne tient d'un trait et fonctionne ; sur telephone c'est
+   un mur.
+
+   Les capitales restent donc sur les etiquettes courtes — « 01 », « No charge
+   · No obligation » — et tombent sur les phrases, sous 720px seulement.
+
+   `!important` est ici le seul moyen : `micro` est un objet de style EN LIGNE
+   partage par trente-trois appels, et une feuille de style ne bat pas un style
+   en ligne. Le jour ou micro devient une classe, ceci redevient une regle
+   ordinaire. */
+@media (max-width: 720px) {
+  .mdc-micro--phrase {
+    text-transform: none !important;
+    letter-spacing: 0.01em !important;
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+  }
 }
 
 /* Le bouton de la maison — voir src/components/effects/QuietButton.tsx.

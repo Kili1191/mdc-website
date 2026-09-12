@@ -102,7 +102,7 @@ export default function SessionsPage() {
             discretion.
             Le QUARTIER, pas l'adresse : SW11 2UG est une adresse, et une
             adresse se donne dans la conversation, apres. */}
-        <p style={{ ...micro, marginTop: 28 }}>
+        <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 28 }}>
           Battersea, South West London · £130 to £250
         </p>
 
@@ -115,7 +115,7 @@ export default function SessionsPage() {
           <div>
             <p className="mdc-num" aria-hidden="true">01</p>
             <p style={label}>ANTARA</p>
-            <p style={{ ...micro, marginTop: 14 }}>90 minutes · The threshold session</p>
+            <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 14 }}>90 minutes · The threshold session</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
               For the weight you have carried longest.
             </h2>
@@ -133,7 +133,7 @@ export default function SessionsPage() {
                 something they could not have named on the way in.
               </p>
             </div>
-            <p style={{ ...micro, marginTop: 36 }}>£250 · 90 minutes · The entrance to the suite</p>
+            <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 36 }}>£250 · 90 minutes · The entrance to the suite</p>
           </div>
         </section>
 
@@ -146,7 +146,7 @@ export default function SessionsPage() {
           <div>
             <p className="mdc-num" aria-hidden="true">02</p>
             <p style={label}>VAYU</p>
-            <p style={{ ...micro, marginTop: 14 }}>60 minutes · For the tightness that lives high</p>
+            <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 14 }}>60 minutes · For the tightness that lives high</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
               When you cannot get a full breath.
             </h2>
@@ -160,7 +160,7 @@ export default function SessionsPage() {
                 You leave with more room. Not a metaphor. More room.
               </p>
             </div>
-            <p style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · Opens after ANTARA, in conversation</p>
+            <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · Opens after ANTARA, in conversation</p>
           </div>
         </section>
 
@@ -173,7 +173,7 @@ export default function SessionsPage() {
           <div>
             <p className="mdc-num" aria-hidden="true">03</p>
             <p style={label}>SOMA</p>
-            <p style={{ ...micro, marginTop: 14 }}>60 minutes · For what the body has stored</p>
+            <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 14 }}>60 minutes · For what the body has stored</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
               The tension you have stopped noticing.
             </h2>
@@ -187,7 +187,7 @@ export default function SessionsPage() {
                 You leave lower to the ground. Steadier. Returned to your own weight.
               </p>
             </div>
-            <p style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · Opens after ANTARA, in conversation</p>
+            <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 36 }}>£180 · 60 minutes · Opens after ANTARA, in conversation</p>
           </div>
         </section>
 
@@ -200,7 +200,7 @@ export default function SessionsPage() {
           <div>
             <p className="mdc-num" aria-hidden="true">04</p>
             <p style={label}>TRANSMISSION</p>
-            <p style={{ ...micro, marginTop: 14 }}>By application · Rarely, and to few</p>
+            <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 14 }}>By application · Rarely, and to few</p>
             <h2 style={{ ...sectionHead, marginTop: 30 }}>
               The deepest room. Not for everyone, and not often.
             </h2>
@@ -269,7 +269,7 @@ export default function SessionsPage() {
                   n'enseigne que le premier. Ecrire l'un sans l'autre deforme,
                   donc les deux tiennent dans la meme phrase. La page d'accueil
                   ne porte plus ce fait : c'est ici qu'on parle d'enseignement. */}
-              <p style={{ ...micro, marginTop: 18, fontSize: 11.5 }}>
+              <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 18, fontSize: 11.5 }}>
                 Kilian is a Reiki master. He teaches level one.
               </p>
             </div>
