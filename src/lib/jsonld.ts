@@ -116,6 +116,59 @@ export const serviceCoaching = {
   ],
 };
 
+/** L'ENSEIGNEMENT DU PREMIER DEGRE.
+ *
+ * `Course` et non `Service` : ce n'est pas un soin qu'on recoit, c'est une
+ * transmission qu'on apprend, et schema.org distingue les deux. Google sait
+ * lire `Course`, et personne d'autre sur le quartier ne le declare.
+ *
+ * CE QUI N'EST PAS DECLARE, ET POURQUOI. Le resultat enrichi « Course info »
+ * de Google demande un `courseSchedule` ou un `courseWorkload`. Kilian
+ * n'enseigne ni sur calendrier ni sur une duree annoncee — « in person, and
+ * rarely ». Inventer un horaire pour decrocher un affichage serait mentir a
+ * un moteur sur un fait, exactement ce que le `lastModified` du sitemap a
+ * deja coute une fois. On declare ce qui est vrai, meme incomplet.
+ *
+ * `maximumAttendeeCapacity: 2` est un fait, pas une precaution : une
+ * personne, ou deux qui viennent ensemble, jamais plus.
+ */
+export const enseignement = {
+  "@type": "Course",
+  "@id": `${SITE}/teaching#course`,
+  name: "Usui Reiki, Level One",
+  description:
+    "Reiki level one, taught in person in Battersea, South West London, to one person or to two who come together. Taught by Kilian, a Reiki master and the eighth name in the line from Usui.",
+  url: `${SITE}/teaching`,
+  provider: { "@id": ORG_ID },
+  inLanguage: "en-GB",
+  educationalCredentialAwarded: "Usui Reiki, level one",
+  teaches: [
+    "The attunements of level one",
+    "The hand positions, in their order",
+    "Self practice, hands on your own body",
+  ],
+  hasCourseInstance: {
+    "@type": "CourseInstance",
+    courseMode: "onsite",
+    location: { "@type": "Place", name: "Battersea, South West London" },
+    instructor: { "@id": PERSON_ID },
+    maximumAttendeeCapacity: 2,
+    inLanguage: "en-GB",
+  },
+  offers: [
+    {
+      "@type": "Offer", name: "One person", price: "450", priceCurrency: "GBP",
+      availability: "https://schema.org/LimitedAvailability",
+      url: `${SITE}/begin`,
+    },
+    {
+      "@type": "Offer", name: "Two who come together, each", price: "350", priceCurrency: "GBP",
+      availability: "https://schema.org/LimitedAvailability",
+      url: `${SITE}/begin`,
+    },
+  ],
+};
+
 /** La page des questions pratiques.
  *
  * `QAPage` et NON `FAQPage`, et ce n'est pas une preference de style.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { COLORS, FONTS } from "@/styles/tokens";
 
 // Ce que le formulaire dit une fois parti, et quand ca echoue.
@@ -57,7 +57,22 @@ const noteStyle: React.CSSProperties = {
 
 type Etat = "attente" | "envoi" | "envoye" | "echec";
 
+// Les valeurs que le menu accepte. Sert aussi de liste blanche pour le
+// parametre d'URL : on ne pose jamais dans un champ une valeur venue de la
+// barre d'adresse sans l'avoir reconnue.
+const MOTIFS = ["session", "deepest", "coaching", "teaching", "retreat", "unsure"];
+
 export default function BeginForm() {
+  const [apporte, setApporte] = useState("");
+
+  // Lecture cote client, et pas useSearchParams : ce dernier impose une
+  // frontiere <Suspense> a toute la page en App Router, pour lire un
+  // parametre facultatif qui n'a aucune raison de retarder le rendu.
+  useEffect(() => {
+    const v = new URLSearchParams(window.location.search).get("brings");
+    if (v && MOTIFS.includes(v)) setApporte(v);
+  }, []);
+
   const [etat, setEtat] = useState<Etat>("attente");
 
   async function envoyer(e: React.FormEvent<HTMLFormElement>) {
@@ -133,17 +148,33 @@ export default function BeginForm() {
             piece ; le coaching est l'exception, sur un appel. On ne coupe pas
             le travail silencieux en deux pour glisser son contraire au milieu.
 
+            L'OPTION REIKI, LEVEL ONE arrive pour la meme raison, releve par
+            l'agent copywriter avant meme que la page existe : /teaching envoie
+            ici avec « Ask about level one », et le menu n'avait rien pour ces
+            gens-la. Le meme defaut que le coaching, un metier plus tard. Elle
+            suit le coaching parce que les deux sont hors de la piece
+            silencieuse, et precede la retraite qui est hors de la maison.
+
+            LE MENU SE PRESELECTIONNE. Chaque page qui envoie ici connait le
+            motif de la personne, et la laisser le rechercher dans une liste de
+            six est une friction gratuite au pire moment. `?brings=teaching`
+            ouvre donc le formulaire deja regle. La valeur est verifiee contre
+            la liste : une URL bricolee ne peut pas injecter une option qui
+            n'existe pas. Et rien n'est verrouille, le menu reste un menu.
+
             L'OPTION D'INVITE remplace un <option> sans libelle : le select
             s'affichait vide et rien ne disait qu'il s'ouvrait. « Whichever is
             closest » reprend le « whichever you prefer » du champ juste
             au-dessus. Ce n'est pas « Choose one » : la maison ne donne pas
             d'ordre de formulaire, et quelqu'un qui hesite entre deux portes a
             besoin qu'on lui dise qu'approcher suffit. */}
-        <select id="brings" name="brings" defaultValue="" style={selectStyle}>
+        <select id="brings" name="brings" value={apporte}
+                onChange={(e) => setApporte(e.target.value)} style={selectStyle}>
           <option value="" disabled>Whichever is closest</option>
           <option value="session">A session</option>
           <option value="deepest">The deepest room, by application</option>
           <option value="coaching">Coaching, the first call</option>
+          <option value="teaching">Reiki, level one</option>
           <option value="retreat">The retreat</option>
           <option value="unsure">I&apos;m not sure yet</option>
         </select>

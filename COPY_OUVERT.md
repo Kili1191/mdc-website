@@ -360,3 +360,42 @@ vivantes passent dessous :
 **A trancher par Kilian**, parce que les rendre lisibles se paie en discretion,
 et que la discretion est voulue. Ce n'est plus une question de palette.
 Detail dans `.claude/skills/taste/SKILL.md`, §11b.
+
+---
+
+## /teaching — la duree du niveau un
+
+Ouvert le 12 septembre 2026, quand la page a ete construite.
+
+**Ce qui manque : combien de temps dure l'enseignement du niveau un.**
+Une demi-journee, une journee, deux ? Le fait n'existe ni dans `SERVICES.md`
+ni ailleurs dans le depot, et il ne s'invente pas : quelqu'un qui paie £450
+organise sa journee autour de la reponse.
+
+La page est ecrite AUTOUR du trou plutot qu'avec un chiffre plausible. La
+phrase qui l'accueillera est la derniere de la section « Format » :
+
+> In person, in Battersea, South West London. It is taught rarely and not to a
+> timetable, so the date is arranged between you and him.
+
+Une fois la duree connue, elle s'ajoute la, se reporte dans `COPY_V13.md`, et
+se declare dans `src/lib/jsonld.ts` en `courseWorkload` — ce qui debloque au
+passage le resultat enrichi « Course info » de Google, aujourd'hui hors de
+portee faute de duree ou de calendrier.
+
+### Deux autres questions levees par l'agent copywriter sur la meme page
+
+**Le decompte de la lignee.** « Huitieme depuis Usui » se compte-t-il EN
+COMPTANT Usui, ou APRES lui ? La page ne donne donc aucun nombre de noms entre
+Takata et Kilian — c'etait la phrase la plus verifiable de la page et la seule
+qu'un sceptique irait recompter. Elle reviendra des que la convention est
+confirmee.
+
+**Ce que le niveau un autorise.** La page dit « a practice to keep, not a
+qualification to sell », ce qui suit ce que `/practitioner` publie deja. Si son
+niveau un autorise a poser les mains sur ses proches, la phrase doit changer —
+et elle merite de changer, parce que c'est une vraie raison d'acheter.
+
+**Et une suggestion, non ecrite faute de fait :** l'eleve repart-il avec sa
+lignee ecrite, d'Usui jusqu'a lui ? C'est le livrable naturel d'une page batie
+sur la lignee, et il contourne l'aversion du site pour les certificats.

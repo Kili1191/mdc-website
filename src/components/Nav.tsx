@@ -37,6 +37,7 @@ import { DURATION, EASE } from "@/lib/motion";
 const PIECES = [
   { label: "Sessions", href: "/sessions", note: "In the room" },
   { label: "Coaching", href: "/coaching", note: "On a call" },
+  { label: "Teaching", href: "/teaching", note: "Reiki, level one" },
   { label: "Retreats", href: "/retreats", note: "Away" },
   { label: "Practitioner", href: "/practitioner", note: "Who receives you" },
   { label: "The Work", href: "/the-work", note: "What it does" },

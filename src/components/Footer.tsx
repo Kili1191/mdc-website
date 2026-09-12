@@ -30,6 +30,7 @@ const METIERS = [
   { titre: "Beyond the room", liens: [
     { l: "Coaching", h: "/coaching" },
     { l: "Retreats", h: "/retreats" },
+    { l: "Teaching", h: "/teaching" },
   ]},
   // « Maison » plutot que « The house », sur proposition de Kilian, verdict de
   // l'agent copywriter. « The house » n'etait pas casse tout seul : lu en serie

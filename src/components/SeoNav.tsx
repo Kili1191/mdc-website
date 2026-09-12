@@ -9,6 +9,7 @@ const LINKS = [
   { label: "Practitioner", href: "/practitioner" },
   { label: "Retreats", href: "/retreats" },
   { label: "Coaching", href: "/coaching" },
+  { label: "Reiki Teaching", href: "/teaching" },
   { label: "The Work", href: "/the-work" },
   { label: "What to expect", href: "/questions" },
   { label: "Notes", href: "/notes" },
