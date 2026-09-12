@@ -409,11 +409,16 @@ body {
   will-change: transform;
 }
 
-/* Rien ne s'epingle sous 1081px ni en mouvement reduit — le composant ne pose
-   pas les classes dans ces cas la. Ces deux regles sont une ceinture : si une
-   classe restait posee par accident, la page redeviendrait normale plutot que
-   de se figer sur un ecran. */
-@media (max-width: 1080px), (prefers-reduced-motion: reduce) {
+/* Rien ne s'epingle en mouvement reduit — le composant ne pose pas les classes
+   dans ce cas la. Ces regles sont une ceinture : si une classe restait posee
+   par accident, la page redeviendrait normale plutot que de se figer sur un
+   ecran.
+
+   LA BORNE A 1080px A DISPARU D'ICI AUSSI. Elle coupait l'epingle sur
+   telephone, et Kilian la voulait partout : « the horizontal scroll automatic
+   doesnt work on mobile ». Une ceinture qui contredit le composant est pire
+   qu'une ceinture absente — c'est elle qui gagne, en silence. */
+@media (prefers-reduced-motion: reduce) {
   .mdc-epingle { height: auto !important; }
   .mdc-epingle__cale { position: static; height: auto; overflow: visible; }
   .mdc-epingle__entete { margin-bottom: 0; }

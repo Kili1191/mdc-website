@@ -23,15 +23,38 @@
 // Consequence : la piste bouge en `transform` seul, sur le GPU, jamais en
 // `left` ni en `scrollLeft`.
 //
-// TROIS SORTIES DE SECOURS, parce qu'un effet qui s'impose partout est un
-// piege deguise :
+// L'EPINGLE VAUT AUSSI SUR TELEPHONE — correction du 12 septembre.
+//
+// Elle etait coupee sous 1081px, et le commentaire qui le justifiait disait :
+// « le pouce sait deja pousser un rail horizontalement, et epingler sur un
+// telephone allonge la page pour un geste que personne n'a demande ».
+// Kilian : « the horizontal scroll automatic doesnt work on mobile ». Il
+// l'avait demande, deux fois, sans jamais dire « sur desktop ». Le raisonnement
+// etait le mien, pas le sien, et il tranche.
+//
+// Ce que l'activation demande en plus, et qui n'existait pas :
+//
+//   LA HAUTEUR DE REFERENCE N'EST PLUS `window.innerHeight`. Sur iPhone, la
+//   barre d'adresse se retracte au defilement et innerHeight grandit de
+//   soixante a quatre-vingt-dix pixels EN COURS DE ROUTE. La zone calee, elle,
+//   fait 100svh — le petit viewport, qui ne bouge jamais. Les deux valeurs
+//   divergeaient donc en plein milieu de la course, et le rail terminait sa
+//   translation a cote de sa sortie d'epingle. On mesure maintenant la zone
+//   calee elle-meme : une seule hauteur, celle qui est reellement a l'ecran.
+//
+//   LE GESTE HORIZONTAL REPOND. Epinglee, la piste n'a plus de debordement a
+//   faire defiler : un balayage lateral sur une rangee de cartes ne faisait
+//   donc RIEN, ce qui est pire qu'un effet absent. Le balayage est desormais
+//   converti en avancee de page (voir `onTouchMove`), en ecoute PASSIVE : on
+//   n'annule jamais le geste, on l'ajoute. Le doigt pousse les cartes, la page
+//   suit, et le scroll vertical fait exactement la meme chose qu'avant.
+//
+// DEUX SORTIES DE SECOURS RESTENT :
 //
 //   1. `prefers-reduced-motion` — on rend le rail libre d'avant, celui qui se
-//      pousse au doigt ou au trackpad. Aucune epingle.
-//   2. Sous 1081px — meme chose. Le pouce sait deja pousser un rail
-//      horizontalement, et epingler sur un telephone allonge la page de trois
-//      ecrans pour un geste que personne n'a demande.
-//   3. Le clavier — voir `onFocusIn` plus bas. Une carte qui recoit le focus
+//      pousse au doigt ou au trackpad. Aucune epingle. Celle-la n'est pas une
+//      preference de design, c'est une preference systeme, et elle reste.
+//   2. Le clavier — voir `onFocusIn` plus bas. Une carte qui recoit le focus
 //      dans une piste translatee ne peut PAS etre amenee dans le champ par le
 //      navigateur : il scrollerait le conteneur, or ce n'est pas le conteneur
 //      qui bouge. On convertit donc la position de la carte en position de
@@ -60,6 +83,7 @@ type Props = {
 
 export default function RailEpingle({ children, label, entete }: Props) {
   const dehorsRef = useRef<HTMLDivElement>(null);
+  const caleRef = useRef<HTMLDivElement>(null);
   const pisteRef = useRef<HTMLElement>(null);
   // `null` tant qu'on n'a pas mesure : on ne rend pas l'epingle cote serveur,
   // et on ne l'active pas avant de connaitre la distance reelle.
@@ -67,18 +91,19 @@ export default function RailEpingle({ children, label, entete }: Props) {
 
   useEffect(() => {
     const dehors = dehorsRef.current;
+    const cale = caleRef.current;
     const piste = pisteRef.current;
-    if (!dehors || !piste) return;
+    if (!dehors || !cale || !piste) return;
 
     const sobre = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const large = window.matchMedia("(min-width: 1081px)");
 
     let distance = 0;
+    let hauteur = 0;   // la hauteur de la zone calee, 100svh resolus
     let raf = 0;
     let actif = false;
 
     const mesurer = () => {
-      actif = large.matches && !sobre.matches;
+      actif = !sobre.matches;
       setEpingle(actif);
       if (!actif) {
         piste.style.transform = "";
@@ -87,8 +112,15 @@ export default function RailEpingle({ children, label, entete }: Props) {
       }
       // Ce qui depasse de l'ecran, et donc la course a parcourir.
       distance = Math.max(0, piste.scrollWidth - window.innerWidth);
-      // Un ecran pour tenir la section calee, plus la course.
-      dehors.style.height = `${window.innerHeight + distance}px`;
+      // La zone calee fait 100svh. On lit sa hauteur REELLE plutot que
+      // window.innerHeight : sur telephone les deux different de la hauteur
+      // de la barre d'adresse, et innerHeight change en cours de route.
+      // Sa hauteur doit se lire avant qu'on impose celle du bloc exterieur,
+      // sinon un bloc trop court l'ecraserait.
+      dehors.style.height = "";
+      hauteur = cale.offsetHeight;
+      // Un ecran cale, plus la course.
+      dehors.style.height = `${hauteur + distance}px`;
       placer();
     };
 
@@ -96,12 +128,46 @@ export default function RailEpingle({ children, label, entete }: Props) {
       raf = 0;
       if (!actif) return;
       const r = dehors.getBoundingClientRect();
-      const course = r.height - window.innerHeight;
+      const course = r.height - hauteur;
       if (course <= 0) return;
       // 0 quand le haut de la section touche le haut de l'ecran,
       // 1 quand son bas y arrive.
       const p = Math.min(1, Math.max(0, -r.top / course));
       piste.style.transform = `translate3d(${-p * distance}px, 0, 0)`;
+    };
+
+    // LE BALAYAGE LATERAL, SUR TELEPHONE.
+    //
+    // Ecoute PASSIVE, donc aucun preventDefault : on n'a pas le droit de
+    // confisquer le geste, c'est la regle de tout ce composant. Un balayage
+    // franchement horizontal ne fait presque rien defiler verticalement de
+    // lui-meme ; on lui ajoute la conversion, et la page avance comme si le
+    // doigt poussait les cartes.
+    //
+    // Le rapport est de un pour un : la section fait une hauteur calee plus la
+    // course, donc un pixel de page vaut un pixel de piste. Il reste ecrit
+    // pour survivre a un changement de hauteur.
+    let tx = 0, ty = 0, lateral = false;
+    const onTouchStart = (e: TouchEvent) => {
+      if (!actif || e.touches.length !== 1) return;
+      tx = e.touches[0].clientX; ty = e.touches[0].clientY; lateral = false;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (!actif || distance <= 0 || e.touches.length !== 1) return;
+      const x = e.touches[0].clientX, y = e.touches[0].clientY;
+      const dx = x - tx, dy = y - ty;
+      tx = x; ty = y;
+      // L'intention se decide au premier mouvement franc et ne change plus
+      // pendant le geste : sans cela, un balayage en arc basculerait d'un
+      // mode a l'autre en cours de route.
+      if (!lateral) {
+        if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+        lateral = Math.abs(dx) > Math.abs(dy);
+        if (!lateral) return;
+      }
+      const course = dehors.offsetHeight - hauteur;
+      if (course <= 0) return;
+      window.scrollBy({ top: -dx * (course / distance), behavior: "auto" });
     };
 
     const planifier = () => { if (!raf) raf = requestAnimationFrame(placer); };
@@ -133,7 +199,7 @@ export default function RailEpingle({ children, label, entete }: Props) {
         const r = cible.getBoundingClientRect();
         const ecart = r.left + r.width / 2 - window.innerWidth / 2;
         if (Math.abs(ecart) < 2) return;
-        const course = dehors.offsetHeight - window.innerHeight;
+        const course = dehors.offsetHeight - hauteur;
         if (course <= 0) return;
         window.scrollBy({ top: ecart * (course / distance), behavior: "auto" });
       });
@@ -143,8 +209,9 @@ export default function RailEpingle({ children, label, entete }: Props) {
     window.addEventListener("scroll", planifier, { passive: true });
     window.addEventListener("resize", mesurer);
     sobre.addEventListener("change", mesurer);
-    large.addEventListener("change", mesurer);
     piste.addEventListener("focusin", onFocusIn);
+    cale.addEventListener("touchstart", onTouchStart, { passive: true });
+    cale.addEventListener("touchmove", onTouchMove, { passive: true });
 
     // Les cartes portent des polices personnalisees : leur largeur change
     // quand les fontes arrivent, et la distance mesuree avant serait fausse.
@@ -156,19 +223,21 @@ export default function RailEpingle({ children, label, entete }: Props) {
       window.removeEventListener("scroll", planifier);
       window.removeEventListener("resize", mesurer);
       sobre.removeEventListener("change", mesurer);
-      large.removeEventListener("change", mesurer);
       piste.removeEventListener("focusin", onFocusIn);
+      cale.removeEventListener("touchstart", onTouchStart);
+      cale.removeEventListener("touchmove", onTouchMove);
       ro.disconnect();
     };
   }, []);
 
   return (
     <div ref={dehorsRef} className={epingle ? "mdc-epingle" : undefined}>
-      <div className={epingle ? "mdc-epingle__cale" : undefined}>
+      <div ref={caleRef} className={epingle ? "mdc-epingle__cale" : undefined}>
         <div className={epingle ? "mdc-epingle__entete" : undefined}>{entete}</div>
         {/* `data-lenis-prevent` seulement quand le rail se pousse lui-meme :
-            epingle, c'est la page qui doit recevoir la molette, et l'attribut
-            l'en empecherait. */}
+            epingle, c'est la page qui doit recevoir la molette ET le doigt, et
+            l'attribut l'en empecherait. Il ne reste donc que pour le mouvement
+            reduit, ou le rail redevient un vrai debordement horizontal. */}
         <nav
           ref={pisteRef}
           className={`mdc-rail${epingle ? " mdc-rail--epingle" : ""}`}
