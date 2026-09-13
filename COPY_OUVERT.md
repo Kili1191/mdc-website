@@ -399,3 +399,20 @@ et elle merite de changer, parce que c'est une vraie raison d'acheter.
 **Et une suggestion, non ecrite faute de fait :** l'eleve repart-il avec sa
 lignee ecrite, d'Usui jusqu'a lui ? C'est le livrable naturel d'une page batie
 sur la lignee, et il contourne l'aversion du site pour les certificats.
+
+**Reste ouverte apres la refonte du 13 septembre.** L'agent copywriter a
+propose de fermer la section sur « you are given those names AND THEIR DATES,
+and you can say them out loud to anyone who asks ». C'est une promesse de
+livrable, et il avait lui-meme signale la veille n'avoir aucun fait dessus. La
+page ne promet donc que ce que `/practitioner` publie deja — « he will tell you
+himself » — sous la forme « When he teaches you, he tells you them ». Si Kilian
+remet effectivement la lignee ecrite, la phrase du copywriter est meilleure et
+doit revenir : c'est un livrable concret sur une page qui n'en a qu'un seul.
+
+### La convention de comptage est desormais PUBLIQUE
+
+`src/components/Lignee.tsx` dessine huit rangs, Usui en 01 et Kilian en 08,
+donc quatre noms tenus entre Takata et lui. C'est ce que « only 8 master »
+veut dire, et le tableau rend la convention verifiable au lieu de la cacher
+dans une phrase. Si elle est autre, c'est la premiere chose a corriger — c'est
+le seul endroit du site qu'un eleve serieux ira recompter.

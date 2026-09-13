@@ -137,7 +137,7 @@ export const enseignement = {
   "@id": `${SITE}/teaching#course`,
   name: "Usui Reiki, Level One",
   description:
-    "Reiki level one, taught in person in Battersea, South West London, to one person or to two who come together. Taught by Kilian, a Reiki master and the eighth name in the line from Usui.",
+    "Eight names from Mikao Usui to this room. Reiki level one, taught in person in Battersea, South West London, to one person or to two who come together, by a Reiki master who teaches the first level only.",
   url: `${SITE}/teaching`,
   provider: { "@id": ORG_ID },
   inLanguage: "en-GB",
