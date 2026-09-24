@@ -80,7 +80,7 @@ export default function TeachingPage() {
         <h1 style={{ ...bigHead, marginTop: 36, maxWidth: "17ch" }}>
           <SplitTextChars text="Eight names from Usui to this room." delay={20} duration={900} />
         </h1>
-        <p style={{ ...lead, marginTop: 40, maxWidth: "46ch" }}>
+        <p style={{ ...lead, marginTop: 40, maxWidth: "33ch" }}>
           Reiki, level one, taught in person in Battersea. Kilian is a Reiki master,
           qualified to teach every level, and this is the only one he teaches. One person,
           or two. £450.

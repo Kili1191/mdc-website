@@ -33,9 +33,38 @@ export const pageStyle: CSSProperties = {
   paddingBottom: "clamp(112px, 20vw, 200px)",
 };
 
+// ─────────────────────────────────────────────────────────────────────────
+// LA MESURE, ET POURQUOI `ch` MENTAIT DE MOITIE.
+//
+// `ch` vaut la largeur du chiffre ZERO, pas celle d'un caractere moyen. Sur
+// une fonte dont le zero est large, les deux n'ont rien a voir. Mesure faite
+// au navigateur sur cinq paragraphes de prose reelle du site, a 17, 18 et
+// 21px, avec un resultat identique aux trois tailles :
+//
+//   Prata   zero = 1,515 x l'avance moyenne de sa prose
+//   Higuen  zero = 1,164 x l'avance moyenne de ses titres
+//
+// Consequence : `maxWidth: 62ch` ne donnait pas 62 caracteres par ligne, il
+// en donnait QUATRE-VINGT-QUATORZE. Mesure sur /practitioner avant
+// correction : 91 caracteres sur une ligne, 93 sur le chapo de /notes. La
+// plage confortable en lecture est 45 a 75, l'optimum autour de 66.
+//
+// Toutes les mesures de PROSE sont donc divisees par ce facteur. 45ch donne
+// 68 caracteres reels a 18px, soit 564px de colonne.
+//
+// LES TITRES NE BOUGENT PAS, et c'est la distinction qui compte : Higuen ne
+// ment presque pas. Mesure a l'ecran, les titres tiennent deja 14 a 19
+// caracteres par ligne, ce qui est exactement ce qu'un titre doit faire. Leur
+// appliquer la meme correction les aurait casses sans raison.
+//
+// LA REGLE, pour la suite : une mesure de prose s'ecrit en ch DIVISE par
+// 1,515, ou directement en pixels. Une mesure de titre s'ecrit en ch tel
+// quel.
+// ─────────────────────────────────────────────────────────────────────────
+
 export const body: CSSProperties = {
   fontFamily: FONTS.prata, fontSize: 18, lineHeight: 1.75,
-  color: COLORS.brou, margin: 0, maxWidth: "62ch",
+  color: COLORS.brou, margin: 0, maxWidth: "45ch",
 };
 
 export const lead: CSSProperties = {
@@ -101,3 +130,32 @@ export const quote: CSSProperties = {
   lineHeight: 1.3, color: COLORS.brouFonce, margin: 0, fontWeight: 400,
   fontStyle: "italic", maxWidth: "20ch",
 };
+
+
+// ─────────────────────────────────────────────────────────────────────────
+// L'ECHELLE. Elle n'existait pas : un releve sur dix pages a 1440px a trouve
+// VINGT tailles de police distinctes, dont huit paires separees de moins de
+// 7 % — 18/17/16,8/16, 13/14, 12,5/12, 11,5/11, 40/38, 52/50. Un ecart de
+// 1,05 ne se lit pas comme une hierarchie, il se lit comme une inattention.
+//
+// Les douze marches ci-dessous sont celles que le site utilise vraiment, les
+// doublons fondus dans la marche la plus proche. Ce n'est pas une suite
+// geometrique posee d'avance : c'est l'inventaire de l'existant, nettoye.
+//
+// A RESPECTER : une taille nouvelle se prend ICI. Si aucune ne convient, la
+// bonne question est ce qu'elle doit dire de plus que ses voisines, pas
+// quel nombre poser.
+export const ECHELLE = {
+  afficheXL: 92,   // le titre de l'accueil
+  afficheL:  62,   // bigHead a son plafond
+  afficheM:  52,   // les citations, le dernier rang de la lignee
+  afficheS:  40,   // sectionHead a son plafond, les rangs de la lignee
+  titre:     24,   // label
+  chapo:     21,   // lead
+  corps:     18,   // body
+  corpsS:    17,   // les colonnes serrees, la signature du pied
+  etiquetteL: 15,
+  etiquetteM: 13,  // les boutons
+  etiquetteS: 12.5,
+  micro:     11,   // eyebrow
+} as const;

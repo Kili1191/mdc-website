@@ -47,12 +47,15 @@ const textareaStyle: React.CSSProperties = {
 };
 const selectStyle: React.CSSProperties = {
   ...inputStyle,
+  // Le champ herite de 16 ; la prose serree du site est a 17. Un menu qui
+  // compose un demi-point sous tout le reste se remarque sans rien dire.
+  fontSize: 17,
   appearance: "none",
   cursor: "pointer",
 };
 const noteStyle: React.CSSProperties = {
   fontFamily: FONTS.prata, fontSize: 13.5, lineHeight: 1.7,
-  color: COLORS.brou, margin: 0, maxWidth: "52ch",
+  color: COLORS.brou, margin: 0, maxWidth: "38ch",
 };
 
 type Etat = "attente" | "envoi" | "envoye" | "echec";
@@ -183,7 +186,15 @@ export default function BeginForm() {
         <button
           type="submit"
           style={{
-            fontFamily: FONTS.prata, fontSize: 14, letterSpacing: "0.32em",
+            // 13 et non 14 : .mdc-button compose deja tous les boutons du
+            // site a 13. Deux tailles de bouton sur la meme page, separees
+            // de 1,08, ne disent rien de plus qu'une seule.
+            fontFamily: FONTS.prata, fontSize: 13, letterSpacing: "0.32em",
+            // L'interlettre pousse un blanc APRES la derniere lettre. Sur un
+            // libelle centre, le mot est donc optiquement decale vers la
+            // gauche de la moitie de ce blanc — 2,1px mesures ici. On reprend
+            // le blanc en retrait.
+            textIndent: "0.32em",
             // Le brou et non le rouille : c'est leur correction de contraste,
             // et elle est juste. Le filet reste en rouille.
             textTransform: "uppercase", color: COLORS.brou,

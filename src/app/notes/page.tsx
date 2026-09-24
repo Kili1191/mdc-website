@@ -51,7 +51,7 @@ export default function NotesPage() {
             <a key={e.n} href={`#essay-${e.n}`}>
               <span style={{ ...micro, opacity: 0.82 }}>{e.n}</span>
               <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>{e.titre}</span>
-              <span style={{ ...body, fontSize: 16, maxWidth: "none", opacity: 0.82 }}>{e.sur}</span>
+              <span style={{ ...body, fontSize: 15, maxWidth: "none", opacity: 0.82 }}>{e.sur}</span>
               <span style={micro}>Essay</span>
             </a>
           ))}

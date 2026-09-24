@@ -72,7 +72,7 @@ export default function Footer() {
                 me remember homeless ». En anglais c'est le vocabulaire du
                 foyer d'accueil. « Receives » est au contraire le verbe des
                 maisons : une maison recoit. */}
-            <p style={{ ...body, fontSize: 17, marginTop: 24, maxWidth: "34ch" }}>
+            <p style={{ ...body, fontSize: 17, marginTop: 24, maxWidth: "25ch" }}>
               A house receives. This one is for the people who never say
               they need it.
             </p>

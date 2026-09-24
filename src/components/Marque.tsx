@@ -83,7 +83,13 @@ export default function Marque({
   // Empilee : le nom se regle sur la largeur de la marque (k = 1,5).
   // En ligne : la marque est a cote et non au-dessus, le nom n'a plus a se
   // caler sur elle ; il se regle sur sa hauteur, comme la barre le fait deja.
-  const tailleNom = empilee ? (RAPPORT * hauteur * K) / CHASSE_NOM : hauteur * 0.42;
+  // 0,425 et non 0,42, et le quart de point a une raison. A 40px de trace —
+  // la signature du pied de page — 0,42 donnait 16,8 px, pose juste au-dessus
+  // d'une ligne de prose a 17. Deux tailles separees de 1,2 %, c'est-a-dire
+  // rien, sauf l'impression que quelque chose ne tombe pas juste. A 0,425 les
+  // hauteurs employees atterrissent sur des marches de l'echelle : 40 donne
+  // 17, 58 donne 24,7, 96 donne 40,8.
+  const tailleNom = empilee ? (RAPPORT * hauteur * K) / CHASSE_NOM : hauteur * 0.425;
   const tailleDevise = tailleNom * (empilee ? 0.62 : 0.60);
 
   const trace = (

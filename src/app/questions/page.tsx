@@ -116,7 +116,7 @@ export default function QuestionsPage() {
         <h1 style={{ ...bigHead, marginTop: 36, maxWidth: "18ch" }}>
           <SplitTextChars text="What to expect." delay={50} duration={900} />
         </h1>
-        <p style={{ ...lead, marginTop: 40, maxWidth: "46ch" }}>
+        <p style={{ ...lead, marginTop: 40, maxWidth: "33ch" }}>
           The things people want to know before a first visit, answered plainly.
         </p>
 
@@ -127,7 +127,7 @@ export default function QuestionsPage() {
               {g.items.map((it) => (
                 <div key={it.q} className="mdc-two" style={{ marginTop: 40 }}>
                   <h2 style={{ ...sectionHead, maxWidth: "20ch" }}>{it.q}</h2>
-                  <p style={{ ...body, maxWidth: "56ch" }}>{it.r}</p>
+                  <p style={{ ...body, maxWidth: "41ch" }}>{it.r}</p>
                 </div>
               ))}
             </div>

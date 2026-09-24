@@ -82,7 +82,7 @@ export default function BeginPage() {
               <div className="mdc-index__row" key={e.n}>
                 <span style={{ ...micro, opacity: 0.82 }}>{e.n}</span>
                 <span style={{ ...body, fontSize: 17, maxWidth: "none" }}>{e.quoi}</span>
-                <span style={{ ...body, fontSize: 16, maxWidth: "none", opacity: 0.82 }}>{e.detail}</span>
+                <span style={{ ...body, fontSize: 15, maxWidth: "none", opacity: 0.82 }}>{e.detail}</span>
                 <span />
               </div>
             ))}

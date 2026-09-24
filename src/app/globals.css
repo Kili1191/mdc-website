@@ -127,7 +127,10 @@ body {
 }
 
 .mdc-wrap { max-width: 1180px; margin: 0 auto; padding: 0 7vw; }
-.mdc-measure { max-width: 660px; }
+/* 560px : 68 caracteres de prose a 18px, la meme mesure que `body`. Elle
+   valait 660, soit 80 caracteres — au-dela de la plage confortable. Voir la
+   note sur le facteur `ch` dans src/styles/page.ts. */
+.mdc-measure { max-width: 560px; }
 
 /* Un index : une ligne par offre, lisible en diagonale. Sans lui, il faut
    scroller toutes les sections pour savoir combien il y en a. */

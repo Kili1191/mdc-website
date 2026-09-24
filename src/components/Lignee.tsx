@@ -120,7 +120,10 @@ export default function Lignee() {
         }
         .mdc-lignee__nom{
           font-family:${FONTS.higuen};
-          font-size:clamp(23px, 3vw, 38px);
+          /* 40 et non 38 : sur /teaching les titres de section plafonnent a
+             40, et deux tailles a 1,05 l'une de l'autre sur le meme ecran ne
+             font pas une hierarchie. Marche afficheS de l echelle. */
+          font-size:clamp(23px, 3vw, 40px);
           line-height:1.05; color:${COLORS.brouFonce};
         }
         /* Les rangs tenus sont PLUS PETITS et en Prata, pas plus pales : un
