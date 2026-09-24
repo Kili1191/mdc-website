@@ -705,6 +705,10 @@ export default function IntroOverlay() {
           transition:opacity 2.2s cubic-bezier(0.16, 1, 0.3, 1),transform 2.2s cubic-bezier(0.16, 1, 0.3, 1);
           text-align:center;margin-top:clamp(16px,3.6vw,26px);
           white-space:nowrap;pointer-events:none;user-select:none;}
+        .mdc-brand__dit{display:block;
+          font-family:var(--font-prata),Georgia,serif;
+          font-size:.60em;letter-spacing:.02em;color:#4A3B2A;
+          margin-top:.62em;line-height:1.3;}
         .mdc-brand-in{opacity:1 !important;transform:translateY(0) !important;}
         .mdc-threshold{position:fixed;inset:0;z-index:10000;
           background:radial-gradient(circle at 50% 44%,
@@ -784,7 +788,24 @@ export default function IntroOverlay() {
             </svg>
             <div className="mdc-breath" ref={bwRef} />
           </div>
-          <div className="mdc-brand" ref={brandRef}>Maison du Calme</div>
+          {/* LA DEVISE, SOUS LE NOM. Demande de Kilian : « A house for what
+              you carry this must be under the logo ».
+
+              Elle vit ICI et pas dans la barre du haut, et c'est une mesure
+              qui le decide : a 30px de trace, la barre donnerait une devise de
+              7,5px. Une devise illisible n'est pas une devise. Le seuil, lui,
+              compose le nom jusqu'a 34px — la devise y fait 20, et elle arrive
+              au moment ou la maison vient d'etre tracee et ou les yeux
+              viennent de s'ouvrir. C'est le seul endroit du site ou une
+              phrase de marque a la fois la place et l'instant.
+
+              0,60 em : le rapport devise/nom de l'etude de verrouillage, le
+              meme que porte Marque.tsx. Elle est DANS .mdc-brand, donc elle
+              herite de sa reveleation — une seule opacite, un seul geste. */}
+          <div className="mdc-brand" ref={brandRef}>
+            Maison du Calme
+            <span className="mdc-brand__dit">A house for what you carry</span>
+          </div>
         </div>
         {/* Le meme coin, deux roles. A l'arrivee on passe ; en exercice on
             ferme — et on ne « passe » pas un exercice, on le termine quand on

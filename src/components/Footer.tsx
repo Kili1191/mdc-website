@@ -1,6 +1,7 @@
 import { body, micro, label, eyebrow } from "@/styles/page";
-import { COLORS, FONTS } from "@/styles/tokens";
+import { COLORS } from "@/styles/tokens";
 import BreathButton from "@/components/BreathButton";
+import Marque from "@/components/Marque";
 
 // Le site n'avait pas de pied de page : il s'arretait sur un bouton et ne se
 // signait jamais. Or une maison se signe — c'est meme le seul endroit d'un
@@ -54,12 +55,19 @@ export default function Footer() {
       <div style={{ borderTop: `1px solid ${COLORS.taupeTrait}`, paddingTop: 56 }}>
         <div className="mdc-foot">
           <div>
-            <p style={{
-              fontFamily: FONTS.higuen, fontSize: 15, letterSpacing: "0.22em",
-              textTransform: "uppercase", color: COLORS.brouFonce, margin: 0,
-            }}>
-              Maison du Calme
-            </p>
+            {/* La signature portait le nom seul, en texte. Elle porte
+                maintenant le verrouillage : le trace et le nom, au rapport
+                mesure dans Marque.tsx.
+
+                SANS LA DEVISE, ET C'EST VOULU. Le pied de page parle deja,
+                juste en dessous : « A house receives. This one is for the
+                people who never say they need it. » Poser « A house for what
+                you carry » au-dessus ferait deux devises l'une sur l'autre,
+                dont la seconde repete la premiere en moins bien.
+
+                40px de trace, et pas davantage : a 320px de large, le bloc
+                mesure 262px pour 275 disponibles. A 44 il deborde. */}
+            <Marque hauteur={40} forme="ligne" devise={false} />
             {/* Le refuge, sans le mot « shelter » : Kilian — « shelter makes
                 me remember homeless ». En anglais c'est le vocabulaire du
                 foyer d'accueil. « Receives » est au contraire le verbe des
