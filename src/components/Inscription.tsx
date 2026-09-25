@@ -355,7 +355,12 @@ export default function Inscription() {
         }
 
         .mdc-inscription__compte{
-          margin-left:30px;
+          /* La MEME garde que la barre du haut. Le compteur et la marque sont
+             les deux seules choses qui tiennent le bord de l'ecran ; avec 30px
+             fixes ici et une garde fluide la-haut, ils se decalaient l'un de
+             l'autre des que l'ecran changeait — 7px a 1440, rien a 1990. Deux
+             meubles sur le meme bord se posent sur la meme ligne. */
+          margin-left:clamp(18px, 2vw, 40px);
           font-family:${FONTS.prata}; font-size:11px; letter-spacing:0.18em;
           color:${COLORS.brou}; opacity:0.82;
         }

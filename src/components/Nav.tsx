@@ -146,21 +146,25 @@ export default function Nav() {
         .mdc-seuil{
           position:fixed; top:0; left:0; right:0; z-index:100;
           display:flex; justify-content:space-between; align-items:center;
-          /* LA BARRE EST CALEE SUR LA COLONNE DE LA PAGE, PAS SUR L'ECRAN.
+          /* LA BARRE TIENT LE BORD DE L'ECRAN. Decision de Kilian : « plus i
+             want it in the edge ».
 
-             Kilian : « i see its not even aligned ». Mesure, et il a raison :
-             la barre avait une garde FIXE de 48px quand tout le reste du site
-             est cale sur --mdc-inset, qui est FLUIDE. L'ecart grandit donc
-             avec l'ecran — 6px a 768, 183px a 1440, 496px a 1990. Sur un
-             grand ecran la marque flottait a un demi-metre a gauche de la
-             colonne qu'elle est censee ouvrir.
+             J'avais fait l'inverse la veille — la caler sur --mdc-inset, la
+             colonne des pages internes — parce qu'il avait ecrit « i see its
+             not even aligned » et que la garde etait fixe a 48px quand tout le
+             reste est fluide. La mesure etait juste et la conclusion fausse,
+             pour une raison que j'aurais du voir : L'ACCUEIL N'A PAS CETTE
+             COLONNE. Ses stations sont calees sur max(6vw, (100vw-1280)/2),
+             une tout autre garde, et elles sont centrees. A 1990px de large la
+             marque se retrouvait donc a 544 pendant que les stations
+             commencaient a 355 et que le compteur tenait le bord a 27. Tiree
+             dans une colonne qui n'existe pas sur la page d'accueil, elle
+             flottait au milieu de rien.
 
-             La meme variable pour les deux, et la marque s'aligne desormais
-             sur le surtitre et le titre de chaque page, Begin sur leur bord
-             droit. 16 en haut et en bas : le trace passe de 30 a 50px, et la
-             barre absorbe une partie de l'ecart en resserrant sa garde plutot
-             qu'en grandissant de vingt pixels. */
-          padding:16px var(--mdc-inset); pointer-events:none;
+             Une barre fixe appartient a la FENETRE, pas au document. Elle tient
+             donc le bord, et sa garde respire avec l'ecran au lieu d'etre
+             clouee a 48 : 18px sur un telephone, 40 sur un grand ecran. */
+          padding:16px clamp(18px, 2vw, 40px); pointer-events:none;
           transition:transform ${DURATION.reveal}ms ${EASE.reveal},
                      opacity ${DURATION.exit}ms ${EASE.exit};
         }
