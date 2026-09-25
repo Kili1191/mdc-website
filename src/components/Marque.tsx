@@ -72,10 +72,15 @@ type Props = {
   /** Le nom est le seul contenu annonce : le trace est decoratif, la devise
    *  aussi — elle est deja dans la page qui la porte. */
   titre?: string;
+  /** Vraie quand un parent nomme deja l'ensemble — le lien de la barre du
+   *  haut porte son propre aria-label. Deux noms imbriques pour la meme
+   *  chose font lire la maison deux fois a un lecteur d'ecran. */
+  decoratif?: boolean;
 };
 
 export default function Marque({
-  hauteur, forme = "empilee", devise = true, centre = false, titre = "Maison du Calme",
+  hauteur, forme = "empilee", devise = true, centre = false,
+  titre = "Maison du Calme", decoratif = false,
 }: Props) {
   const u = hauteur / 9;
   const empilee = forme === "empilee";
@@ -123,8 +128,7 @@ export default function Marque({
   if (empilee) {
     return (
       <span
-        role="img"
-        aria-label={titre}
+        {...(decoratif ? { "aria-hidden": true } : { role: "img", "aria-label": titre })}
         style={{
           display: "inline-flex", flexDirection: "column",
           alignItems: centre ? "center" : "flex-start",
@@ -139,8 +143,7 @@ export default function Marque({
 
   return (
     <span
-      role="img"
-      aria-label={titre}
+      {...(decoratif ? { "aria-hidden": true } : { role: "img", "aria-label": titre })}
       style={{ display: "inline-flex", alignItems: "center", gap: 1.6 * u }}
     >
       {trace}

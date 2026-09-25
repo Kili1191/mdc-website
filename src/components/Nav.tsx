@@ -33,6 +33,7 @@ import { usePathname } from "next/navigation";
 import { COLORS, FONTS } from "@/styles/tokens";
 import { useIntroReady } from "@/lib/introReady";
 import { DURATION, EASE } from "@/lib/motion";
+import Marque from "@/components/Marque";
 
 const PIECES = [
   { label: "Sessions", href: "/sessions", note: "In the room" },
@@ -145,7 +146,10 @@ export default function Nav() {
         .mdc-seuil{
           position:fixed; top:0; left:0; right:0; z-index:100;
           display:flex; justify-content:space-between; align-items:center;
-          padding:22px 48px; pointer-events:none;
+          /* 16 et non 22 : le trace passe de 30 a 50px, et la barre absorbe
+             une partie de l'ecart en resserrant sa garde plutot qu'en
+             grandissant de vingt pixels. */
+          padding:16px 48px; pointer-events:none;
           transition:transform ${DURATION.reveal}ms ${EASE.reveal},
                      opacity ${DURATION.exit}ms ${EASE.exit};
         }
@@ -153,11 +157,7 @@ export default function Nav() {
         .mdc-seuil.est-replie{ transform:translateY(-110%); opacity:0; }
         .mdc-seuil.est-replie > *{ pointer-events:none; }
 
-        .mdc-seuil__marque{ display:flex; align-items:center; gap:12px; text-decoration:none; }
-        .mdc-seuil__mot{
-          font-family:${FONTS.higuen}; font-size:15px; letter-spacing:0.22em;
-          color:${COLORS.brouFonce};
-        }
+        .mdc-seuil__marque{ display:flex; align-items:center; text-decoration:none; }
         .mdc-seuil__droite{ display:flex; align-items:center; gap:30px; }
 
         /* Index et Begin partagent la meme graisse : ni l'un ni l'autre ne
@@ -261,9 +261,24 @@ export default function Nav() {
           }
         }
 
+        /* LE VERROUILLAGE TIENT AU-DESSUS DE 560px, ET PAS EN DESSOUS.
+           Mesure : trace 60 + garde 8,9 + nom 262 = 331px, plus Index et Begin
+           a 129, plus 40 de padding, soit 500px occupes. A 768 il reste 210px
+           d'air, a 600 il en reste 100 ; a 390 il en manque cent dix.
+
+           Sous la borne, la barre ne garde que le trace — comme elle gardait
+           deja le seul logo sous 720 — et il redescend a 38px. A 50 il aurait
+           tenu seul au milieu d'une barre de 82px de haut sur un ecran de 844,
+           soit un dixieme de la fenetre pour une barre qui se derobe au
+           defilement. 38 reste plus grand que les 30 d'avant, donc la cible du
+           pouce y gagne quand meme. */
+        @media (max-width: 560px){
+          .mdc-seuil__marque span span{ display:none; }
+          .mdc-seuil__marque img{ height:38px !important; }
+          .mdc-seuil{ padding-top:14px; padding-bottom:14px; }
+        }
         @media (max-width: 720px){
           .mdc-seuil{ padding:16px 20px; }
-          .mdc-seuil__mot{ display:none; }
           .mdc-seuil__droite{ gap:20px; }
           .mdc-porte__fermer{ right:20px; }
           .mdc-porte__note{ display:none; }
@@ -275,10 +290,26 @@ export default function Nav() {
       `}</style>
 
       <nav className={`mdc-seuil${replie ? " est-replie" : ""}`} aria-label="Maison du Calme">
+        {/* LA DEVISE EST ICI, SOUS LE NOM, ET C'EST UNE CORRECTION.
+            Kilian : « A house for what you carry this must be under the logo »,
+            puis, devant la barre inchangee : « yOu didnt nothing from the
+            logo ». Il avait raison. J'avais mesure qu'a 30px de trace la
+            devise tomberait a 7,5px, et j'en avais conclu qu'elle ne pouvait
+            pas vivre ici — au lieu d'agrandir la barre pour qu'elle y tienne.
+            Une mesure qui sert a refuser une demande n'est pas une mesure,
+            c'est un pretexte.
+            Le trace passe donc a 50px : le nom tombe a 21,25 et la devise a
+            12,75, deux valeurs lisibles et voisines des marches `chapo` et
+            `etiquetteS` de l'echelle. Les rapports sont ceux de Marque.tsx,
+            rien n'est pose a la main.
+            Et la barre est le bon endroit pour une autre raison, que j'avais
+            manquee : l'intro NE REJOUE PAS quand on vient d'une autre page du
+            site (voir shouldBypassIntro). La devise posee dans le seuil est
+            donc invisible a tout visiteur qui navigue. Elle reste la, mais
+            elle vit d'abord ici. */}
         <a href="/" className="mdc-seuil__marque" aria-label="Maison du Calme, accueil"
            tabIndex={replie ? -1 : 0}>
-          <img src="/logo.png" alt="" style={{ height: 30, width: "auto", display: "block" }} />
-          <span className="mdc-seuil__mot">MAISON DU CALME</span>
+          <Marque hauteur={50} forme="ligne" devise decoratif />
         </a>
         <div className="mdc-seuil__droite">
           <button
