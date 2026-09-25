@@ -84,6 +84,41 @@ session ouverte sur un autre depot avec mdc-website en second ne le voit pas :
 C'est arrive, et le depannage (copier le fichier dans `~/.claude/agents/`) ne
 survit pas au conteneur. Ouvrir la session depuis `Kili1191/mdc-website`.
 
+# Les agents, et qui fait quoi
+
+Cinq agents, et ils ne se recouvrent pas. Convoquer le mauvais coute une passe.
+
+| agent | il repond a |
+|---|---|
+| `designer` | est-ce que cette page FONCTIONNE — ce qui porte, ce qu'il faut couper, ou l'oeil decroche, si ca mene a Begin |
+| `proportions` | des CHIFFRES — echelle, longueur de ligne, alignements, rythme, cibles |
+| `copywriter` | tout mot destine a un client |
+| `seo` | faire venir les bonnes personnes |
+| skill `taste` | la marque — palette, fontes, motion, et la liste de controle |
+
+Le skill `taste` n'est pas un agent : il se lit avant de livrer, toujours.
+
+# L'agent designer
+
+`.claude/agents/designer.md` fait la direction artistique. A convoquer devant
+une page entiere, une nouvelle section, un parcours, ou quand quelque chose est
+techniquement juste et laisse froid.
+
+**Ce qu'il porte et qu'aucun modele n'a :** ce qui a ete tente sur ce depot puis
+RETIRE, avec le chiffre qui l'a decide — MagneticButton, la recompense
+d'immobilite, le voile en backdrop-filter, la page Lineage, la regle gravee de
+la marge, le balisage FAQPage. Il connait les deux virages (le 8 septembre sur
+le spectaculaire, le 11 sur la copy) et ce qu'ils n'emportent PAS.
+
+Il ne mesure pas lui-meme — c'est `proportions`. Il n'ecrit pas la copy — c'est
+`copywriter`. Et il a le droit de dire qu'une page va bien : une direction
+artistique qui trouve toujours quelque chose a changer est une direction
+artistique qui invente.
+
+**Il vieillit si on ne le nourrit pas.** Chaque decision de Kilian, chaque
+retrait sur chiffre, chaque effet rate se reporte dedans — comme `SERVICES.md`
+tient les faits et `COPY_OUVERT.md` les questions ouvertes.
+
 # L'agent proportions
 
 `.claude/agents/proportions.md` mesure la mise en page dans un navigateur reel
