@@ -84,6 +84,25 @@ session ouverte sur un autre depot avec mdc-website en second ne le voit pas :
 C'est arrive, et le depannage (copier le fichier dans `~/.claude/agents/`) ne
 survit pas au conteneur. Ouvrir la session depuis `Kili1191/mdc-website`.
 
+# L'agent proportions
+
+`.claude/agents/proportions.md` mesure la mise en page dans un navigateur reel
+— echelle typographique, longueur de ligne, alignements, rythme vertical,
+cibles tactiles — et rend des chiffres, jamais des impressions.
+
+**A convoquer AVANT de valider un changement visuel**, et des que quelque
+chose « ne tombe pas juste » sans qu'on sache dire quoi. Il porte les six
+pieges deja payes sur ce depot : `ch` qui ment d'un facteur 1,515 en Prata et
+1,164 en Higuen, une garde fixe a cote d'une garde fluide (496px d'ecart a
+1990px de large), `getBoundingClientRect` qui renvoie la boite apres
+transformation, le blanc que l'interlettre pousse apres la derniere lettre, un
+trace qui deborde et ne s'aligne donc pas sur sa boite, et le telephone dont la
+colonne est bornee par l'ecran — ce qui rend un defaut de mesure invisible la
+ou on regarde le plus souvent.
+
+Il ne choisit ni couleur ni effet — c'est le skill `taste` — et il n'ecrit
+jamais un mot destine a un client.
+
 # L'agent seo
 
 `.claude/agents/seo.md` porte la strategie de visibilite : pourquoi ce site ne

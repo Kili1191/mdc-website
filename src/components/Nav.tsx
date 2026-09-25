@@ -146,10 +146,21 @@ export default function Nav() {
         .mdc-seuil{
           position:fixed; top:0; left:0; right:0; z-index:100;
           display:flex; justify-content:space-between; align-items:center;
-          /* 16 et non 22 : le trace passe de 30 a 50px, et la barre absorbe
-             une partie de l'ecart en resserrant sa garde plutot qu'en
-             grandissant de vingt pixels. */
-          padding:16px 48px; pointer-events:none;
+          /* LA BARRE EST CALEE SUR LA COLONNE DE LA PAGE, PAS SUR L'ECRAN.
+
+             Kilian : « i see its not even aligned ». Mesure, et il a raison :
+             la barre avait une garde FIXE de 48px quand tout le reste du site
+             est cale sur --mdc-inset, qui est FLUIDE. L'ecart grandit donc
+             avec l'ecran — 6px a 768, 183px a 1440, 496px a 1990. Sur un
+             grand ecran la marque flottait a un demi-metre a gauche de la
+             colonne qu'elle est censee ouvrir.
+
+             La meme variable pour les deux, et la marque s'aligne desormais
+             sur le surtitre et le titre de chaque page, Begin sur leur bord
+             droit. 16 en haut et en bas : le trace passe de 30 a 50px, et la
+             barre absorbe une partie de l'ecart en resserrant sa garde plutot
+             qu'en grandissant de vingt pixels. */
+          padding:16px var(--mdc-inset); pointer-events:none;
           transition:transform ${DURATION.reveal}ms ${EASE.reveal},
                      opacity ${DURATION.exit}ms ${EASE.exit};
         }
@@ -158,6 +169,7 @@ export default function Nav() {
         .mdc-seuil.est-replie > *{ pointer-events:none; }
 
         .mdc-seuil__marque{ display:flex; align-items:center; text-decoration:none; }
+
         .mdc-seuil__droite{ display:flex; align-items:center; gap:30px; }
 
         /* Index et Begin partagent la meme graisse : ni l'un ni l'autre ne
@@ -168,7 +180,14 @@ export default function Nav() {
           text-decoration:none; background:none; border:0; cursor:pointer;
           padding:8px 2px; margin:-8px -2px;
         }
-        .mdc-seuil__begin{ border-bottom:1px solid ${COLORS.rouille}; padding-bottom:3px; }
+        .mdc-seuil__begin{
+          border-bottom:1px solid ${COLORS.rouille}; padding-bottom:3px;
+          /* Le dernier element de la barre, donc celui qui porte le bord
+             droit de la colonne. Son interlettre pousse un blanc APRES le N,
+             et le mot finissait donc 2px en retrait du bord ou finit le texte
+             de la page. On reprend le blanc. */
+          margin-right:-0.14em;
+        }
         .mdc-seuil__index{ opacity:0.82; }
         .mdc-seuil__index:hover, .mdc-seuil__index:focus-visible{ opacity:1; }
 
@@ -278,7 +297,6 @@ export default function Nav() {
           .mdc-seuil{ padding-top:14px; padding-bottom:14px; }
         }
         @media (max-width: 720px){
-          .mdc-seuil{ padding:16px 20px; }
           .mdc-seuil__droite{ gap:20px; }
           .mdc-porte__fermer{ right:20px; }
           .mdc-porte__note{ display:none; }

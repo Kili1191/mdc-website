@@ -59,6 +59,9 @@ const CHASSE_NOM = 12.35;
 const RAPPORT = 1.1987;
 /** Le nom vaut une fois et demie la largeur de la marque. Voir l'etude. */
 const K = 1.5;
+/** Part de la largeur du trace occupee par le debord d'avant-toit, a gauche.
+ *  Mesure sur le PNG : le mur commence a 52 sur 573px d'encre. */
+const DEBORD = 0.089;
 
 type Props = {
   /** Hauteur du trace, en pixels. Toute la composition en decoule. */
@@ -97,11 +100,31 @@ export default function Marque({
   const tailleNom = empilee ? (RAPPORT * hauteur * K) / CHASSE_NOM : hauteur * 0.425;
   const tailleDevise = tailleNom * (empilee ? 0.62 : 0.60);
 
+  // ALIGNEMENT OPTIQUE, PAS GEOMETRIQUE.
+  //
+  // Le trace deborde de ses avant-toits : sur les 573px d'encre du PNG, le MUR
+  // ne commence qu'a 52, soit 8,9 % de la largeur. Caler la boite de l'image
+  // sur une colonne revient donc a rentrer la maison de 8,9 % pendant que ses
+  // toits depassent — et c'est le mur que l'oeil aligne, comme il aligne un
+  // jambage et non le crochet d'un guillemet.
+  //
+  // On tire donc l'image de la valeur du debord, calculee ICI parce que c'est
+  // le seul endroit qui connait la largeur du trace. Premiere tentative :
+  // `margin-left:-0.089em` en CSS — faux, `em` sur une image se resout contre
+  // sa taille de police heritee, soit 1,4px au lieu des 5,3 voulus.
+  //
+  // Seulement en forme EN LIGNE : empilee, le trace est centre sur le nom et
+  // c'est le faite qui fait le centre, pas le mur.
+  const suspension = empilee ? 0 : -(hauteur * RAPPORT * DEBORD);
+
   const trace = (
     <img
       src="/logo.png"
       alt=""
-      style={{ height: hauteur, width: "auto", display: "block", flex: "none" }}
+      style={{
+        height: hauteur, width: "auto", display: "block", flex: "none",
+        marginLeft: suspension,
+      }}
     />
   );
 
