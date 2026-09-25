@@ -486,6 +486,9 @@ export default function MarbleBackground({
     window.addEventListener(INTRO_DONE_EVENT, decouvrir);
     window.addEventListener(BREATH_OPEN_EVENT, recouvrir);
 
+    // Cache de la bande de voile : voir le bloc dans `animate`.
+    let bandeY = -99999, bandeW = -1, bandeCentre = 0.5, bandeDemi = 0.5;
+
     const animate = () => {
       if (couvert && !unePasse) { raf = requestAnimationFrame(animate); return; }
       const t = clock.getElapsedTime();
@@ -494,25 +497,78 @@ export default function MarbleBackground({
       // plus le burin est descendu.
       // LA BANDE SUIT LA VRAIE COLONNE DE TEXTE.
       //
-      // Mesuree sur `.mdc-wrap`, qui porte tout le texte des pages internes,
-      // et sur `.mdc-station` pour l'accueil, dont les phrases sont larges et
-      // se deplacent. On lit la boite reelle plutot que de la deviner : la
-      // colonne change avec la largeur de l'ecran (max 1180, padding 7vw), et
-      // une constante serait fausse partout sauf a une taille.
+      // ─────────────────────────────────────────────────────────────────
+      // ELLE NE LA SUIVAIT PAS, ET C'ETAIT LE PIRE DEFAUT DU SITE.
       //
-      // Repli genereux quand aucun des deux n'existe : mieux vaut trop de
-      // voile qu'un texte pose sur un lotus.
-      const colonne =
-        document.querySelector(".mdc-station") ?? document.querySelector(".mdc-wrap");
-      if (colonne) {
-        const r = colonne.getBoundingClientRect();
-        const w = window.innerWidth || 1;
-        // Un peu plus large que le texte : les glyphes debordent, et la bande
-        // doit finir avant eux, pas sur eux.
-        const demi = Math.min(0.5, (r.width / w) * 0.5 * 1.12);
-        finalMat.uniforms.uTexteCentre.value = (r.left + r.width / 2) / w;
-        finalMat.uniforms.uTexteDemi.value = Math.max(0.18, demi);
+      // Kilian, le 11 septembre : « enleve le voile entre le marbre et
+      // l'image dessous garde juste sous le texte ». J'ai mesure la bande sur
+      // `.mdc-station` — et `.mdc-station` porte `width: 100%`. Elle rend donc
+      // la largeur du viewport ENTIER, `demi` sortait a 0,56, et le
+      // `Math.min(0.5, ...)` l'avalait a 0,5 : la borne, c'est-a-dire tout
+      // l'ecran.
+      //
+      // Mesure sur le build de production, avant correction :
+      //
+      //   accueil 1990   demi = 0,500   (le contenu n'en demande que 0,253)
+      //   accueil 1440   demi = 0,500   (0,350)
+      //   sessions 1990  demi = 0,332   ← les pages internes, elles, marchaient
+      //
+      // Le voile couvrait donc l'ecran entier SUR L'ACCUEIL SEULEMENT, la
+      // seule page qui n'a rien d'autre a montrer que sa pierre. Kilian, deux
+      // fois de suite devant son grand ecran : « you did nothing ». Il avait
+      // litteralement raison — la matiere que le code devait poser dans le
+      // vide n'y etait pas.
+      //
+      // ON MESURE DONC LE CONTENU, PAS LA SECTION. Une station EST le
+      // viewport ; son contenu ne l'est pas. Et on prend la station devant le
+      // regard, pas la premiere du document : elles n'ont ni la meme largeur
+      // ni le meme cote — centre, gauche, centre, droite, centre.
+      //
+      // Cache sur le scroll et la largeur : cette boucle tourne a chaque
+      // frame, et six rectangles par frame pour une valeur qui ne bouge qu'au
+      // defilement serait du gaspillage pur.
+      // ─────────────────────────────────────────────────────────────────
+      const y = window.scrollY;
+      const w = window.innerWidth || 1;
+      if (Math.abs(y - bandeY) > 24 || w !== bandeW) {
+        bandeY = y; bandeW = w;
+        const stations = document.querySelectorAll<HTMLElement>(".mdc-station");
+        let cible: HTMLElement | null = null;
+        if (stations.length) {
+          // La plus proche du milieu de l'ecran. Le rectangle est celui
+          // d'APRES la choregraphie, qui translate jusqu'a 460px — au pire on
+          // prend la voisine, dont le contenu a une largeur comparable.
+          let meilleur = Infinity;
+          const milieu = window.innerHeight / 2;
+          stations.forEach((n) => {
+            const b = n.getBoundingClientRect();
+            const d = Math.abs(b.top + b.height / 2 - milieu);
+            if (d < meilleur) { meilleur = d; cible = n; }
+          });
+        } else {
+          cible = document.querySelector<HTMLElement>(".mdc-wrap");
+        }
+        if (cible) {
+          // Union des enfants de premier rang : c'est le bloc de texte, pas la
+          // section qui le porte. Les elements sans surface sont du gabarit.
+          let g = Infinity, d = -Infinity;
+          for (const k of Array.from((cible as HTMLElement).children)) {
+            const b = k.getBoundingClientRect();
+            if (b.width < 4 || b.height < 4) continue;
+            g = Math.min(g, b.left); d = Math.max(d, b.right);
+          }
+          // Repli genereux si la station est vide — la gravure n'a pas de
+          // texte : mieux vaut trop de voile qu'un texte pose sur un lotus.
+          if (g === Infinity) { const b = (cible as HTMLElement).getBoundingClientRect(); g = b.left; d = b.right; }
+          // Un peu plus large que le texte : les glyphes debordent, et la
+          // bande doit finir avant eux, pas sur eux.
+          const demi = Math.min(0.5, ((d - g) / w) * 0.5 * 1.12);
+          bandeCentre = (g + (d - g) / 2) / w;
+          bandeDemi = Math.max(0.18, demi);
+        }
       }
+      finalMat.uniforms.uTexteCentre.value = bandeCentre;
+      finalMat.uniforms.uTexteDemi.value = bandeDemi;
 
       finalMat.uniforms.uCarve.value = houseFocus.progress();
 

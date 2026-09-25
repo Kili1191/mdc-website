@@ -387,7 +387,25 @@ body {
   flex-direction: column;
   justify-content: center;
   /* Le contenu cale deborde des marges de .mdc-wrap pour que la piste
-     atteigne les deux bords de l'ecran, comme le rail libre le faisait. */
+     atteigne les deux bords de l'ecran, comme le rail libre le faisait.
+
+     CE COMMENTAIRE DECRIVAIT UNE ECHAPPEE QUI N'EXISTAIT PAS. Les marges
+     negatives vivaient sur .mdc-rail, mais c'est CETTE regle qui porte
+     `overflow: hidden`, et elle est dans .mdc-wrap. La boite de rognage etait
+     donc la colonne de texte, pas l'ecran.
+
+     Mesure a 1990px : la zone calee faisait 901px pour une piste de 3029.
+     1089px d'ecran — 55 % — etaient du marbre mort de part et d'autre d'une
+     meurtriere, et les cartes s'y faisaient trancher au milieu d'un mot aux
+     deux bords. Le JS et le CSS n'etaient pas d'accord non plus :
+     RailEpingle.tsx calcule sa course sur `window.innerWidth` pendant que le
+     CSS rognait sur la colonne.
+
+     L'echappee se fait donc ICI, ou vit le rognage. La piste garde ses
+     creux — voir .mdc-rail--epingle — et l'entete reprend la marge, sans
+     quoi le titre partirait au bord de l'ecran. */
+  margin-left: calc(-1 * var(--mdc-inset));
+  margin-right: calc(-1 * var(--mdc-inset));
   overflow: hidden;
 }
 
@@ -398,6 +416,10 @@ body {
    premiere carte demarrait a 231. */
 .mdc-epingle__entete {
   margin-bottom: 8px;
+  /* La zone calee s'echappe maintenant jusqu'aux bords de l'ecran ; l'entete,
+     elle, appartient a la colonne de texte et reprend donc sa marge. */
+  padding-left: var(--mdc-inset);
+  padding-right: var(--mdc-inset);
 }
 
 /* Epinglee, la piste ne defile plus elle-meme : c'est un transform qui la
@@ -408,6 +430,13 @@ body {
   scroll-snap-type: none;
   margin-top: 0;
   padding-bottom: 0;
+  /* Les marges negatives de .mdc-rail ont deja servi, un cran plus haut, sur
+     la zone calee. Les garder ici les compterait deux fois et decalerait la
+     piste d'une largeur de garde. Les creux, eux, RESTENT : ce sont eux qui
+     alignent la premiere carte sur le texte et laissent a la derniere de quoi
+     finir a la meme distance du bord droit. */
+  margin-left: 0;
+  margin-right: 0;
   width: max-content;
   will-change: transform;
 }
