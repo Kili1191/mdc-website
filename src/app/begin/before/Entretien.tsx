@@ -50,6 +50,12 @@ const REFUS = "(declined)";
 const ABSENT = "The assistant is not putting questions right now. Write to Kilian instead: it reaches him the same way.";
 const MUET = "The next question did not come through. Nothing you have written is lost: try again.";
 const NON_ENVOYE = "That did not send. Everything you wrote is still on this page: send it again.";
+// L'echec d'envoi APRES un arret de crise ne peut pas dire « send it again » :
+// il n'y a pas de bouton d'envoi sur cet ecran, et on parlerait de mise en page
+// a quelqu'un qu'on vient d'orienter vers le 999. Il a donc sa propre phrase,
+// et elle renvoie aux numeros plutot qu'a la page.
+const NON_ENVOYE_CRISE = "That did not reach Kilian. The numbers above matter more than this page. You can write to him later.";
+const EN_ROUTE = "Sending what you wrote to Kilian.";
 
 export default function Entretien() {
   const [phase, setPhase] = useState<Phase>("seuil");
@@ -200,9 +206,7 @@ export default function Entretien() {
           </p>
         ) : (
           <p style={{ ...body, marginTop: 40 }}>
-            {attente
-              ? "Sending what you wrote to Kilian."
-              : "That did not reach Kilian. The numbers above matter more than this page. You can write to him later."}
+            {attente ? EN_ROUTE : NON_ENVOYE_CRISE}
           </p>
         )}
       </div>

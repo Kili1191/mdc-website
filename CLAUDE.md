@@ -115,17 +115,37 @@ survit pas au conteneur. Ouvrir la session depuis `Kili1191/mdc-website`.
 
 # Les agents, et qui fait quoi
 
-Cinq agents, et ils ne se recouvrent pas. Convoquer le mauvais coute une passe.
+Neuf agents, et ils ne se recouvrent pas. Convoquer le mauvais coute une passe ;
+n'en convoquer aucun coute une regression.
 
 | agent | il repond a |
 |---|---|
 | `designer` | est-ce que cette page FONCTIONNE — ce qui porte, ce qu'il faut couper, ou l'oeil decroche, si ca mene a Begin |
-| `proportions` | des CHIFFRES — echelle, longueur de ligne, alignements, rythme, cibles |
+| `proportions` | des CHIFFRES de mise en page — echelle, longueur de ligne, alignements, rythme, cibles |
 | `copywriter` | tout mot destine a un client |
 | `seo` | faire venir les bonnes personnes |
+| `ingenieur` | la machine — WebGL, Next 16, la loi de mouvement, pourquoi ca casse en prod |
+| `accessibilite` | est-ce que quelqu'un qui voit mal, n'a pas de souris, ou a le vertige peut s'en servir |
+| `confidentialite` | ce qui peut couter a Kilian ou blesser un visiteur — donnees de sante, allegations, secrets, detresse |
+| `qa` | « comment le sais-tu » — prouver, et prouver que la preuve ne ment pas |
+| `offre` | ce qui est vendu, a quel prix, comment on l'achete, et ce qui dort chez Kilian |
 | skill `taste` | la marque — palette, fontes, motion, et la liste de controle |
 
 Le skill `taste` n'est pas un agent : il se lit avant de livrer, toujours.
+
+**Ce qui les rend utiles n'est pas leur competence generale.** Un modele connait
+deja le WebGL, le WCAG, le RGPD et la tarification. Ce qu'aucun ne connait, et
+ce que chacun de ces fichiers porte, c'est **ce qui a ete tente ICI puis retire,
+avec le chiffre qui l'a decide**. C'est la seule chose qui ne se deduit pas, et
+c'est ce qui se perd si personne ne l'ecrit.
+
+**Ils vieillissent.** Chaque decision de Kilian, chaque retrait sur mesure,
+chaque harnais qui a menti se reporte dans l'agent concerne. Un agent qu'on ne
+nourrit pas redevient un modele generique en trois mois, et un modele generique
+est exactement le probleme que ce site essaie d'eviter.
+
+**Ils ne se chargent que si `mdc-website` est la RACINE de la session** — voir la
+section sur l'agent copywriter plus bas. C'est vrai des neuf.
 
 # L'agent designer
 
@@ -181,6 +201,86 @@ par un agent SEO est la mort de ce site.
 Il connait aussi les bonnes pratiques SEO qui sont INTERDITES ici — la page FAQ
 en premier, que la regle « la maison ne se justifie jamais » disqualifie quel
 que soit son rendement.
+
+# L'agent ingenieur
+
+`.claude/agents/ingenieur.md` tient la machine : la couche WebGL permanente, le
+scroll en JavaScript, la loi de mouvement, la sante du build.
+
+**A convoquer AVANT** de toucher au marbre, au scroll, aux transitions de page,
+a une couche plein ecran, a une route d'API, et des que quelque chose « marche
+en dev et pas en prod ».
+
+**Ce qu'il porte :** les six pannes deja payees avec le chiffre qui les a
+diagnostiquees — le canvas a 1440x5400 parce qu'un `transform` parent capture
+`position: fixed`, les deux secondes de fond plat parce que le motif etait une
+prop, les 7,75 de contraste quand une view transition avale le canvas, les
+610px de scroll qui passaient sous un verrou CSS parce que Lenis ne scrolle pas
+nativement, les deux builds casses le meme jour par un backtick dans un
+commentaire, et le geste d'onglet fini a 110ms. Plus les valeurs gravees, qu'on
+ne retouche pas.
+
+# L'agent accessibilite
+
+`.claude/agents/accessibilite.md` repond a une seule question : est-ce que
+quelqu'un qui voit mal, n'utilise pas de souris, lit a l'oreille ou a le vertige
+peut se servir de cette maison comme les autres. Sur un site qui recoit des gens
+epuises, ce n'est pas une case a cocher, c'est la population reelle.
+
+**Ce qu'il porte :** les planchers MESURES contre le pire fond (brou 6,38 au 1er
+centile de l'accueil, rouille 3,11 donc jamais d'encre, taupe 2,28 donc jamais a
+l'ecran), le plancher d'opacite a 0,82 et non 0,78, la double condition
+`pointer: coarse` ET `max-width: 720px` — parce qu'un telephone emule n'est pas
+coarse et que la cible mesurait 33px la ou on regarde le plus —, et **les deux
+controles qui restent sous la barre parce que Kilian en a decide ainsi**. Les
+resignaler a chaque passe est inutile ; les corriger sans lui est une faute.
+
+# L'agent confidentialite
+
+`.claude/agents/confidentialite.md` demande « et si ca tombe mal ». Une plainte
+ASA se regle contre le praticien. Une donnee de sante appartient a quelqu'un qui
+ne l'a dite a personne d'autre. Un fait invente sur Kilian est une affirmation
+sur une personne reelle.
+
+**Ce qu'il porte :** les interdits avec leur raison — Ofqual deja publie par
+erreur puis retire, l'adresse, le COMMENT de NERVANA, l'ecole, les histoires de
+clients, `/lineage` supprimee parce qu'expliquer ce qu'on retient fabrique de la
+mefiance — et l'etat reel de ce que le depot tient deja : rien n'est stocke,
+aucun contenu n'est journalise, aucune cle dans le depot, les consignes de
+l'assistant ne partent pas dans le navigateur, et les ressources de crise sont
+ecrites en dur et relues.
+
+# L'agent qa
+
+`.claude/agents/qa.md` repond a « comment le sais-tu ». Ce depot est plein de
+decisions qui portent un chiffre, et c'est sa force ; un chiffre FAUX est plus
+dangereux qu'aucun chiffre, parce qu'il clot la discussion.
+
+**Ce qu'il porte :** les sept fois ou un harnais de ce depot a menti — le script
+qui echantillonnait zero bloc et rendait « aucun probleme », le canvas WebGL lu
+noir sans `preserveDrawingBuffer`, le port mort pris pour une panne de code, le
+serveur de prod perime dont le CSS repondait 404 et qui faisait mesurer une page
+sans aucun style, `isMobile` qui fausse toutes les boites, le rectangle
+post-transformation, et la colonne du telephone bornee par l'ecran. Plus
+l'outillage reel : playwright n'est PAS installe, puppeteer l'est.
+
+# L'agent offre
+
+`.claude/agents/offre.md` tient ce qui est vendu, a quel prix, comment quelqu'un
+l'achete, et ce qui dort chez Kilian. Personne d'autre ne porte cette question :
+`seo` fait venir, `designer` juge si la page mene quelque part, `copywriter`
+ecrit, mais personne ne demande si ce qu'on vend tient debout.
+
+**Il n'invente JAMAIS un prix**, une duree ou une disponibilite. La source est
+`SERVICES.md`, ce que le site publie deja, et la parole de Kilian. Quand un
+chiffre manque, il ecrit « a trancher par Kilian » et dit ce que la decision
+change.
+
+**Ce qu'il porte :** la grille reelle, la logique qui la tient (ANTARA est une
+porte obligatoire, pas la premiere d'une liste ; le cycle de six n'est pas une
+remise), la faute deja commise ou la mise en page faisait lire VAYU comme une
+entree moins chere, et la liste des decisions en attente — a commencer par la
+variable d'environnement absente qui fait perdre CENT POUR CENT des demandes.
 
 # Copy rule — LEVÉE PAR KILIAN LE 11 SEPTEMBRE 2026
 
