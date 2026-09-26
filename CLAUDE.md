@@ -44,6 +44,35 @@ Toute couche plein ecran rendue depuis une page passe par un portal sur
 Nav, BreathingCursor, SoundToggle, IntroOverlay) sont hors du wrapper et ne
 sont pas concernees.
 
+# L'entretien de `/begin/before`, et la seule regle qui le tient
+
+Une IA pose les questions d'avant-seance, une par une, et choisit la suivante
+d'apres ce qui vient d'etre repondu. A la fin, Kilian recoit une fiche remplie
+et la transcription mot pour mot.
+
+**L'assistant ne repond JAMAIS.** Il demande, il n'explique pas, il ne rassure
+pas, il ne lit pas un cas, il n'accepte et ne refuse personne. C'est la
+condition qui garde vraie la promesse de `/begin` : ce qui LIT et ce qui REPOND
+est Kilian. Le jour ou l'assistant repond quelque chose a quelqu'un, la page
+ment, et c'est la seule promesse sur laquelle tout le site repose.
+
+Trois autres regles, et elles sont dans le code :
+
+- **les consignes ne partent pas dans le navigateur.** Elles vivent dans
+  `src/lib/entretien.ts`, cote serveur. Le composant client ne l'importe pas.
+  Seul `src/lib/secours.ts` est partage, parce qu'il est fait pour etre lu ;
+- **rien n'est stocke.** Ni base, ni session, ni journal de contenu. C'est de la
+  donnee de sante, article 9 du RGPD britannique ;
+- **un champ non aborde reste vide dans la fiche.** Aucune deduction. Kilian
+  entre dans la piece en croyant ce qu'il a lu.
+
+Ce qui reste interdit ne bouge pas d'un mot : aucune allegation de sante, aucun
+diagnostic demande ou pose, aucun effet promis. L'ASA et le code CAP, au
+Royaume-Uni, se reglent contre le praticien.
+
+Les variables d'environnement sont dans `DEPLOY.md` §4ter. Sans `ANTHROPIC_API_KEY`
+la page bascule proprement sur le formulaire ecrit de `/begin`.
+
 # Sources of truth (canonical)
 
 `SERVICES.md` — ce que Kilian propose reellement (suite silencieuse, retraites,

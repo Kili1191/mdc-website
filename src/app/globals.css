@@ -627,3 +627,53 @@ body {
   position: absolute;
   left: 0; right: 0; top: -8px; bottom: -8px;
 }
+
+/* ─── L'entretien de /begin/before ─────────────────────────────────────
+   Une question a l'ecran, la suivante decidee par ce qui vient d'etre
+   repondu. Trois classes, pas une de plus : l'arrivee d'une question, le
+   refus d'y repondre, et ce qui a deja ete dit. */
+
+/* L'arrivee. Amplitude 0,5em et 900ms : la meme que toutes les revelations
+   du site (voir BreathReveal), donc la meme main. Sur `transform` et
+   `opacity` seulement. */
+@keyframes mdc-venir {
+  from { opacity: 0; transform: translateY(0.5em); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.mdc-venir { animation: mdc-venir 900ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .mdc-venir { animation: none; }
+}
+
+/* « I would rather not say. » Le mot en brou, le filet en rouille : c'est la
+   regle du site, mesuree, et le rouille n'ecrit jamais. */
+.mdc-refus {
+  font-family: var(--font-prata), Georgia, serif;
+  font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #4A3B2A; background: none; border: 0;
+  border-bottom: 1px solid #B14E2D;
+  padding: 6px 0; cursor: pointer;
+  transition: opacity 450ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+.mdc-refus:hover, .mdc-refus:focus-visible { opacity: 0.82; }
+.mdc-refus:focus-visible { outline: 2px solid rgba(177, 78, 45, 0.55); outline-offset: 4px; }
+
+/* Au doigt, une cible de 44px. Le trait reste ou il est : c'est la zone
+   tactile qui grandit, pas le soulignement.
+   LES DEUX CONDITIONS, et pas seulement `pointer: coarse` : un telephone
+   emule dans un navigateur de bureau n'est PAS coarse, donc la cible mesurait
+   33px la ou on la mesure le plus souvent. Mesure a 390px de large. */
+@media (pointer: coarse), (max-width: 720px) {
+  .mdc-refus { padding: 16px 0; }
+}
+
+/* Ce qui a deja ete dit, sous la question en cours. La question en petit,
+   la reponse en prose : c'est la reponse qu'on relit, pas la question. */
+.mdc-dit { display: grid; grid-template-columns: 2.6rem 1fr; gap: 4px 18px;
+           padding: 22px 0; border-top: 1px solid #74654F; }
+.mdc-dit > :nth-child(2),
+.mdc-dit > :nth-child(3) { grid-column: 2; }
+@media (max-width: 560px) {
+  .mdc-dit { grid-template-columns: 1fr; gap: 6px; }
+  .mdc-dit > :nth-child(2), .mdc-dit > :nth-child(3) { grid-column: 1; }
+}

@@ -123,6 +123,61 @@ parti, et ce qu'il dit quand ça échoue. Ils s'affichent tels quels
 Rien du contenu des messages n'est journalisé : les logs disent si l'envoi a
 réussi, jamais ce qu'il disait. La page promet le secret, le serveur le tient.
 
+---
+
+## 4ter. L'entretien de `/begin/before` — À FAIRE
+
+La page pose les questions d'avant-séance une par une, choisit la suivante
+d'après ce qui vient d'être répondu, et envoie à Kilian une fiche remplie plus
+la transcription mot pour mot. Elle a besoin de **deux** choses.
+
+### 1. La clé du modèle
+
+    Nom     ANTHROPIC_API_KEY
+    Valeur  la clé (console.anthropic.com → API keys)
+    Envs    Production (et Preview si tu veux tester avant)
+
+Elle ne figure nulle part dans le dépôt et ne doit jamais y figurer. Sans elle,
+`/api/entretien` répond **503** et la page bascule sur « Write to him instead »,
+qui renvoie au formulaire écrit de `/begin`. C'est le même principe que
+ci-dessus : rien ne fait semblant de marcher.
+
+### 2. Où va la fiche
+
+    Nom     MDC_ENTRETIEN_FORWARD_URL      (facultatif)
+    Valeur  l'URL choisie
+
+**Facultatif** parce que la route retombe sur `MDC_BEGIN_FORWARD_URL` quand
+elle n'existe pas : par défaut, l'entretien arrive là où arrive déjà le
+formulaire écrit. Ne la définir que pour séparer les deux boîtes.
+
+### Vérifier
+
+    curl -i -X POST https://maisonducalme.com/api/entretien \
+      -H 'content-type: application/json' -d '{"tours":[]}'
+
+`200` avec un champ `question` : la clé est vue. `503 assistant_absent` : elle
+ne l'est pas par ce déploiement.
+
+### Ce que ça coûte
+
+Un appel au modèle par question posée, plus un pour remplir la fiche. Un
+entretien complet en fait une dizaine à une quinzaine. Les garde-fous sont dans
+le code et pas dans une facture : `TOURS_MAX` (22 questions maximum),
+`LIMITE_TOTALE` (16 000 caractères par entretien) et un plafond de 80 appels
+par heure et par adresse IP.
+
+### Ce qui n'est pas stocké
+
+Rien. Pas de base, pas de session, pas de journal de contenu. La conversation
+vit dans le navigateur du visiteur et dans le corps des requêtes ; la fiche
+part chez Kilian et le serveur l'oublie. C'est de la donnée de santé, donc de
+catégorie particulière au sens de l'article 9 du RGPD britannique, et la
+manière la plus sûre de ne pas la perdre est de ne jamais la garder.
+
+Conséquence assumée : un rafraîchissement de page perd l'entretien en cours.
+La page le dit avant la première question.
+
 ## 5. Vérifs post-déploiement
 
 - `https://maisonducalme.com` → doit servir le site (redirect www → apex ou l'inverse selon config Vercel, laisse ce que Vercel propose par défaut)

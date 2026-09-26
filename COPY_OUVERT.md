@@ -416,3 +416,76 @@ donc quatre noms tenus entre Takata et lui. C'est ce que « only 8 master »
 veut dire, et le tableau rend la convention verifiable au lieu de la cacher
 dans une phrase. Si elle est autre, c'est la premiere chose a corriger — c'est
 le seul endroit du site qu'un eleve serieux ira recompter.
+
+---
+
+## 9. L'entretien de `/begin/before` — A VALIDER (26 septembre 2026)
+
+Demande par Kilian : un questionnaire interactif mene par une IA qui agit pour
+la maison, qui demande tout ce qu'il doit savoir avant la seance, qui juge la
+fragilite de la personne en face et choisit sa question suivante, et qui lui
+envoie a la fin une fiche remplie.
+
+La regle de copy etant levee depuis le 11 septembre, tout ce qui suit est
+**ecrit**, pas signale. Kilian valide, et ce qu'il change se reporte ici ET dans
+le code.
+
+### 9.1 Une ligne de `/begin` a DU bouger
+
+`src/app/begin/page.tsx` — les trois temps de « What happens next ».
+
+    avant   01 · He reads it himself · « Not a system, not an assistant. »
+    apres   01 · He reads it himself · « Every word of it, before he answers. »
+
+**Pourquoi.** `/begin/before` fait POSER les questions par un assistant. Un
+visiteur qui lit « not an assistant » a trois lignes d'ecart lit une
+contradiction, pas une nuance.
+
+Ce que la ligne promettait reste vrai mot pour mot : ce qui LIT et ce qui
+REPOND est une personne. Aucune machine ne lit ce qui est ecrit, aucune ne
+repond, aucune ne decide de personne. C'est meme la contrainte qui a dessine
+tout l'entretien : **l'assistant ne repond jamais**, il ne fait que demander.
+
+Si Kilian prefere garder la phrase d'origine, alors c'est `/begin/before` qui
+doit changer de nom ou disparaitre, pas la phrase qui doit devenir approximative.
+
+### 9.2 Ce qui a ete ecrit pour la page
+
+- le titre **« Before the room. »** et son chapo ;
+- la colonne de droite, **« An assistant asks. Kilian reads. »**, qui dit en
+  clair qu'un assistant pose les questions, que la sante est abordee, et que
+  tout refus est transmis comme un refus ;
+- les trois etats de fin : l'envoi (« It has arrived. He has it from here. »,
+  reprise exacte de `/begin`), la panne (« Write to him instead »), et l'arret.
+
+### 9.3 Les trois questions ecrites en dur
+
+`src/app/api/entretien/route.ts` les garde en secours : si le modele conclut
+sans elles, le serveur les pose lui-meme. Ce sont l'identite, le corps et le
+consentement au toucher. Elles se lisent telles quelles :
+
+- « Before this goes to Kilian: what is your name, and how should he reach you? »
+- « Is there anything about your body he should know before you arrive? A
+  pregnancy, a recent operation, an injury, pain anywhere. »
+- « Hands rest on the body, or just above it, and are held. Is that welcome, and
+  is there anywhere he should not touch? »
+
+### 9.4 Ce qui reste a decider, et que personne n'inventera
+
+1. **Les questions elles-memes ne sont pas ecrites** : le modele les formule au
+   moment ou il les pose, a partir des consignes de `src/lib/entretien.ts`. Ce
+   qui est ecrit, c'est CE QU'IL DOIT OBTENIR. Kilian doit lire cette liste de
+   douze et dire ce qui manque ou ce qui est de trop. C'est sa consultation, pas
+   celle d'un modele.
+2. **Le delai.** La page reprend la promesse de `/begin` : « answers personally,
+   within two working days ». Si l'entretien change ce delai, il change aux deux
+   endroits.
+3. **L'arret de crise.** Les trois ressources sont ecrites en dur dans
+   `src/lib/secours.ts` (Samaritans 116 123, NHS 111 option 2, 999) et la page
+   dit « Kilian is one person and he may not read this tonight ». C'est une
+   phrase dure, et elle est la exprès : quelqu'un en detresse ne doit pas
+   attendre une reponse qui n'arrivera pas ce soir. Si Kilian veut l'adoucir,
+   il faut qu'elle reste vraie.
+4. **La fiche elle-meme.** Le libelle des treize sections du formulaire qu'il
+   recoit (`formateDossier` dans `src/lib/entretien.ts`). Elle ne sort pas de
+   la maison, mais c'est lui qui la lit avant d'entrer dans la piece.
