@@ -51,34 +51,49 @@ const navigateur = await puppeteer.launch({
 });
 const page = await navigateur.newPage();
 await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
-await page.setRequestInterception(true);
+// L'INTERCEPTION PASSE PAR CDP, PAS PAR `setRequestInterception`.
+//
+// `page.setRequestInterception(true)` met TOUTES les requetes en attente, y
+// compris les chunks JavaScript de Next. Il suffit qu'un chunk parte en
+// `ERR_ABORTED` pour que l'hydratation echoue : la page s'affiche, plus rien ne
+// repond au clic, et le script echoue sur « bouton introuvable : Start » —
+// c'est-a-dire qu'il accuse la page d'un defaut que lui-meme vient de causer.
+//
+// `Fetch.enable` avec un motif d'URL ne met en attente que l'API. Tout le reste
+// du chargement est intact.
+const cdp = await page.createCDPSession();
+await cdp.send("Fetch.enable", { patterns: [{ urlPattern: "*api/entretien*" }] });
 
 let poses = 0;
 let envois = 0;
-page.on("request", (req) => {
-  const u = req.url();
+
+const rendre = (requestId, objet) =>
+  cdp.send("Fetch.fulfillRequest", {
+    requestId,
+    responseCode: 200,
+    responseHeaders: [{ name: "content-type", value: "application/json" }],
+    body: Buffer.from(JSON.stringify(objet)).toString("base64"),
+  });
+
+cdp.on("Fetch.requestPaused", async (e) => {
+  const u = e.request.url;
   if (u.includes("/api/entretien/dossier")) {
     envois += 1;
-    req.respond({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true }) });
+    await rendre(e.requestId, { ok: true });
     return;
   }
-  if (u.includes("/api/entretien")) {
-    const tours = JSON.parse(req.postData() || "{}").tours ?? [];
-    const rendre = (o) => req.respond({ status: 200, contentType: "application/json", body: JSON.stringify(o) });
-    if (SCENARIO === "crise" && tours.length === 2) {
-      rendre({ etat: "arret", question: "", note: "", champ: "paragraphe", couvert: [], fragilite: 5 });
-      return;
-    }
-    if (tours.length >= QUESTIONS.length) {
-      rendre({ etat: "assez", question: "", note: "", champ: "paragraphe", couvert: [], fragilite: 2 });
-      return;
-    }
-    const t = QUESTIONS[tours.length];
-    poses += 1;
-    rendre({ etat: "question", question: t.q, note: t.note, champ: t.champ, couvert: [], fragilite: 2 });
+  const tours = JSON.parse(e.request.postData || "{}").tours ?? [];
+  if (SCENARIO === "crise" && tours.length === 2) {
+    await rendre(e.requestId, { etat: "arret", question: "", note: "", champ: "paragraphe", couvert: [], fragilite: 5 });
     return;
   }
-  req.continue();
+  if (tours.length >= QUESTIONS.length) {
+    await rendre(e.requestId, { etat: "assez", question: "", note: "", champ: "paragraphe", couvert: [], fragilite: 2 });
+    return;
+  }
+  const t = QUESTIONS[tours.length];
+  poses += 1;
+  await rendre(e.requestId, { etat: "question", question: t.q, note: t.note, champ: t.champ, couvert: [], fragilite: 2 });
 });
 
 // `?from=carry` saute l'intro — voir shouldBypassIntro dans src/lib/introReady.ts.
@@ -121,12 +136,30 @@ if (SCENARIO === "crise") {
 } else {
   await attendre(800);
   await page.screenshot({ path: `${SORTIE}/revue.png`, fullPage: true });
-  const revue = await page.evaluate(() => document.body.innerText);
-  console.log("revue :", /That is everything he needs/.test(revue) ? "ok" : "MANQUE");
+  // ON N'ASSERTE PAS SUR LA COPY. Cette ligne cherchait « That is everything he
+  // needs » et a rendu MANQUE le jour ou l'agent copywriter a ecrit « That is
+  // enough to go on » — un faux echec sur une page parfaitement saine, ce qui
+  // est exactement la facon dont un harnais perd sa credibilite. On asserte sur
+  // ce qui ne bouge pas : l'ecran de revue est celui qui porte le bouton
+  // d'envoi et plus aucun champ de reponse.
+  const revue = await page.evaluate(() => ({
+    envoi: [...document.querySelectorAll("button")].some((b) => /Kilian/.test(b.textContent)),
+    champ: !!document.querySelector("#mdc-reponse"),
+  }));
+  console.log("revue :", revue.envoi && !revue.champ ? "ok" : `MANQUE ${JSON.stringify(revue)}`);
   await clic("Send this to Kilian");
   await attendre(900);
-  const fin = await page.evaluate(() => document.body.innerText);
-  console.log("fin :", /It has arrived/.test(fin) ? "ok" : "MANQUE");
+  // Les deux boutons qui restent a l'ecran ne sont pas a l'entretien : ce sont
+  // le son et la nav, montes dans layout.tsx. On ne compte donc pas les
+  // boutons de la PAGE, on verifie qu'aucune commande de l'entretien ne
+  // subsiste — plus de champ, plus de Next, plus d'envoi.
+  const fin = await page.evaluate(() => ({
+    champ: !!document.querySelector("#mdc-reponse"),
+    commandes: [...document.querySelectorAll("button")]
+      .map((b) => b.textContent.trim())
+      .filter((t) => t === "Next" || /Kilian/.test(t) || t === "Start"),
+  }));
+  console.log("fin :", !fin.champ && !fin.commandes.length ? "ok" : `MANQUE ${JSON.stringify(fin)}`);
   console.log("questions posees :", poses, "· envois :", envois);
 
   // Le telephone. `hasTouch` sans `isMobile` : `isMobile` change l'echelle de

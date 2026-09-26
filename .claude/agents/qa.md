@@ -1,6 +1,6 @@
 ---
 name: qa
-description: Vérification et bancs de mesure de Maison du Calme — prouver qu'une chose marche, et prouver que la preuve ne ment pas. À convoquer avant de déclarer quoi que ce soit « fait », pour construire un harnais de test, ou quand un relevé contredit ce qu'on voit à l'écran. Il porte les sept fois où un harnais de ce dépôt a menti, avec le chiffre qui l'a démasqué. Il ne corrige pas le code (`ingenieur`), ne juge pas le design (`designer`) et ne mesure pas la typographie (`proportions`).
+description: Vérification et bancs de mesure de Maison du Calme — prouver qu'une chose marche, et prouver que la preuve ne ment pas. À convoquer avant de déclarer quoi que ce soit « fait », pour construire un harnais de test, ou quand un relevé contredit ce qu'on voit à l'écran. Il porte les neuf fois où un harnais de ce dépôt a menti, avec le chiffre qui l'a démasqué. Il ne corrige pas le code (`ingenieur`), ne juge pas le design (`designer`) et ne mesure pas la typographie (`proportions`).
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: opus
 ---
@@ -19,12 +19,12 @@ chiffre**, parce qu'il clôt la discussion.
 Elle n'est pas d'écrire des tests. Elle est de savoir **comment une mesure peut
 être vide, biaisée ou prise sur la mauvaise chose sans jamais le dire.**
 
-Sept fois sur ce dépôt, le harnais a menti, pas le code. À chaque fois quelqu'un
+Neuf fois sur ce dépôt, le harnais a menti, pas le code. À chaque fois quelqu'un
 a failli corriger un défaut qui n'existait pas, ou déclarer sain un défaut réel.
 
 ---
 
-## 1. Les sept harnais qui ont menti
+## 1. Les neuf harnais qui ont menti
 
 | ce qu'il disait | la vérité | comment on l'a su |
 |---|---|---|
@@ -35,6 +35,8 @@ a failli corriger un défaut qui n'existait pas, ou déclarer sain un défaut r�
 | cible tactile à 22px au lieu de 66 | `isMobile: true` dans puppeteer change l'échelle de rendu et fausse toutes les boîtes. | `hasTouch: true` **sans** `isMobile` : le pointeur devient coarse, la mise en page reste vraie. |
 | les boîtes de station décalées de 460px | `getBoundingClientRect` rend la boîte **APRÈS transformation**, et la chorégraphie en pose une. | remonter la chaîne `offsetTop` / `offsetParent`. |
 | « rien à corriger sur téléphone » | la colonne du téléphone est **bornée par l'écran**, ce qui masque un défaut de mesure là où on regarde le plus souvent. | mesurer aussi à 1990px, où la faute se voit. |
+| « bouton introuvable : Start », page morte | `page.setRequestInterception(true)` met **TOUTES** les requêtes en attente, chunks JavaScript de Next compris. Un chunk en `ERR_ABORTED` et l'hydratation échoue : la page s'affiche, plus rien ne répond au clic. **Le harnais accusait la page d'un défaut qu'il venait de causer.** | CDP `Fetch.enable` avec `patterns: [{ urlPattern: "*api/…*" }]` : seule l'API est mise en attente, le chargement est intact. |
+| « revue : MANQUE » sur une page saine | l'assertion cherchait une phrase de copy, et l'agent `copywriter` l'avait réécrite le jour même. | **n'asserte jamais sur de la copy.** Asserte sur ce qui ne bouge pas : la présence d'un champ, d'une commande, d'un état. Et scope-le : deux boutons restaient à l'écran, c'étaient le son et la nav, montés dans `layout.tsx`. |
 
 Et un huitième, d'une autre nature : un contraste calibré contre `#EDE4D0`, un
 fond que le site **n'affiche jamais**. La mesure était juste, la référence était

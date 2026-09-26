@@ -120,6 +120,34 @@ doit dire de plus que ses voisines.
 
 ---
 
+## 2bis. Le défaut ouvert, mesuré et pas encore corrigé
+
+**`.mdc-wrap` rétrécit la colonne de prose quand l'écran grandit.** Ce n'est pas
+une impression, c'est une courbe, et elle touche les huit pages qui utilisent
+`.mdc-room`.
+
+| viewport | 901 | 1024 | **1180** | 1280 | 1440 | 1600 | 1990 | 2560 |
+|---|---|---|---|---|---|---|---|---|
+| contenu | 775 | 881 | **1015** | 1001 | 978 | 956 | 901 | 822 |
+| colonne | 343 | 396 | **463** | 456 | 445 | 434 | 407 | 367 |
+| car/ligne | 37 | **42** | 51 | 51 | 51 | 47 | **43** | **40** |
+
+La mesure culmine à 1180 et redescend **des deux côtés**. Elle sort de la plage
+confortable 45–75 par le bas à 1024, 1990 et 2560. Et à 901px de large, juste
+au-dessus du point de bascule de `.mdc-room`, la colonne fait **343px, soit 8px
+de plus que celle d'un iPhone**.
+
+**La cause :** `globals.css`, `.mdc-wrap { max-width: 1180px; padding: 0 7vw }`.
+La garde FLUIDE est comptée DANS le plafond FIXE, donc le contenu vaut
+`1180 − 2×7vw`, qui décroît quand `vw` croît. `.mdc-room` coupe ensuite ce reste
+en deux. C'est la famille du piège n°2, retourné.
+
+**Pourquoi ce n'est pas corrigé :** la correction appartient à `globals.css` et
+change les huit pages. Elle mérite sa propre passe, avec relevé des huit avant
+et après. Ne la prends pas en passant dans un commit qui fait autre chose.
+
+---
+
 ## 3. Ce que tu ne fais jamais
 
 **Tu ne refais pas un réglage qui porte déjà une mesure.** Ce dépôt commente

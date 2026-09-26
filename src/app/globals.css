@@ -677,3 +677,28 @@ body {
   .mdc-dit { grid-template-columns: 1fr; gap: 6px; }
   .mdc-dit > :nth-child(2), .mdc-dit > :nth-child(3) { grid-column: 1; }
 }
+
+/* Le chapo de /begin/before se retire au telephone une fois l'entretien
+   ouvert. `Entretien` pose l'attribut, et il ne le pose que sur un geste :
+   quelqu'un a appuye sur Start.
+
+   MESURE a 390x844. Le preambule — eyebrow, titre, chapo — occupe 558 a 612px,
+   soit 66 a 73 % du premier ecran. Pendant ce temps le champ de reponse tombe
+   32 a 86px SOUS la ligne de flottaison, et le bouton 145 a 199px plus bas
+   encore : on lit une question sur son corps et on ne voit pas ou repondre.
+   Le chapo vaut 184px de texte plus 40 de marge. Le retirer rend 224px, ce qui
+   couvre le pire des deux cas. Le titre, lui, reste.
+
+   Et ca regle un second defaut de la meme mesure : a 390 la question la plus
+   longue compose a 21px, exactement la taille du chapo, avec une capitale 13 %
+   plus courte (Higuen 15px contre Prata 17px). Les deux ne se croisent plus. */
+/* LA HAUTEUR COMPTE AUTANT QUE LA LARGEUR, et c'est la deuxieme mesure qui
+   l'a dit. Apres la premiere correction, le telephone allait — mais a
+   1440x900, question longue precedee d'une note, le champ tenait a 8px pres et
+   le bouton `Next` restait 104px sous le pli. Un ecran de portable n'est pas
+   large et court : il est LARGE ET COURT, et seule la hauteur le dit.
+   Le chapo se retire donc aussi sous 940px de haut. Sur un ecran vraiment haut
+   (1100 mesures) rien ne se cache, parce que tout tient. */
+@media (max-width: 720px), (max-height: 940px) {
+  :root[data-entretien="ouvert"] .mdc-seuil-chapo { display: none; }
+}

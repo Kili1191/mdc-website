@@ -1,4 +1,4 @@
-import { pageStyle, body, lead, bigHead, sectionHead, eyebrow, micro } from "@/styles/page";
+import { pageStyle, body, lead, bigHead, sectionHead, eyebrow, micro, ECHELLE } from "@/styles/page";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
 import Entretien from "./Entretien";
@@ -40,7 +40,11 @@ export default function BeforePage() {
         <h1 style={{ ...bigHead, marginTop: 36 }}>
           <SplitTextChars text="Before the room." delay={60} duration={900} />
         </h1>
-        <p style={{ ...lead, marginTop: 40 }}>
+        {/* Le chapo se retire au telephone une fois l'entretien ouvert. Il a
+            fait son travail — decider — et il occupait 224px d'un ecran de 844
+            pendant qu'on cherchait ou repondre. Voir `.mdc-seuil-chapo` dans
+            globals.css et l'attribut pose par `Entretien`. */}
+        <p className="mdc-seuil-chapo" style={{ ...lead, marginTop: 40 }}>
           A first session starts with what Kilian needs to know. These are the
           questions he would put sitting across from you, one at a time.
         </p>
@@ -55,7 +59,13 @@ export default function BeforePage() {
               la promesse de discretion sur /begin. */}
           <div>
             <p style={eyebrow}>How this works</p>
-            <h2 style={{ ...sectionHead, marginTop: 26 }}>
+            {/* 24px, une marche SOUS la question, et c'est une mesure.
+                A `sectionHead` ce titre composait a 40px — exactement la taille
+                de la question en cours, boites 530..628 contre 530..628, ratio
+                1,000, cote a cote sur la meme ligne. L'explication de ce qu'est
+                la page ne peut pas peser autant que la question qu'on est en
+                train de poser a quelqu'un. */}
+            <h2 style={{ ...sectionHead, fontSize: ECHELLE.titre, marginTop: 26 }}>
               An assistant asks. Kilian reads.
             </h2>
             <p style={{ ...body, marginTop: 28 }}>

@@ -69,6 +69,24 @@ export default function Entretien() {
   const champRef = useRef<HTMLTextAreaElement | HTMLInputElement | null>(null);
   const numero = tours.length + 1;
 
+  // LA PAGE APPREND QUE L'ENTRETIEN A COMMENCE, et elle s'en sert au telephone
+  // pour rendre l'ecran a la question.
+  //
+  // Mesure a 390x844 : le preambule — eyebrow, titre, chapo — occupe 558 a
+  // 612px, soit 66 a 73 % du premier ecran. En face, le bloc question plus
+  // bouton manque de 145 a 199px. Le chapo seul vaut 224px avec sa marge : le
+  // cacher une fois l'entretien ouvert suffit, et le titre reste.
+  //
+  // Il ne bouge QUE sur un geste — la personne a appuye sur Start. Un preambule
+  // qui se replie tout seul serait exactement l'instabilite que ce site a
+  // retiree du fond.
+  useEffect(() => {
+    const racine = document.documentElement;
+    if (phase === "seuil") racine.removeAttribute("data-entretien");
+    else racine.setAttribute("data-entretien", "ouvert");
+    return () => racine.removeAttribute("data-entretien");
+  }, [phase]);
+
   // Le focus suit la question, sans deplacer la page : `preventScroll` parce que
   // Lenis tient le defilement en JavaScript et qu'un navigateur qui recentre
   // seul se bagarre avec lui.
@@ -288,11 +306,20 @@ export default function Entretien() {
   // Les trois marches sont celles de `ECHELLE` (afficheS 40, titre 24, chapo
   // 21), jamais des nombres choisis ici. Les seuils sont en caracteres parce
   // que c'est ce qui decide du nombre de lignes.
+  const MARCHES = [
+    "clamp(29px, 3.6vw, 40px)",
+    "clamp(24px, 2.6vw, 29px)",
+    "clamp(21px, 2.2vw, 24px)",
+  ];
   const longueurQ = courant?.question.length ?? 0;
-  const tailleQ =
-    longueurQ <= 42 ? "clamp(29px, 3.6vw, 40px)"
-    : longueurQ <= 90 ? "clamp(24px, 2.6vw, 29px)"
-    : "clamp(21px, 2.2vw, 24px)";
+  const rang = longueurQ <= 42 ? 0 : longueurQ <= 90 ? 1 : 2;
+  // LA NOTE COMPTE DANS LA MARCHE, et c'est ce que ma premiere mesure avait
+  // rate. Le reglage ne regardait que la longueur de la QUESTION ; la note qui
+  // la precede (17px plus 24 de marge) ajoute 54px mesures au-dessus d'elle et
+  // n'entrait dans aucun seuil. Resultat a 1440x900, question longue precedee
+  // d'une note : le champ de reponse passait 20px SOUS la ligne de flottaison.
+  // Une note presente descend donc d'une marche.
+  const tailleQ = MARCHES[Math.min(MARCHES.length - 1, rang + (courant?.note ? 1 : 0))];
 
   return (
     <div>
@@ -301,7 +328,13 @@ export default function Entretien() {
         {courant?.note && (
           <p style={{ ...body, fontSize: 17, marginTop: 24, opacity: 0.82 }}>{courant.note}</p>
         )}
-        <h2 id="mdc-question" style={{ ...sectionHead, fontSize: tailleQ, marginTop: 26, maxWidth: "26ch" }}>
+        {/* 34ch et non 26 : a 26ch la question plafonnait a 324px dans une
+            colonne qui en fait 445. Mesure a 1440, question de 126 caracteres :
+            en levant le plafond elle passe de CINQ lignes a QUATRE (28 puis 36
+            caracteres par ligne) et le champ de reponse remonte de 29px. Un
+            titre a 26ch est juste ; une question de vingt-cinq mots n'est pas un
+            titre, et l'etrangler lui coute une ligne pour rien. */}
+        <h2 id="mdc-question" style={{ ...sectionHead, fontSize: tailleQ, marginTop: 26, maxWidth: "34ch" }}>
           {courant?.question}
         </h2>
       </div>
