@@ -115,11 +115,12 @@ survit pas au conteneur. Ouvrir la session depuis `Kili1191/mdc-website`.
 
 # Les agents, et qui fait quoi
 
-Neuf agents, et ils ne se recouvrent pas. Convoquer le mauvais coute une passe ;
+Dix agents, et ils ne se recouvrent pas. Convoquer le mauvais coute une passe ;
 n'en convoquer aucun coute une regression.
 
 | agent | il repond a |
 |---|---|
+| `chantier` | QUI appeler, dans quel ordre, avec quel brief. Il ne fait pas le travail, il le repartit |
 | `designer` | est-ce que cette page FONCTIONNE — ce qui porte, ce qu'il faut couper, ou l'oeil decroche, si ca mene a Begin |
 | `proportions` | des CHIFFRES de mise en page — echelle, longueur de ligne, alignements, rythme, cibles |
 | `copywriter` | tout mot destine a un client |
@@ -146,6 +147,33 @@ est exactement le probleme que ce site essaie d'eviter.
 
 **Ils ne se chargent que si `mdc-website` est la RACINE de la session** — voir la
 section sur l'agent copywriter plus bas. C'est vrai des neuf.
+
+# L'agent chantier
+
+`.claude/agents/chantier.md` est le contremaitre. Il ne pose pas une pierre : il
+dit qui la pose, quand, et ce qu'on verifie avant la suivante. **A convoquer
+devant une demande qui touche plus d'un metier**, devant un chantier dont on ne
+sait pas par quel bout le prendre, ou quand une passe precedente a fait perdre
+du temps.
+
+Il existe parce que les neuf autres sont excellents dans leur couloir et
+qu'**aucun ne sait qu'il faut appeler les autres**. `designer` ne mesure pas,
+`proportions` n'ecrit pas, `seo` ne redige jamais un mot client, `offre`
+n'invente pas un prix. Chacun a raison de s'arreter la ou il s'arrete. Le trou
+est entre eux.
+
+**Ce qu'il porte :** la table de routage avec les recouvrements qui ont deja
+coute une passe, l'ordre qui marche (juger avant de construire, mesurer avant de
+livrer, `seo` en dernier), la regle de parallelisme — **jamais deux agents qui
+ECRIVENT dans le meme fichier**, d'ou la ligne obligatoire « tu edites » ou « tu
+ne modifies rien » dans chaque brief —, les cinq elements d'un brief qui evite a
+un agent de refaire ce qui est fait, et **les six choses qui ne se deleguent
+jamais** : une decision de Kilian, un fait sur lui, un prix non publie, un texte
+de crise, une allegation de sante, l'approbation finale d'un mot client.
+
+Il sait aussi ou vivent les listes de travail, et il porte une regle de priorite
+qui prime sur l'elegance : **ce qui empeche un client d'arriver passe avant ce
+qui embellit une page.**
 
 # L'agent designer
 
