@@ -65,12 +65,18 @@ const T = {
 // Le centre du quartier, en unites du dessin. Ce n'est pas une adresse : il
 // tombe entre la gare et le parc, c'est-a-dire au milieu de Battersea. Le rayon
 // vaut plus d'un kilometre au sol — 1 unite fait environ 3,8 m.
-const ICI = { x: 455, y: 496, r: 300 };
+// Le centre du quartier, en unites du dessin. Ce n'est pas une adresse : il
+// tombe entre la gare et le parc, c'est-a-dire au milieu de Battersea. Le rayon
+// vaut environ 1,2 km au sol — apres l'elargissement du cadre, 1 unite fait
+// 4,9 m et non plus 3,8, donc il descend de 300 a 250 pour couvrir la meme
+// etendue reelle. Une zone qui grandit parce que la carte a dezoome serait un
+// hasard, pas une decision.
+const ICI = { x: 465, y: 611, r: 250 };
 
 // Le nom se pose un peu au-dessus et a gauche du centre du masque : a l'aplomb
 // exact, il tombait sur le faisceau ferroviaire. Cent unites valent 380 m au
 // sol, et ce n'est de toute facon pas une epingle.
-const NOM = { x: 420, y: 452 };
+const NOM = { x: 438, y: 566 };
 
 // LE HALO DES ETIQUETTES. C'est la solution de toutes les cartes du monde a un
 // probleme reel : un nom pose sur une route devient illisible. Un liset de fond
@@ -160,10 +166,11 @@ export default function Carte() {
             parc. Une carte exacte avec des noms faux est pire qu'un schema.
             Calcul dans scripts/carte-battersea.mjs, meme projection que le trace. */}
         <g fill={T.encre} fontFamily={FONTS.prata} style={HALO}>
-          <text className="mdc-carte__lieu" x="118" y="93" letterSpacing="0.22em" opacity="0.82">THE THAMES</text>
-          <text className="mdc-carte__lieu" x="607" y="231" letterSpacing="0.14em" textAnchor="middle">Battersea Park</text>
-          <text className="mdc-carte__lieu mdc-carte__gare" x="300" y="626" letterSpacing="0.14em" textAnchor="middle">Clapham Junction</text>
-          <text className="mdc-carte__lieu mdc-carte__loin" x="767" y="765" letterSpacing="0.14em" textAnchor="middle">Clapham Common</text>
+          <text className="mdc-carte__lieu" x="141" y="260" letterSpacing="0.22em" opacity="0.82">THE THAMES</text>
+          <text className="mdc-carte__lieu mdc-carte__loin" x="408" y="163" letterSpacing="0.14em" textAnchor="middle" opacity="0.82">Chelsea</text>
+          <text className="mdc-carte__lieu" x="583" y="405" letterSpacing="0.14em" textAnchor="middle">Battersea Park</text>
+          <text className="mdc-carte__lieu mdc-carte__gare" x="330" y="705" letterSpacing="0.14em" textAnchor="middle">Clapham Junction</text>
+          <text className="mdc-carte__lieu mdc-carte__loin" x="707" y="819" letterSpacing="0.14em" textAnchor="middle">Clapham Common</text>
         </g>
 
         {/* LE NOM DU QUARTIER, au centre de la zone. Il avait disparu en

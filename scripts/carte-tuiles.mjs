@@ -29,7 +29,20 @@ import { join } from "node:path";
 const OUT = process.argv[2];
 if (!OUT) { console.error("usage: node scripts/carte-tuiles.mjs <dossier>"); process.exit(1); }
 
-const VUE = { sud: 51.4560, ouest: -0.1900, nord: 51.4870, est: -0.1350 };
+// LA FENETRE. Elargie a la demande de Kilian : « peut etre dezoom un peu pour
+// mieux voir Chelsea dans la carte ». Chelsea est au NORD du fleuve et le bord
+// superieur le coupait presque entierement.
+//
+// Le cadre s'ouvre donc de 0,010 degre vers le nord — et aussi en longitude,
+// sinon la carte devient une colonne : a largeur constante, monter seul aurait
+// donne un rapport hauteur/largeur de 1,23 au lieu de 0,90. Ouvrir des deux
+// cotes garde exactement la proportion actuelle.
+//
+// Couverture : environ 4,9 km sur 4,4 km, contre 3,8 sur 3,5.
+// C'est la SEULE definition de la fenetre : `carte-battersea.mjs` la relit dans
+// geo.json plutot que d'en garder une copie, parce que deux fenetres qui
+// divergent donnent une carte dont les noms ne tombent plus sur leurs lieux.
+const VUE = { sud: 51.4570, ouest: -0.1980, nord: 51.4970, est: -0.1270 };
 const PAS_LAT = 0.0075;
 const PAS_LON = 0.011;
 
