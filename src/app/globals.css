@@ -702,3 +702,25 @@ body {
 @media (max-width: 720px), (max-height: 940px) {
   :root[data-entretien="ouvert"] .mdc-seuil-chapo { display: none; }
 }
+
+/* La carte du quartier, sur /questions.
+
+   POURQUOI LES TAILLES SONT ICI ET PAS DANS LE COMPOSANT. Dans un SVG a
+   viewBox, une taille de police est en UNITES UTILISATEUR : elle suit l'echelle
+   du dessin. La carte fait 760px sur un ecran de 1440 et 335px sur un telephone
+   de 390 — facteur 0,419. Les etiquettes a 15 unites arrivaient donc a 6,3px
+   reels au telephone. Une seule valeur ne peut pas servir les deux. */
+.mdc-carte__lieu { font-size: 15px; }
+.mdc-carte__ici  { font-size: 40px; }
+.mdc-carte__code { font-size: 15px; }
+
+@media (max-width: 720px) {
+  /* 30 unites x 0,419 = 12,6px reels. `Chelsea` sort : quatre reperes dans une
+     carte de 335px se marchent dessus, et c'est le seul qui soit de l'autre
+     cote de l'eau, donc le moins utile pour se situer. */
+  .mdc-carte__lieu { font-size: 30px; }
+  .mdc-carte__ici  { font-size: 56px; }
+  .mdc-carte__code { font-size: 26px; }
+  .mdc-carte__loin { display: none; }
+  .mdc-carte__gare { font-size: 26px; }
+}
