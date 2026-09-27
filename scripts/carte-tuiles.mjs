@@ -37,6 +37,14 @@ const PAS_LON = 0.011;
 const GARDE = (t) => {
   if (t.waterway === "riverbank") return "eau";
   if (t.natural === "water") return "eau";
+  // LA TAMISE N'EST PAS UNE WAY. Elle est stockee comme une RELATION
+  // multipolygone dont les tronçons de berge ne portent aucun tag : un
+  // extracteur qui ne lit que les ways tagees la rate entierement, et c'est
+  // exactement ce qui est arrive au premier passage. Trois plans d'eau
+  // recuperes — un bassin de port et un etang — et pas de fleuve.
+  // On garde donc AUSSI l'axe du cours d'eau, qui lui est une way, et on lit
+  // les relations plus bas.
+  if (t.waterway === "river") return "fleuve";
   if (t.leisure === "park" || t.leisure === "common" || t.leisure === "nature_reserve") return "parc";
   if (t.highway === "motorway" || t.highway === "trunk" || t.highway === "primary") return "axes";
   if (t.highway === "secondary") return "rues";
@@ -44,39 +52,69 @@ const GARDE = (t) => {
   return null;
 };
 
-const couches = { eau: [], parc: [], axes: [], rues: [], rail: [] };
+const couches = { eau: [], fleuve: [], parc: [], axes: [], rues: [], rail: [] };
 const vus = new Set();
 
-// Une machine a etats sur le XML d'OSM. Les noeuds d'abord (ils precedent
-// toujours les ways dans la sortie de l'API), puis les ways avec leurs refs.
+// Une machine a etats sur le XML d'OSM. Les noeuds d'abord, puis les ways,
+// puis les relations — c'est l'ordre que l'API garantit, et c'est ce qui permet
+// de lire le fichier en une seule passe.
+//
+// DEUX PASSES SUR LES WAYS, et c'est necessaire : on garde TOUTES les
+// geometries en memoire le temps d'une tuile, parce qu'une relation peut
+// reclamer une way qui ne porte aucun tag. Une tuile pese quelques megaoctets,
+// elle tient en memoire, et elle est jetee juste apres.
 function avale(xml) {
   const noeuds = new Map();
+  const geoms = new Map();   // id de way -> points, taguee ou non
   const lignes = xml.split("\n");
-  let dansWay = false, refs = [], tags = {}, id = null;
+  let dansWay = false, dansRel = false;
+  let refs = [], membres = [], tags = {}, id = null;
+
+  const pose = (couche, wid, pts, nom) => {
+    if (!couche || vus.has(wid) || pts.length < 2) return;
+    vus.add(wid);
+    couches[couche].push({ id: wid, pts, nom: nom || "" });
+  };
 
   for (const l of lignes) {
-    if (!dansWay) {
-      const n = l.match(/<node id="(\d+)"[^>]*? lat="(-?[\d.]+)" lon="(-?[\d.]+)"/);
-      if (n) { noeuds.set(n[1], [parseFloat(n[2]), parseFloat(n[3])]); continue; }
-      const w = l.match(/<way id="(\d+)"/);
-      if (w) { dansWay = true; id = w[1]; refs = []; tags = {}; if (l.includes("/>")) { dansWay = false; } continue; }
-    } else {
+    if (dansWay) {
       const nd = l.match(/<nd ref="(\d+)"/);
       if (nd) { refs.push(nd[1]); continue; }
       const tg = l.match(/<tag k="([^"]+)" v="([^"]*)"/);
       if (tg) { tags[tg[1]] = tg[2]; continue; }
       if (l.includes("</way>")) {
         dansWay = false;
+        const pts = refs.map((x) => noeuds.get(x)).filter(Boolean);
+        geoms.set(id, pts);
+        pose(GARDE(tags), id, pts, tags.name);
+      }
+      continue;
+    }
+    if (dansRel) {
+      const m = l.match(/<member type="way" ref="(\d+)"(?: role="([^"]*)")?/);
+      if (m) { membres.push({ ref: m[1], role: m[2] || "" }); continue; }
+      const tg = l.match(/<tag k="([^"]+)" v="([^"]*)"/);
+      if (tg) { tags[tg[1]] = tg[2]; continue; }
+      if (l.includes("</relation>")) {
+        dansRel = false;
         const couche = GARDE(tags);
-        if (couche && !vus.has(id)) {
-          const pts = refs.map((r) => noeuds.get(r)).filter(Boolean);
-          // Une way coupee par le bord de la tuile perd des noeuds : on la garde
-          // quand meme, les tuiles voisines apporteront la suite sous un autre
-          // identifiant de way ou la meme, et le trace se recolle a l'oeil.
-          if (pts.length >= 2) { vus.add(id); couches[couche].push({ id, pts, nom: tags.name || "" }); }
+        if (couche) {
+          for (const mb of membres) {
+            if (mb.role === "inner") continue;   // les iles, on s'en passe
+            const pts = geoms.get(mb.ref);
+            if (pts) pose(couche, `r${mb.ref}`, pts, tags.name);
+          }
         }
       }
+      continue;
     }
+
+    const n = l.match(/<node id="(\d+)"[^>]*? lat="(-?[\d.]+)" lon="(-?[\d.]+)"/);
+    if (n) { noeuds.set(n[1], [parseFloat(n[2]), parseFloat(n[3])]); continue; }
+    const w = l.match(/<way id="(\d+)"/);
+    if (w) { id = w[1]; refs = []; tags = {}; if (!l.includes("/>")) dansWay = true; continue; }
+    const rl = l.match(/<relation id="(\d+)"/);
+    if (rl) { id = rl[1]; membres = []; tags = {}; if (!l.includes("/>")) dansRel = true; continue; }
   }
 }
 
