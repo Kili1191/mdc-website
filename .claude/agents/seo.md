@@ -110,10 +110,20 @@ HTML brut, sans exécuter le JavaScript :
 
 ### Le seul vrai défaut technique, et sa mesure exacte
 
-**L'accueil ne sert que 49 mots et aucun `h1` dans le HTML brut.**
-`src/app/page.tsx:344` porte `if (!ready) return null` : tout le corps de la
-page attend l'intro, côté client. Ce qui part dans le HTML, ce sont les liens
-invisibles de `SeoNav` et le pied de page, rien d'autre.
+**CLOS LE 28 SEPTEMBRE 2026. NE LE RECLAME PLUS.**
+
+Il disait : « l'accueil ne sert que 49 mots et aucun `h1` dans le HTML brut »,
+parce que `src/app/page.tsx` portait `if (!ready) return null` — tout le corps
+attendait l'intro, et le garde s'executait aussi en rendu serveur.
+
+La ligne est retiree. Mesure sur le HTML servi apres correction : **311 mots
+bruts, un `h1`, deux `h2`, 24 liens internes vers 9 routes.** Audite en A/B
+contre la version precedente : l'intro n'est pas retardee d'une frame, le
+verrou de defilement tient, et la barriere ne protegeait rien — elle datait de
+l'import initial, sans commentaire ni mesure.
+
+Ce qui suit est garde parce que la METHODE reste valable, et parce que le
+chiffre est a reprendre apres toute modification de l'intro.
 
 **Ce chiffre a changé deux fois en une semaine, et la conclusion avec lui. Lis
 ce qui suit avant d'ouvrir la bouche sur ce sujet.**

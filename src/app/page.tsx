@@ -5,7 +5,6 @@ import BreathReveal from "@/components/BreathReveal";
 import RailEpingle from "@/components/RailEpingle";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
-import AssetFrame from "@/components/effects/AssetFrame";
 import { useIntroReady } from "@/lib/introReady";
 import { COLORS, FONTS } from "@/styles/tokens";
 import { body as pageBody, sectionHead, eyebrow, micro, label } from "@/styles/page";

@@ -38,6 +38,31 @@ cause est dans le tableau ci-dessous ».**
 | Le build casse sur une ligne de prose | un commentaire français qui cite du code entre backticks **ferme le littéral de gabarit** qui l'entoure. Le reste du fichier devient du JavaScript invalide et l'erreur pointe la prose, pas la cause. | deux builds cassés **le même jour**, `Descente.tsx` le matin et `MarbleBackground.tsx` l'après-midi. `scripts/verifie-litteraux.mjs` est branché en `prebuild`. Il a encore attrapé un backtick pendant la session de l'entretien. Ne le débranche jamais. |
 | Le geste de l'onglet actif est fini avant d'être perçu | la courbe de reveal est si front-loaded que le mouvement était terminé à **110 ms**. | c'est la SEULE exception à la loi de mouvement : 700 ms sur une troisième courbe, `cubic-bezier(0.65, 0.05, 0.36, 1)`. Un burin n'accélère pas comme un souffle. Elle est écrite dans `DIRECTION.md`, elle n'est pas une dérive. |
 
+### Et une panne d'un autre genre : un effet que PERSONNE n'a jamais vu
+
+`SplitTextChars` et `BreathReveal` se declenchent sur `IntersectionObserver`.
+**Un `IntersectionObserver` ne sait pas qu'il est COUVERT** : il regarde le
+viewport, pas l'occlusion. La station 1 de l'accueil est dans le viewport a
+scrollY 0, donc sa gravure se consomme derriere le voile de l'intro.
+
+Mesure A/B, avant et apres le retrait de la barriere de rendu :
+
+| | avec le corps monte tot | avec la barriere |
+|---|---|---|
+| burin en marche | 233 ms | 20 355 ms |
+| premier caractere plein | **517 ms** | **20 632 ms** |
+| paragraphe pose | 877 ms | 20 990 ms |
+| opacite du voile a cet instant | **1,000** | **1,000** |
+| le voile commence a s'effacer | 25 316 ms | 25 315 ms |
+
+**Dans les DEUX versions, la gravure du `h1` etait finie plusieurs secondes
+avant que le voile ne bouge d'un centieme.** Elle n'a jamais ete percue par
+personne. Le retrait de la barriere n'a rien casse : il a deplace une animation
+invisible de 20,6 s a 0,5 s.
+
+Si on veut un jour que cette arrivee se voie, elle s'accroche a
+`INTRO_DONE_EVENT`, jamais a un `IntersectionObserver`.
+
 ---
 
 ## 2. Les valeurs gravées
@@ -132,6 +157,32 @@ La chaîne complète avant de dire qu'une chose est faite :
 `--use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader`.
 `scripts/contraste-matiere.mjs` importe `playwright` et ne tourne donc pas en
 l'état : c'est un manque connu, pas un bug à découvrir.
+
+---
+
+## 5bis. Deux dettes mesurees, pre-existantes, et non bloquantes
+
+Elles ne sont causees par aucun changement recent. Elles sont ecrites ici pour
+qu'on ne les redecouvre pas, et qu'on ne les attribue pas par erreur au
+prochain commit qui touchera l'accueil.
+
+**`will-change` n'est jamais retire.** `stationStyle` (six sections), le mot de
+`BreathReveal` et le caractere de `SplitTextChars` le portent a vie. Chacun est
+promu en couche de composition par Blink. Mesure a l'etat de repos de
+l'accueil : **228 couches et ~198 Mo de backing store** a 1440x900, **240
+couches et 76,7 Mo** a 390x844 en dpr 3. Sur un vrai GPU, des couches statiques
+coutent de la memoire et non des frames — rien ne les repeint. Si on veut le
+payer : remettre `style.willChange = ""` sur `animationend` pour les caracteres
+et les mots ; les six stations gardent le leur, elles bougent a chaque frame.
+**A remesurer avant d'y croire.**
+
+**Le minuteur de secours de `ScrollProvider` est un litteral.** Il vaut
+`25000` ms, quand la fin naturelle de l'intro est mesuree a **26 174 ms**
+(plancher structurel 23 700). Sur une machine lente, Lenis redemarre donc
+~1,2 s avant `INTRO_DONE_EVENT`. Non exploitable en pratique — tout geste leve
+le voile avant, et le seul scroll observe sous un voile encore present l'etait a
+opacite 0,13. Le jour ou on y touche, `secours` se DERIVE de
+`TOTAL + REVEILLE + HOLD + EXIT` plus une marge, il ne se retape pas.
 
 ---
 
