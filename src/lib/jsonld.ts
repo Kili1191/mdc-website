@@ -26,12 +26,69 @@ const SITE = "https://maisonducalme.com";
 export const ORG_ID = `${SITE}/#maison`;
 export const PERSON_ID = `${SITE}/#kilian`;
 
+export const SITE_ID = `${SITE}/#site`;
+
+/**
+ * LE SITE LUI-MEME, et c'est le noeud qui manquait.
+ *
+ * POURQUOI IL COMPTE ICI PLUS QU'AILLEURS. « Maison du Calme » n'est pas un nom
+ * invente : c'est une expression francaise courante, deja portee par des gites
+ * en Bretagne, en Hongrie et a Paris, avec des annees d'anciennete, des fiches
+ * Booking et des compteurs d'avis. Google a donc lie cette chaine a « location
+ * de vacances » dans son graphe d'entites, et il le dit mot pour mot dans son
+ * apercu : « one of several peaceful holiday rentals, retreats, or apartments
+ * located in France and Hungary ».
+ *
+ * Pire, il REECRIT la requete : quelqu'un qui tape « maisonducalme » recoit
+ * « These are results for maison du calme ». C'est Google qui annonce qu'il ne
+ * connait pas encore « maisonducalme » comme entite.
+ *
+ * `alternateName` repond exactement a ca. Ce n'est pas une invention : c'est le
+ * nom de domaine, et c'est ce que les gens tapent.
+ *
+ * PAS DE `SearchAction`. Il n'y a pas de recherche sur ce site ; l'annoncer
+ * serait le faux signal que l'en-tete de ce fichier interdit.
+ */
+export const siteWeb = {
+  "@type": "WebSite",
+  "@id": SITE_ID,
+  url: SITE,
+  name: "Maison du Calme",
+  alternateName: ["maisonducalme"],
+  inLanguage: "en-GB",
+  publisher: { "@id": ORG_ID },
+};
+
 /** La maison. `HealthAndBeautyBusiness` est plus juste que `LocalBusiness` seul. */
 export const organisation = {
   "@type": "HealthAndBeautyBusiness",
   "@id": ORG_ID,
   name: "Maison du Calme",
   url: SITE,
+  // L'IMAGE ET LE LOGO. Deux fichiers reels du depot, rien d'invente. Un graphe
+  // d'entites se construit par recoupement, et sans eux il n'y a rien a
+  // recouper : c'est ce qui laisse Google confondre ce cabinet avec un gite.
+  image: `${SITE}/og.jpg`,
+  logo: `${SITE}/mdc-logo.png`,
+
+  // L'ADRESSE, ET SEULEMENT SOUS CETTE FORME.
+  //
+  // `addressLocality` et `addressRegion`, JAMAIS `streetAddress` ni
+  // `postalCode`. Ca ne dit pas un mot de plus que « Battersea, South West
+  // London », qui est deja ecrit dans le pied de page de chaque page — donc la
+  // regle de maintenance en tete de fichier est tenue : on ne balise que ce que
+  // la page affiche.
+  //
+  // Et c'est le champ que Google lit REELLEMENT pour le local, la ou
+  // `areaServed` seul reste faible. Les deux se completent, aucun ne remplace
+  // l'autre.
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Battersea",
+    addressRegion: "London",
+    addressCountry: "GB",
+  },
+
   // Le quartier, jamais l'adresse. C'est une contrainte de marque, pas un oubli.
   areaServed: [
     { "@type": "Place", name: "Battersea, South West London" },

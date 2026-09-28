@@ -8,7 +8,7 @@ import PageTransition from "@/components/PageTransition";
 import ScrollProvider from "@/components/ScrollProvider";
 import SeoNav from "@/components/SeoNav";
 import JsonLd from "@/components/JsonLd";
-import { graphe, organisation, praticien } from "@/lib/jsonld";
+import { graphe, organisation, praticien, siteWeb } from "@/lib/jsonld";
 import Footer from "@/components/Footer";
 import BreathButton from "@/components/BreathButton";
 import Inscription from "@/components/Inscription";
@@ -93,7 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${prata.variable} ${higuen.variable}`}>
       <body style={{ margin: 0, minHeight: "100svh", background: "#EDE4D0", color: "#4A3B2A" }}>
-        <JsonLd data={graphe(organisation, praticien)} />
+        <JsonLd data={graphe(siteWeb, organisation, praticien)} />
         <SeoNav />
         <IntroOverlay />
         <ScrollProvider />
