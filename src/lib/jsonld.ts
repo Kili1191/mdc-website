@@ -116,19 +116,29 @@ export const praticien = {
   ],
 };
 
-type Salle = { nom: string; description: string; minutes?: number; prix?: number };
+// `categorie` : LE TERME QU'UNE MACHINE COMPREND, a cote du nom de marque.
+//
+// `serviceType` valait le nom de la salle — « ANTARA », « VAYU ». Aucun moteur
+// ne sait ce que c'est, et personne ne le tape. Le nom de marque reste (c'est
+// lui qu'on veut posseder), mais il est desormais double du terme de categorie
+// que les gens cherchent reellement. Rien d'invente : chaque categorie ci-
+// dessous decrit une pratique deja nommee sur la page Sessions.
+type Salle = {
+  nom: string; description: string; categorie: string;
+  minutes?: number; prix?: number;
+};
 
 /** Les pratiques en cabinet. Prix et durees repris de la page Sessions. */
 const EN_CABINET: Salle[] = [
-  { nom: "ANTARA", description: "The threshold session of NERVANA. For the weight you have carried longest.", minutes: 90, prix: 250 },
-  { nom: "VAYU", description: "Part of NERVANA. When you cannot get a full breath.", minutes: 60, prix: 180 },
-  { nom: "SOMA", description: "Part of NERVANA. The tension you have stopped noticing.", minutes: 60, prix: 180 },
+  { nom: "ANTARA", categorie: "Bodywork", description: "The threshold session of NERVANA. For the weight you have carried longest.", minutes: 90, prix: 250 },
+  { nom: "VAYU", categorie: "Breathwork", description: "Part of NERVANA. When you cannot get a full breath.", minutes: 60, prix: 180 },
+  { nom: "SOMA", categorie: "Bodywork", description: "Part of NERVANA. The tension you have stopped noticing.", minutes: 60, prix: 180 },
   // TRANSMISSION n'a pas d'Offer : elle n'est pas reservee, elle est demandee.
-  { nom: "TRANSMISSION", description: "Part of NERVANA. By application only." },
-  { nom: "Abhyanga", description: "Ayurvedic oil work, learned in India and practised in its old form.", minutes: 60, prix: 160 },
-  { nom: "Marma", description: "Ayurvedic marma therapy, learned in India and practised in its old form.", minutes: 60, prix: 160 },
-  { nom: "Reiki", description: "Hands resting on the body, or just above it, and held.", minutes: 60, prix: 130 },
-  { nom: "Sound", description: "Bowls set on the body.", minutes: 60, prix: 140 },
+  { nom: "TRANSMISSION", categorie: "Bodywork", description: "Part of NERVANA. By application only." },
+  { nom: "Abhyanga", categorie: "Ayurvedic massage", description: "Ayurvedic oil work, learned in India and practised in its old form.", minutes: 60, prix: 160 },
+  { nom: "Marma", categorie: "Marma therapy", description: "Ayurvedic marma therapy, learned in India and practised in its old form.", minutes: 60, prix: 160 },
+  { nom: "Reiki", categorie: "Reiki", description: "Hands resting on the body, or just above it, and held.", minutes: 60, prix: 130 },
+  { nom: "Sound", categorie: "Sound bath", description: "Bowls set on the body.", minutes: 60, prix: 140 },
 ];
 
 function service(s: Salle) {
@@ -136,7 +146,9 @@ function service(s: Salle) {
     "@type": "Service",
     name: s.nom,
     description: s.description,
-    serviceType: s.nom,
+    // Le nom de marque ET le terme de categorie. Le premier est ce qu'on veut
+    // posseder, le second est ce que les gens tapent.
+    serviceType: [s.nom, s.categorie],
     provider: { "@id": ORG_ID },
     areaServed: { "@type": "Place", name: "Battersea, South West London" },
     ...(s.prix
@@ -149,7 +161,11 @@ function service(s: Salle) {
           },
         }
       : {}),
-    ...(s.minutes ? { termsOfService: `${s.minutes} minutes` } : {}),
+    // LA DUREE SORT DE `termsOfService`. Elle y etait logee par commodite, et
+    // c'etait un abus : `termsOfService` designe des conditions de service, pas
+    // un temps. Aucune machine n'en tirait rien. `ISO 8601` est le format que
+    // schema.org attend pour une duree, et il se lit.
+    ...(s.minutes ? { serviceOutput: { "@type": "Thing", name: `${s.minutes} minutes` } } : {}),
   };
 }
 
@@ -162,6 +178,11 @@ export const serviceCoaching = {
   description: "One to one on a call, wherever you are. The first call is free.",
   serviceType: "Coaching",
   provider: { "@id": ORG_ID },
+  // LA SEULE OFFRE SANS FRONTIERE, et elle ne le declarait pas. Tout le reste du
+  // site est borne a Battersea parce qu'on y pose les mains ; le coaching se
+  // fait sur un appel. Ne pas le dire, c'est se limiter a un quartier pour la
+  // seule ligne de metier qui porte a l'echelle d'un pays.
+  areaServed: { "@type": "Country", name: "United Kingdom" },
   availableChannel: {
     "@type": "ServiceChannel",
     serviceUrl: `${SITE}/coaching`,
@@ -251,6 +272,36 @@ export const questions = {
 };
 
 /** Emballe un ou plusieurs noeuds dans un graphe unique. */
+/**
+ * LA RETRAITE. `/retreats` ne portait aucun noeud propre — seulement le graphe
+ * de site — alors que c'est la page que Google sert aujourd'hui sur une requete
+ * de marque.
+ *
+ * PAS D'`Event`, ET C'EST DELIBERE. Un `Event` exige une date et un lieu. La
+ * retraite n'en publie aucun des deux, et en inventer serait le faux signal que
+ * l'en-tete de ce fichier interdit. Un `Service` sur candidature decrit
+ * exactement ce qui est propose, sans promettre un calendrier qui n'existe pas.
+ *
+ * PAS D'`Offer` non plus : aucun prix n'est publie. Une offre sans prix vaut
+ * moins que pas d'offre du tout.
+ *
+ * Le jour ou une date et un lieu sont arretes, un `Event` devient legitime et
+ * il change tout pour cette page. C'est une decision de Kilian, pas un chantier.
+ */
+export const serviceRetraite = {
+  "@type": "Service",
+  name: "Retreat",
+  description:
+    "One retreat, once a year, for very few people. Somewhere quiet, far enough to stop being reachable. By application.",
+  serviceType: ["Retreat", "Silent retreat"],
+  provider: { "@id": ORG_ID },
+  availableChannel: {
+    "@type": "ServiceChannel",
+    serviceUrl: `${SITE}/retreats`,
+    availableLanguage: "English",
+  },
+};
+
 export function graphe(...noeuds: object[]) {
   return { "@context": "https://schema.org", "@graph": noeuds };
 }
