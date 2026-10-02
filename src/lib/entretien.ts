@@ -176,15 +176,35 @@ export const SCHEMA_TOUR = {
       description: "Every key already answered well enough, including by this turn's answer.",
     },
     fragilite: {
+      // PAS DE `minimum` NI DE `maximum`, ET CE N'EST PAS UN OUBLI.
+      //
+      // Les sorties structurees les refusent sur un entier. L'API repondait
+      // 400 : « For 'integer' type, properties maximum, minimum are not
+      // supported ». La route rendait alors `assistant_muet`, et l'entretien
+      // n'a jamais pose une seule question en production.
+      //
+      // La borne vit donc dans deux endroits qui, eux, l'acceptent : la phrase
+      // ci-dessous, que le modele lit, et `borne()` plus bas, qui ne lui fait
+      // pas confiance. Un schema qui ne contraint plus exige un code qui
+      // contraint.
       type: "integer",
-      minimum: 1,
-      maximum: 5,
-      description: "1 matter of fact, 5 raw. Judged on this conversation, not on the topic.",
+      description: "An integer from 1 to 5. 1 matter of fact, 5 raw. Judged on this conversation, not on the topic.",
     },
   },
   required: ["etat", "question", "note", "champ", "couvert", "fragilite"],
   additionalProperties: false,
 } as const;
+
+/** Ramene une fragilite dans 1..5, et rend 3 quand il n'y a rien a ramener.
+ *
+ *  Le schema ne peut plus porter la borne (voir SCHEMA_TOUR), donc elle est
+ *  ici. Un entier hors bornes n'est pas une erreur a signaler : la fiche est
+ *  faite pour etre lue par Kilian avant d'entrer dans la piece, et un « 7 of
+ *  5 » y serait du bruit. On ramene, et on se tait. */
+export function borne(v: unknown): number {
+  if (typeof v !== "number" || !Number.isFinite(v)) return 3;
+  return Math.min(5, Math.max(1, Math.round(v)));
+}
 
 export type Tour = {
   etat: "question" | "assez" | "arret";
@@ -249,7 +269,8 @@ export const SCHEMA_DOSSIER = {
     drapeaux: { type: "array", items: { type: "string" }, description: "What must be read before touching anyone." },
     verifier: { type: "array", items: { type: "string" }, description: "To confirm in person." },
     non_dit: { type: "array", items: { type: "string" }, description: "Asked and not answered, or never asked." },
-    fragilite: { type: "integer", minimum: 1, maximum: 5, description: "1 matter of fact, 5 raw." },
+    // Meme raison que dans SCHEMA_TOUR : les bornes d'un entier font un 400.
+    fragilite: { type: "integer", description: "An integer from 1 to 5. 1 matter of fact, 5 raw." },
   },
   required: [...CHAMPS_DOSSIER.map((c) => c.cle), "accueil", "drapeaux", "verifier", "non_dit", "fragilite"],
   additionalProperties: false,
@@ -318,7 +339,7 @@ export function formateDossier(d: Dossier, tours: Echange[], urgence: boolean): 
     lignes.push("");
   }
 
-  const f = d.fragilite;
+  const f = typeof d.fragilite === "number" ? borne(d.fragilite) : undefined;
   if (typeof f === "number") {
     lignes.push(`How they arrive, 1 matter of fact to 5 raw:  ${f} of 5`);
     lignes.push("");
