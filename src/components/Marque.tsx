@@ -62,6 +62,15 @@ const K = 1.5;
 /** Part de la largeur du trace occupee par le debord d'avant-toit, a gauche.
  *  Mesure sur le PNG : le mur commence a 52 sur 573px d'encre. */
 const DEBORD = 0.089;
+/** Position du MUR dans la boite de l'image, en fraction de sa hauteur.
+ *
+ *  Le fichier fait 574 x 480 et le mur commence a x = 52 : 52/480 = 0,108333.
+ *  C'est cette fraction-la qu'il faut, et non RAPPORT x DEBORD = 0,106695, qui
+ *  rapporte le debord a la boite d'ENCRE (51 sur 573) alors que la marge
+ *  deplace la boite de l'ELEMENT, bord transparent compris. L'ecart vaut
+ *  0,082px a 50px de trace ; la mesure au navigateur relevait le mur a 39,885
+ *  pour une garde a 39,8, soit 0,085px. Les deux tombent ensemble. */
+const MUR = 52 / 480;
 
 type Props = {
   /** Hauteur du trace, en pixels. Toute la composition en decoule. */
@@ -115,15 +124,31 @@ export default function Marque({
   //
   // Seulement en forme EN LIGNE : empilee, le trace est centre sur le nom et
   // c'est le faite qui fait le centre, pas le mur.
-  const suspension = empilee ? 0 : -(hauteur * RAPPORT * DEBORD);
+  // ELLE DOIT SUIVRE LA HAUTEUR RENDUE, ET ELLE NE LA SUIVAIT PAS.
+  //
+  // Mesure de l'agent proportions : sous 561px, la barre force le trace a 38px
+  // (`.mdc-seuil__marque img`) pendant que la marge restait calculee sur la
+  // PROP, soit 50. Resultat, le mur pendait a 16,789 pour une garde a 18 :
+  // 1,211px dehors, sur le seul format ou l'ecran est trop etroit pour que
+  // l'oeil pardonne. Au-dessus de 561px l'erreur n'etait que de 0,085px.
+  //
+  // La hauteur passe donc par une variable CSS, et la marge la lit. Une
+  // surcharge de la hauteur deplace automatiquement la marge avec elle : il
+  // n'y a plus deux endroits a tenir d'accord. La valeur par defaut dans le
+  // `var()` est la prop, donc rien a declarer quand personne ne surcharge.
+  //
+  // Ecarte : `transform: translateX(-9%)`. Un translate ne consomme pas de
+  // place — le mot-marque ne suivrait pas et le trou entre les deux
+  // grandirait de 5,3px. C'est une MARGE qu'il faut.
+  const h = `var(--mdc-trace-h, ${hauteur}px)`;
 
   const trace = (
     <img
       src="/logo.png"
       alt=""
       style={{
-        height: hauteur, width: "auto", display: "block", flex: "none",
-        marginLeft: suspension,
+        height: h, width: "auto", display: "block", flex: "none",
+        marginLeft: empilee ? 0 : `calc(${h} * -${MUR})`,
       }}
     />
   );
@@ -132,10 +157,31 @@ export default function Marque({
     <span style={{
       fontFamily: FONTS.higuen, fontSize: tailleNom,
       letterSpacing: "0.22em",
-      // L'interlettre pousse un blanc APRES la derniere lettre. Sans le
-      // reprendre en retrait, le bloc est optiquement decale d'un quart de
-      // cadratin vers la gauche sous le faite.
-      textIndent: "0.22em",
+      // LE BLANC DE FIN SE REPREND A DROITE, ET PAS EN RETRAIT A GAUCHE.
+      //
+      // Kilian : « pourquoi le texte du logo est pas aligne ? ». Mesure de
+      // l'agent proportions sur le build de prod, bords d'encre rasterises a
+      // 10x : « MAISON DU CALME » commence 5,075px a DROITE de « A house for
+      // what you carry », identique a 561, 768, 1024, 1440 et 1990px.
+      //
+      // La cause etait ici. L'interlettre pousse un blanc APRES la derniere
+      // lettre, et il fallait bien le reprendre — mais `text-indent` le
+      // reprend en poussant le PREMIER glyphe vers la droite. Sous le faite,
+      // dans une signature empilee et centree, ca recentre le bloc et c'est
+      // juste. Dans la barre du haut, les deux lignes sont une colonne calee a
+      // gauche : le M part a droite pendant que le A reste au bord.
+      //
+      // La decomposition des 5,075 le dit : 4,675 viennent du retrait
+      // (0,22em x 21,25px) et 0,400 de l'apex du A de Prata, qui deborde a
+      // gauche de sa boite. Ce dernier reste, et c'est voulu — une pointe
+      // doit deborder, comme une bas-de-casse ronde, sinon elle parait
+      // rentree.
+      //
+      // `margin-right` negatif retire le meme blanc par l'autre bout : la
+      // boite se referme a droite, le premier glyphe ne bouge pas. Le
+      // centrage de la forme empilee est preserve, l'alignement a gauche de
+      // la forme en ligne est obtenu. Un seul correctif pour les deux formes.
+      marginRight: "-0.22em",
       textTransform: "uppercase", color: COLORS.brouFonce, lineHeight: 1,
       whiteSpace: "nowrap",
     }}>{NOM}</span>
@@ -167,7 +213,22 @@ export default function Marque({
   return (
     <span
       {...(decoratif ? { "aria-hidden": true } : { role: "img", "aria-label": titre })}
-      style={{ display: "inline-flex", alignItems: "center", gap: 1.6 * u }}
+      // 2,5u ET NON 1,6u, ET C'EST LE RETRAIT QUI PAYAIT LA DIFFERENCE.
+      //
+      // Le trou declare valait 1,6u = 8,889px. Mesure a l'ecran : 13,540px,
+      // soit 52,3 % de plus. Les 4,651 de surplus etaient les 4,675 du
+      // `text-indent` corrige plus haut, qui poussait le M vers la droite et
+      // elargissait donc le trou par accident.
+      //
+      // Retirer le retrait sans toucher au gap aurait resserre le lockup de
+      // 34 % — un changement que Kilian n'a pas demande, en reponse a une
+      // question d'alignement. 2,5u rend 13,889px, soit 0,35px de ce qui est
+      // a l'ecran aujourd'hui : l'alignement se corrige, le dessin ne bouge
+      // pas. Et 2,5 reste un multiple de u, donc le systeme tient.
+      //
+      // Si le trou de 8,889 est prefere un jour, c'est ici, et c'est une
+      // decision de direction — la mesure ne la tranche pas.
+      style={{ display: "inline-flex", alignItems: "center", gap: 2.5 * u }}
     >
       {trace}
       <span style={{

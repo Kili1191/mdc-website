@@ -189,8 +189,22 @@ export default function Nav() {
           /* Le dernier element de la barre, donc celui qui porte le bord
              droit de la colonne. Son interlettre pousse un blanc APRES le N,
              et le mot finissait donc 2px en retrait du bord ou finit le texte
-             de la page. On reprend le blanc. */
-          margin-right:-0.14em;
+             de la page. On reprend le blanc.
+
+             ET IL FALLAIT AUSSI REPRENDRE LE PADDING. Cette declaration
+             REMPLACE le margin -8px -2px de la regle partagee : le blanc
+             d'interlettre etait bien paye, les 2px de padding-right ne
+             l'etaient plus. Mesure de l'agent proportions : l'encre du N
+             finissait a 42,141 du bord droit quand le mur de la maison etait
+             a 39,885 du bord gauche, soit 2,255px d'asymetrie entre les deux
+             bouts de la barre, identique a 1440 et 1990.
+
+             Comptabilite relevee : 39,8 de garde - 1,68 de marge + 2 de
+             padding + 1,68 de blanc final + 0,32 d'approche droite du N =
+             42,12, contre 42,141 mesures. Les deux termes manquants sont donc
+             bien le padding. Avec -0,14em - 2px, l'encre tombe a 40,12, soit
+             0,24px du mur : symetrique a l'oeil et au dixieme de pixel. */
+          margin-right:calc(-0.14em - 2px);
         }
         .mdc-seuil__index{ opacity:0.82; }
         .mdc-seuil__index:hover, .mdc-seuil__index:focus-visible{ opacity:1; }
@@ -297,7 +311,13 @@ export default function Nav() {
            pouce y gagne quand meme. */
         @media (max-width: 560px){
           .mdc-seuil__marque span span{ display:none; }
-          .mdc-seuil__marque img{ height:38px !important; }
+          /* UNE SEULE VALEUR POUR LA HAUTEUR ET POUR LA SUSPENSION.
+             C'etait height 38px !important ici pendant que Marque.tsx
+             calculait sa marge gauche sur la prop, restee a 50 : le mur
+             pendait 1,211px a gauche de la garde sur telephone. La variable
+             porte maintenant les deux, le composant lit la meme valeur, et
+             surcharger la hauteur deplace la marge avec elle. */
+          .mdc-seuil__marque{ --mdc-trace-h:38px; }
           .mdc-seuil{ padding-top:14px; padding-bottom:14px; }
         }
         @media (max-width: 720px){
