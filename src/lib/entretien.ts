@@ -294,7 +294,7 @@ const TRAIT = "-".repeat(66);
 
 // LE FORMULAIRE. Du texte brut, mis en page, et c'est un choix : un HTML
 // d'e-mail se fait manger par un client sur deux, et la destination n'est pas
-// connue d'ici (voir MDC_BEGIN_FORWARD_URL dans DEPLOY.md). Du texte aligne se
+// connue d'ici (voir MDC_BEGIN_A dans DEPLOY.md). Du texte aligne se
 // lit partout, y compris dans un webhook, y compris sur un telephone.
 export function formateDossier(d: Dossier, tours: Echange[], urgence: boolean): string {
   const lire = (cle: string) => {

@@ -5,19 +5,23 @@
 // poste le tout a la destination de Kilian. Elle ne decide rien, elle ne garde
 // rien, et elle n'ecrit pas une ligne du contenu dans un journal.
 //
-// LA DESTINATION n'est pas choisie ici, meme raison que /api/begin : ou vont les
-// messages est une decision de Kilian. `MDC_ENTRETIEN_FORWARD_URL` si elle
-// existe, sinon `MDC_BEGIN_FORWARD_URL` — l'entretien arrive alors la ou arrive
-// deja le formulaire ecrit, ce qui est le comportement souhaitable par defaut.
-// Tant qu'aucune des deux n'est definie, la route repond 503 et la page le dit.
-// Personne ne doit pouvoir repondre a treize questions sur son corps et croire
-// que c'est parti.
+// LA DESTINATION est la boite de Kilian, et le site y envoie le mail lui-meme :
+// `MDC_ENTRETIEN_A` si elle existe, sinon `MDC_BEGIN_A` — l'entretien arrive
+// alors la ou arrive deja le formulaire ecrit, ce qui est le comportement
+// souhaitable par defaut. Tant qu'aucune des deux n'est definie, la route
+// repond 503 et la page le dit. Personne ne doit pouvoir repondre a treize
+// questions sur son corps et croire que c'est parti.
 //
-// CE QUI EST TRANSMIS, et c'est volontairement redondant : le texte mis en page
-// sous `message`, parce que c'est la cle que la plupart des services de
-// formulaire affichent ; la fiche structuree sous `fiche`, pour le jour ou
-// Kilian voudra la mettre ailleurs ; et la transcription complete en bas du
-// texte, parce qu'il a demande « toutes les infos » et qu'un resume est
+// IL N'Y A PLUS DE RELAIS, et c'est cette charge-ci qui l'a decide : treize
+// champs de categorie particuliere au sens de l'article 9 du RGPD britannique,
+// la transcription mot pour mot, un drapeau d'urgence, un nom et un contact en
+// clair. Un service de formulaire garde ca dans un tableau de bord et une
+// plateforme d'automatisation dans un historique d'execution ; ce n'est pas une
+// fuite, c'est leur fonction. La page affiche « Nothing is saved here ».
+// Voir l'en-tete de `src/lib/courrier.ts`.
+//
+// CE QUI EST TRANSMIS : la fiche mise en page, et la transcription complete en
+// dessous, parce que Kilian a demande « toutes les infos » et qu'un resume est
 // toujours quelqu'un d'autre qui a decide de ce qui comptait.
 
 import Anthropic from "@anthropic-ai/sdk";
@@ -26,6 +30,7 @@ import {
   type Dossier,
 } from "@/lib/entretien";
 import { adresse, lisTours, tropDAppels } from "@/lib/entretienServeur";
+import { boiteEntretien, envoie } from "@/lib/courrier";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -44,11 +49,10 @@ export async function POST(request: Request) {
     return Response.json({ erreur: "assistant_absent" }, { status: 503 });
   }
 
-  const destination =
-    process.env.MDC_ENTRETIEN_FORWARD_URL || process.env.MDC_BEGIN_FORWARD_URL;
-  if (!destination) {
+  const boite = boiteEntretien();
+  if (!boite) {
     console.error(
-      "[entretien] Une fiche est arrivee et aucune destination n'est definie (MDC_ENTRETIEN_FORWARD_URL, MDC_BEGIN_FORWARD_URL). Elle n'a PAS ete transmise."
+      "[entretien] Une fiche est arrivee et aucune destination n'est definie (MDC_ENTRETIEN_A, MDC_BEGIN_A). Elle n'a PAS ete transmise."
     );
     return Response.json({ erreur: "destination_absente" }, { status: 503 });
   }
@@ -110,35 +114,25 @@ export async function POST(request: Request) {
   const contact = typeof fiche.contact === "string" ? fiche.contact.trim() : "";
   const sujet = `Before the room${nom ? `: ${nom}` : ""}${urgence ? " (stopped early)" : ""}`;
 
-  const charge: Record<string, unknown> = {
-    subject: sujet,
-    _subject: sujet,
-    name: nom,
-    message: texteDossier,
-    fiche,
-    urgence,
-    tours: tours.length,
-    recu: new Date().toISOString(),
-  };
-  // Meme convention que /api/begin : quand le contact est un e-mail, on le
-  // repete sous `email`, la cle que les services de formulaire lisent pour
-  // poser le « repondre a ». Sans elle Kilian recopie l'adresse a la main.
-  if (EMAIL.test(contact)) charge.email = contact;
+  const resultat = await envoie({
+    a: boite,
+    sujet,
+    texte: texteDossier,
+    // Le contact quand c'est un e-mail : Kilian appuie sur Repondre et ecrit a
+    // quelqu'un qui vient de repondre a treize questions sur son corps, sans
+    // recopier une adresse.
+    repondreA: EMAIL.test(contact) ? contact : undefined,
+  });
 
-  try {
-    const envoi = await fetch(destination, {
-      method: "POST",
-      headers: { "content-type": "application/json", accept: "application/json" },
-      body: JSON.stringify(charge),
-      signal: AbortSignal.timeout(12_000),
-    });
-    if (!envoi.ok) {
-      console.error(`[entretien] La destination a repondu ${envoi.status}. Fiche non transmise.`);
-      return Response.json({ erreur: "destination_en_erreur" }, { status: 502 });
+  if (!resultat.ok) {
+    if (resultat.raison === "config_absente") {
+      console.error(
+        "[entretien] Une fiche est arrivee et l'envoi n'est pas configure (MDC_SMTP_URL, MDC_COURRIER_DE). Elle n'a PAS ete transmise."
+      );
+      return Response.json({ erreur: "destination_absente" }, { status: 503 });
     }
-  } catch {
-    console.error("[entretien] La destination est injoignable. Fiche non transmise.");
-    return Response.json({ erreur: "destination_injoignable" }, { status: 502 });
+    console.error("[entretien] Le serveur de courrier a refuse la fiche. Non transmise.");
+    return Response.json({ erreur: "destination_en_erreur" }, { status: 502 });
   }
 
   return Response.json({ ok: true });

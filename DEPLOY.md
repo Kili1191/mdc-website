@@ -82,26 +82,64 @@ Vercel émet le certificat HTTPS automatiquement dès que le DNS résout. Tu voi
 
 ---
 
-## 4bis. Où vont les messages du formulaire Begin — À FAIRE
+## 4bis. Où va le courrier — À FAIRE
 
-Sans cette étape, `/begin` répond une erreur à chaque envoi. C'est délibéré :
-un envoi qui échoue visiblement vaut mieux qu'un envoi qui fait semblant.
-Personne ne doit pouvoir écrire ce qu'il porte et croire que c'est parti.
+Sans cette étape, `/begin` répond une erreur à chaque envoi et l'entretien de
+`/begin/before` ne transmet rien. C'est délibéré : un envoi qui échoue
+visiblement vaut mieux qu'un envoi qui fait semblant. Personne ne doit pouvoir
+écrire ce qu'il porte et croire que c'est parti.
 
-La route `src/app/api/begin/route.ts` poste le message en JSON à l'URL donnée
-par **`MDC_BEGIN_FORWARD_URL`**. Aucun fournisseur n'est imposé et aucune clé
-n'est écrite dans le dépôt : ça peut être un formulaire hébergé, un webhook,
-une automatisation qui envoie l'e-mail.
+**Le site envoie le mail lui-même, en SMTP, en un saut.** Il n'y a pas de
+relais, pas de webhook, pas de service de formulaire. Deux raisons, et chacune
+suffirait.
 
-### Dans Vercel
+Une plateforme d'automatisation répond **200 à la réception** de la charge, pas
+à la livraison du mail : quota épuisé, étape en erreur, compte suspendu, et la
+route voyait 200. La page affichait alors à quelqu'un qu'on venait d'orienter
+vers le 999 que ce qu'il avait écrit était parti.
 
-Settings → Environment Variables → Add
+Et l'archive est leur produit : un service de formulaire garde les soumissions
+dans un tableau de bord, une plateforme d'automatisation garde l'historique
+d'exécution avec la charge. La fiche de `/begin/before` porte treize champs de
+catégorie particulière au sens de l'article 9 du RGPD britannique, la
+transcription mot pour mot et un drapeau d'urgence. La page affiche « Nothing
+is saved here ».
 
-    Nom     MDC_BEGIN_FORWARD_URL
-    Valeur  l'URL choisie
+### Les variables
+
+    Nom     MDC_SMTP_URL
+    Valeur  la connexion entière, identifiants compris
     Envs    Production (et Preview si tu veux tester avant)
 
+    Nom     MDC_COURRIER_DE
+    Valeur  l'adresse qui envoie
+
+    Nom     MDC_BEGIN_A
+    Valeur  la boîte qui reçoit
+
+    Nom     MDC_ENTRETIEN_A        (facultatif)
+    Valeur  une seconde boîte, pour l'entretien seul
+
+`MDC_SMTP_URL` porte la connexion entière, donc **le fournisseur est une
+variable et pas un choix gravé** : Resend, Brevo, Proton pour les
+professionnels, tous parlent SMTP. En changer ne touche pas une ligne de code.
+
+    smtps://utilisateur:motdepasse@serveur:465     (TLS direct)
+    smtp://utilisateur:motdepasse@serveur:587      (STARTTLS)
+
+Chez Resend, l'utilisateur est littéralement `resend` et le mot de passe est la
+clé d'API. Tant que `maisonducalme.com` n'est pas vérifié chez le fournisseur,
+`MDC_COURRIER_DE` doit être l'adresse de bac à sable qu'il impose, et le seul
+destinataire autorisé est l'adresse du compte.
+
+`MDC_ENTRETIEN_A` est **facultative** : sans elle, l'entretien arrive dans
+`MDC_BEGIN_A`. Elle sert à séparer les boîtes, et il y a une raison de le
+faire : les deux charges ne sont pas de même nature, et le drapeau d'urgence
+mérite sa propre notification. Deux adresses chez le même fournisseur
+suffisent.
+
 Puis **redéployer** : une variable ajoutée ne s'applique pas au build en cours.
+C'est le piège qui a déjà coûté deux passes.
 
 ### Vérifier
 
@@ -109,9 +147,19 @@ Puis **redéployer** : une variable ajoutée ne s'applique pas au build en cours
       -H 'content-type: application/json' \
       -d '{"name":"Test","reach":"toi@exemple.com","carry":"essai"}'
 
-`200 {"ok":true}` et le message arrive à destination. `503
-destination_absente` veut dire que la variable n'est pas vue par ce
-déploiement.
+`200 {"ok":true}` et le mail arrive. `503 destination_absente` veut dire qu'il
+manque une variable à ce déploiement — le journal Vercel dit laquelle, et c'est
+la seule chose qu'il dit. `502 destination_en_erreur` veut dire que le serveur
+de courrier a refusé.
+
+**Le seul test qui compte est un mail réellement reçu.** La présence de la
+variable ne prouve rien, et les journaux de fonctions sont purgés vite.
+
+### En local, sans rien dépenser
+
+`scripts/entretien-faux-modele.mjs` monte un faux point d'entrée Messages et un
+faux serveur de courrier qui écrit le mail reçu sur le disque. Le mode d'emploi
+est en tête du fichier.
 
 ### Avant la mise en ligne
 
@@ -129,9 +177,8 @@ réussi, jamais ce qu'il disait. La page promet le secret, le serveur le tient.
 
 La page pose les questions d'avant-séance une par une, choisit la suivante
 d'après ce qui vient d'être répondu, et envoie à Kilian une fiche remplie plus
-la transcription mot pour mot. Elle a besoin de **deux** choses.
-
-### 1. La clé du modèle
+la transcription mot pour mot. Elle a besoin de la clé du modèle, en plus du
+courrier de §4bis.
 
     Nom     ANTHROPIC_API_KEY
     Valeur  la clé (console.anthropic.com → API keys)
@@ -139,17 +186,11 @@ la transcription mot pour mot. Elle a besoin de **deux** choses.
 
 Elle ne figure nulle part dans le dépôt et ne doit jamais y figurer. Sans elle,
 `/api/entretien` répond **503** et la page bascule sur « Write to him instead »,
-qui renvoie au formulaire écrit de `/begin`. C'est le même principe que
-ci-dessus : rien ne fait semblant de marcher.
+qui renvoie au formulaire écrit de `/begin`. Rien ne fait semblant de marcher.
 
-### 2. Où va la fiche
-
-    Nom     MDC_ENTRETIEN_FORWARD_URL      (facultatif)
-    Valeur  l'URL choisie
-
-**Facultatif** parce que la route retombe sur `MDC_BEGIN_FORWARD_URL` quand
-elle n'existe pas : par défaut, l'entretien arrive là où arrive déjà le
-formulaire écrit. Ne la définir que pour séparer les deux boîtes.
+**Attention au périmètre de la clé.** Une clé liée à l'organisation et non à un
+espace de travail fait répondre 400 à chaque appel, et le journal le dit mot
+pour mot. Prendre une clé d'espace de travail.
 
 ### Vérifier
 
@@ -167,16 +208,31 @@ le code et pas dans une facture : `TOURS_MAX` (22 questions maximum),
 `LIMITE_TOTALE` (16 000 caractères par entretien) et un plafond de 80 appels
 par heure et par adresse IP.
 
+### Ce qui reste à régler, et qui n'est pas du code
+
+**La rétention chez le fournisseur du modèle.** La transcription entière lui
+part pour remplir la fiche. C'est de l'article 9 : demander la rétention zéro
+sur la clé de ce projet.
+
+**La boîte qui reçoit.** C'est là que des années de fiches vont s'accumuler, et
+un compte de messagerie grand public gratuit n'a pas de contrat de
+sous-traitance derrière lui. Une boîte professionnelle sous adéquation
+britannique (Suisse, EEE) n'exige aucun instrument de transfert.
+
+**Les destinataires ne sont nommés nulle part.** Le site écrit « Nothing is
+saved here », « Never shared », « read by Kilian alone ». Il n'y a aucune page
+de confidentialité. La phrase manquante est à écrire, et elle ne peut pas être
+une bannière de trois paragraphes : ce serait trahir ce qu'elle protège.
+
 ### Ce qui n'est pas stocké
 
 Rien. Pas de base, pas de session, pas de journal de contenu. La conversation
 vit dans le navigateur du visiteur et dans le corps des requêtes ; la fiche
 part chez Kilian et le serveur l'oublie. C'est de la donnée de santé, donc de
 catégorie particulière au sens de l'article 9 du RGPD britannique, et la
-manière la plus sûre de ne pas la perdre est de ne jamais la garder.
+discipline est la même partout dans ce dépôt.
 
-Conséquence assumée : un rafraîchissement de page perd l'entretien en cours.
-La page le dit avant la première question.
+---
 
 ## 5. Vérifs post-déploiement
 

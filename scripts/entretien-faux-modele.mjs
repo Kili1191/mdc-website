@@ -1,4 +1,4 @@
-// Un faux point d'entree Messages, et une fausse destination de formulaire.
+// Un faux point d'entree Messages, et un faux serveur de courrier.
 //
 // POURQUOI. Les deux routes de l'entretien ne peuvent pas etre exercees sans
 // clé de modele, et une clé coute de l'argent a chaque essai. Ce stub tient les
@@ -10,13 +10,17 @@
 //
 //   S=/tmp/essai node scripts/entretien-faux-modele.mjs &
 //   ANTHROPIC_API_KEY=faux ANTHROPIC_BASE_URL=http://localhost:4411 \
-//     MDC_ENTRETIEN_FORWARD_URL=http://localhost:4411/collecte npx next start -p 3314
+//     MDC_SMTP_URL=smtp://essai:essai@localhost:4412 \
+//     MDC_COURRIER_DE=essai@localhost MDC_ENTRETIEN_A=kilian@localhost \
+//     npx next start -p 3314
 //
 // Le comportement se choisit en ecrivant un mot dans $S/mode.txt :
 // question · assez-sans-corps · assez-complet · repetition · arret.
-// Ce qui est poste a la destination atterrit dans $S/recu.json.
+// Le mail recu atterrit en entier dans $S/recu.txt — en-tetes compris, parce
+// que le sujet et le « repondre a » font partie de ce qu'on verifie.
 import { createServer } from "node:http";
 import { readFileSync, writeFileSync } from "node:fs";
+import { SMTPServer } from "smtp-server";
 
 const S = process.env.S;
 const lisMode = () => { try { return readFileSync(`${S}/mode.txt`, "utf8").trim(); } catch { return "question"; } };
@@ -32,12 +36,6 @@ createServer((req, res) => {
   let brut = "";
   req.on("data", (c) => (brut += c));
   req.on("end", () => {
-    if (req.url.startsWith("/collecte")) {
-      writeFileSync(`${S}/recu.json`, brut);
-      res.writeHead(200, { "content-type": "application/json" });
-      res.end('{"ok":true}');
-      return;
-    }
     const corps = JSON.parse(brut || "{}");
     const systeme = JSON.stringify(corps.system ?? "");
     let sortie;
@@ -72,3 +70,24 @@ createServer((req, res) => {
     res.end(JSON.stringify(message(sortie)));
   });
 }).listen(4411, () => console.log("stub 4411"));
+
+// Le faux serveur de courrier. Il accepte tout, n'exige pas TLS, et ecrit le
+// message entier sur le disque. C'est volontairement bete : ce qu'on verifie
+// ici n'est pas SMTP, c'est que la route envoie bien quelque chose, et quoi.
+new SMTPServer({
+  // `authOptional` ne suffit pas : nodemailer presente les identifiants de
+  // l'URL, et sans ce gestionnaire smtp-server repond « 535 Authentication not
+  // implemented ». La route voit alors un refus et rend 502 — un faux negatif
+  // qui ressemble exactement a une vraie panne d'envoi.
+  authOptional: true,
+  onAuth: (_auth, _session, fini) => fini(null, { user: "essai" }),
+  disabledCommands: ["STARTTLS"],
+  onData(flux, _session, fini) {
+    let brut = "";
+    flux.on("data", (c) => (brut += c));
+    flux.on("end", () => {
+      writeFileSync(`${S}/recu.txt`, brut);
+      fini();
+    });
+  },
+}).listen(4412, () => console.log("courrier 4412"));
