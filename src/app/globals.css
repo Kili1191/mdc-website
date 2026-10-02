@@ -42,6 +42,38 @@ body {
   overflow-x: clip; /* meme raison qu'au-dessus : `hidden` casse tout sticky */
 }
 
+/* AUCUNE LIGNE NE PORTE UN SEUL MOT.
+
+   Kilian, sur l'accueil en production : « the sentence with only one word a la
+   ligne stupid ». Releve : « Entry is by conversation, not by calendar. Tell
+   Kilian what you / carry. » — le dernier mot, seul, sous une ligne pleine.
+
+   Ce n'est pas un reglage de ce site, c'est un defaut de composition que tout
+   navigateur produit par defaut : il remplit chaque ligne au maximum et laisse
+   tomber ce qui reste. Sur une phrase centree, le reste tient dans un mot et
+   la phrase a l'air cassee.
+
+   `text-wrap: pretty` demande au moteur de regarder la DERNIERE ligne avant de
+   figer les precedentes, et de remonter un mot plutot que d'en laisser un
+   seul. `balance` va plus loin et egalise les lignes, mais il ne vaut que sur
+   un bloc court — au-dela de six lignes les moteurs l'ignorent, et sur un vrai
+   paragraphe il donne des lignes toutes de la meme longueur, ce qui se lit
+   comme un bloc de pierre et non comme de la prose. D'ou le partage : `pretty`
+   sur ce qui se lit, `balance` sur ce qui s'annonce.
+
+   Un navigateur qui ne connait ni l'un ni l'autre ignore la declaration et
+   compose comme avant. Il n'y a donc rien a replier.
+
+   Ce que ca ne fait PAS : changer une taille, une marge ou une couleur. Les
+   planchers mesures de ce depot ne sont pas touches, seule la decision de
+   coupure l'est. */
+p, li, blockquote, figcaption, dd {
+  text-wrap: pretty;
+}
+h1, h2, h3, .mdc-balance {
+  text-wrap: balance;
+}
+
 /* Mobile — ajustements responsives globaux.
 
    CE QUI ETAIT ICI ET N'Y EST PLUS : html{font-size:15px} sous 640px et 14px

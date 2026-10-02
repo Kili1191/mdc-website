@@ -1,69 +1,40 @@
 "use client";
 
-// L'INSCRIPTION — ce qui remplace la regle gravee de la marge.
+// LE REPERAGE DU BORD — ce qu'il reste apres deux rejets au meme endroit.
 //
-// Kilian, deux fois : « why this thing ugly on the side ? ugly af », puis
-// « remove la regle du cote soit creatif pour le awwwards design more than the
-// actual ».
+// Kilian, sur la regle gravee : « why this thing ugly on the side ? ugly af »,
+// puis « remove la regle du cote soit creatif pour le awwwards design ». Elle a
+// ete remplacee par une INSCRIPTION : le nom de la station taille en grand
+// dans la pierre du bord, volontairement rognee par l'ecran. Verdict de
+// Kilian, en production : « thats ugly on the side ».
 //
-// La regle avait ete reparee — les crans touchaient enfin le sillon, le
-// sillon s'eteignait a ses bouts, les cibles faisaient 24px. Tout etait juste
-// et ca restait un WIDGET : un petit instrument de mesure pose dans un coin,
-// qui explique ou l'on est. Reparer un objet ne le rend pas desirable.
+// DEUX PROPOSITIONS, LE MEME VERDICT, ET C'EST LE VERDICT QUI COMPTE. La
+// premiere fois on pouvait croire a un defaut d'execution — la regle etait un
+// widget, un petit instrument de mesure pose dans un coin. La seconde etait
+// tout l'inverse : architecturale, mesuree sur le mur nu, a l'echelle d'un
+// batiment. Les deux ont ete rejetees. Ce qui est rejete n'est donc pas la
+// FORME de l'objet, c'est le fait qu'il y ait un objet a cet endroit. Une
+// troisieme idee serait une troisieme passe pour le meme verdict.
 //
-// CE QUI LE REMPLACE, ET POURQUOI CELUI-LA. Le nom de la station, taille
-// GRAND dans la pierre du bord de l'ecran, et volontairement coupe par ce
-// bord. On ne lit pas un indicateur : on longe une inscription sur un mur,
-// dont on ne voit qu'une partie parce qu'on est trop pres. C'est la langue que
-// ce site parle depuis ce matin — le burin, la traversee, les titres tailles —
-// portee a l'echelle d'un batiment plutot qu'a celle d'une interface.
+// Il ne reste donc que ce qui INFORME, et rien qui decore :
 //
-// Ecarte : le nom en vertical le long du bord. C'est le reflexe du genre, on
-// le voit sur la moitie des sites primes, et le skill taste a raison de se
-// mefier du « generic Awwwards » meme apres le virage. Une inscription
-// horizontale et rognee est architecturale ; un texte tourne a 90 degres est
-// une convention de site web.
+//   le nav invisible, complet pour un lecteur d'ecran et pour le clavier ;
+//   le compteur, petit, a la garde de la barre du haut.
 //
-// ─────────────────────────────────────────────────────────────────────────
-// LE MUR NU. C'est la seule regle du composant, et elle vient d'un defaut
-// mesure sur capture : a la premiere version l'inscription etait toujours a
-// gauche, et la station « The weight » — la seule composee A GAUCHE — se
-// faisait traverser par le mot. La barre du H passait dans la hauteur d'x de
-// « tiredness ». Exactement le reproche deja formule : « ça peut pas être
-// brouillon ».
+// Et c'est le partage qui etait deja ecrit ici : « l'information vit dans le
+// nav invisible », disait le commentaire pour autoriser le mot a etre discret.
+// Le mot parti, l'information est intacte. C'est la preuve que le mot ne
+// portait rien — un element dont le retrait ne coute aucune information
+// n'etait pas de l'information.
 //
-// On ne choisit donc plus un cote : on MESURE, pour la station active, ou le
-// mur est nu. La page alterne centre / gauche / centre / droite / centre, et
-// cette alternance est porteuse de sens (voir RANGEE dans page.tsx) ; le mur
-// nu est donc, selon la station, a gauche, a droite, large ou inexistant.
-// L'inscription va du cote le plus large, et se fond dans la pierre 260px
-// avant la copie. Quand il n'y a pas de mur — le sommaire « The practice »
-// occupe toute la largeur — elle ne s'ecrit pas du tout.
-//
-// Consequence assumee : elle n'apparait pas sur les six stations, et sur un
-// ecran etroit elle n'apparait que sur les deux stations poussees aux marges.
-// C'est voulu. Une inscription qui se force sur un mur deja couvert n'est pas
-// une inscription, c'est un calque.
-// ─────────────────────────────────────────────────────────────────────────
-//
-// DEUX CHOSES QUE LA REGLE FAISAIT ET QUI NE SE PERDENT PAS :
-//
-//   La navigation. Les ancres existent toujours, dans un `nav` accessible mais
-//   invisible. Un lecteur d'ecran et le clavier gardent donc la liste complete
-//   des stations, ce que le grand mot ne peut pas donner.
-//
-//   Le reperage. Le compteur reste, petit, sous l'inscription, et lui ne
-//   disparait jamais.
-//
-// Et c'est CE PARTAGE qui autorise l'inscription a etre aussi discrete qu'elle
-// veut : elle est `aria-hidden`, purement decorative. Le contraste n'a donc
-// pas a lui appliquer le plancher de 4,5:1 — l'information vit dans le nav
-// invisible, pas dans elle. Sans ce partage, un mot geant a faible contraste
-// serait une faute.
+// CE QUE LA MESURE DU MUR FAIT ENCORE ICI, et pourquoi elle ne part pas avec
+// le mot. Le compteur se pose du cote ou la station n'ecrit pas. Sans ca il
+// tomberait sur la copie des deux stations composees a gauche. Le seuil est
+// descendu de 100px — la place qu'il fallait au mot entier — a la place qu'il
+// faut au compteur et a sa garde.
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { COLORS, FONTS } from "@/styles/tokens";
-import { DURATION, EASE } from "@/lib/motion";
 
 type Station = { id: string; nom: string };
 // `large` : la largeur de mur nu, en pixels. `cote` : de quel bord elle part.
@@ -72,21 +43,12 @@ type Place = { cote: "g" | "d"; large: number };
 // La distance qu'on laisse entre le dernier caractere de l'inscription et le
 // premier de la copie. Assez pour que les deux ne se lisent jamais ensemble.
 const GARDE = 120;
-// Le mot est taille A LA MESURE DU MUR : jamais un fragment, jamais un
-// depassement. Ces deux bornes disent seulement quand l'echelle cesse d'etre
-// architecturale — trop petit, ce n'est plus une inscription mais une
-// legende ; trop grand, ca cesse d'etre de la pierre et redevient un titre.
-//
-// Le plancher est haut, et c'est le point : il vaut mieux pas d'inscription
-// qu'une petite. Mesure faite a 1440px — les seules stations qui ouvrent un
-// vrai mur sont les deux poussees aux marges, « The weight » et « Kilian »,
-// c'est-a-dire les deux qui encadrent la gravure. L'inscription tombe donc
-// exactement sur la symetrie que la page a deja.
-const TAILLE_MIN = 100;
-const TAILLE_MAX = 150;
-// Taille de reference pour la mesure. On lit la largeur naturelle du mot a
-// 100px une fois, et on en deduit la taille qui remplit le mur.
-const ETALON = 100;
+// La place minimale pour qu'un cote compte comme libre. Le compteur fait 40px
+// de texte et porte une garde de 18 a 40 : sous 100px il serait colle au bord
+// ou a la copie. L'ancien seuil valait 100 aussi, mais pour une autre raison —
+// c'etait la taille sous laquelle le mot cessait d'etre une inscription. Les
+// deux tombent au meme endroit par coincidence, et celui-ci est le vrai.
+const MUR_MIN = 100;
 
 export default function Inscription() {
   const [stations, setStations] = useState<Station[]>([]);
@@ -94,7 +56,6 @@ export default function Inscription() {
   const [place, setPlace] = useState<Place | null>(null);
   const boitesRef = useRef<{ haut: number; bas: number }[]>([]);
   const noeudsRef = useRef<HTMLElement[]>([]);
-  const motRef = useRef<HTMLSpanElement>(null);
   const ici: Station | undefined = stations[actif];
 
   useEffect(() => {
@@ -166,9 +127,9 @@ export default function Inscription() {
       const aDroite = vw - d - GARDE;
       const cote = aDroite > aGauche ? "d" : "g";
       const large = Math.max(aGauche, aDroite);
-      // La taille minimale decide du reste : un mur qui ne peut pas porter le
-      // mot entier a TAILLE_MIN n'est pas un mur.
-      return large >= TAILLE_MIN ? { cote, large: Math.round(large) } : null;
+      // Un cote trop etroit pour le compteur et sa garde n'est pas un cote
+      // libre : mieux vaut le compteur a gauche par defaut que colle au bord.
+      return large >= MUR_MIN ? { cote, large: Math.round(large) } : null;
     };
 
     // Les boites des stations sont mesurees UNE fois, et c'etait faux : le
@@ -224,42 +185,6 @@ export default function Inscription() {
     };
   }, []);
 
-  // LA TAILLE SE MESURE, ELLE NE SE DEVINE PAS.
-  //
-  // Premiere version : une taille fixe en clamp(58px, 9vw, 150px) et un
-  // degrade qui effacait ce qui depassait. Resultat mesure sur capture a
-  // 1990px : « THRESHOLD » commencait et s'eteignait au bout de trois
-  // lettres. Un mot coupe en plein milieu ne se lit pas comme une inscription
-  // rognee par le bord de l'ecran, il se lit comme un bogue.
-  //
-  // Le mot est donc taille A LA MESURE DU MUR. On lit sa largeur naturelle a
-  // 100px, on en deduit la taille qui remplit exactement la place libre, et
-  // on la refuse si elle tombe sous le seuil architectural. Consequence :
-  // l'inscription est toujours ENTIERE, et sa taille dit d'elle-meme combien
-  // de mur la composition lui a laisse.
-  //
-  // useLayoutEffect, pas useEffect : la mesure et la pose doivent tenir dans
-  // la meme frame, sinon on voit le mot a 100px pendant une image.
-  // Pose ecrite directement sur le noeud, sans passer par un etat React : une
-  // mesure suivie d'un setState relancerait cet effet, qui remettrait la
-  // taille etalon pour remesurer, et React s'arreterait la faute de valeur
-  // nouvelle — le mot resterait fige a 100px. Ici la mesure et la pose sont
-  // le meme geste, dans la meme frame.
-  useLayoutEffect(() => {
-    const el = motRef.current;
-    if (!el) return;
-    if (!place) { el.style.display = "none"; return; }
-    el.style.display = "block";
-    el.style.fontSize = `${ETALON}px`;
-    el.style.width = "auto";
-    const naturel = el.scrollWidth;
-    if (!naturel) return;
-    const brute = ETALON * (place.large / naturel);
-    if (brute < TAILLE_MIN) { el.style.display = "none"; return; }
-    const t = Math.min(TAILLE_MAX, brute);
-    el.style.fontSize = `${t}px`;
-    el.style.width = `${Math.ceil(naturel * (t / ETALON))}px`;
-  }, [ici?.nom, place]);
 
   if (stations.length < 2) return null;
   const droite = place?.cote === "d";
@@ -281,23 +206,6 @@ export default function Inscription() {
       </nav>
 
       <div className={`mdc-inscription${droite ? " mdc-inscription--d" : ""}`} aria-hidden>
-        {/* key sur le nom ET le cote : React remonte l'element a chaque
-            changement, donc l'animation d'entree rejoue. Sans elle, le mot
-            changerait d'un coup, sans que rien ne se taille. */}
-        <span
-          key={`${ici.id}-${place?.cote ?? "x"}`}
-          ref={motRef}
-          className="mdc-inscription__mot"
-        >
-          {/* UN MOT PAR LIGNE. Une inscription sur un mur s'empile ; c'est une
-              ligne de texte qui court en travers. Et c'est aussi ce qui rend
-              la chose possible : le mur nu fait 400 a 900px de large et
-              900px de haut, donc « THE WEIGHT » sur une ligne n'y tient qu'en
-              tout petit, alors qu'empile il y tient a pleine taille. */}
-          {ici.nom.split(/\s+/).map((m, i) => (
-            <span key={i} className="mdc-inscription__ligne">{m}</span>
-          ))}
-        </span>
         <span className="mdc-inscription__compte">
           {String(actif + 1).padStart(2, "0")}
           <i>/{String(stations.length).padStart(2, "0")}</i>
@@ -317,42 +225,9 @@ export default function Inscription() {
         .mdc-inscription{
           position:fixed; left:0; top:50%; transform:translateY(-50%);
           z-index:4; pointer-events:none;
-          display:flex; flex-direction:column; align-items:flex-start; gap:18px;
+          display:flex; align-items:flex-start;
         }
         .mdc-inscription--d{ left:auto; right:0; align-items:flex-end; }
-
-        .mdc-inscription__mot{
-          display:block;
-          margin-left:-0.14em;
-          font-family:${FONTS.higuen};
-          /* Grand, et qui grandit avec l'ecran. Le plafond tombe a 1700px de
-             large, comme tous les autres depuis ce matin. */
-          /* La taille est posee par la mesure, pas par une regle : voir le
-             useLayoutEffect. Cette valeur n'est que le repli du premier
-             rendu, avant que la mesure ait eu lieu. */
-          font-size:${TAILLE_MIN}px;
-          line-height:0.86;
-          letter-spacing:-0.015em;
-          text-transform:uppercase;
-          color:${COLORS.brou};
-          /* Cache par defaut : c'est la mesure qui l'allume, et tant qu'elle
-             n'a pas eu lieu il n'y a rien a montrer. Evite aussi de voir le
-             mot a la taille etalon pendant une image. */
-          display:none;
-          /* Tres bas : c'est de la pierre, pas un titre. L'information est
-             dans le nav au-dessus, donc ce mot n'a rien a porter. */
-          opacity:0.10;
-          /* Le meme relief que les titres tailles au burin, a l'echelle du
-             corps : la lumiere vient toujours d'en haut a gauche. */
-          text-shadow:
-             0.017em 0.021em 0 rgba(255, 251, 241, 0.55),
-            -0.008em -0.010em 0.012em rgba(47, 37, 25, 0.22);
-          animation: mdc-inscription-entre ${DURATION.reveal}ms ${EASE.reveal} both;
-        }
-        .mdc-inscription__ligne{ display:block; white-space:nowrap; }
-        .mdc-inscription--d .mdc-inscription__mot{
-          margin-left:0; margin-right:-0.14em; text-align:right;
-        }
 
         .mdc-inscription__compte{
           /* La MEME garde que la barre du haut. Le compteur et la marque sont
@@ -366,11 +241,6 @@ export default function Inscription() {
         }
         .mdc-inscription--d .mdc-inscription__compte{ margin-left:0; margin-right:30px; }
         .mdc-inscription__compte i{ font-style:normal; opacity:0.5; }
-
-        @keyframes mdc-inscription-entre{
-          from{ opacity:0; transform:translateX(-0.06em); }
-          to  { opacity:0.10; transform:none; }
-        }
 
         /* Sous 1080px il n'y a pas de mur (voir murDe), et le compteur part
            avec le mot.
@@ -387,9 +257,6 @@ export default function Inscription() {
           .mdc-inscription{ display:none; }
         }
 
-        @media (prefers-reduced-motion: reduce){
-          .mdc-inscription__mot{ animation:none; opacity:0.10; }
-        }
       `}</style>
     </>
   );

@@ -134,36 +134,72 @@ export default function BreathReveal({
 
   return (
     <Tag ref={ref} className={className} style={rootStyle}>
-      {lines.map((line, li) => (
-        <span key={li} style={lineSpanStyle}>
-          {line.split(/\s+/).map((word, wi) => (
-            <Fragment key={`${li}-${wi}`}>
-              {/* UN VRAI ESPACE ENTRE LES MOTS, ET IL MANQUAIT.
-                  Chaque mot est un `inline-block` separe du suivant par une
-                  MARGE. Visuellement c'est juste ; dans le DOM il n'y avait
-                  alors AUCUN caractere d'espace, et le texte de la page se
-                  lisait d'un bloc.
+      {lines.map((line, li) => {
+        const mots = line.split(/\s+/);
 
-                  Releve sur le HTML servi de l'accueil, balises retirees :
-                  « Thereisakindoftirednessthatrestdoesn'treach. » Ce que ca
-                  coute, et les trois sont reels : un lecteur d'ecran annonce un
-                  seul mot interminable ; une selection copiee rend du texte
-                  colle ; et un extracteur de texte — Google compris — ne peut
-                  pas apparier « a kind of tiredness that rest doesn't reach »,
-                  qui est precisement le genre de phrase que ce site veut gagner.
+        // UN MOT, ET L'ESPACE QUI LE PRECEDE.
+        //
+        // L'espace est pose a `fontSize: 0` : il EXISTE dans le texte, l'arbre
+        // d'accessibilite et le presse-papier, et il n'occupe aucune largeur —
+        // c'est la marge du mot qui fait le blanc. Mesure avant et apres son
+        // ajout : 1,59 px entre deux mots, identique.
+        //
+        // Sans lui, le HTML servi de l'accueil se lisait
+        // « Thereisakindoftirednessthatrestdoesn'treach. » Trois couts reels :
+        // un lecteur d'ecran annoncait un seul mot interminable, une selection
+        // copiee rendait du texte colle, et aucun extracteur — Google compris —
+        // ne pouvait apparier les phrases de longue trainee que ce site vise.
+        const mot = (m: string, wi: number) => (
+          <Fragment key={`${li}-${wi}`}>
+            {wi > 0 && <span style={{ fontSize: 0, lineHeight: 0 }}> </span>}
+            <span className="mdc-breath-word" style={wordSpanStyle}>{m}</span>
+          </Fragment>
+        );
 
-                  L'espace est pose a `fontSize: 0` : il EXISTE dans le texte,
-                  l'arbre d'accessibilite et le presse-papier, et il n'occupe
-                  aucune largeur. La geometrie ne bouge pas d'un centieme —
-                  mesure avant et apres : 1,59 px entre deux mots, identique. */}
-              {wi > 0 && <span style={{ fontSize: 0, lineHeight: 0 }}> </span>}
-              <span className="mdc-breath-word" style={wordSpanStyle}>
-                {word}
-              </span>
-            </Fragment>
-          ))}
-        </span>
-      ))}
+        // AUCUNE LIGNE NE FINIT SUR UN MOT SEUL.
+        //
+        // Kilian : « the sentence with only one word a la ligne stupid ».
+        // Releve : « Tell Kilian what you / carry. »
+        //
+        // DEUX CORRECTIFS ESSAYES AVANT CELUI-CI, ET LES DEUX SONT INOPERANTS
+        // ICI, pour la meme raison de fond :
+        //
+        //   `text-wrap: pretty`, pose dans globals.css et fait exactement pour
+        //   ca. Chromium l'abandonne des qu'un bloc contient des boites inline
+        //   ATOMIQUES, et chaque mot en est une — l'inline-block est ce qui
+        //   permet de le faire monter. Verifie sur le build : la propriete
+        //   calculee vaut bien `pretty`, la coupure ne bouge pas d'un mot.
+        //
+        //   une espace insecable avant le dernier mot. Elle ne peut rien non
+        //   plus : CSS Text ouvre une occasion de coupure AVANT ET APRES chaque
+        //   inline atomique, quel que soit le caractere entre les deux. Retirer
+        //   l'espace ne retire pas l'occasion.
+        //
+        // Ce qui marche est d'interdire la coupure plutot que de la deplacer :
+        // les deux derniers mots vivent dans un `white-space: nowrap`, qui
+        // supprime les occasions A L'INTERIEUR de lui. L'espace qui PRECEDE ce
+        // duo reste dehors, donc la ligne peut toujours se couper avant lui —
+        // sinon on lierait trois mots au lieu de deux et on deplacerait le
+        // probleme d'un cran.
+        //
+        // Chaque mot garde son propre `inline-block` et donc son propre souffle
+        // dans le stagger : le groupe ne porte que l'interdiction de couper.
+        if (mots.length < 2) {
+          return <span key={li} style={lineSpanStyle}>{mots.map(mot)}</span>;
+        }
+        const avant = mots.slice(0, -2).map(mot);
+        const i = mots.length - 2;
+        return (
+          <span key={li} style={lineSpanStyle}>
+            {avant}
+            {i > 0 && <span style={{ fontSize: 0, lineHeight: 0 }}> </span>}
+            <span style={{ whiteSpace: "nowrap" }}>
+              {mot(mots[i], 0)}
+              {mot(mots[i + 1], 1)}
+            </span>
+          </span>
+        );
+      })}
     </Tag>
   );
 }
