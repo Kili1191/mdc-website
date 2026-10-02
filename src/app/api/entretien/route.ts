@@ -15,7 +15,7 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 import {
-  MODELE, SYSTEME, SCHEMA_TOUR, TOURS_MAX, transcription, type Tour,
+  MODELE, SYSTEME, SCHEMA_TOUR, TOURS_MAX, borne, transcription, type Tour,
 } from "@/lib/entretien";
 import { adresse, lisTours, tropDAppels } from "@/lib/entretienServeur";
 
@@ -141,7 +141,7 @@ export async function POST(request: Request) {
     if (manque) {
       return Response.json({
         etat: "question", question: manque.question, note: "",
-        champ: manque.champ, couvert, fragilite: tour.fragilite ?? 3,
+        champ: manque.champ, couvert, fragilite: borne(tour.fragilite),
       } satisfies Tour);
     }
   }
@@ -152,7 +152,7 @@ export async function POST(request: Request) {
   if (tour.etat === "question" && tours.some((t) => t.question === tour.question)) {
     return Response.json({
       etat: "assez", question: "", note: "", champ: "paragraphe",
-      couvert, fragilite: tour.fragilite ?? 3,
+      couvert, fragilite: borne(tour.fragilite),
     } satisfies Tour);
   }
 
@@ -162,6 +162,6 @@ export async function POST(request: Request) {
     note: typeof tour.note === "string" ? tour.note : "",
     champ: tour.champ === "ligne" ? "ligne" : "paragraphe",
     couvert,
-    fragilite: typeof tour.fragilite === "number" ? tour.fragilite : 3,
+    fragilite: borne(tour.fragilite),
   } satisfies Tour);
 }
