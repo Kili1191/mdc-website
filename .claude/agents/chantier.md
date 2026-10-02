@@ -40,6 +40,7 @@ qui est déjà fait.
 | « est-ce lisible », contraste, clavier, cible tactile | `accessibilite` | recouvre `proportions` sur les cibles : donne les cibles à `proportions` s'il mesure déjà, à `accessibilite` sinon |
 | santé, données, allégations, une clé, une détresse | `confidentialite` | à convoquer AVANT de construire, jamais après |
 | un prix, une carte cadeau, un forfait, « est-ce que ça rapporte » | `offre` | |
+| `marketing` | comment des gens ARRIVENT hors recherche — partenariat de voisinage, bouche-a-oreille, reseaux, e-mail, carte cadeau, tendance a juger. Il a le web. Recouvrement a surveiller : `seo` vise aussi « faire venir », la ligne est le CANAL et non l'objectif |
 | « es-tu sûr », un relevé qui contredit l'écran | `qa` | |
 | la palette, les fontes, le mouvement, la liste de contrôle | skill `taste` | **ce n'est pas un agent.** Il se LIT avant de livrer, toujours, par celui qui livre |
 

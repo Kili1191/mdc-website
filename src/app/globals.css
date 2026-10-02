@@ -42,6 +42,38 @@ body {
   overflow-x: clip; /* meme raison qu'au-dessus : `hidden` casse tout sticky */
 }
 
+/* AUCUNE LIGNE NE PORTE UN SEUL MOT.
+
+   Kilian, sur l'accueil en production : « the sentence with only one word a la
+   ligne stupid ». Releve : « Entry is by conversation, not by calendar. Tell
+   Kilian what you / carry. » — le dernier mot, seul, sous une ligne pleine.
+
+   Ce n'est pas un reglage de ce site, c'est un defaut de composition que tout
+   navigateur produit par defaut : il remplit chaque ligne au maximum et laisse
+   tomber ce qui reste. Sur une phrase centree, le reste tient dans un mot et
+   la phrase a l'air cassee.
+
+   `text-wrap: pretty` demande au moteur de regarder la DERNIERE ligne avant de
+   figer les precedentes, et de remonter un mot plutot que d'en laisser un
+   seul. `balance` va plus loin et egalise les lignes, mais il ne vaut que sur
+   un bloc court — au-dela de six lignes les moteurs l'ignorent, et sur un vrai
+   paragraphe il donne des lignes toutes de la meme longueur, ce qui se lit
+   comme un bloc de pierre et non comme de la prose. D'ou le partage : `pretty`
+   sur ce qui se lit, `balance` sur ce qui s'annonce.
+
+   Un navigateur qui ne connait ni l'un ni l'autre ignore la declaration et
+   compose comme avant. Il n'y a donc rien a replier.
+
+   Ce que ca ne fait PAS : changer une taille, une marge ou une couleur. Les
+   planchers mesures de ce depot ne sont pas touches, seule la decision de
+   coupure l'est. */
+p, li, blockquote, figcaption, dd {
+  text-wrap: pretty;
+}
+h1, h2, h3, .mdc-balance {
+  text-wrap: balance;
+}
+
 /* Mobile — ajustements responsives globaux.
 
    CE QUI ETAIT ICI ET N'Y EST PLUS : html{font-size:15px} sous 640px et 14px
@@ -70,6 +102,43 @@ body {
    partage par trente-trois appels, et une feuille de style ne bat pas un style
    en ligne. Le jour ou micro devient une classe, ceci redevient une regle
    ordinaire. */
+/* ET L'INTERLIGNE DE CE BLOC N'ETAIT CHOISI PAR PERSONNE.
+
+   Kilian, sur l'accueil en production : « some are not enough space between
+   next paragraphe ». Mesure de l'agent proportions, encre reelle et non boite,
+   a 1440 comme a 1990 : entre les deux phrases de meta sous le rail il reste
+   4,75px d'encre a encre sous la virgule de « CLOTHED, ». C'est le plus petit
+   interligne optique de tout l'accueil — le suivant est a 9,88px, et c'est un
+   titre d'affichage ou c'est voulu. Dans la prose, le plus serre est 10,53.
+
+   LA CAUSE N'EST PAS UNE VALEUR MAL REGLEE, C'EST UNE VALEUR ABSENTE. L'objet
+   `micro` de styles/page.ts ne declare aucun `line-height`, et la regle
+   ci-dessous ne vivait QUE sous 720px. Au-dessus, le bloc heritait du
+   `html{line-height:1.5}` du preflight Tailwind. Personne n'a jamais choisi
+   1,5 pour cette phrase.
+
+   LE RENVERSEMENT QUI TRANCHE : la ligne la plus LARGE de la page portait
+   l'interligne le plus COURT. 753,6px contre 564 pour la prose, soit une
+   justification 1,34 fois plus longue menee avec un interligne 1,17 fois plus
+   court. L'oeil doit traverser 754px pour retrouver une cible 7,75px plus bas.
+
+   ET LE BUREAU ETAIT PLUS SERRE QUE LE TELEPHONE, sur le meme bloc : 0,62 em
+   de blanc au-dessus d'une capitale a 1440 contre 0,85 em a 390. Un releve
+   fait sur telephone aurait conclu que la page allait bien.
+
+   1,75 n'est pas une valeur d'usage importee, c'est celle de la prose de ce
+   site — `body` et `bodyStyle` la portent partout. Elle donne 10,88px de base
+   a capitale, soit 0,99 fois la hauteur de capitale, et ramene l'ecart
+   bureau/telephone de 37 % a 2 %.
+
+   Pas de `!important` et c'est verifiable : les trois ci-dessous en portent un
+   parce que `font-size`, `letter-spacing` et `text-transform` sont poses EN
+   LIGNE par `micro`. `line-height` ne l'est pas, une feuille de style le bat.
+   La regle de 720px continue de gagner sur telephone, ou 1,65 reste juste. */
+.mdc-micro--phrase {
+  line-height: 1.75;
+}
+
 @media (max-width: 720px) {
   .mdc-micro--phrase {
     text-transform: none !important;

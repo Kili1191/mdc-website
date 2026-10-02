@@ -115,7 +115,7 @@ survit pas au conteneur. Ouvrir la session depuis `Kili1191/mdc-website`.
 
 # Les agents, et qui fait quoi
 
-Onze agents, et ils ne se recouvrent pas. Convoquer le mauvais coute une passe ;
+Douze agents, et ils ne se recouvrent pas. Convoquer le mauvais coute une passe ;
 n'en convoquer aucun coute une regression.
 
 | agent | il repond a |
@@ -131,6 +131,7 @@ n'en convoquer aucun coute une regression.
 | `confidentialite` | ce qui peut couter a Kilian ou blesser un visiteur — donnees de sante, allegations, secrets, detresse |
 | `qa` | « comment le sais-tu » — prouver, et prouver que la preuve ne ment pas |
 | `offre` | ce qui est vendu, a quel prix, comment on l'achete, et ce qui dort chez Kilian |
+| `marketing` | comment des gens ARRIVENT — partenariats, bouche-a-oreille, reseaux, tendances. Il a le web, et il sait ce qui est interdit ici |
 | skill `taste` | la marque — palette, fontes, motion, et la liste de controle |
 
 Le skill `taste` n'est pas un agent : il se lit avant de livrer, toujours.
@@ -337,6 +338,38 @@ porte obligatoire, pas la premiere d'une liste ; le cycle de six n'est pas une
 remise), la faute deja commise ou la mise en page faisait lire VAYU comme une
 entree moins chere, et la liste des decisions en attente — a commencer par la
 variable d'environnement absente qui fait perdre CENT POUR CENT des demandes.
+
+# L'agent marketing
+
+`.claude/agents/marketing.md` tient la demande : comment des gens arrivent
+jusqu'a la maison. Partenariats de voisinage, bouche-a-oreille, reseaux,
+e-mail, carte cadeau, lancement d'une offre, et le jugement d'une tendance
+avant de la suivre.
+
+**Il a `WebSearch` et `WebFetch`**, et c'est le premier agent de ce depot a les
+porter. Ils servent a DATER ce qu'il sait, pas a remplacer son jugement : une
+source doit etre reelle, verifiable et dire ce qu'on lui fait dire, et il
+ecrit toujours qui parle — un chiffre d'agence sur l'efficacite des agences
+est un argumentaire, pas une mesure.
+
+**Ce qui le rend utile n'est pas sa competence generale.** Une recherche sur
+« wellness marketing » rend, des ses premiers resultats, un mur d'avis cinq
+etoiles, un programme d'affiliation et des temoignages clients. **Les quatre
+sont interdits ici** — donnee de sante, promesse de la maison, regle de
+marque. Ce qu'il porte, c'est la liste de ces interdits AVEC leur raison, et
+le fait qu'une fiche Google Business Profile est hors de portee tant que
+l'agence immobiliere interdit a Kilian d'enregistrer une activite au
+logement.
+
+**Sa regle de priorite prime sur toute campagne :** ce qui EMPECHE un client
+d'arriver passe avant ce qui le fait venir. Tant que `MDC_BEGIN_FORWARD_URL`
+n'est pas posee, cent pour cent des demandes se perdent et toute depense est a
+fonds perdu. Le dire est son premier travail.
+
+Il n'ecrit jamais un mot destine au client (`copywriter`), n'invente jamais un
+prix (`offre`), et ne fait pas de referencement (`seo`) — la ligne avec ce
+dernier est le CANAL, pas l'objectif : un moteur de recherche est a `seo`, une
+personne ou un partenariat est a lui.
 
 # Copy rule — LEVÉE PAR KILIAN LE 11 SEPTEMBRE 2026
 

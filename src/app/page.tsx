@@ -565,9 +565,20 @@ export default function Home() {
               locale, et c'est le seul endroit de l'accueil qui le dit) et
               distinguer les cinq en personne du sixieme sur un appel. Cette
               distinction etait portee par les prix ; elle se dit mieux sans. */}
+          {/* DEUX PHRASES, DONC DEUX BLOCS, ET C'EN ETAIT UN SEUL.
+              Un `<br />` separait les deux : elles recevaient donc exactement
+              le blanc d'un retour a la ligne, et la coupure de sens etait
+              dimensionnellement invisible aux trois largeurs. Entre 721 et
+              870px de large, la seconde phrase reflue sur deux lignes et plus
+              rien ne dit ou l'une finit et l'autre commence.
+              Les 11px rendent la couture lisible contre le nouvel interligne
+              sans la detacher du bloc : 21,88px de base a capitale, soit deux
+              fois l'interligne interne, ce qui est le plancher sous lequel
+              deux choses cessent d'etre distinctes sur cette page. */}
           <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 28 }}>
             Up to ninety minutes. Clothed, unless there is oil.
-            <br />
+          </p>
+          <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 11 }}>
             Battersea, South West London · One to one, in person · Coaching on a call
           </p>
 
