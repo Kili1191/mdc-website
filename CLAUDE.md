@@ -115,12 +115,13 @@ survit pas au conteneur. Ouvrir la session depuis `Kili1191/mdc-website`.
 
 # Les agents, et qui fait quoi
 
-Dix agents, et ils ne se recouvrent pas. Convoquer le mauvais coute une passe ;
+Onze agents, et ils ne se recouvrent pas. Convoquer le mauvais coute une passe ;
 n'en convoquer aucun coute une regression.
 
 | agent | il repond a |
 |---|---|
 | `chantier` | QUI appeler, dans quel ordre, avec quel brief. Il ne fait pas le travail, il le repartit |
+| `visiteur` | ce que voit quelqu'un qui arrive pour la premiere fois, et a quelle seconde. Il constate, il ne juge pas |
 | `designer` | est-ce que cette page FONCTIONNE — ce qui porte, ce qu'il faut couper, ou l'oeil decroche, si ca mene a Begin |
 | `proportions` | des CHIFFRES de mise en page — echelle, longueur de ligne, alignements, rythme, cibles |
 | `copywriter` | tout mot destine a un client |
@@ -174,6 +175,33 @@ de crise, une allegation de sante, l'approbation finale d'un mot client.
 Il sait aussi ou vivent les listes de travail, et il porte une regle de priorite
 qui prime sur l'elegance : **ce qui empeche un client d'arriver passe avant ce
 qui embellit une page.**
+
+# L'agent visiteur
+
+`.claude/agents/visiteur.md` traverse le site comme quelqu'un qui arrive pour la
+premiere fois, dans un VRAI navigateur, et rend ce qui est reellement a l'ecran,
+a quel instant, et ou le chemin se casse.
+
+**Il ne joue pas un personnage.** Un modele qui donne son avis sur un site qu'il
+n'a pas vu produit des phrases qui sonnent juste et ne reposent sur rien. Lui
+pilote le site et rend un constat horodate. `proportions` mesure une page posee,
+`accessibilite` mesure des seuils, `qa` prouve qu'une chose marche — **personne
+ne traverse**. Le trou est dans l'enchainement : l'attente, le defilement, le
+moment ou quelqu'un renonce.
+
+**Ce qu'il porte :** les trois pieges qui font mentir une traversee — « visible »
+ne veut pas dire « pas recouvert » (le titre annonce visible a 1013 ms etait
+couvert jusqu'a 26 700), Chromium headless qui annonce `prefers-reduced-motion:
+reduce` par defaut, et le referrer qui compte qui est `document.referrer` et non
+l'en-tete HTTP. Plus les trois arrivees (`google`, `bouche`, `bureau`) portees
+par `scripts/visite.mjs`.
+
+**Ce que sa premiere traversee a trouve, et que personne n'avait vu :** les mots
+de l'accueil etaient COLLES — `BreathReveal` separait chaque mot par une marge
+CSS, sans aucun caractere d'espace dans le DOM. Un lecteur d'ecran annoncait un
+seul mot interminable, et Google ne pouvait pas apparier les phrases de longue
+trainee que ce site veut gagner. **La lecon est generale : regarde toujours le
+texte EXTRAIT, pas le texte affiche.**
 
 # L'agent designer
 
