@@ -90,7 +90,20 @@ export async function POST(request: Request) {
   try {
     const reponse = await client.messages.create({
       model: MODELE,
-      max_tokens: 2000,
+      // LE PLAFOND COMPTE LA REFLEXION, ET 2000 NE SUFFISAIT PAS.
+      //
+      // `thinking: adaptive` fait reflechir le modele avant de repondre, et ces
+      // jetons-la comptent dans `max_tokens`. A 2000, la reflexion pouvait
+      // remplir le plafond a elle seule : la reponse revenait avec
+      // `stop_reason: "max_tokens"` et AUCUN bloc de texte, le `find` plus bas
+      // rendait undefined, et la page affichait « assistant muet » sans qu'on
+      // puisse savoir pourquoi depuis la production.
+      //
+      // 16000 est le plancher recommande pour une requete non diffusee. Ce
+      // n'est PAS une depense : `max_tokens` est un plafond, pas une
+      // reservation. Une question d'entretien fait trente mots, et ce qu'on
+      // paie ne change pas d'un jeton.
+      max_tokens: 16000,
       thinking: { type: "adaptive" },
       output_config: { effort: "medium", format: { type: "json_schema", schema: SCHEMA_TOUR } },
       system: [{ type: "text", text: SYSTEME, cache_control: { type: "ephemeral" } }],
@@ -98,7 +111,11 @@ export async function POST(request: Request) {
     });
 
     const texte = reponse.content.find((b) => b.type === "text");
-    if (!texte || texte.type !== "text") throw new Error("aucun bloc de texte");
+    // Dire POURQUOI il n'y a pas de texte. Sans `stop_reason`, un plafond
+    // atteint et une cle refusee laissaient la meme trace dans les journaux.
+    if (!texte || texte.type !== "text") {
+      throw new Error(`aucun bloc de texte (stop_reason ${reponse.stop_reason})`);
+    }
     tour = JSON.parse(texte.text) as Tour;
   } catch (e) {
     // Le message d'erreur du SDK ne contient pas le corps de la requete, donc
@@ -109,7 +126,8 @@ export async function POST(request: Request) {
       : e instanceof Anthropic.RateLimitError ? "limite_fournisseur"
       : e instanceof Anthropic.APIError ? `api_${e.status}`
       : "illisible";
-    console.error(`[entretien] La question suivante n'a pas pu etre obtenue (${quoi}).`);
+    const detail = e instanceof Error ? e.message : "";
+    console.error(`[entretien] La question suivante n'a pas pu etre obtenue (${quoi}). ${detail}`);
     return Response.json({ erreur: "assistant_muet" }, { status: 502 });
   }
 

@@ -74,7 +74,11 @@ export async function POST(request: Request) {
   try {
     const reponse = await client.messages.create({
       model: MODELE,
-      max_tokens: 8000,
+      // Meme raison que dans la route de la question : `thinking` consomme ce
+      // plafond, et cette requete-ci tourne a l'effort HAUT sur une
+      // transcription entiere. 8000 pouvait partir en reflexion et ne rien
+      // laisser pour la fiche. C'est un plafond, pas une depense.
+      max_tokens: 16000,
       thinking: { type: "adaptive" },
       output_config: { effort: "high", format: { type: "json_schema", schema: SCHEMA_DOSSIER } },
       system: [{ type: "text", text: SYSTEME_DOSSIER, cache_control: { type: "ephemeral" } }],
