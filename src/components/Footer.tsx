@@ -67,7 +67,24 @@ export default function Footer() {
 
                 40px de trace, et pas davantage : a 320px de large, le bloc
                 mesure 262px pour 275 disponibles. A 44 il deborde. */}
-            <Marque hauteur={40} forme="ligne" devise={false} />
+            {/* LA MARQUE DEVIENT UN LIEN VERS L'ACCUEIL, et ce n'est pas une
+                commodite de navigation.
+
+                MESURE : la racine recevait UN SEUL lien interne sur tout le
+                site, et c'etait la nav de secours VISUELLEMENT MASQUEE. Le lien
+                maison de la nav visible existe mais disparait du HTML servi
+                (`Nav.tsx` rend `null` avant l'intro), et ce pied de page listait
+                huit liens sans un seul vers `/`. Toutes les autres routes en
+                recevaient deux. **La page d'accueil etait la page la moins liee
+                de son propre site**, ce qui est exactement ce qu'on ne veut pas
+                quand on se bat pour son propre nom.
+
+                Envelopper la marque qui EXISTE DEJA la fait passer de un lien a
+                deux, sans ecrire un mot nouveau et sans ajouter une entree
+                « Home » qui aurait demande une decision de copy. */}
+            <a href="/" aria-label="Maison du Calme, home" style={{ display: "inline-block", textDecoration: "none" }}>
+              <Marque hauteur={40} forme="ligne" devise={false} />
+            </a>
             {/* Le refuge, sans le mot « shelter » : Kilian — « shelter makes
                 me remember homeless ». En anglais c'est le vocabulaire du
                 foyer d'accueil. « Receives » est au contraire le verbe des

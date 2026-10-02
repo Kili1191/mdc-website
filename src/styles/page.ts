@@ -150,6 +150,12 @@ export const ECHELLE = {
   afficheL:  62,   // bigHead a son plafond
   afficheM:  52,   // les citations, le dernier rang de la lignee
   afficheS:  40,   // sectionHead a son plafond, les rangs de la lignee
+  // 29 servait deja SANS etre nomme : c'est le plancher du clamp de
+  // sectionHead, monte de 26 a 29 sur mesure, et la marche du milieu des
+  // questions de /begin/before. Une marche qu'on utilise sans l'inscrire est
+  // exactement ce que ce registre a ete ecrit pour finir.
+  // Rapports : 40/29 = 1,379 · 29/24 = 1,208. Sains.
+  afficheXS: 29,
   titre:     24,   // label
   chapo:     21,   // lead
   corps:     18,   // body

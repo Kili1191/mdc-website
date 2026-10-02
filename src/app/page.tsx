@@ -5,7 +5,6 @@ import BreathReveal from "@/components/BreathReveal";
 import RailEpingle from "@/components/RailEpingle";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
-import AssetFrame from "@/components/effects/AssetFrame";
 import { useIntroReady } from "@/lib/introReady";
 import { COLORS, FONTS } from "@/styles/tokens";
 import { body as pageBody, sectionHead, eyebrow, micro, label } from "@/styles/page";
@@ -380,7 +379,30 @@ export default function Home() {
     return () => cancelAnimationFrame(raf);
   }, [ready]);
 
-  if (!ready) return null;
+  // PAS DE BARRIERE DE RENDU. Elle valait `if (!ready) return null` et elle
+  // coutait le referencement de la page d'accueil.
+  //
+  // MESURE, sur le HTML servi en production : `/` rendait SOIXANTE mots et
+  // ZERO `h1` — et les soixante etaient le menu et le pied de page, identiques
+  // aux dix autres routes. Zero mot propre a l'accueil. Les autres pages en
+  // servent 282 a 733. Google ne peut pas classer une page sans corps : entre
+  // une page vide et une page de prose, il a choisi `/retreats`, ce qui a fait
+  // dire a Kilian « why it's retreat showing, c'est le seul truc que je fais
+  // pas ».
+  //
+  // La barriere attendait `INTRO_PRELOAD_EVENT`, soit vingt secondes d'horloge
+  // murale. En rendu serveur elle s'executait aussi, et rendait `null`.
+  //
+  // CE QUI NE CHANGE PAS POUR UN VISITEUR. Le voile de l'intro est opaque et
+  // plein ecran : le corps rendu dessous ne se voit pas. Lenis est arrete et la
+  // page est ramenee en haut a la levee. `stationStyle` ne porte aucune
+  // opacite nulle, donc les stations arrivent visibles — c'est exactement ce
+  // qu'on veut pour un robot, et c'est invisible pour un oeil.
+  //
+  // Et la boucle rAF qui pilote l'opacite et le Y garde SON garde `ready` : son
+  // premier tick tombe 3,7 s avant la fin de la levee du voile (20 000 contre
+  // 23 700), donc elle a pose ses valeurs bien avant qu'on voie quoi que ce
+  // soit. C'est la chorégraphie qui attend, pas le texte.
 
   return (
     <>

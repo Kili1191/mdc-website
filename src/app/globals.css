@@ -627,3 +627,100 @@ body {
   position: absolute;
   left: 0; right: 0; top: -8px; bottom: -8px;
 }
+
+/* ─── L'entretien de /begin/before ─────────────────────────────────────
+   Une question a l'ecran, la suivante decidee par ce qui vient d'etre
+   repondu. Trois classes, pas une de plus : l'arrivee d'une question, le
+   refus d'y repondre, et ce qui a deja ete dit. */
+
+/* L'arrivee. Amplitude 0,5em et 900ms : la meme que toutes les revelations
+   du site (voir BreathReveal), donc la meme main. Sur `transform` et
+   `opacity` seulement. */
+@keyframes mdc-venir {
+  from { opacity: 0; transform: translateY(0.5em); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.mdc-venir { animation: mdc-venir 900ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .mdc-venir { animation: none; }
+}
+
+/* « I would rather not say. » Le mot en brou, le filet en rouille : c'est la
+   regle du site, mesuree, et le rouille n'ecrit jamais. */
+.mdc-refus {
+  font-family: var(--font-prata), Georgia, serif;
+  font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #4A3B2A; background: none; border: 0;
+  border-bottom: 1px solid #B14E2D;
+  padding: 6px 0; cursor: pointer;
+  transition: opacity 450ms cubic-bezier(0.4, 0, 0.6, 1);
+}
+.mdc-refus:hover, .mdc-refus:focus-visible { opacity: 0.82; }
+.mdc-refus:focus-visible { outline: 2px solid rgba(177, 78, 45, 0.55); outline-offset: 4px; }
+
+/* Au doigt, une cible de 44px. Le trait reste ou il est : c'est la zone
+   tactile qui grandit, pas le soulignement.
+   LES DEUX CONDITIONS, et pas seulement `pointer: coarse` : un telephone
+   emule dans un navigateur de bureau n'est PAS coarse, donc la cible mesurait
+   33px la ou on la mesure le plus souvent. Mesure a 390px de large. */
+@media (pointer: coarse), (max-width: 720px) {
+  .mdc-refus { padding: 16px 0; }
+}
+
+/* Ce qui a deja ete dit, sous la question en cours. La question en petit,
+   la reponse en prose : c'est la reponse qu'on relit, pas la question. */
+.mdc-dit { display: grid; grid-template-columns: 2.6rem 1fr; gap: 4px 18px;
+           padding: 22px 0; border-top: 1px solid #74654F; }
+.mdc-dit > :nth-child(2),
+.mdc-dit > :nth-child(3) { grid-column: 2; }
+@media (max-width: 560px) {
+  .mdc-dit { grid-template-columns: 1fr; gap: 6px; }
+  .mdc-dit > :nth-child(2), .mdc-dit > :nth-child(3) { grid-column: 1; }
+}
+
+/* Le chapo de /begin/before se retire au telephone une fois l'entretien
+   ouvert. `Entretien` pose l'attribut, et il ne le pose que sur un geste :
+   quelqu'un a appuye sur Start.
+
+   MESURE a 390x844. Le preambule — eyebrow, titre, chapo — occupe 558 a 612px,
+   soit 66 a 73 % du premier ecran. Pendant ce temps le champ de reponse tombe
+   32 a 86px SOUS la ligne de flottaison, et le bouton 145 a 199px plus bas
+   encore : on lit une question sur son corps et on ne voit pas ou repondre.
+   Le chapo vaut 184px de texte plus 40 de marge. Le retirer rend 224px, ce qui
+   couvre le pire des deux cas. Le titre, lui, reste.
+
+   Et ca regle un second defaut de la meme mesure : a 390 la question la plus
+   longue compose a 21px, exactement la taille du chapo, avec une capitale 13 %
+   plus courte (Higuen 15px contre Prata 17px). Les deux ne se croisent plus. */
+/* LA HAUTEUR COMPTE AUTANT QUE LA LARGEUR, et c'est la deuxieme mesure qui
+   l'a dit. Apres la premiere correction, le telephone allait — mais a
+   1440x900, question longue precedee d'une note, le champ tenait a 8px pres et
+   le bouton `Next` restait 104px sous le pli. Un ecran de portable n'est pas
+   large et court : il est LARGE ET COURT, et seule la hauteur le dit.
+   Le chapo se retire donc aussi sous 940px de haut. Sur un ecran vraiment haut
+   (1100 mesures) rien ne se cache, parce que tout tient. */
+@media (max-width: 720px), (max-height: 940px) {
+  :root[data-entretien="ouvert"] .mdc-seuil-chapo { display: none; }
+}
+
+/* La carte du quartier, sur /questions.
+
+   POURQUOI LES TAILLES SONT ICI ET PAS DANS LE COMPOSANT. Dans un SVG a
+   viewBox, une taille de police est en UNITES UTILISATEUR : elle suit l'echelle
+   du dessin. La carte fait 760px sur un ecran de 1440 et 335px sur un telephone
+   de 390 — facteur 0,419. Les etiquettes a 15 unites arrivaient donc a 6,3px
+   reels au telephone. Une seule valeur ne peut pas servir les deux. */
+.mdc-carte__lieu { font-size: 15px; }
+.mdc-carte__ici  { font-size: 40px; }
+.mdc-carte__code { font-size: 15px; }
+
+@media (max-width: 720px) {
+  /* 30 unites x 0,419 = 12,6px reels. `Chelsea` sort : quatre reperes dans une
+     carte de 335px se marchent dessus, et c'est le seul qui soit de l'autre
+     cote de l'eau, donc le moins utile pour se situer. */
+  .mdc-carte__lieu { font-size: 30px; }
+  .mdc-carte__ici  { font-size: 56px; }
+  .mdc-carte__code { font-size: 26px; }
+  .mdc-carte__loin { display: none; }
+  .mdc-carte__gare { font-size: 26px; }
+}

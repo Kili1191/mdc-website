@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { COLORS, FONTS } from "@/styles/tokens";
+import { labelChamp, champLigne, champTexte, champMenu } from "@/styles/champs";
 
 // Ce que le formulaire dit une fois parti, et quand ca echoue.
 //
@@ -18,41 +19,15 @@ import { COLORS, FONTS } from "@/styles/tokens";
 const ENVOYE = "It has arrived. He has it from here.";
 const ECHEC = "That did not send. What you wrote is still here: send it again."
 
-// Les libelles des champs etaient ecrits en taupe. Mesure sur le marbre du
-// site : 1,77:1, quand un petit texte en demande 4,5. « Your name », « How to
-// reach you », « What brings you » etaient donc illisibles en pratique, sur la
-// seule page qui transforme un visiteur en client.
-//
-// C'est la faute exacte que le §11 du skill taste decrit : le taupe est une
-// couleur de PAUSE, une regle ou un filet, jamais une couleur de texte. Elle
-// avait ete corrigee sur Sessions, ou elle mangeait les durees et les tarifs,
-// et personne n'etait revenu ici. Le brou donne 6,93:1.
-//
-// Le taupe reste juste au-dessous, en bordure de champ : c'est son emploi.
-const labelStyle: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 12, letterSpacing: "0.24em",
-  textTransform: "uppercase", color: COLORS.brou, margin: 0,
-  display: "block", marginBottom: 12,
-};
-const inputStyle: React.CSSProperties = {
-  fontFamily: FONTS.prata, fontSize: 16, color: COLORS.brou,
-  background: "transparent",
-  border: 0, borderBottom: `1px solid ${COLORS.taupeTrait}`,
-  padding: "12px 0", width: "100%", outline: "none",
-};
-const textareaStyle: React.CSSProperties = {
-  ...inputStyle,
-  minHeight: 140, resize: "vertical", lineHeight: 1.6,
-  paddingTop: 12, paddingBottom: 12,
-};
-const selectStyle: React.CSSProperties = {
-  ...inputStyle,
-  // Le champ herite de 16 ; la prose serree du site est a 17. Un menu qui
-  // compose un demi-point sous tout le reste se remarque sans rien dire.
-  fontSize: 17,
-  appearance: "none",
-  cursor: "pointer",
-};
+// Les styles de champ vivent dans `src/styles/champs.ts` : l'entretien de
+// `/begin/before` pose les memes questions sous une autre forme, et deux copies
+// de la meme correction de contraste, c'est une correction qui finit par ne
+// plus etre vraie d'un cote.
+const labelStyle = labelChamp;
+const inputStyle = champLigne;
+const textareaStyle = champTexte;
+const selectStyle = champMenu;
+
 const noteStyle: React.CSSProperties = {
   fontFamily: FONTS.prata, fontSize: 13.5, lineHeight: 1.7,
   color: COLORS.brou, margin: 0, maxWidth: "38ch",
@@ -164,6 +139,18 @@ export default function BeginForm() {
             ouvre donc le formulaire deja regle. La valeur est verifiee contre
             la liste : une URL bricolee ne peut pas injecter une option qui
             n'existe pas. Et rien n'est verrouille, le menu reste un menu.
+
+            ET PENDANT UN MOMENT UNE SEULE PAGE LE FAISAIT. /teaching envoyait
+            `?brings=teaching` ; /sessions, /coaching et /retreats envoyaient
+            vers `/begin` nu. Trois portes sur quatre faisaient donc rechercher
+            dans une liste de six le motif que la page connaissait deja. Le
+            defaut est invisible au relecteur, parce que le formulaire marche.
+
+            Les quatre portent desormais leur valeur, et /sessions pose
+            `deepest` et non `session` : le seul bouton de cette page appartient
+            a TRANSMISSION, qui ne se reserve pas. Les liens qui restent nus le
+            sont a raison — la barre de navigation, l'accueil, /the-work,
+            /practitioner et /questions n'emportent aucun motif unique.
 
             L'OPTION D'INVITE remplace un <option> sans libelle : le select
             s'affichait vide et rien ne disait qu'il s'ouvrait. « Whichever is

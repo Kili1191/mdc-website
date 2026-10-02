@@ -93,7 +93,37 @@ export default function MarbleBackground({
           vec2 warp = vec2(vnoise(wp), vnoise(wp + vec2(17.3, 41.7))) - 0.5;
           vec2 dOrg = d + warp * 0.055;
 
-          float stamp = uActive * smoothstep(uRadius, 0.0, length(dOrg)) * (0.6 + uVel*2.5);
+          // L'AMPLITUDE DU TAMPON, ET POURQUOI ELLE EST A 1.0.
+          //
+          // Elle valait 0.6, et c'est l'opacite que Kilian a fini par voir :
+          // « normalement ya deux image 1 cest le marbre 2 les motifs mais
+          // depuis longtemps tu a installe une opacite que jaime pas. quand la
+          // souris reveal it must be full revealing ».
+          //
+          // Il avait raison, et le defaut etait arithmetique, pas esthetique.
+          // Le tampon plafonnait a 0,6 au centre exact du curseur ; le shader
+          // final lit ensuite smoothstep(0.0, 0.85, reveal), qui rend 0,791
+          // pour une entree de 0,6. Le voile vaut (1.0 - r) : il restait donc
+          // 20,9 % d'albatre pose sur le motif AU POINT LE PLUS OUVERT, et
+          // 5,9 % seulement quand la main allait vite — la pierre s'ouvrait
+          // plus au geste brusque qu'a la main posee, ce qui est l'inverse de
+          // ce que ce site raconte.
+          //
+          // Il n'existait AUCUN rayon ou la revelation atteignait 100 %. Pas
+          // un reglage trop bas : un plafond que la chaine ne pouvait pas
+          // franchir. Quatre passes de reglage sur le voile n'y pouvaient rien,
+          // parce que le voile n'etait pas le coupable.
+          //
+          // A 1.0, le centre sort a 1,000 et le voile tombe a zero : le motif
+          // est nu sous la main, sur un coeur de 64 px de rayon a l'arret et
+          // 84 px en mouvement, puis le degrade reprend jusqu'a uRadius.
+          //
+          // CE QUI N'EST PAS TOUCHE, et c'est le point : uRadius 0.29, uDecay
+          // 0,930/0,985, uSpread, le domain warp, uReflet, uIrisation. Ce sont
+          // les valeurs verrouillees de DIRECTION.md, et aucune n'etait en
+          // cause. Le terme de vitesse reste, il elargit desormais le coeur
+          // sature au lieu de l'eclaircir.
+          float stamp = uActive * smoothstep(uRadius, 0.0, length(dOrg)) * (1.0 + uVel*2.5);
           gl_FragColor = vec4(vec3(clamp(max(prev,stamp),0.0,1.0)),1.0);
         }`,
     });
@@ -133,8 +163,6 @@ export default function MarbleBackground({
         // LA COLONNE DE LECTURE, en fractions d'ecran. Mesuree en JS sur
         // `.mdc-wrap` et poussee a chaque frame : le shader ne connait pas le
         // DOM, il faut la lui dire.
-        uTexteCentre: { value: 0.5 },
-        uTexteDemi: { value: 0.34 },
         uHouseCenter: { value: new THREE.Vector2(0.5, 0.80) },
         uHouseInner: { value: 0.11 },
         uHouseOuter: { value: 0.24 },
@@ -154,7 +182,6 @@ export default function MarbleBackground({
         uniform sampler2D uMotif,uVeil,uTrail;
         uniform float uZoom,uTime,uReflet,uIrisation,uEffectScale;
         uniform vec2 uScreenRes,uRes;
-        uniform float uTexteCentre, uTexteDemi;
         uniform vec2 uHouseCenter;
         uniform float uHouseInner,uHouseOuter;
         uniform sampler2D uHouseTex;
@@ -229,35 +256,50 @@ export default function MarbleBackground({
           vec3 veil  = texture2D(uVeil,  uv).rgb;
           vec3 motifCol = texture2D(uMotif, uvMotif).rgb;
 
-          // LE VOILE NE COUVRE PLUS QUE LE TEXTE.
+          // DEUX IMAGES, ET LE MARBRE EST LE SOL.
           //
-          // Demande de Kilian : « enleve le voile entre le marbre et l'image
-          // dessous garde juste sous le texte ».
+          // Kilian : « normalement ya deux image 1 cest le marbre 2 les motifs
+          // [...] quand la souris reveal it must be full revealing », puis,
+          // devant le resultat : « ya presque plus de marbre ».
           //
-          // Ce qu'il y avait : mix(veil, motifCol, r). L'albatre uni
-          // par-dessus, le motif dessous, et le motif ne se decouvrait QUE
-          // sous la trainee du curseur. Le relief de lotus — l'image la plus
-          // travaillee du site — etait donc invisible pour qui ne promene pas
-          // sa souris, c'est-a-dire pour tout le monde sur telephone.
+          // CE QUI AVAIT ETE FAIT, ET POURQUOI C'ETAIT A COTE. Le 11 septembre
+          // il demandait « enleve le voile entre le marbre et l'image dessous
+          // garde juste sous le texte », parce que le relief de lotus ne se
+          // decouvrait que sous la trainee du curseur et restait donc invisible
+          // sur telephone. La reponse avait INVERSE la composition : le motif
+          // partout, et l'albatre reduit a une bande verticale sous la colonne
+          // de lecture.
           //
-          // Ce qu'il y a maintenant : le motif partout, et le voile en BANDE
-          // VERTICALE sous la colonne de lecture. La bande est mesuree en JS
-          // sur .mdc-wrap et poussee en uniforme, donc elle suit la vraie
-          // largeur du texte a toutes les tailles d'ecran sans constante a
-          // recaler.
+          // Le cout ne s'est vu que des semaines plus tard, et il est double.
+          // Le marbre, qui est la matiere de la maison, ne couvrait plus que la
+          // largeur du texte — a 1990 px, 0,253 de demi-largeur, donc la moitie
+          // de l'ecran montrait du lotus en permanence. Et surtout la
+          // revelation n'avait plus de sujet : hors de la bande, le voile
+          // valait deja zero, donc promener la souris sur les lotus n'ouvrait
+          // RIEN. Porter l'amplitude du tampon a 1,0 — ce qui etait juste — ne
+          // pouvait donc se voir que dans la bande, c'est-a-dire nulle part ou
+          // l'oeil regardait.
           //
-          // Ses bords sont fondus sur un quart de sa demi-largeur : une arete
-          // nette se lirait comme un bandeau pose sur l'image, ce qui est
-          // exactement ce que le 5 et le 12 du skill taste interdisent. Fondu,
-          // on ne voit pas une boite, on voit la pierre qui se calme la ou il
-          // y a a lire.
-          float dx = abs(vUv.x - uTexteCentre);
-          float bord = uTexteDemi * 0.25;
-          float bandeTexte = 1.0 - smoothstep(uTexteDemi - bord, uTexteDemi + bord, dx);
-
-          // Le curseur ouvre toujours la pierre, y compris dans la bande :
-          // c'est le seul geste qui commande le fond, et le 10b tient.
-          float voileIci = bandeTexte * (1.0 - r);
+          // CE QU'IL Y A MAINTENANT. L'albatre redevient le sol, sur tout
+          // l'ecran, et le motif est ce que la main decouvre. Le geste reprend
+          // son sujet, et il le decouvre ENTIEREMENT : au centre du curseur
+          // r vaut 1,000, donc le voile tombe a zero et le lotus est nu.
+          //
+          // La bande de texte disparait avec son motif. Elle n'existait que
+          // pour proteger la lecture d'un fond qui etait devenu une image ;
+          // avec l'albatre pour sol, le texte est sur du marbre partout, et
+          // mesure a 6,33:1 au 5e centile contre 3,03:1 sur le motif nu. Le
+          // calcul de sa largeur part donc aussi : une mesure par frame qui ne
+          // sert plus rien n'est pas une precaution, c'est de la dette.
+          //
+          // Ce qui reste du 11 septembre, et qui etait la vraie demande : le
+          // relief de lotus n'est plus enfoui sous un voile opaque que seule
+          // une souris pouvait entamer. Il est a un geste, et le geste le rend
+          // en entier. Sur telephone, uActive suit le doigt comme il suivait le
+          // curseur — et PAS de backtick dans ce commentaire : il est dans un
+          // litteral gabarit, et un backtick le fermerait. Ce depot a deja
+          // casse deux builds le meme jour pour cette raison.
+          float voileIci = 1.0 - r;
           vec3 col = mix(motifCol, veil, voileIci);
 
           vec3 warmLight = vec3(0.98, 0.92, 0.78);
@@ -486,89 +528,25 @@ export default function MarbleBackground({
     window.addEventListener(INTRO_DONE_EVENT, decouvrir);
     window.addEventListener(BREATH_OPEN_EVENT, recouvrir);
 
-    // Cache de la bande de voile : voir le bloc dans `animate`.
-    let bandeY = -99999, bandeW = -1, bandeCentre = 0.5, bandeDemi = 0.5;
-
     const animate = () => {
       if (couvert && !unePasse) { raf = requestAnimationFrame(animate); return; }
       const t = clock.getElapsedTime();
       finalMat.uniforms.uTime.value = t;
       // La gravure suit le scroll dans la station MAISON : plus on descend,
       // plus le burin est descendu.
-      // LA BANDE SUIT LA VRAIE COLONNE DE TEXTE.
+      // LA BANDE DE VOILE N'EXISTE PLUS, ET SON CALCUL NON PLUS.
       //
-      // ─────────────────────────────────────────────────────────────────
-      // ELLE NE LA SUIVAIT PAS, ET C'ETAIT LE PIRE DEFAUT DU SITE.
+      // Elle mesurait, a chaque defilement, la largeur reelle du bloc de texte
+      // de la station devant le regard, pour poser l'albatre sous la colonne de
+      // lecture et laisser le motif partout ailleurs. Elle a coute une passe au
+      // passage : la premiere version mesurait `.mdc-station`, qui porte
+      // `width: 100%`, donc le voile couvrait l'ecran entier sur l'accueil et
+      // Kilian avait litteralement raison de dire « you did nothing ».
       //
-      // Kilian, le 11 septembre : « enleve le voile entre le marbre et
-      // l'image dessous garde juste sous le texte ». J'ai mesure la bande sur
-      // `.mdc-station` — et `.mdc-station` porte `width: 100%`. Elle rend donc
-      // la largeur du viewport ENTIER, `demi` sortait a 0,56, et le
-      // `Math.min(0.5, ...)` l'avalait a 0,5 : la borne, c'est-a-dire tout
-      // l'ecran.
-      //
-      // Mesure sur le build de production, avant correction :
-      //
-      //   accueil 1990   demi = 0,500   (le contenu n'en demande que 0,253)
-      //   accueil 1440   demi = 0,500   (0,350)
-      //   sessions 1990  demi = 0,332   ← les pages internes, elles, marchaient
-      //
-      // Le voile couvrait donc l'ecran entier SUR L'ACCUEIL SEULEMENT, la
-      // seule page qui n'a rien d'autre a montrer que sa pierre. Kilian, deux
-      // fois de suite devant son grand ecran : « you did nothing ». Il avait
-      // litteralement raison — la matiere que le code devait poser dans le
-      // vide n'y etait pas.
-      //
-      // ON MESURE DONC LE CONTENU, PAS LA SECTION. Une station EST le
-      // viewport ; son contenu ne l'est pas. Et on prend la station devant le
-      // regard, pas la premiere du document : elles n'ont ni la meme largeur
-      // ni le meme cote — centre, gauche, centre, droite, centre.
-      //
-      // Cache sur le scroll et la largeur : cette boucle tourne a chaque
-      // frame, et six rectangles par frame pour une valeur qui ne bouge qu'au
-      // defilement serait du gaspillage pur.
-      // ─────────────────────────────────────────────────────────────────
-      const y = window.scrollY;
-      const w = window.innerWidth || 1;
-      if (Math.abs(y - bandeY) > 24 || w !== bandeW) {
-        bandeY = y; bandeW = w;
-        const stations = document.querySelectorAll<HTMLElement>(".mdc-station");
-        let cible: HTMLElement | null = null;
-        if (stations.length) {
-          // La plus proche du milieu de l'ecran. Le rectangle est celui
-          // d'APRES la choregraphie, qui translate jusqu'a 460px — au pire on
-          // prend la voisine, dont le contenu a une largeur comparable.
-          let meilleur = Infinity;
-          const milieu = window.innerHeight / 2;
-          stations.forEach((n) => {
-            const b = n.getBoundingClientRect();
-            const d = Math.abs(b.top + b.height / 2 - milieu);
-            if (d < meilleur) { meilleur = d; cible = n; }
-          });
-        } else {
-          cible = document.querySelector<HTMLElement>(".mdc-wrap");
-        }
-        if (cible) {
-          // Union des enfants de premier rang : c'est le bloc de texte, pas la
-          // section qui le porte. Les elements sans surface sont du gabarit.
-          let g = Infinity, d = -Infinity;
-          for (const k of Array.from((cible as HTMLElement).children)) {
-            const b = k.getBoundingClientRect();
-            if (b.width < 4 || b.height < 4) continue;
-            g = Math.min(g, b.left); d = Math.max(d, b.right);
-          }
-          // Repli genereux si la station est vide — la gravure n'a pas de
-          // texte : mieux vaut trop de voile qu'un texte pose sur un lotus.
-          if (g === Infinity) { const b = (cible as HTMLElement).getBoundingClientRect(); g = b.left; d = b.right; }
-          // Un peu plus large que le texte : les glyphes debordent, et la
-          // bande doit finir avant eux, pas sur eux.
-          const demi = Math.min(0.5, ((d - g) / w) * 0.5 * 1.12);
-          bandeCentre = (g + (d - g) / 2) / w;
-          bandeDemi = Math.max(0.18, demi);
-        }
-      }
-      finalMat.uniforms.uTexteCentre.value = bandeCentre;
-      finalMat.uniforms.uTexteDemi.value = bandeDemi;
+      // Elle part parce que le motif n'est plus le sol. Avec l'albatre pour
+      // fond, le texte est sur du marbre partout : il n'y a plus de colonne a
+      // proteger, donc plus de rectangle a mesurer, donc plus six
+      // getBoundingClientRect a filtrer par frame.
 
       finalMat.uniforms.uCarve.value = houseFocus.progress();
 

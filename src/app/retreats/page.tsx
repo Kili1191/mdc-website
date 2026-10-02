@@ -4,6 +4,8 @@ import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
 import AssetFrame from "@/components/effects/AssetFrame";
 import ScrollDriftGallery from "@/components/effects/ScrollDriftGallery";
+import JsonLd from "@/components/JsonLd";
+import { graphe, serviceRetraite } from "@/lib/jsonld";
 
 // Retreats — une seule offre, et beaucoup de choses qu'elle n'est pas.
 //
@@ -28,6 +30,7 @@ export const metadata = {
 export default function RetreatsPage() {
   return (
     <main style={pageStyle}>
+      <JsonLd data={graphe(serviceRetraite)} />
       <div className="mdc-wrap">
         <p style={eyebrow}>Retreats</p>
         <h1 style={{ ...bigHead, marginTop: 36, maxWidth: "16ch" }}>
@@ -199,7 +202,7 @@ export default function RetreatsPage() {
           </div>
           <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 34 }}>One line is enough · No newsletter</p>
           <div style={{ marginTop: 44 }}>
-            <QuietButton href="/begin">Put your name down</QuietButton>
+            <QuietButton href="/begin?brings=retreat">Put your name down</QuietButton>
           </div>
         </section>
       </div>

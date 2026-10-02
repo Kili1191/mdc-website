@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties, type ElementType } from "react";
+import { Fragment, useEffect, useRef, type CSSProperties, type ElementType } from "react";
 
 // Titre révélé mot par mot au rythme du souffle.
 // Chaque mot fade + monte légèrement, staggerés — un souffle traverse
@@ -137,13 +137,30 @@ export default function BreathReveal({
       {lines.map((line, li) => (
         <span key={li} style={lineSpanStyle}>
           {line.split(/\s+/).map((word, wi) => (
-            <span
-              key={`${li}-${wi}`}
-              className="mdc-breath-word"
-              style={wordSpanStyle}
-            >
-              {word}
-            </span>
+            <Fragment key={`${li}-${wi}`}>
+              {/* UN VRAI ESPACE ENTRE LES MOTS, ET IL MANQUAIT.
+                  Chaque mot est un `inline-block` separe du suivant par une
+                  MARGE. Visuellement c'est juste ; dans le DOM il n'y avait
+                  alors AUCUN caractere d'espace, et le texte de la page se
+                  lisait d'un bloc.
+
+                  Releve sur le HTML servi de l'accueil, balises retirees :
+                  « Thereisakindoftirednessthatrestdoesn'treach. » Ce que ca
+                  coute, et les trois sont reels : un lecteur d'ecran annonce un
+                  seul mot interminable ; une selection copiee rend du texte
+                  colle ; et un extracteur de texte — Google compris — ne peut
+                  pas apparier « a kind of tiredness that rest doesn't reach »,
+                  qui est precisement le genre de phrase que ce site veut gagner.
+
+                  L'espace est pose a `fontSize: 0` : il EXISTE dans le texte,
+                  l'arbre d'accessibilite et le presse-papier, et il n'occupe
+                  aucune largeur. La geometrie ne bouge pas d'un centieme —
+                  mesure avant et apres : 1,59 px entre deux mots, identique. */}
+              {wi > 0 && <span style={{ fontSize: 0, lineHeight: 0 }}> </span>}
+              <span className="mdc-breath-word" style={wordSpanStyle}>
+                {word}
+              </span>
+            </Fragment>
           ))}
         </span>
       ))}

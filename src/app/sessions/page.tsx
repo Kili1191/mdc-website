@@ -218,7 +218,7 @@ export default function SessionsPage() {
               </p>
             </div>
             <div style={{ marginTop: 44 }}>
-              <QuietButton href="/begin">Apply</QuietButton>
+              <QuietButton href="/begin?brings=deepest">Apply</QuietButton>
             </div>
           </div>
         </section>

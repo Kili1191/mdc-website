@@ -1,6 +1,7 @@
 import { pageStyle, body, lead, bigHead, sectionHead, eyebrow, micro } from "@/styles/page";
 import SplitTextChars from "@/components/effects/SplitTextChars";
 import QuietButton from "@/components/effects/QuietButton";
+import Carte from "@/components/Carte";
 import JsonLd from "@/components/JsonLd";
 import { graphe, questions } from "@/lib/jsonld";
 
@@ -133,6 +134,25 @@ export default function QuestionsPage() {
             </div>
           </section>
         ))}
+
+        {/* LA CARTE. Elle vient apres les questions, et pas avant : quelqu'un
+            qui se demande encore ce qui se passe dans la piece ne se demande pas
+            encore comment y aller.
+
+            AUCUN MOT NOUVEAU. La phrase sous la carte est celle qui repond deja
+            a « Where is it? » plus haut dans la page, mot pour mot. Une carte
+            qui arrive avec son propre paragraphe dirait deux fois la meme chose,
+            et la seconde fois moins bien. */}
+        <section className="mdc-gap">
+          <p style={eyebrow}>Where</p>
+          <div style={{ marginTop: 40 }}>
+            <Carte />
+          </div>
+          <p style={{ ...body, marginTop: 36 }}>
+            Battersea, in South West London. The address is given when a time is
+            arranged.
+          </p>
+        </section>
 
         <div className="mdc-gap">
           <p className="mdc-micro--phrase" style={{ ...micro, marginBottom: 28 }}>
