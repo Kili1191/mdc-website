@@ -93,7 +93,37 @@ export default function MarbleBackground({
           vec2 warp = vec2(vnoise(wp), vnoise(wp + vec2(17.3, 41.7))) - 0.5;
           vec2 dOrg = d + warp * 0.055;
 
-          float stamp = uActive * smoothstep(uRadius, 0.0, length(dOrg)) * (0.6 + uVel*2.5);
+          // L'AMPLITUDE DU TAMPON, ET POURQUOI ELLE EST A 1.0.
+          //
+          // Elle valait 0.6, et c'est l'opacite que Kilian a fini par voir :
+          // « normalement ya deux image 1 cest le marbre 2 les motifs mais
+          // depuis longtemps tu a installe une opacite que jaime pas. quand la
+          // souris reveal it must be full revealing ».
+          //
+          // Il avait raison, et le defaut etait arithmetique, pas esthetique.
+          // Le tampon plafonnait a 0,6 au centre exact du curseur ; le shader
+          // final lit ensuite smoothstep(0.0, 0.85, reveal), qui rend 0,791
+          // pour une entree de 0,6. Le voile vaut (1.0 - r) : il restait donc
+          // 20,9 % d'albatre pose sur le motif AU POINT LE PLUS OUVERT, et
+          // 5,9 % seulement quand la main allait vite — la pierre s'ouvrait
+          // plus au geste brusque qu'a la main posee, ce qui est l'inverse de
+          // ce que ce site raconte.
+          //
+          // Il n'existait AUCUN rayon ou la revelation atteignait 100 %. Pas
+          // un reglage trop bas : un plafond que la chaine ne pouvait pas
+          // franchir. Quatre passes de reglage sur le voile n'y pouvaient rien,
+          // parce que le voile n'etait pas le coupable.
+          //
+          // A 1.0, le centre sort a 1,000 et le voile tombe a zero : le motif
+          // est nu sous la main, sur un coeur de 64 px de rayon a l'arret et
+          // 84 px en mouvement, puis le degrade reprend jusqu'a uRadius.
+          //
+          // CE QUI N'EST PAS TOUCHE, et c'est le point : uRadius 0.29, uDecay
+          // 0,930/0,985, uSpread, le domain warp, uReflet, uIrisation. Ce sont
+          // les valeurs verrouillees de DIRECTION.md, et aucune n'etait en
+          // cause. Le terme de vitesse reste, il elargit desormais le coeur
+          // sature au lieu de l'eclaircir.
+          float stamp = uActive * smoothstep(uRadius, 0.0, length(dOrg)) * (1.0 + uVel*2.5);
           gl_FragColor = vec4(vec3(clamp(max(prev,stamp),0.0,1.0)),1.0);
         }`,
     });
