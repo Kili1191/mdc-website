@@ -135,7 +135,28 @@ export default function BreathReveal({
   return (
     <Tag ref={ref} className={className} style={rootStyle}>
       {lines.map((line, li) => {
-        const mots = line.split(/\s+/);
+        // UNE PHRASE NE SE COUPE QUE SI ELLE NE TIENT PAS.
+        //
+        // Kilian : « make sure to cut sentences a la ligne quand cest vraiment
+        // necessaire autrement mets toute la phrases a la ligne ».
+        //
+        // Releve avant correction, sur le build de prod, encre reelle :
+        // quatre phrases de l'accueil etaient coupees en deux alors qu'elles
+        // tenaient entieres — « This is the one room where you don't have
+        // to. » occupait 430px dans une colonne de 620, et la ligne cassait
+        // apres « you ».
+        //
+        // Un navigateur remplit chaque ligne au maximum : il ne sait pas
+        // qu'une phrase est une unite. On le lui dit en faisant de chaque
+        // phrase une boite inline-block. Une telle boite est posee ENTIERE sur
+        // la ligne courante si elle y tient, et DESCEND ENTIERE sinon — et si
+        // elle est plus large que la colonne, elle se coupe a l'interieur,
+        // comme il faut. C'est exactement la regle demandee, et elle ne coute
+        // aucune mesure a l'execution.
+        //
+        // Ecarte : couper le texte en lignes a la main. Ca tient a une largeur
+        // et ment a toutes les autres, et ce site va de 320 a 1990px.
+        const phrases = line.split(/(?<=[.!?]["»”’]?)\s+/).filter(Boolean);
 
         // UN MOT, ET L'ESPACE QUI LE PRECEDE.
         //
@@ -149,54 +170,62 @@ export default function BreathReveal({
         // un lecteur d'ecran annoncait un seul mot interminable, une selection
         // copiee rendait du texte colle, et aucun extracteur — Google compris —
         // ne pouvait apparier les phrases de longue trainee que ce site vise.
-        const mot = (m: string, wi: number) => (
-          <Fragment key={`${li}-${wi}`}>
-            {wi > 0 && <span style={{ fontSize: 0, lineHeight: 0 }}> </span>}
+        const mot = (m: string, cle: string, premier: boolean) => (
+          <Fragment key={cle}>
+            {!premier && <span style={{ fontSize: 0, lineHeight: 0 }}> </span>}
             <span className="mdc-breath-word" style={wordSpanStyle}>{m}</span>
           </Fragment>
         );
 
         // AUCUNE LIGNE NE FINIT SUR UN MOT SEUL.
         //
-        // Kilian : « the sentence with only one word a la ligne stupid ».
-        // Releve : « Tell Kilian what you / carry. »
+        // Kilian, deja : « the sentence with only one word a la ligne stupid ».
         //
-        // DEUX CORRECTIFS ESSAYES AVANT CELUI-CI, ET LES DEUX SONT INOPERANTS
-        // ICI, pour la meme raison de fond :
+        // DEUX CORRECTIFS ESSAYES AVANT CELUI-CI, INOPERANTS POUR LA MEME
+        // RAISON DE FOND :
         //
         //   `text-wrap: pretty`, pose dans globals.css et fait exactement pour
         //   ca. Chromium l'abandonne des qu'un bloc contient des boites inline
-        //   ATOMIQUES, et chaque mot en est une — l'inline-block est ce qui
-        //   permet de le faire monter. Verifie sur le build : la propriete
-        //   calculee vaut bien `pretty`, la coupure ne bouge pas d'un mot.
+        //   ATOMIQUES, et chaque mot en est une. Verifie sur le build : la
+        //   propriete calculee vaut bien `pretty`, la coupure ne bouge pas.
         //
-        //   une espace insecable avant le dernier mot. Elle ne peut rien non
-        //   plus : CSS Text ouvre une occasion de coupure AVANT ET APRES chaque
-        //   inline atomique, quel que soit le caractere entre les deux. Retirer
-        //   l'espace ne retire pas l'occasion.
+        //   une espace insecable avant le dernier mot. CSS Text ouvre une
+        //   occasion de coupure AVANT ET APRES chaque inline atomique, quel
+        //   que soit le caractere entre les deux. Retirer l'espace ne retire
+        //   pas l'occasion.
         //
-        // Ce qui marche est d'interdire la coupure plutot que de la deplacer :
-        // les deux derniers mots vivent dans un `white-space: nowrap`, qui
-        // supprime les occasions A L'INTERIEUR de lui. L'espace qui PRECEDE ce
-        // duo reste dehors, donc la ligne peut toujours se couper avant lui —
-        // sinon on lierait trois mots au lieu de deux et on deplacerait le
-        // probleme d'un cran.
-        //
-        // Chaque mot garde son propre `inline-block` et donc son propre souffle
-        // dans le stagger : le groupe ne porte que l'interdiction de couper.
-        if (mots.length < 2) {
-          return <span key={li} style={lineSpanStyle}>{mots.map(mot)}</span>;
-        }
-        const avant = mots.slice(0, -2).map(mot);
-        const i = mots.length - 2;
+        // Ce qui marche est d'INTERDIRE la coupure : les deux derniers mots
+        // d'une phrase vivent dans un `white-space: nowrap`. L'espace qui
+        // PRECEDE le duo reste dehors, sinon on lierait trois mots et le
+        // probleme reculerait d'un cran. Chaque mot garde son inline-block,
+        // donc son souffle dans le stagger.
+        const phraseRendue = (texte: string, pi: number) => {
+          const mots = texte.split(/\s+/).filter(Boolean);
+          const cle = (k: number) => `${li}-${pi}-${k}`;
+          if (mots.length < 2) {
+            return mots.map((m, k) => mot(m, cle(k), k === 0));
+          }
+          const i = mots.length - 2;
+          return (
+            <>
+              {mots.slice(0, i).map((m, k) => mot(m, cle(k), k === 0))}
+              {i > 0 && <span style={{ fontSize: 0, lineHeight: 0 }}> </span>}
+              <span style={{ whiteSpace: "nowrap" }}>
+                {mot(mots[i], cle(i), true)}
+                {mot(mots[i + 1], cle(i + 1), false)}
+              </span>
+            </>
+          );
+        };
+
         return (
           <span key={li} style={lineSpanStyle}>
-            {avant}
-            {i > 0 && <span style={{ fontSize: 0, lineHeight: 0 }}> </span>}
-            <span style={{ whiteSpace: "nowrap" }}>
-              {mot(mots[i], 0)}
-              {mot(mots[i + 1], 1)}
-            </span>
+            {phrases.map((ph, pi) => (
+              <Fragment key={`${li}-p${pi}`}>
+                {pi > 0 && <span style={{ fontSize: 0, lineHeight: 0 }}> </span>}
+                <span style={{ display: "inline-block" }}>{phraseRendue(ph, pi)}</span>
+              </Fragment>
+            ))}
           </span>
         );
       })}

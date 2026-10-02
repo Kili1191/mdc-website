@@ -92,12 +92,18 @@ export default function SplitTextChars({
     return () => io.disconnect();
   }, [text, delay, duration]);
 
-  const parts = text.split(/(\s+)/);
-  // Rang, dans `parts`, de l'avant-dernier morceau porteur de texte : c'est la
-  // que commence le groupe insecable.
-  const pleins = parts.map((m, i) => ({ m, i })).filter(({ m }) => m && !/^\s+$/.test(m));
-  const debutDuo = pleins.length > 1 ? pleins[pleins.length - 2].i : -1;
-
+  // UNE PHRASE NE SE COUPE QUE SI ELLE NE TIENT PAS.
+  //
+  // Kilian : « make sure to cut sentences a la ligne quand cest vraiment
+  // necessaire autrement mets toute la phrases a la ligne ». Releve sur
+  // /the-work : « He will never tell you how. » occupait 536px dans une
+  // colonne de 548 et cassait quand meme apres « never ».
+  //
+  // Chaque phrase devient une boite inline-block : posee ENTIERE si elle tient
+  // sur la ligne courante, descendue ENTIERE sinon, et coupee a l'interieur
+  // seulement si elle est plus large que la colonne. Meme mecanique que
+  // BreathReveal, et elle ne coute aucune mesure a l'execution.
+  const phrases = text.split(/(?<=[.!?]["»”’]?)\s+/).filter(Boolean);
   // Rang du caractere sur la LIGNE ENTIERE, espaces compris dans le compte du
   // temps : c'est ce qui fait que l'outil avance a vitesse constante et ne
   // ralentit pas sur les mots courts. Il se compte dans l'ordre du texte, donc
@@ -133,15 +139,35 @@ export default function SplitTextChars({
     );
   };
 
-  const coupe = debutDuo === -1 ? parts.length : debutDuo;
-  const avant = parts.slice(0, coupe).map((part, wi) => rendu(part, wi));
-  const duo = debutDuo === -1 ? null
-    : parts.slice(coupe).map((part, k) => rendu(part, coupe + k));
+  // Une phrase : ses mots, et les deux derniers lies pour qu'aucune ligne ne
+  // finisse sur un mot seul. L'espace qui PRECEDE le duo reste dehors, sinon
+  // on lierait trois mots et le probleme reculerait d'un cran.
+  const phraseRendue = (texte: string, pi: number) => {
+    const parts = texte.split(/(\s+)/);
+    const pleins = parts.map((m, i) => ({ m, i })).filter(({ m }) => m && !/^\s+$/.test(m));
+    const debutDuo = pleins.length > 1 ? pleins[pleins.length - 2].i : -1;
+    const coupe = debutDuo === -1 ? parts.length : debutDuo;
+    const cle = (k: number) => pi * 1000 + k;
+    return (
+      <>
+        {parts.slice(0, coupe).map((part, wi) => rendu(part, cle(wi)))}
+        {debutDuo !== -1 && (
+          <span style={{ whiteSpace: "nowrap" }}>
+            {parts.slice(coupe).map((part, k) => rendu(part, cle(coupe + k)))}
+          </span>
+        )}
+      </>
+    );
+  };
 
   return (
     <span ref={ref} style={{ display: "inline", overflow: "visible" }}>
-      {avant}
-      {duo && <span style={{ whiteSpace: "nowrap" }}>{duo}</span>}
+      {phrases.map((ph, pi) => (
+        <span key={pi} style={{ display: "inline-block" }}>
+          {pi > 0 && <span style={{ fontSize: 0, lineHeight: 0 }}> </span>}
+          {phraseRendue(ph, pi)}
+        </span>
+      ))}
     </span>
   );
 }
