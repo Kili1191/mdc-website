@@ -191,7 +191,7 @@ export default function BeginForm() {
             opacity: etat === "envoye" ? 0.45 : 1,
           }}
           // Le bouton n'est plus grise selon une adresse connue du navigateur :
-          // la destination vit cote SERVEUR (MDC_BEGIN_FORWARD_URL), le client
+          // la destination vit cote SERVEUR (MDC_BEGIN_A), le client
           // ne la voit pas. Il se desactive pendant l'envoi et une fois parti.
           disabled={etat === "envoi" || etat === "envoye"}
           aria-busy={etat === "envoi"}
