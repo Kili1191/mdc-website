@@ -207,7 +207,7 @@ export default function CoachingPage() {
           </div>
           <p style={{ ...micro, marginTop: 34 }}>No charge · No obligation</p>
           <div style={{ marginTop: 44 }}>
-            <QuietButton href="/begin">Ask for the first call</QuietButton>
+            <QuietButton href="/begin?brings=coaching">Ask for the first call</QuietButton>
           </div>
         </section>
       </div>

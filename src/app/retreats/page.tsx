@@ -202,7 +202,7 @@ export default function RetreatsPage() {
           </div>
           <p className="mdc-micro--phrase" style={{ ...micro, marginTop: 34 }}>One line is enough · No newsletter</p>
           <div style={{ marginTop: 44 }}>
-            <QuietButton href="/begin">Put your name down</QuietButton>
+            <QuietButton href="/begin?brings=retreat">Put your name down</QuietButton>
           </div>
         </section>
       </div>

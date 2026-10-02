@@ -140,6 +140,18 @@ export default function BeginForm() {
             la liste : une URL bricolee ne peut pas injecter une option qui
             n'existe pas. Et rien n'est verrouille, le menu reste un menu.
 
+            ET PENDANT UN MOMENT UNE SEULE PAGE LE FAISAIT. /teaching envoyait
+            `?brings=teaching` ; /sessions, /coaching et /retreats envoyaient
+            vers `/begin` nu. Trois portes sur quatre faisaient donc rechercher
+            dans une liste de six le motif que la page connaissait deja. Le
+            defaut est invisible au relecteur, parce que le formulaire marche.
+
+            Les quatre portent desormais leur valeur, et /sessions pose
+            `deepest` et non `session` : le seul bouton de cette page appartient
+            a TRANSMISSION, qui ne se reserve pas. Les liens qui restent nus le
+            sont a raison — la barre de navigation, l'accueil, /the-work,
+            /practitioner et /questions n'emportent aucun motif unique.
+
             L'OPTION D'INVITE remplace un <option> sans libelle : le select
             s'affichait vide et rien ne disait qu'il s'ouvrait. « Whichever is
             closest » reprend le « whichever you prefer » du champ juste
