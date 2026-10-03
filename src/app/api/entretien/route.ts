@@ -146,16 +146,28 @@ export async function POST(request: Request) {
   }
 
   const couvert = Array.isArray(tour.couvert) ? tour.couvert.filter((c) => typeof c === "string") : [];
+  const deja = Array.isArray(tour.demande) ? tour.demande.filter((c) => typeof c === "string") : [];
 
   // Le filet des trois obligatoires.
+  //
+  // IL LIT `demande`, ET C'EST LA LE CORRECTIF. Avant, il ne regardait que
+  // `couvert` : le modele demandait le nom, la reponse n'en contenait pas,
+  // donc `identite` restait non couvert, et le filet reposait la meme question
+  // autrement formulee. Mesure en production : le nom demande DEUX FOIS de
+  // suite, a quelqu'un qui venait de ne pas le donner.
+  //
+  // Une question deja posee ne se repose pas. Un refus est une reponse.
   if (tour.etat === "assez") {
     const manque = SECOURS_OBLIGATOIRES.find(
-      (s) => !couvert.includes(s.cle) && !tours.some((t) => t.question === s.question)
+      (s) =>
+        !couvert.includes(s.cle) &&
+        !deja.includes(s.cle) &&
+        !tours.some((t) => t.question === s.question)
     );
     if (manque) {
       return Response.json({
         etat: "question", question: manque.question, note: "",
-        champ: manque.champ, couvert, fragilite: borne(tour.fragilite),
+        champ: manque.champ, couvert, demande: deja, fragilite: borne(tour.fragilite),
       } satisfies Tour);
     }
   }
