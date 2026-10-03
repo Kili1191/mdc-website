@@ -282,7 +282,7 @@ export type Tour = {
 // a `porte`, et sans ligne pour l'accueillir ce fait se perdrait dans un
 // paragraphe. On ne pose plus la question ; on garde l'endroit ou ranger la
 // reponse quand elle vient sans qu'on l'ait demandee.
-const CHAMPS_DOSSIER: { cle: string; titre: string; quoi: string }[] = [
+export const CHAMPS_DOSSIER: { cle: string; titre: string; quoi: string }[] = [
   { cle: "nom", titre: "Name", quoi: "Exactly as they gave it." },
   { cle: "contact", titre: "How to reach them", quoi: "The email or telephone number as written." },
   { cle: "porte", titre: "What they carry", quoi: "In their own words. Quote them rather than summarising." },
