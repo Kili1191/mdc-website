@@ -62,7 +62,23 @@
 // ressources reelles, ecrites en dur ici. Un texte de secours genere a la
 // volee est un texte qu'on n'a pas relu.
 
-export const MODELE = "claude-opus-5";
+// Opus 5.5 plutot que Opus 5, et ce n'est pas une mise a jour de confort.
+// Tarif releve le 3 octobre 2026 sur la page de prix :
+//
+//              entree   sortie   lecture de cache
+//   Opus 5      5,00    25,00    0,50
+//   Opus 5.5    4,00    20,00    0,20
+//
+// Vingt pour cent de moins sur l'entree et la sortie, et SOIXANTE pour cent de
+// moins sur la lecture de cache — 5.5 lit le cache a 0,05x du tarif d'entree
+// la ou tous les autres sont a 0,1x. Sur un entretien qui renvoie toute la
+// transcription a chaque question, c'est la ligne qui compte.
+//
+// Aucune perte : 5.5 est le modele plus recent de la meme famille. Les deux
+// routes posent `effort` explicitement, donc le defaut qui passe de `high` a
+// `medium` sur 5.5 ne change rien ici. Et rien ne renvoie de bloc de reflexion
+// au modele, donc le controle de reflexion preservee ne mord pas.
+export const MODELE = "claude-opus-5-5";
 
 // Le plafond dur de l'echange. L'assistant s'arrete de lui-meme bien avant sur
 // quelqu'un de fragile ; ce nombre n'est pas une cible, c'est une butee.

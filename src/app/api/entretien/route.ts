@@ -105,6 +105,20 @@ export async function POST(request: Request) {
       // paie ne change pas d'un jeton.
       max_tokens: 16000,
       thinking: { type: "adaptive" },
+      // LE CACHE PORTE AUSSI LA TRANSCRIPTION, et c'est la le gain. La consigne
+      // etait deja mise en cache par le bloc `system` ci-dessous ; les tours ne
+      // l'etaient pas, et ils sont renvoyes EN ENTIER a chaque question. A la
+      // douzieme question, la premiere reponse avait ete payee douze fois plein
+      // tarif. Le `cache_control` de plus haut niveau met en cache le dernier
+      // bloc cachable, transcription comprise : chaque tour relit ce que le
+      // precedent a ecrit au lieu de le repayer.
+      //
+      // Ca ne tient que si les requetes s'enchainent a moins de cinq minutes —
+      // c'est la duree d'une entree ephemere, et une lecture remet le compteur
+      // a zero. Quelqu'un qui reflechit six minutes entre deux questions
+      // reecrit le cache. C'est acceptable : il paie alors ce qu'on payait
+      // partout avant.
+      cache_control: { type: "ephemeral" },
       output_config: { effort: "medium", format: { type: "json_schema", schema: SCHEMA_TOUR } },
       system: [{ type: "text", text: SYSTEME, cache_control: { type: "ephemeral" } }],
       messages: [{ role: "user", content: demande }],
