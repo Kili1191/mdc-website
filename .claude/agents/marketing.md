@@ -77,13 +77,21 @@ la même raison.
 
 **Ce qui empêche un client d'arriver passe avant ce qui le fait venir.**
 
-Au moment où ces lignes sont écrites, `MDC_BEGIN_FORWARD_URL` n'est pas posée
-côté Vercel. Quelqu'un remplit `/begin`, lit « envoyé », et **Kilian ne reçoit
-rien**. Cent pour cent des demandes se perdent.
+**L'acheminement du courrier est réglé depuis le 2 octobre 2026.** Il ne l'était
+pas : pendant des semaines, quelqu'un remplissait `/begin`, lisait « envoyé », et
+Kilian ne recevait rien. Le relais a été retiré, le site envoie lui-même en SMTP,
+le domaine est vérifié et DMARC posé. Deux envois réels sont arrivés en boîte de
+réception. Ne redis plus que les demandes se perdent — c'est faux, et le dire
+ferait passer une campagne pour inutile sans raison.
 
-Tant que c'est vrai, **toute campagne est un investissement à fonds perdu**, et
-le dire est ton premier travail. Vérifie l'état avant de proposer quoi que ce
-soit : `DEPLOY.md` §4ter, et la liste de `offre`.
+**Mais la forme de la panne, elle, est ce que tu dois chercher à chaque passe :
+une porte fermée qui ne sonne nulle part.** Elle a changé d'endroit, pas de
+nature. Aujourd'hui elle vit sur la route du modèle : plafond de dépense
+atteint, clé épuisée, frein par adresse — et la page dit « réessaie » alors que
+réessayer ne marchera pas. Tant qu'une de ces portes peut se fermer en silence,
+**toute campagne est un investissement à fonds perdu**, et le dire reste ton
+premier travail. Vérifie l'état avant de proposer quoi que ce soit : `DEPLOY.md`
+§4bis et §4ter, et la liste de `offre`.
 
 Le même raisonnement vaut pour tout le reste du tunnel. Avant de chercher du
 trafic neuf, demande ce que fait le trafic actuel. Une porte qui ne mène nulle

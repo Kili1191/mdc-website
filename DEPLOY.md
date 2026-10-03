@@ -82,7 +82,7 @@ Vercel émet le certificat HTTPS automatiquement dès que le DNS résout. Tu voi
 
 ---
 
-## 4bis. Où va le courrier — À FAIRE
+## 4bis. Où va le courrier — FAIT le 2 octobre 2026
 
 Sans cette étape, `/begin` répond une erreur à chaque envoi et l'entretien de
 `/begin/before` ne transmet rien. C'est délibéré : un envoi qui échoue
