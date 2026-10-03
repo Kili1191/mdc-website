@@ -99,7 +99,7 @@ export default function Carte() {
         width="100%"
         className="mdc-carte"
         role="img"
-        aria-label="A map of Battersea in South West London. The Thames runs along the north, Battersea Park sits against the river, and the railway lines converge at Clapham Junction to the south west. The neighbourhood is drawn a little more strongly than its surroundings, across more than a kilometre. No exact location is marked."
+        aria-label="A map of Battersea in South West London. The Thames runs along the north, Battersea Park sits against the river, and the railway lines converge at Clapham Junction to the south west. The Maison du Calme mark sits over the neighbourhood, which is drawn a little more strongly than its surroundings across more than a kilometre. No exact address is marked."
         style={{ display: "block", width: "100%", height: "auto" }}
       >
         <defs>
@@ -172,6 +172,30 @@ export default function Carte() {
           <text className="mdc-carte__lieu mdc-carte__gare" x="330" y="705" letterSpacing="0.14em" textAnchor="middle">Clapham Junction</text>
           <text className="mdc-carte__lieu mdc-carte__loin" x="707" y="819" letterSpacing="0.14em" textAnchor="middle">Clapham Common</text>
         </g>
+
+        {/* LA MARQUE, demandee par Kilian : « mettre un logo MDC ou le studio
+            est ». Elle se pose a l'aplomb du nom du quartier, c'est-a-dire au
+            meme endroit que lui — et ce n'est toujours PAS une adresse.
+
+            POURQUOI CA NE CASSE PAS LA DECISION 1 PLUS HAUT. `NOM` n'est pas le
+            logement : il est decale de cent unites du centre du masque, soit
+            380 m, et ce centre est lui-meme le milieu de Battersea, entre la
+            gare et le parc, dans une zone de 1,2 km. La marque dit « la maison
+            est dans ce quartier ». Elle ne designe aucun immeuble, et il n'y a
+            toujours rien a recopier dans une barre d'adresse.
+
+            ELLE GARDE SON ROUILLE. La regle du depot dit que #B14E2D fait la
+            marque et les traits, jamais l'encre d'un texte. Ici elle EST la
+            marque : c'est son seul emploi legitime sur cette page.
+
+            Et elle ne bouge pas — decision 3. Une marque qui pulse sur une
+            carte se lit comme une alerte. */}
+        <image
+          href="/mdc-logo.svg"
+          x={NOM.x - 34} y={NOM.y - 96}
+          width={68} height={57}
+          opacity={0.92}
+        />
 
         {/* LE NOM DU QUARTIER, au centre de la zone. Il avait disparu en
             reecrivant le bloc des reperes — une carte de Battersea qui ne dit
