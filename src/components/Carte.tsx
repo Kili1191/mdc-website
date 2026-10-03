@@ -114,6 +114,24 @@ export default function Carte() {
           <mask id="mdc-carte-ici">
             <circle cx={ICI.x} cy={ICI.y} r={ICI.r} fill="url(#mdc-carte-degrade)" />
           </mask>
+          {/* LA CLAIRIERE SOUS LA MARQUE. Un chemin passait en plein milieu de
+              la maison et lui traversait le toit : le trace se lisait a travers
+              le dessin, et les deux se brouillaient.
+
+              C'est le meme geste que le HALO des etiquettes plus bas — un liset
+              de parchemin dessine SOUS le glyphe pour le detacher sans
+              l'encadrer. Une image ne peut pas porter `paintOrder`, donc la
+              clairiere se dessine a part, juste avant elle.
+
+              EN FONDU ET SANS BORD, c'est la condition. Un disque plein ferait
+              un medaillon pose sur la carte, et le §5 du skill `taste` le
+              refuse. Le papier s'eclaircit vers le centre, et on ne doit pas
+              pouvoir dire ou il s'arrete. */}
+          <radialGradient id="mdc-carte-clairiere">
+            <stop offset="0%" stopColor={COLORS.parchemin} stopOpacity="0.94" />
+            <stop offset="52%" stopColor={COLORS.parchemin} stopOpacity="0.82" />
+            <stop offset="100%" stopColor={COLORS.parchemin} stopOpacity="0" />
+          </radialGradient>
         </defs>
 
         <g aria-hidden="true">
@@ -190,6 +208,11 @@ export default function Carte() {
 
             Et elle ne bouge pas — decision 3. Une marque qui pulse sur une
             carte se lit comme une alerte. */}
+        <ellipse
+          cx={NOM.x} cy={NOM.y - 67}
+          rx={86} ry={74}
+          fill="url(#mdc-carte-clairiere)"
+        />
         <image
           href="/mdc-logo.svg"
           x={NOM.x - 34} y={NOM.y - 96}
