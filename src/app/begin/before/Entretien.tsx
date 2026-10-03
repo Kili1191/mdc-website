@@ -347,12 +347,21 @@ export default function Entretien() {
           repond(reponse.trim());
         }}
       >
+          {/* `autoComplete="off"` sur les deux champs, et ce n'est pas une
+              precaution de principe. Les questions courtes partagent un `id`
+              constant, et la question d'identite — nom et moyen de contact —
+              est justement une question courte. L'historique de champs du
+              navigateur s'indexe la-dessus : sur un portable partage, il
+              proposerait le nom de la personne precedente a la suivante. Deux
+              attributs, et c'est le seul endroit du dispositif ou ce qu'une
+              personne a ecrit pouvait reapparaitre devant quelqu'un d'autre. */}
         <label style={labelChamp} htmlFor="mdc-reponse">
           {longue ? "In your own words" : "Your answer"}
         </label>
         {longue ? (
           <textarea
             id="mdc-reponse"
+            autoComplete="off"
             ref={champRef as React.Ref<HTMLTextAreaElement>}
             aria-labelledby="mdc-question"
             value={reponse}
@@ -367,6 +376,7 @@ export default function Entretien() {
             ref={champRef as React.Ref<HTMLInputElement>}
             aria-labelledby="mdc-question"
             type="text"
+            autoComplete="off"
             value={reponse}
             maxLength={2400}
             onChange={(e) => setReponse(e.target.value)}

@@ -109,11 +109,27 @@ deux portes, et deux seulement :
 - **`/begin/before`** — l'entretien, les mêmes informations demandées une par
   une par un assistant, avec une fiche envoyée à Kilian.
 
-**La fuite la plus grave du site n'est pas une page, c'est une variable
-d'environnement.** Tant que `MDC_BEGIN_FORWARD_URL` n'est pas posée dans Vercel,
-**chaque personne qui écrit reçoit une erreur**. Ce n'est pas un détail
-technique : c'est cent pour cent des demandes perdues. Tant que ce n'est pas
-fait, aucune autre optimisation commerciale n'a de sens, et tu le rappelles.
+**L'envoi, lui, est réglé — et c'était la fuite la plus chère de ce document.**
+Jusqu'au 2 octobre 2026, `MDC_BEGIN_FORWARD_URL` n'était pas posée et chaque
+personne qui écrivait recevait une erreur : cent pour cent des demandes perdues,
+pendant des semaines, en silence. **Le relais a été retiré.** Le site envoie
+désormais le mail lui-même en SMTP (`src/lib/courrier.ts`, `MDC_SMTP_URL`),
+le domaine est vérifié, DMARC est posé, et deux envois réels sont arrivés en
+boîte de réception. Commits `8da88f4` et `7762a93`. Ne redemande plus cette
+variable : elle n'existe plus dans le code.
+
+**Ce qu'il faut retenir de cet épisode n'est pas la variable, c'est la forme de
+la panne :** une porte fermée qui ne sonne nulle part. Un 200 qui ne voulait
+rien dire, une page polie, et personne pour s'en apercevoir. **Chaque fois que
+tu regardes le chemin d'achat, cherche cette forme-là** — pas la variable qui
+l'a causée une fois.
+
+**Et elle est encore là, ailleurs.** La porte unique est maintenant l'entretien
+de `/begin/before`, qui appelle un modèle payant à chaque question. Quand l'appel
+est refusé pour une raison de facturation — plafond de dépense atteint, clé
+épuisée — `src/app/begin/before/Entretien.tsx` affiche « try again », et
+réessayer ne marchera pas avant le premier du mois. C'est le même silence, sur
+la seule porte du site. Voir §4.
 
 **Chaque page qui mène ici doit présélectionner le motif.** `?brings=teaching`,
 `?brings=coaching` : quelqu'un qui vient de lire une page sait pourquoi il
@@ -127,8 +143,34 @@ pire moment.
 Tu tiens cette liste à jour. C'est ta vraie valeur : les décisions qui dorment
 coûtent plus cher que les pages qui manquent.
 
-1. **`MDC_BEGIN_FORWARD_URL`** et **`ANTHROPIC_API_KEY`** dans Vercel. Voir
-   `DEPLOY.md` §4bis et §4ter. **Bloquant, et le plus cher de la liste.**
+1. **`ANTHROPIC_API_KEY`** dans Vercel, et le plafond de dépense qui va avec.
+   Voir `DEPLOY.md` §4ter. L'envoi du courrier (§4bis) est **réglé** depuis le
+   2 octobre 2026 : plus de relais, SMTP direct, domaine vérifié, DMARC posé,
+   deux envois réels reçus — commits `8da88f4` et `7762a93`. Il reste la clé du
+   modèle, et depuis que l'entretien est la porte unique elle porte la totalité
+   des demandes : sans elle `/api/entretien` répond 503 et la page renvoie au
+   formulaire écrit de `/begin`, ce qui est une dégradation propre, pas une
+   perte. **Bloquant pour l'entretien, plus pour les demandes.**
+
+   **Deux chiffres à trancher avec la clé, et ils ne sont pas techniques.**
+   Un entretien complet coûte de l'ordre de **0,30 à 1,20 USD** au tarif Opus 5
+   publié (5 USD/MTok en entrée, 25 en sortie, cache à 0,50 — relevé le
+   3 octobre 2026). Le poste dominant est la sortie, donc la réflexion du
+   modèle, pas le texte du visiteur. À des volumes plausibles pour un praticien
+   seul, cela fait **10 à 90 USD par mois** ; l'ordre de grandeur n'est pas le
+   sujet, le **plafond** l'est, parce qu'une boucle sur le point d'entrée peut
+   brûler quelques dizaines de dollars en une nuit. Proposition à Kilian :
+   un plafond mensuel **sur l'espace de travail du site**, posé à environ
+   **150 USD** (quatre à cinq fois le volume plausible), et une alerte qui
+   arrive chez LUI. Le plafond du palier Start est de 500 USD, et un plafond
+   qu'on se pose soi-même doit rester sous celui-là.
+
+   **Ce qui doit être construit AVANT de poser le plafond :** la page doit
+   savoir dire la différence entre « réessaie dans dix secondes » et « la porte
+   est fermée, écris-lui ». Aujourd'hui elle dit la première phrase dans les
+   deux cas. Un plafond posé sur une page qui ment transforme une facture
+   maîtrisée en demandes perdues, et c'est exactement la panne qu'on vient de
+   réparer.
 2. **La carte cadeau.** Étudiée, jamais construite. Ce qui a été vu : le marché
    britannique du bien-être vend surtout des bons à montant, et les bons à
    PRESTATION nommée se réservent mieux. Deux choses restent à trancher par
