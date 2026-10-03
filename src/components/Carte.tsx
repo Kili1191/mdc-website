@@ -128,8 +128,8 @@ export default function Carte() {
               refuse. Le papier s'eclaircit vers le centre, et on ne doit pas
               pouvoir dire ou il s'arrete. */}
           <radialGradient id="mdc-carte-clairiere">
-            <stop offset="0%" stopColor={COLORS.parchemin} stopOpacity="0.94" />
-            <stop offset="52%" stopColor={COLORS.parchemin} stopOpacity="0.82" />
+            <stop offset="0%" stopColor={COLORS.parchemin} stopOpacity="0.92" />
+            <stop offset="34%" stopColor={COLORS.parchemin} stopOpacity="0.70" />
             <stop offset="100%" stopColor={COLORS.parchemin} stopOpacity="0" />
           </radialGradient>
         </defs>
@@ -208,9 +208,20 @@ export default function Carte() {
 
             Et elle ne bouge pas — decision 3. Une marque qui pulse sur une
             carte se lit comme une alerte. */}
+        {/* ELLE S'ARRETE AVANT LE PARC. Kilian : « don't let the background
+            overtake on the park ». La premiere clairiere faisait 86 sur 74 et
+            son lobe superieur droit delavait le coin de Battersea Park — un
+            aplat qui perd sa couleur se lit comme une erreur d'impression, pas
+            comme une mise en valeur.
+
+            Elle est donc resserree a 58 sur 50, et son centre descend de six
+            unites, a l'oppose du parc qui monte vers la droite. Le plateau
+            central tombe aussi plus tot — 0,70 des 34 % du rayon au lieu de
+            0,82 a 52 % — donc elle degage le trace juste sous la marque et
+            s'eteint avant d'atteindre quoi que ce soit de colore. */}
         <ellipse
-          cx={NOM.x} cy={NOM.y - 67}
-          rx={86} ry={74}
+          cx={NOM.x - 3} cy={NOM.y - 61}
+          rx={58} ry={50}
           fill="url(#mdc-carte-clairiere)"
         />
         <image
