@@ -185,7 +185,20 @@ export default function Carte() {
             Calcul dans scripts/carte-battersea.mjs, meme projection que le trace. */}
         <g fill={T.encre} fontFamily={FONTS.prata} style={HALO}>
           <text className="mdc-carte__lieu" x="141" y="260" letterSpacing="0.22em" opacity="0.82">THE THAMES</text>
-          <text className="mdc-carte__lieu mdc-carte__loin" x="408" y="163" letterSpacing="0.14em" textAnchor="middle" opacity="0.82">Chelsea</text>
+          {/* CHELSEA N'EST PLUS UN REPERE LOINTAIN. Demande de Kilian : « put the
+              name where is Chelsea to show I'm in a posh area ».
+
+              Elle etait la depuis le debut, mais en `__loin` : opacite 0,82, et
+              surtout `display: none` en dessous de 720px. Elle DISPARAISSAIT
+              donc sur telephone, c'est-a-dire la ou la plupart des gens
+              regardent. Un repere qu'on pose pour dire quelque chose et qui
+              s'efface sur le format principal ne dit rien.
+
+              Elle passe au meme traitement que Battersea Park : meme encre,
+              meme corps, aucune opacite. Pas d'encadre, pas de couleur, pas de
+              taille superieure — la carte dit ou on est, elle ne se vante pas.
+              Clapham Common, elle, reste lointaine : elle l'est. */}
+          <text className="mdc-carte__lieu" x="408" y="163" letterSpacing="0.14em" textAnchor="middle">Chelsea</text>
           <text className="mdc-carte__lieu" x="583" y="405" letterSpacing="0.14em" textAnchor="middle">Battersea Park</text>
           <text className="mdc-carte__lieu mdc-carte__gare" x="330" y="705" letterSpacing="0.14em" textAnchor="middle">Clapham Junction</text>
           <text className="mdc-carte__lieu mdc-carte__loin" x="707" y="819" letterSpacing="0.14em" textAnchor="middle">Clapham Common</text>
