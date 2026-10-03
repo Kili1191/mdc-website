@@ -70,6 +70,31 @@ const vu = () => page.evaluate(() => {
   };
 });
 
+
+// CLIQUER COMME UN DOIGT. On amene l'element au centre, on verifie que
+// `elementFromPoint` rend bien cet element — sinon un clic de souris frappe
+// autre chose et on le dit — puis on clique vraiment.
+async function clique(page, trouve, nom) {
+  await page.evaluate(`(() => { const el = (${trouve})(); if (el) el.scrollIntoView({ block: "center" }); })()`);
+  await attends(900);
+  const info = await page.evaluate(`(() => {
+    const el = (${trouve})();
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    const x = Math.min(innerWidth-2, Math.max(2, r.left + r.width/2));
+    const y = Math.min(innerHeight-2, Math.max(2, r.top + r.height/2));
+    const d = document.elementFromPoint(x, y);
+    return { x, y, ecranY: Math.round(r.top), scrollY: Math.round(scrollY),
+      touche: d ? (d === el || el.contains(d) || d.contains(el)) : false,
+      quoi: d ? (String(d.className).slice(0,26) || d.tagName) : "rien" };
+  })()`);
+  if (!info) { console.log(`  [${nom}] ABSENT de la page`); return null; }
+  console.log(`  [${nom}] ecranY=${info.ecranY} scrollY=${info.scrollY} · le doigt toucherait ${info.touche ? "LUI" : "autre chose (" + info.quoi + ")"}`);
+  if (info.touche) await page.mouse.click(info.x, info.y);
+  else await page.evaluate(`(() => (${trouve})().click())()`);
+  return info;
+}
+
 if (MODE === "froid") {
   console.log(`\n=== /begin/before · arrivee FROIDE · ${W}x${H} ===\n`);
   const PORT = 3999;
@@ -122,12 +147,9 @@ const posLien = await page.evaluate(() => {
   return a ? Math.round(a.getBoundingClientRect().top + scrollY) : null;
 });
 console.log(`« Be asked instead » est a y=${posLien} px. On defile.`);
-await page.evaluate((y) => scrollTo(0, y - 300), posLien);
-await attends(1200);
-const cible = await page.evaluate(() => { const a = document.querySelector('a[href="/begin/before"]');
-  const r = a.getBoundingClientRect(); return { x: r.left + r.width/2, y: r.top + r.height/2 }; });
-const tClic = Date.now();
-await page.mouse.click(cible.x, cible.y);
+const tClic0 = Date.now();
+await clique(page, `() => document.querySelector('a[href="/begin/before"]')`, "Be asked instead");
+const tClic = tClic0;
 let arrive = null;
 for (let t = 200; t <= 3600; t += 200) {
   await attends(Math.max(0, t - (Date.now() - tClic)));
@@ -153,14 +175,9 @@ e = await vu();
 console.log(`\nEN HAUT DE PAGE, bouton « ${e.labelStart} » a ecranY=${e.startBoite?.ecranY} (ecran ${e.ecran} px) → ${e.startBoite?.ecranY < e.ecran ? "visible sans defiler" : "IL FAUT DEFILER"}`);
 
 // ── ON CLIQUE START ──────────────────────────────────────────────────────
-const bs = await page.evaluate(() => { const b = [...document.querySelectorAll("button")].find(x => /^Start$/.test(x.textContent.trim()));
-  if (!b) return null; b.scrollIntoView({ block: "center" }); const r = b.getBoundingClientRect(); return { x: r.left+r.width/2, y: r.top+r.height/2 }; });
-await attends(600);
-const bs2 = await page.evaluate(() => { const b = [...document.querySelectorAll("button")].find(x => /^Start$/.test(x.textContent.trim()));
-  const r = b.getBoundingClientRect(); return { x: r.left+r.width/2, y: r.top+r.height/2 }; });
 console.log(`\n>>> CLIC SUR START`);
 const tS = Date.now();
-await page.mouse.click(bs2.x, bs2.y);
+await clique(page, `() => [...document.querySelectorAll("button")].find(x => /^Start$/.test(x.textContent.trim()))`, "Start");
 let q1 = null;
 for (let t = 200; t <= 45000; t += 400) {
   await attends(Math.max(0, t - (Date.now() - tS)));
@@ -191,11 +208,8 @@ for (let i = 0; i < 4; i += 1) {
   const nb = await page.evaluate(() => { const b = [...document.querySelectorAll("button")].find(x => /^(Next|One moment)$/.test(x.textContent.trim()));
     const r = b.getBoundingClientRect(); return { x: r.left+r.width/2, y: r.top+r.height/2, ecranY: Math.round(r.top), dansEcran: r.top < innerHeight && r.bottom > 0 }; });
   console.log(`  bouton Next a ecranY=${nb.ecranY} · dans l'ecran: ${nb.dansEcran}`);
-  if (!nb.dansEcran) { await page.evaluate(() => { const b=[...document.querySelectorAll("button")].find(x=>/^(Next|One moment)$/.test(x.textContent.trim())); b.scrollIntoView({block:"center"}); }); await attends(500); }
-  const nb2 = await page.evaluate(() => { const b = [...document.querySelectorAll("button")].find(x => /^(Next|One moment)$/.test(x.textContent.trim()));
-    const r = b.getBoundingClientRect(); return { x: r.left+r.width/2, y: r.top+r.height/2 }; });
   const tQ = Date.now();
-  await page.mouse.click(nb2.x, nb2.y);
+  await clique(page, `() => [...document.querySelectorAll("button")].find(x => /^(Next|One moment)$/.test(x.textContent.trim()))`, "Next");
   let suiv = null, qAvant = apresFrappe.question;
   for (let t = 200; t <= 45000; t += 400) {
     await attends(Math.max(0, t - (Date.now() - tQ)));
