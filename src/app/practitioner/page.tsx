@@ -52,8 +52,21 @@ export default function PractitionerPage() {
 
         <section className="mdc-room">
           <div className="mdc-room__art">
+            {/* LE PORTRAIT DE KILIAN, et non plus la marque gravee dans la
+                pierre qui tenait la place. Le `prompt` sert aussi d'alt (voir
+                l'en-tete d'AssetFrame) : il decrivait l'image de marque, et il
+                aurait decrit faux des que la photographie est arrivee.
+
+                L'alt dit ce qu'on voit et rien d'autre. Pas de titre, pas de
+                qualite, pas d'annee de pratique — une description d'image n'est
+                pas un endroit ou l'on glisse une affirmation.
+
+                Recadre en 4/5 AVANT d'etre depose, et pas laisse au navigateur :
+                le cadre est en `objectFit: cover`, donc il aurait rogne au
+                centre. Sur un portrait, c'est la coupe qui decide ou tombent les
+                yeux. 1075x1344, 26 pixels retires en haut et 93 en bas. */}
             <AssetFrame slot="PT-01" kind="image" src="/photos/pt-01.jpg" aspect="4/5" effect="reveal"
-              prompt="The house engraved in the stone , the practitioner's mark." />
+              prompt="Kilian, looking into the camera, in a pale linen shirt." />
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
             <p style={body}>
