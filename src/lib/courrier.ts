@@ -42,6 +42,10 @@ export type Courrier = {
   // posee que quand le visiteur a laisse un e-mail : il peut laisser un
   // telephone, et c'est son droit.
   repondreA?: string;
+  // Une piece jointe, au plus. Le texte du message reste la source : il est
+  // cherchable dans la boite et il survit si la piece jointe ne s'ouvre pas.
+  // Le fichier est en PLUS, jamais a la place.
+  piece?: { nom: string; contenu: Buffer; type: string };
 };
 
 export type Echec = "config_absente" | "envoi_refuse";
@@ -108,6 +112,13 @@ export async function envoie(courrier: Courrier): Promise<Resultat> {
         subject: courrier.sujet,
         text: courrier.texte,
         replyTo: courrier.repondreA || undefined,
+        attachments: courrier.piece
+          ? [{
+              filename: courrier.piece.nom,
+              content: courrier.piece.contenu,
+              contentType: courrier.piece.type,
+            }]
+          : undefined,
       })
     );
   } catch {

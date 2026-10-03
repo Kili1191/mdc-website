@@ -82,9 +82,15 @@ C'est l'état, pas un idéal. Tu vérifies qu'un nouveau code ne le casse pas.
 - **Aucun contenu n'est journalisé.** Les logs de `/api/begin` et
   `/api/entretien` disent si un envoi a réussi et pourquoi il a échoué, **jamais
   ce qu'il transportait, jamais qui l'a écrit.**
-- **La destination n'est pas choisie dans le code.** Où vont les messages est
-  une décision de Kilian : `MDC_BEGIN_FORWARD_URL`, `MDC_ENTRETIEN_FORWARD_URL`.
-  Aucun fournisseur imposé, aucune clé dans le dépôt.
+- **Il n'y a plus de relais, depuis le 2 octobre 2026.** Le site envoie le mail
+  lui-même, en un saut : `src/lib/courrier.ts`, `MDC_SMTP_URL` pour la connexion,
+  `MDC_COURRIER_DE` pour l'expéditeur, `MDC_BEGIN_A` et `MDC_ENTRETIEN_A` pour
+  les boîtes. Les anciennes `MDC_*_FORWARD_URL` n'existent plus. **Deux raisons
+  l'ont décidé, et elles sont les tiennes :** une plateforme d'automatisation
+  répond 200 à la réception et pas à la livraison, donc la page annonçait
+  « parti » sur un message perdu ; et son historique d'exécution garde la charge
+  en clair, ce qui est sa fonction et pas une fuite. Aucun fournisseur imposé,
+  aucune clé dans le dépôt.
 - **Tant qu'une destination manque, la route répond 503 et la page affiche son
   échec.** Un envoi qui rate visiblement vaut mieux qu'un envoi qui fait
   semblant. Personne ne doit pouvoir écrire ce qu'il porte et croire que c'est

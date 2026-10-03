@@ -15,7 +15,7 @@
 //     npx next start -p 3314
 //
 // Le comportement se choisit en ecrivant un mot dans $S/mode.txt :
-// question · assez-sans-corps · assez-complet · repetition · arret.
+// question · assez-sans-corps · assez-deja-demande · assez-complet · repetition · arret.
 // Le mail recu atterrit en entier dans $S/recu.txt — en-tetes compris, parce
 // que le sujet et le « repondre a » font partie de ce qu'on verifie.
 import { createServer } from "node:http";
@@ -58,6 +58,12 @@ createServer((req, res) => {
         sortie = { etat: "assez", question: "", note: "", champ: "paragraphe", couvert: ["identite", "porte"], fragilite: 2 };
       } else if (mode === "assez-complet") {
         sortie = { etat: "assez", question: "", note: "", champ: "paragraphe", couvert: ["identite", "porte", "corps", "toucher"], fragilite: 2 };
+      } else if (mode === "assez-deja-demande") {
+        // Le cas qui a produit le defaut : `corps` et `toucher` ont ete DEMANDES
+        // et la reponse n'y repondait pas, donc ils ne sont pas `couvert`. Le
+        // filet ne doit PAS reposer la question. C'est la seule difference avec
+        // `assez-sans-corps`, et c'est tout le correctif.
+        sortie = { etat: "assez", question: "", note: "", champ: "paragraphe", couvert: ["identite", "porte"], demande: ["identite", "porte", "corps", "toucher"], fragilite: 2 };
       } else if (mode === "repetition") {
         sortie = { etat: "question", question: "How long has it been like that?", note: "", champ: "ligne", couvert: ["porte"], fragilite: 2 };
       } else if (mode === "arret") {

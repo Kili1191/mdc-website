@@ -82,7 +82,7 @@ Vercel émet le certificat HTTPS automatiquement dès que le DNS résout. Tu voi
 
 ---
 
-## 4bis. Où va le courrier — À FAIRE
+## 4bis. Où va le courrier — FAIT le 2 octobre 2026
 
 Sans cette étape, `/begin` répond une erreur à chaque envoi et l'entretien de
 `/begin/before` ne transmet rien. C'est délibéré : un envoi qui échoue
@@ -160,6 +160,56 @@ variable ne prouve rien, et les journaux de fonctions sont purgés vite.
 `scripts/entretien-faux-modele.mjs` monte un faux point d'entrée Messages et un
 faux serveur de courrier qui écrit le mail reçu sur le disque. Le mode d'emploi
 est en tête du fichier.
+
+### La délivrabilité, et les trois choses qui l'ont décidée
+
+Mesuré le 3 octobre 2026, en production, après que les premiers envois soient
+partis en spam.
+
+**Il manquait DMARC, et c'est l'essentiel.** Le domaine avait SPF et DKIM, et
+ça ne suffit plus : depuis 2024, Gmail et Outlook traitent avec méfiance un
+domaine qui n'a pas de DMARC. L'enregistrement posé chez Cloudflare :
+
+    Type      TXT
+    Name      _dmarc
+    Content   v=DMARC1; p=none; rua=mailto:contact@maisonducalme.com
+
+`p=none` observe sans rien bloquer. Après ça, les envois sont arrivés en boîte
+de réception. **C'est le levier qui a tout changé, et il coûte un
+enregistrement.**
+
+**Le SPF de la racine ne connaît pas Resend**, et ça n'a pas empêché le
+résultat :
+
+    v=spf1 include:_spf.mx.cloudflare.net ~all
+
+Il est posé par Cloudflare Email Routing, qui gouverne la RECEPTION, et
+Cloudflare le marque « Locked ». SPF échoue donc sur un envoi depuis
+`contact@maisonducalme.com` — mais la signature DKIM de Resend est posée sur
+`resend._domainkey` et alignée sur le domaine, et DMARC accepte qu'une seule
+des deux passe. **Ne pas y toucher sans raison : cet enregistrement tient le
+courrier entrant.** Les adresses de Resend, si un jour il le faut, sont dans
+le TXT de `send.maisonducalme.com`.
+
+**Un domaine neuf part toujours bas.** `maisonducalme.com` n'avait jamais
+envoyé un mail avant ce soir-là. Et un message d'essai court et sans sens est
+exactement ce qu'un filtre cherche : tester avec un vrai texte, sinon on
+diagnostique le contenu en croyant diagnostiquer le domaine.
+
+### Répondre depuis l'adresse de la maison
+
+Gmail, Paramètres → Comptes et importation → « Envoyer des e-mails en tant
+que » → ajouter `contact@maisonducalme.com`, avec le SMTP de Resend
+(`smtp.resend.com`, port 465, utilisateur `resend`, mot de passe une clé
+d'API **distincte de celle du site**, en Sending access). Puis « Utiliser comme
+adresse par défaut » ET « Toujours répondre à partir de l'adresse par défaut ».
+
+**Le piège qui a coûté une passe :** Resend refuse un message sans sujet, et
+répond `550 Missing subject field.`. Google traduit ça par « The settings for
+your Send mail as account are misconfigured or out of date », qui accuse la
+configuration. La configuration allait bien. **Toujours lire « The response
+from the remote server was » avant de toucher à quoi que ce soit** — c'est la
+même leçon que le 400 de l'entretien, le même soir.
 
 ### Avant la mise en ligne
 

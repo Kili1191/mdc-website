@@ -105,6 +105,20 @@ export async function POST(request: Request) {
       // paie ne change pas d'un jeton.
       max_tokens: 16000,
       thinking: { type: "adaptive" },
+      // LE CACHE PORTE AUSSI LA TRANSCRIPTION, et c'est la le gain. La consigne
+      // etait deja mise en cache par le bloc `system` ci-dessous ; les tours ne
+      // l'etaient pas, et ils sont renvoyes EN ENTIER a chaque question. A la
+      // douzieme question, la premiere reponse avait ete payee douze fois plein
+      // tarif. Le `cache_control` de plus haut niveau met en cache le dernier
+      // bloc cachable, transcription comprise : chaque tour relit ce que le
+      // precedent a ecrit au lieu de le repayer.
+      //
+      // Ca ne tient que si les requetes s'enchainent a moins de cinq minutes —
+      // c'est la duree d'une entree ephemere, et une lecture remet le compteur
+      // a zero. Quelqu'un qui reflechit six minutes entre deux questions
+      // reecrit le cache. C'est acceptable : il paie alors ce qu'on payait
+      // partout avant.
+      cache_control: { type: "ephemeral" },
       output_config: { effort: "medium", format: { type: "json_schema", schema: SCHEMA_TOUR } },
       system: [{ type: "text", text: SYSTEME, cache_control: { type: "ephemeral" } }],
       messages: [{ role: "user", content: demande }],
@@ -132,16 +146,28 @@ export async function POST(request: Request) {
   }
 
   const couvert = Array.isArray(tour.couvert) ? tour.couvert.filter((c) => typeof c === "string") : [];
+  const deja = Array.isArray(tour.demande) ? tour.demande.filter((c) => typeof c === "string") : [];
 
   // Le filet des trois obligatoires.
+  //
+  // IL LIT `demande`, ET C'EST LA LE CORRECTIF. Avant, il ne regardait que
+  // `couvert` : le modele demandait le nom, la reponse n'en contenait pas,
+  // donc `identite` restait non couvert, et le filet reposait la meme question
+  // autrement formulee. Mesure en production : le nom demande DEUX FOIS de
+  // suite, a quelqu'un qui venait de ne pas le donner.
+  //
+  // Une question deja posee ne se repose pas. Un refus est une reponse.
   if (tour.etat === "assez") {
     const manque = SECOURS_OBLIGATOIRES.find(
-      (s) => !couvert.includes(s.cle) && !tours.some((t) => t.question === s.question)
+      (s) =>
+        !couvert.includes(s.cle) &&
+        !deja.includes(s.cle) &&
+        !tours.some((t) => t.question === s.question)
     );
     if (manque) {
       return Response.json({
         etat: "question", question: manque.question, note: "",
-        champ: manque.champ, couvert, fragilite: borne(tour.fragilite),
+        champ: manque.champ, couvert, demande: deja, fragilite: borne(tour.fragilite),
       } satisfies Tour);
     }
   }

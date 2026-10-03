@@ -15,7 +15,11 @@ import { labelChamp, champLigne, champTexte, champMenu } from "@/styles/champs";
 // L'echec dit le fait, puis leve la seule peur reelle de quelqu'un qui vient
 // d'ecrire une page : que son texte soit perdu. Il ne l'est pas — le formulaire
 // n'est pas vide et le bouton est reactive. La phrase est donc exacte, et elle
-// ne renvoie vers aucun contact de secours : le site n'en publie aucun.
+// ne renvoie vers aucun contact de secours : cette page-ci n'en publie aucun.
+// (Ce commentaire disait « le site n'en publie aucun ». Ce n'est plus vrai :
+// `src/lib/secours.ts` en publie trois sur l'arret de crise de l'entretien.
+// Une note perimee sur un texte de crise est exactement ce qui fait qu'on le
+// duplique ou qu'on le contredit.)
 const ENVOYE = "It has arrived. He has it from here.";
 const ECHEC = "That did not send. What you wrote is still here: send it again."
 

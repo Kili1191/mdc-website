@@ -31,6 +31,7 @@ import {
 } from "@/lib/entretien";
 import { adresse, lisTours, tropDAppels } from "@/lib/entretienServeur";
 import { boiteEntretien, envoie } from "@/lib/courrier";
+import { fichePdf } from "@/lib/fichePdf";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -114,6 +115,22 @@ export async function POST(request: Request) {
   const contact = typeof fiche.contact === "string" ? fiche.contact.trim() : "";
   const sujet = `Before the room${nom ? `: ${nom}` : ""}${urgence ? " (stopped early)" : ""}`;
 
+  // LA FICHE EN PDF, EN PLUS DU TEXTE ET JAMAIS A LA PLACE. Elle sert a une
+  // chose que le corps du mail ne fait pas : s'imprimer, et se tenir dans la
+  // main avant d'ouvrir la porte. Si sa fabrication echoue, le mail part quand
+  // meme — ce que la personne a ecrit ne disparait pas parce qu'une mise en
+  // page a rate. Meme principe que la fiche vide plus haut.
+  let piece: { nom: string; contenu: Buffer; type: string } | undefined;
+  try {
+    piece = {
+      nom: `before-the-room${nom ? `-${nom.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}` : ""}.pdf`,
+      contenu: await fichePdf(fiche, tours, urgence),
+      type: "application/pdf",
+    };
+  } catch {
+    console.error("[entretien] Le PDF n'a pas pu etre fabrique. La fiche part en texte seul.");
+  }
+
   const resultat = await envoie({
     a: boite,
     sujet,
@@ -122,6 +139,7 @@ export async function POST(request: Request) {
     // quelqu'un qui vient de repondre a treize questions sur son corps, sans
     // recopier une adresse.
     repondreA: EMAIL.test(contact) ? contact : undefined,
+    piece,
   });
 
   if (!resultat.ok) {

@@ -40,3 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 CHAT_HISTORY.md
+
+# Brouillons de mesure. Un agent qui traverse le site en fabrique, et ils ne
+# survivent pas a sa passe. Un banc qui merite de rester se nomme autrement.
+scripts/_tmp-*

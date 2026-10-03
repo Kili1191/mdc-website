@@ -99,7 +99,7 @@ export default function Carte() {
         width="100%"
         className="mdc-carte"
         role="img"
-        aria-label="A map of Battersea in South West London. The Thames runs along the north, Battersea Park sits against the river, and the railway lines converge at Clapham Junction to the south west. The neighbourhood is drawn a little more strongly than its surroundings, across more than a kilometre. No exact location is marked."
+        aria-label="A map of Battersea in South West London. The Thames runs along the north, Battersea Park sits against the river, and the railway lines converge at Clapham Junction to the south west. The Maison du Calme mark sits over the neighbourhood, which is drawn a little more strongly than its surroundings across more than a kilometre. No exact address is marked."
         style={{ display: "block", width: "100%", height: "auto" }}
       >
         <defs>
@@ -114,6 +114,24 @@ export default function Carte() {
           <mask id="mdc-carte-ici">
             <circle cx={ICI.x} cy={ICI.y} r={ICI.r} fill="url(#mdc-carte-degrade)" />
           </mask>
+          {/* LA CLAIRIERE SOUS LA MARQUE. Un chemin passait en plein milieu de
+              la maison et lui traversait le toit : le trace se lisait a travers
+              le dessin, et les deux se brouillaient.
+
+              C'est le meme geste que le HALO des etiquettes plus bas — un liset
+              de parchemin dessine SOUS le glyphe pour le detacher sans
+              l'encadrer. Une image ne peut pas porter `paintOrder`, donc la
+              clairiere se dessine a part, juste avant elle.
+
+              EN FONDU ET SANS BORD, c'est la condition. Un disque plein ferait
+              un medaillon pose sur la carte, et le §5 du skill `taste` le
+              refuse. Le papier s'eclaircit vers le centre, et on ne doit pas
+              pouvoir dire ou il s'arrete. */}
+          <radialGradient id="mdc-carte-clairiere">
+            <stop offset="0%" stopColor={COLORS.parchemin} stopOpacity="0.92" />
+            <stop offset="34%" stopColor={COLORS.parchemin} stopOpacity="0.70" />
+            <stop offset="100%" stopColor={COLORS.parchemin} stopOpacity="0" />
+          </radialGradient>
         </defs>
 
         <g aria-hidden="true">
@@ -167,11 +185,64 @@ export default function Carte() {
             Calcul dans scripts/carte-battersea.mjs, meme projection que le trace. */}
         <g fill={T.encre} fontFamily={FONTS.prata} style={HALO}>
           <text className="mdc-carte__lieu" x="141" y="260" letterSpacing="0.22em" opacity="0.82">THE THAMES</text>
-          <text className="mdc-carte__lieu mdc-carte__loin" x="408" y="163" letterSpacing="0.14em" textAnchor="middle" opacity="0.82">Chelsea</text>
+          {/* CHELSEA N'EST PLUS UN REPERE LOINTAIN. Demande de Kilian : « put the
+              name where is Chelsea to show I'm in a posh area ».
+
+              Elle etait la depuis le debut, mais en `__loin` : opacite 0,82, et
+              surtout `display: none` en dessous de 720px. Elle DISPARAISSAIT
+              donc sur telephone, c'est-a-dire la ou la plupart des gens
+              regardent. Un repere qu'on pose pour dire quelque chose et qui
+              s'efface sur le format principal ne dit rien.
+
+              Elle passe au meme traitement que Battersea Park : meme encre,
+              meme corps, aucune opacite. Pas d'encadre, pas de couleur, pas de
+              taille superieure — la carte dit ou on est, elle ne se vante pas.
+              Clapham Common, elle, reste lointaine : elle l'est. */}
+          <text className="mdc-carte__lieu" x="408" y="163" letterSpacing="0.14em" textAnchor="middle">Chelsea</text>
           <text className="mdc-carte__lieu" x="583" y="405" letterSpacing="0.14em" textAnchor="middle">Battersea Park</text>
           <text className="mdc-carte__lieu mdc-carte__gare" x="330" y="705" letterSpacing="0.14em" textAnchor="middle">Clapham Junction</text>
           <text className="mdc-carte__lieu mdc-carte__loin" x="707" y="819" letterSpacing="0.14em" textAnchor="middle">Clapham Common</text>
         </g>
+
+        {/* LA MARQUE, demandee par Kilian : « mettre un logo MDC ou le studio
+            est ». Elle se pose a l'aplomb du nom du quartier, c'est-a-dire au
+            meme endroit que lui — et ce n'est toujours PAS une adresse.
+
+            POURQUOI CA NE CASSE PAS LA DECISION 1 PLUS HAUT. `NOM` n'est pas le
+            logement : il est decale de cent unites du centre du masque, soit
+            380 m, et ce centre est lui-meme le milieu de Battersea, entre la
+            gare et le parc, dans une zone de 1,2 km. La marque dit « la maison
+            est dans ce quartier ». Elle ne designe aucun immeuble, et il n'y a
+            toujours rien a recopier dans une barre d'adresse.
+
+            ELLE GARDE SON ROUILLE. La regle du depot dit que #B14E2D fait la
+            marque et les traits, jamais l'encre d'un texte. Ici elle EST la
+            marque : c'est son seul emploi legitime sur cette page.
+
+            Et elle ne bouge pas — decision 3. Une marque qui pulse sur une
+            carte se lit comme une alerte. */}
+        {/* ELLE S'ARRETE AVANT LE PARC. Kilian : « don't let the background
+            overtake on the park ». La premiere clairiere faisait 86 sur 74 et
+            son lobe superieur droit delavait le coin de Battersea Park — un
+            aplat qui perd sa couleur se lit comme une erreur d'impression, pas
+            comme une mise en valeur.
+
+            Elle est donc resserree a 58 sur 50, et son centre descend de six
+            unites, a l'oppose du parc qui monte vers la droite. Le plateau
+            central tombe aussi plus tot — 0,70 des 34 % du rayon au lieu de
+            0,82 a 52 % — donc elle degage le trace juste sous la marque et
+            s'eteint avant d'atteindre quoi que ce soit de colore. */}
+        <ellipse
+          cx={NOM.x - 3} cy={NOM.y - 61}
+          rx={58} ry={50}
+          fill="url(#mdc-carte-clairiere)"
+        />
+        <image
+          href="/mdc-logo.svg"
+          x={NOM.x - 34} y={NOM.y - 96}
+          width={68} height={57}
+          opacity={0.92}
+        />
 
         {/* LE NOM DU QUARTIER, au centre de la zone. Il avait disparu en
             reecrivant le bloc des reperes — une carte de Battersea qui ne dit

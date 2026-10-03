@@ -62,11 +62,27 @@
 // ressources reelles, ecrites en dur ici. Un texte de secours genere a la
 // volee est un texte qu'on n'a pas relu.
 
-export const MODELE = "claude-opus-5";
+// Opus 5.5 plutot que Opus 5, et ce n'est pas une mise a jour de confort.
+// Tarif releve le 3 octobre 2026 sur la page de prix :
+//
+//              entree   sortie   lecture de cache
+//   Opus 5      5,00    25,00    0,50
+//   Opus 5.5    4,00    20,00    0,20
+//
+// Vingt pour cent de moins sur l'entree et la sortie, et SOIXANTE pour cent de
+// moins sur la lecture de cache — 5.5 lit le cache a 0,05x du tarif d'entree
+// la ou tous les autres sont a 0,1x. Sur un entretien qui renvoie toute la
+// transcription a chaque question, c'est la ligne qui compte.
+//
+// Aucune perte : 5.5 est le modele plus recent de la meme famille. Les deux
+// routes posent `effort` explicitement, donc le defaut qui passe de `high` a
+// `medium` sur 5.5 ne change rien ici. Et rien ne renvoie de bloc de reflexion
+// au modele, donc le controle de reflexion preservee ne mord pas.
+export const MODELE = "claude-opus-5-5";
 
 // Le plafond dur de l'echange. L'assistant s'arrete de lui-meme bien avant sur
 // quelqu'un de fragile ; ce nombre n'est pas une cible, c'est une butee.
-export const TOURS_MAX = 22;
+export const TOURS_MAX = 10;
 
 // Par reponse, et pour tout l'entretien. Un champ de texte libre ouvert sur une
 // API payante est une facture ouverte.
@@ -75,18 +91,33 @@ export const LIMITE_TOTALE = 16000;
 
 // Les cles de ce que Kilian doit savoir. Elles servent trois fois : dans les
 // consignes, dans ce que le modele declare avoir couvert, et dans le dossier.
+// SEPT, ET IL Y EN AVAIT DOUZE.
+//
+// Cinq ont ete retirees le 3 octobre 2026, et le critere etait simple : est-ce
+// que Kilian a besoin de le savoir AVANT d'ouvrir la porte, ou est-ce qu'il
+// peut le demander en repondant au mail ?
+//
+//   depuis    depuis combien de temps — vient presque toujours dans `porte`
+//   etat      sommeil, energie, appetit — pareil, et dans leurs mots
+//   avant     experience precedente — utile, pas necessaire pour se rencontrer
+//   piece     parfum, son, lumiere, silence — ca se regle dans la piece
+//   pratique  jours, horaires, trajet — ca se regle dans la reponse au mail
+//
+// Les deux dernieres etaient celles qui faisaient le plus ressembler
+// l'entretien a un formulaire, et c'est exactement ce que la consigne plus bas
+// dit d'eviter : « une personne fatiguee qui remplit un long formulaire est une
+// personne qui ne vient pas ».
+//
+// Le cout suit la meme courbe : la transcription entiere repart a chaque
+// question, donc la depense monte comme le CARRE du nombre de questions.
+// Couper cinq besoins coute moins cher que n'importe quel reglage de modele.
 export const BESOINS = [
   { cle: "identite",   quoi: "Their name, and how to reach them." },
   { cle: "porte",      quoi: "What they carry, in their own words." },
-  { cle: "depuis",     quoi: "How long it has been like this." },
   { cle: "soin",       quoi: "Whether anyone is already looking after it, and what they have tried." },
   { cle: "medication", quoi: "Anything prescribed or taken regularly they want him to know about." },
   { cle: "corps",      quoi: "Pregnancy, recent surgery, injury, acute pain." },
   { cle: "toucher",    quoi: "Whether touch is welcome, and any area he must not touch." },
-  { cle: "etat",       quoi: "Sleep, energy, appetite as they experience them." },
-  { cle: "avant",      quoi: "Previous experience of this kind of work, and anything that went badly." },
-  { cle: "piece",      quoi: "The room: scent, sound, light, temperature, how much silence." },
-  { cle: "pratique",   quoi: "Which days and times are possible, and how they will travel." },
   { cle: "reste",      quoi: "Anything else, including what they would rather not say out loud in the room." },
 ] as const;
 
@@ -175,6 +206,22 @@ export const SCHEMA_TOUR = {
       items: { type: "string", enum: CLES },
       description: "Every key already answered well enough, including by this turn's answer.",
     },
+    // `demande` N'EST PAS UN DOUBLON DE `couvert`, et il repare un defaut
+    // mesure : le nom etait demande DEUX FOIS de suite. Le modele posait la
+    // question, la reponse ne contenait pas de nom, donc `identite` ne passait
+    // pas dans `couvert` — et le filet des trois obligatoires reposait la meme
+    // question, autrement formulee. Quelqu'un qui vient de refuser de donner
+    // son nom se le voyait redemander dans la foulee.
+    //
+    // `couvert` dit ce qui est SU. `demande` dit ce qui a ete DEMANDE. Le filet
+    // lit le second : il ne reveille une question que si elle n'a jamais ete
+    // posee. Le modele voit toute la transcription a chaque tour, donc il peut
+    // le remplir sans que le client ait a le renvoyer.
+    demande: {
+      type: "array",
+      items: { type: "string", enum: CLES },
+      description: "Every key you have already put a question about in this conversation, whether or not it was answered. A refusal counts as asked.",
+    },
     fragilite: {
       // PAS DE `minimum` NI DE `maximum`, ET CE N'EST PAS UN OUBLI.
       //
@@ -191,7 +238,7 @@ export const SCHEMA_TOUR = {
       description: "An integer from 1 to 5. 1 matter of fact, 5 raw. Judged on this conversation, not on the topic.",
     },
   },
-  required: ["etat", "question", "note", "champ", "couvert", "fragilite"],
+  required: ["etat", "question", "note", "champ", "couvert", "demande", "fragilite"],
   additionalProperties: false,
 } as const;
 
@@ -212,6 +259,7 @@ export type Tour = {
   note: string;
   champ: "ligne" | "paragraphe";
   couvert: string[];
+  demande?: string[];
   fragilite: number;
 };
 
@@ -224,7 +272,17 @@ export type Tour = {
 // praticien emportera dans la piece.
 // ─────────────────────────────────────────────────────────────────────────
 
-const CHAMPS_DOSSIER: { cle: string; titre: string; quoi: string }[] = [
+// LA FICHE SUIT LA LISTE, A DEUX EXCEPTIONS PRES. Les besoins sont passes de
+// douze a sept ; la fiche perd `avant`, `piece` et `pratique` avec eux, parce
+// qu'une ligne « non demande » qui le restera toujours est du bruit sur la page
+// que Kilian lit avant d'ouvrir la porte.
+//
+// `depuis` et `etat` RESTENT alors qu'on ne les demande plus. Ce ne sont pas
+// des oublis : « je ne dors plus depuis mars » arrive tout seul dans la reponse
+// a `porte`, et sans ligne pour l'accueillir ce fait se perdrait dans un
+// paragraphe. On ne pose plus la question ; on garde l'endroit ou ranger la
+// reponse quand elle vient sans qu'on l'ait demandee.
+export const CHAMPS_DOSSIER: { cle: string; titre: string; quoi: string }[] = [
   { cle: "nom", titre: "Name", quoi: "Exactly as they gave it." },
   { cle: "contact", titre: "How to reach them", quoi: "The email or telephone number as written." },
   { cle: "porte", titre: "What they carry", quoi: "In their own words. Quote them rather than summarising." },
@@ -234,9 +292,6 @@ const CHAMPS_DOSSIER: { cle: string; titre: string; quoi: string }[] = [
   { cle: "corps", titre: "The body", quoi: "Pregnancy, surgery, injury, pain. Their words." },
   { cle: "toucher", titre: "Touch", quoi: "Whether it is welcome, and every area or action they ruled out." },
   { cle: "etat", titre: "Sleep, energy, appetite", quoi: "As they described it." },
-  { cle: "avant", titre: "Before this", quoi: "Previous experience, and anything that went badly." },
-  { cle: "piece", titre: "The room", quoi: "Scent, sound, light, temperature, how much silence." },
-  { cle: "pratique", titre: "Practical", quoi: "Days, times, how they will travel." },
   { cle: "reste", titre: "Anything else", quoi: "Including what they would rather not say out loud." },
 ];
 
